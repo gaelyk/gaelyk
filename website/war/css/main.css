@@ -1,0 +1,142 @@
+body {
+	font-family: Arial;
+	margin: 0px;
+}
+
+h1 {
+	color: #D33381;
+	border-bottom: black 3px dotted;
+}
+
+h2 {
+	color: #721741;
+}
+
+li {
+	list-style-type: square;
+}
+
+pre {
+	background-color: #FAFAFA !important;
+	border-left: 5px solid lightgray !important;
+	padding: 10px !important;
+	margin-left: 20px !important;
+	width: 90% !important;
+}
+
+code, tt {
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+blockquote {
+	background-color: #FFFFAA;
+	font-style: italic;
+	border-left: 5px solid #AAAA00;
+	padding: 10px !important;
+	margin-left: 20px !important;
+	width: 90% !important;
+}
+
+a:visited, a:active, a:link {
+	color: #D33381;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+.transparent-white {
+	background-color: #FFFFFF;
+	border: 1px solid gray;
+}
+
+#navigation {
+	background: black url('../images/black-shade.png') repeat-x top;
+	color: white;
+	font-style: bold;
+	padding: 5px;
+	height: 73px;
+}
+
+#navigation ul {
+	margin-left: 50px;
+	list-style: none;
+}
+
+#navigation ul li {
+	padding: 20px;
+	display: inline;
+}
+
+#navigation ul li:hover {
+	color: #D33381;
+	border-bottom: 10px solid;	
+}
+
+#navigation ul li a {
+	font-size: 24pt;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#navigation ul li a:visited, #navigation ul li a:active, #navigation ul li a:link {
+	color: white;
+}
+
+#navigation ul li a:hover {
+	color: #D33381;
+}
+
+#learn-download {
+	float: right;
+	background-color: white;
+	border: 3px solid #D33381;
+	padding: 20px;
+	margin: 20px;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+}
+
+#learn-download table {
+	border-spacing: 10px;
+}
+
+#learn-download td {
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+#learn-download a {
+	text-decoration: none;
+	color: #721741;
+}
+
+#learn-download a:hover {
+	color: #D33381;
+	text-decoration: underline;
+}
+
+#learn-download a:visited, #learn-download a:active {
+	color: #721741;
+}
+
+#header {
+	background: white url('../images/gray-shade.png') repeat-x bottom;
+	padding: 20px;
+}
+
+#content {
+	background: #FFE0F6 url('../images/pink-shade.png') repeat-x top;
+	padding: 20px;
+	padding-right: 40px;
+	padding-left: 115px;
+}
+
+#footer {
+	background: white url('../images/gray-shade-top-down.png') repeat-x top;
+	color: #555;
+	text-align: center;
+	padding: 20px;
+	height: 100px;
+}

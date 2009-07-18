@@ -1,0 +1,10 @@
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <application>myappid</application>
+    
+    <version>1</version>
+    
+    <static-files>
+        <exclude path="/WEB-INF/**.groovy" />
+        <exclude path="**.gtpl" />
+    </static-files>
+</appengine-web-app>

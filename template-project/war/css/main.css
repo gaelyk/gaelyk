@@ -1,0 +1,9 @@
+body {
+	font-family: Arial;
+	margin: 30px;
+}
+
+h1 {
+	color: #D33381;
+	border-bottom: black 3px dotted;
+}

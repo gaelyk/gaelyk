@@ -16,8 +16,8 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
 </ul>
 
 <p>
-You can download <b>Gaelyk</b> in the <a href="/download">download area</a> and 
-learn how to create <b>Gaelyk</b> applications by reading the <a href="/tutorial">tutorial</a>.
+You can download <b>Gaelyk</b> in the <a href="/download/">download area</a> and 
+learn how to create <b>Gaelyk</b> applications by reading the <a href="/tutorial/">tutorial</a>.
 </p>
 
 <h1>Frequently Asked Question</h1>

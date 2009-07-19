@@ -66,7 +66,7 @@ At the root of your project, you'll find:
     <li>
         <code>build.groovy</code>: a small Groovy build file using Groovy's AntBuilder to compiled Groovy and Java sources 
         contained in the <code>src</code> directory. It's using Groovy's joint compiler.
-        To run this build, simply launch the command <code>groovy build</code> 
+        To run this build, if you've got additional sources to compile, simply launch the command <code>groovy build</code> 
         &mdash you'll need <a href="http://groovy.codehaus.org/Installing+Groovy">Groovy installed</a> on your machine.
     </li>
     <li>
@@ -110,7 +110,8 @@ In the <code>WEB-INF</code> directory, you'll find:
 
 <blockquote>
 <b>Note: </b> You may decide to put the Groovy scripts and includes elsewhere, 
-but the other files and directories can't be changed, as they are 
+but the other files and directories can't be changed, 
+as they are files App Engine or the servlet container expects to find at that specific locaction.
 </blockquote>
 
 <h2>Configuration files</h2>
@@ -208,7 +209,8 @@ Since <b>Gaelyk</b> provides both view templates and Groovlet controllers, it's 
 <blockquote>
 <b>Note: </b> You can learn more about Groovy's Groovlets and templates from this <a href="http://www.ibm.com/developerworks/java/library/j-pg03155/">article on IBM developerWorks</a>. 
 <b>Gaelyk</b>'s own Groovlets and templates are just an extension of Groovy's ones,
-and si
+and simply decorate Groovy's Groovlets and templates by giving access to App Engine services
+and add some additional methods to them via <a href="http://groovy.codehaus.org/Groovy+Categories">Groovy categories</a>.
 </blockquote>
 
 <p>
@@ -356,7 +358,7 @@ The resulting HTML produced by the template will look like this:
 If you need to import classes, you can also define imports in a scriplet at the top of your template as the following snippet shows:
 </p>
 
-<pre class="brush:xml">
+<pre class="brush:groovy">
     &lt;% import com.foo.Bar %&gt;
 </pre>
 
@@ -638,5 +640,35 @@ that <b>Gaelyk</b> adds on <code>DataService</code> and which takes care of that
 The <code>withTransaction()</code> method takes a closuer as sole parameter,
 and within that closure, upon its execution by <b>Gaelyk</b>, your code will be in the context of a transaction.
 </p>
+
+<h1>Running and deploying Gaelyk applications</h1>
+
+<h2>Running your application locally</h2>
+
+<p>
+Google App Engine provides a local servlet container, powered by Jetty, which lets you run your applications locally.
+If you're using the <b>Gaelyk</b> template, when you're at the root of your project 
+&mdash; and we assume you have installed the App Engine SDK on your machine &mdash;
+you can run your application with the following command-line:
+</p>
+
+<pre>
+dev_appserver.sh war
+</pre>
+
+<blockquote>
+<b>Note: </b> Notice that there are some subtle differences between running locally and in the cloud.
+You'd better always check how your application works once deployed, as there may be some differences in behaviour between the two.
+</blockquote>
+
+<h2>Deploying your application in the cloud</h2>
+
+<p>
+Once you're at the root of your application, simply run the usual deployment command:
+</p>
+
+<pre>
+appcfg.sh update war
+</pre>
 
 <% include '/WEB-INF/includes/footer.gtpl' %>

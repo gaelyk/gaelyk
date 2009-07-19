@@ -7,17 +7,21 @@
 for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
 </p>
 <ul>
-    <li><b>Gaelyk</b> lets you deploy small applications on Google App Engine Java</li>
-    <li><b>Gaelyk</b> gives you the choice to use Groovy for developing your applications</li>
-    <li><b>Gaelyk</b> builds on <a href="http://groovy.codehaus.org/Groovlets">Groovlets</a> 
+    <li><b>Gaelyk</b> lets you deploy small applications on Google App Engine Java.</li>
+    <li><b>Gaelyk</b> gives you the choice to use Groovy for developing your applications.</li>
+    <li><b>Gaelyk</b> builds on <a href="http://groovy.codehaus.org/Groovlets">Groovlets.</a> 
         and the <a href="http://groovy.codehaus.org/Groovy+Templates">Groovy template servlet</a> 
-        to add a few niceties on top of the GAE SDK APIs</li>
-    <li><b>Gaelyk</b> allows you to cleanly seperate your views with Groovy templates and your actions in Groovlets</li>
+        to add a few niceties on top of the GAE SDK APIs.</li>
+    <li><b>Gaelyk</b> allows you to cleanly seperate your views with Groovy templates and your actions in Groovlets.</li>
 </ul>
 
 <p>
-You can download <b>Gaelyk</b> in the <a href="/download/">download area</a> and 
-learn how to create <b>Gaelyk</b> applications by reading the <a href="/tutorial/">tutorial</a>.
+You can:
+<ul>
+    <li>download <b>Gaelyk</b> in the <a href="/download/">download area</a>,</li>
+    <li>learn how to create <b>Gaelyk</b> applications by reading the <a href="/tutorial/">tutorial</a>,</li>
+    <li>and participate in the <a href="/community/">community</a>.</li>
+</ul>  
 </p>
 
 <h1>Frequently Asked Question</h1>
@@ -43,11 +47,23 @@ For bigger applications, you should be considering <a href="http://grails.org">G
 but for little applications, <b>Gaelyk</b> is ideal!
 </p>
 
-<h2>What is the license of Gaelyk and where can I find the source code?</h2>
+<h2>What is the license of Gaelyk?</h2>
 
 <p>
-<b>Gaelyk</b> is released under the Apache License (ASL 2) and its code base is hosted 
-by <a href="http://github.com/glaforge/gaelyk/tree/master">Github</a>.
+<b>Gaelyk</b> is <b>Open Source</b> and is released under the <b>Apache License</b> (ASL 2).
+</p>
+
+<h2>Where can I find the source code?</h2>
+
+<p>
+The source code of <b>Gaelyk</b> is hosted by <a href="http://github.com/glaforge/gaelyk/tree/master">Github</a>
+</p>
+
+<h2>How can I contribute?</h2>
+
+<p>
+If you're interested in participating in the project, providing patches, reporting bugs, writing documentation, and more,
+please have a look at our <a href="/community/">community section</a>.
 </p>
 
 <% include '/WEB-INF/includes/footer.gtpl' %>

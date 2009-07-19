@@ -381,9 +381,9 @@ For instance, the following template will display a different message depending 
         &lt;body&gt;
             &lt;% if (user) { %&gt;
                 &lt;p&gt;You are currently logged in.&lt;/p&gt;
-            } else { %&gt;
+            &lt;% } else { %&gt;
                 &lt;p&gt;You're not logged in.&lt;/p&gt;
-            } %&gt;
+            &lt;% } %&gt;
         &lt;/body&gt;
     &lt;/html&gt;
 </pre>

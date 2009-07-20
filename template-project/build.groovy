@@ -1,4 +1,4 @@
-def ant = new AntBuilder().sequential {
+new AntBuilder().sequential {
 	webinf = "war/WEB-INF"
 	
 	taskdef name: "groovyc", classname: "org.codehaus.groovy.ant.Groovyc"

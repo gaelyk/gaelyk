@@ -1,4 +1,4 @@
-def ant = new AntBuilder().sequential {
+new AntBuilder().sequential {
 	
 	// current Gaelyk version
 	version = '0.1'

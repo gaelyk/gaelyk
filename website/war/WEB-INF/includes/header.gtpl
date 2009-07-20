@@ -9,15 +9,18 @@
         
     	<link type="text/css" rel="stylesheet" href="/css/shCore.css"/>
     	<link type="text/css" rel="stylesheet" href="/css/shThemeDefault.css"/>
+
+        <script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
     	        
         <script language="javascript" src="/js/shCore.js"></script>
         <script language="javascript" src="/js/shBrushGroovy.js"></script>
         <script language="javascript" src="/js/shBrushXml.js"></script>
+        
         <script type="text/javascript">
         	SyntaxHighlighter.config.clipboardSwf = '/falsh/clipboard.swf';
         	SyntaxHighlighter.defaults['light'] = true;
         	SyntaxHighlighter.all();
-        </script>
+        </script>        
         
         <meta name="keywords" lang="en" content="google app engine, groovy, java, cloud, grails, gae, appengine, google, dynamic language, jvm">
     </head>

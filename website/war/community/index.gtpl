@@ -11,7 +11,7 @@ you can join the <a href="http://groups.google.com/group/gaelyk">Gaelyk Google G
 
 <h3>Latest messages in our discussion group</h3>
 
-<% include '/latestmessages.groovy' %>
+<div id="latestmessages">Loading <b>latest messages</b> through AJAX...</div>
 
 <h2>Contribute</h2>
 
@@ -30,6 +30,19 @@ If you wish to contribute to the development of <b>Gaelyk</b>:
 
 <h3>Latest activity on our repository</h3>
 
-<% include '/latestcommits.groovy' %>
+<div id="latestcommits">Loading <b>latest commits</b> through AJAX...</div>
+
+<h3>Open issues in our bug tracker</h3>
+
+<div id="latestissues">Loading <b>latest issues</b> through AJAX...</div>
 
 <% include '/WEB-INF/includes/footer.gtpl' %>
+
+<script type="text/javascript">
+    \$(document).ready(function() {
+        \$("#latestmessages").load("/latestmessages.groovy");
+        \$("#latestcommits").load("/latestcommits.groovy");
+        \$("#latestissues").load("/latestissues.groovy");
+    });
+</script>
+

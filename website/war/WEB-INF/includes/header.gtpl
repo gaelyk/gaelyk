@@ -20,7 +20,19 @@
         	SyntaxHighlighter.config.clipboardSwf = '/falsh/clipboard.swf';
         	SyntaxHighlighter.defaults['light'] = true;
         	SyntaxHighlighter.all();
-        </script>        
+        </script>
+
+        <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        
+        <script type="text/javascript">
+            try {
+                var pageTracker = _gat._getTracker("UA-257558-6");
+                pageTracker._trackPageview();
+            } catch(err) {}
+        </script>
         
         <meta name="keywords" lang="en" content="google app engine, groovy, java, cloud, grails, gae, appengine, google, dynamic language, jvm">
     </head>

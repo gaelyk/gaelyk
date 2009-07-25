@@ -47,15 +47,9 @@ a:hover {
 	text-decoration: none;
 }
 
-.transparent-white {
-	background-color: #FFFFFF;
-	border: 1px solid gray;
-}
-
 #navigation {
 	background: black url('../images/black-shade.png') repeat-x top;
 	color: white;
-	font-style: bold;
 	padding: 5px;
 	height: 73px;
 }
@@ -87,39 +81,6 @@ a:hover {
 
 #navigation ul li a:hover {
 	color: #D33381;
-}
-
-#learn-download {
-	float: right;
-	background-color: white;
-	border: 3px solid #D33381;
-	padding: 20px;
-	margin: 20px;
-	-moz-border-radius: 25px;
-	-webkit-border-radius: 25px;
-}
-
-#learn-download table {
-	border-spacing: 10px;
-}
-
-#learn-download td {
-	font-size: 1.3em;
-	font-weight: bold;
-}
-
-#learn-download a {
-	text-decoration: none;
-	color: #721741;
-}
-
-#learn-download a:hover {
-	color: #D33381;
-	text-decoration: underline;
-}
-
-#learn-download a:visited, #learn-download a:active {
-	color: #721741;
 }
 
 #header {

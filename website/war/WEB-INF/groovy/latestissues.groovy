@@ -22,7 +22,7 @@ html.ul {
 //			2009/07/20 01:41:25 -0700
 			def sdf = new SDF("yyyy/MM/dd HH:mm:ss Z", Locale.US)
 			def prettyTime = new PrettyTime().format(sdf.parse(issue.created_at))
-			i " openend ${prettyTime}"
+			i " opened ${prettyTime}"
 		}
 	}
 }

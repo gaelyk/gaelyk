@@ -528,6 +528,164 @@ The last line of the Groovlet then forwards the data back to the template view <
     &lt;/html&gt;
 </pre>
 
+<h2>URL mapping</h2>
+
+<h3>Different extensions for Groovlets and templates</h3>
+
+<p>
+So far, we used the extension <code>.groovy</code> for our Groovlets and <code>.gtpl</code> for our templates.
+But these extensions are by no means mandatory. You may, for example, decide to use <code>.action</code> for Groovlets
+and <code>.html</code> for the templates, so that nobody guesses the underlying technology being used.
+This is as simple as changing the servlet mappings in <code>web.xml</code>.
+</p>
+
+<pre class="brush:xml">
+    ...
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;GroovyServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;*.action&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;TemplateServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;*.html&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    ...
+</pre>
+
+<p>
+If you want to hide the <code>.groovy</code> extension, or make it optional, you can also leverage a somewhat
+lesser-known feature of Groovlets, with its regex resource replacement init parameter.
+With the following init parameters defined in <code>web.xml</code>, when you define the <b>Gaelyk</b> servlet,
+you can achieve making the <code>.groovy</code> extension optional:
+</p>
+
+<pre class="brush:xml">
+    ...
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;GroovyServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;groovyx.gaelyk.servlet.GaelykServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;!-- This parameter is true by default, you can omit it if you want to replace all occurrences --&gt;
+            &lt;param-name&gt;resource.name.replace.all&lt;/param-name&gt;
+            &lt;param-value&gt;false&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;resource.name.regex&lt;/param-name&gt;
+            &lt;param-value&gt;(\\w*/)*((\\w*)(\\.groovy)?)(\\?.*)?&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;resource.name.replacement&lt;/param-name&gt;
+            &lt;param-value&gt;\$3.groovy&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/servlet&gt;
+    ...
+</pre>
+
+<p>
+This mechanism takes the request URI and transform that path into a different path using regular expression replacement,
+to point to a difference resource, ie. a Groovlet.
+So for example, if your path is <code>/knowledgeBase/question/show?id=33</code>,
+it would be transformed into <code>show.groovy</code> for the Groovlet resource to be found by the Groovlet servlet.
+Here, we're just keeping the last <i>word</i> matched to point to the Groovlet that's going to be executed:
+the third group denoted by <code>\$3</code> corresponds to the second occurrence of <code>\\w*</code> in the regex.
+</p>
+
+<p>
+You could also decide to keep the path, by tweaking the regular expression.
+You would use <code>((\\w*/)*)((\\w*)(\\.groovy)?)(\\?.*)?</code> as regex
+and <code>\$1\$3.groovy</code> as replacement string.
+Contrary to our previous example, you'd get <code>/knowledgeBase/question/show.groovy</code> as a result.
+</p>
+
+<blockquote>
+<b>Note: </b> To help you with finding the right regular expression and replacement string,
+you may validate your matching with the following Groovy snippet, that you can run in the Groovy console or shell:
+<pre class="brush:groovy">
+    String myPath = '/knowledgeBase/question/show?id=33'
+    String regex = '(\\\\w*/)*((\\\\w*)(\\\\.groovy)?)(\\\\?.*)?'
+    String replacement = '\$3.groovy'
+
+    // use replaceFirst() when the init param "resource.name.replace.all"
+    // is set to false, replaceAll() otherwise
+    assert myPath.replaceFirst(regex, replacement) == 'show.groovy'
+</pre>
+</blockquote>
+
+<blockquote>
+<b>Warning: </b> the <code>(\\?.*)?</code> part in the regular expression corresponds to the request parameters
+passed in the URL. Make sure to not keep that part in the resulting string, because there would be no file with a
+name like <code>show.groovy?id=32</code> on the file system.
+</blockquote>
+
+<h3>REST-ful URLs</h3>
+
+<p>
+Nowadays, the REST architectural style has become a best practice for our web applications, so you may also wish
+to provide REST-ful URLs to the users and consumers of your <b>Gaelyk</b> pages and services.
+In this section, we'll see how we can get REST-ful URLs using that string replacement technique.
+You could use a solution which keeps the path and omits the <code>.groovy</code> extension,
+similar to the one suggested above.
+Or you could use a simpler mapping, if you want to redirect all URLs to a central REST endpoint,
+that would then serve as a kind of front controller.
+You could do as follows:
+</p>
+
+<pre class="brush:xml">
+    ...
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;GroovyServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;groovyx.gaelyk.servlet.GaelykServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;resource.name.replace.all&lt;/param-name&gt;
+            &lt;param-value&gt;false&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;resource.name.regex&lt;/param-name&gt;
+            &lt;!-- Match all request URIs (regular expression) --&gt;
+            &lt;param-value&gt;.*&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;resource.name.replacement&lt;/param-name&gt;
+            &lt;!-- Always redirect to the rest.groovy Groovlet --&gt;
+            &lt;param-value&gt;rest.groovy&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/servlet&gt;
+    ...
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name>GroovyServlet&lt;/servlet-name&gt;
+        &lt;!-- Match all request URIs (servlet url pattern matching) --&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    ...
+</pre>
+
+<blockquote>
+<b>Warning: </b> Remember that the servlet mapping URL pattern is not a usual Java regular expression.
+Whereas the <code>resource.name.regex</code> init parameter corresponds to a real Java regular expression.
+</blockquote>
+
+<p>
+Inside your <code>rest.groovy</code> Groovlet, you are then able to know which HTTP method was used, by using:
+</p>
+
+<pre class="brush:groovy">
+    request.requestURI.tokenize('/')
+</pre>
+
+<p>
+For a path like <code>/customer/32</code>, you would get a Groovy list like <code>['customer', '32']</code>.
+</p>
+
+<p>
+You can retrieve the HTTP method being used with:
+</p>
+
+<pre class="brush:groovy">
+    request.method
+</pre>
+
+And remember you can also get the request parameters thanks to the <code>params</code> variable.
 
 <h1>Google App Engine specific shortcuts</h1>
 

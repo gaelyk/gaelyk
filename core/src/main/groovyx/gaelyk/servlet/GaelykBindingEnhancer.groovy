@@ -24,6 +24,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory
 import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
+import com.google.appengine.api.labs.taskqueue.QueueFactory
 
 /**
  * @author Marcel Overdijk
@@ -49,5 +50,10 @@ class GaelykBindingEnhancer {
         UserService userService = UserServiceFactory.userService
         binding.setVariable("userService", userService)
         binding.setVariable("user", userService.getCurrentUser())
+
+        // New in GAE SDK 1.2.5: task queues
+        binding.setVariable("defaultQueue", QueueFactory.getDefaultQueue())
+        binding.setVariable("queues", new QueueAccessor())
+
     }
 }

@@ -20,8 +20,10 @@ import com.google.appengine.api.mail.MailService
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.Transaction
 import com.google.appengine.api.datastore.DatastoreService
-import com.google.appengine.api.datastore.DatastoreServiceImpl
 import com.google.appengine.api.datastore.DatastoreServiceFactory
+import com.google.appengine.api.labs.taskqueue.Queue
+import com.google.appengine.api.labs.taskqueue.TaskHandle
+import com.google.appengine.api.labs.taskqueue.TaskOptions
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -172,5 +174,105 @@ class GaelykCategory {
             // rethrow the exception
             throw e
         }
+    }
+
+
+
+    /**
+     * Shorcut to get the name of the Queue.
+     * <p>
+     * Instead of having to call <code>queue.getQueueName()</code> or <code>queue.queueName</code>,
+     * you can use the syntax <code>queue.name</code> which is more concise.
+     *
+     * @return the name of the queue
+     */
+    static String getName(Queue selfQueue) {
+        selfQueue.getQueueName()
+    }
+
+
+
+    /**
+     * Add a new task on the queue using a map for holding the task attributes instead of a TaskOptions builder object.
+     * <p>
+     * Allowed keys are: <ul>
+     * <li><code>countdownMillis</code></li>
+     * <li><code>etaMillis</code></li>
+     * <li><code>headers</code> (a map of key/value pairs)</li>
+     * <li><code>method</code> (can be 'GET', 'POST', 'PUT', 'DELETE', 'HEAD' or an enum of TaskOptions.Method)</li>
+     * <li><code>params</code> (a map of key/value parameters)</li>
+     * <li><code>payload</code></li>
+     * <li><code>taskName</code></li>
+     * <li><code>url</code></li>
+     * </ul>
+     *
+     * @param params the map of task attributes
+     * @return a TaskHandle instance
+     */
+    static TaskHandle add(Queue selfQueue, Map params) {
+        def options = TaskOptions.Builder.withDefaults()
+        params.each { key, value ->
+            if (key in ['countdownMillis', 'etaMillis', 'taskName', 'url']) {
+                options = options."$key"(value)
+            } else if (key == 'headers') {
+                if (value instanceof Map) {
+                    value.each { headerKey, headerValue ->
+                        options = options.header(headerKey, headerValue)
+                    }
+                } else {
+                    throw new RuntimeException("The headers key/value pairs should be passed as a map.")
+                }
+            } else if (key == 'method') {
+                if (value instanceof TaskOptions.Method) {
+                    options = options.method(value)
+                } else if(value in ['GET', 'POST', 'PUT', 'DELETE', 'HEAD']) {
+                    options = options.method(TaskOptions.Method.valueOf(value))
+                } else {
+                    throw new RuntimeException("Not a valid method: $value")
+                }
+            } else if (key == 'params') {
+                if (value instanceof Map) {
+                    value.each { paramKey, paramValue ->
+                        options = options.param(paramKey, paramValue.toString())
+                    }
+                } else {
+                    throw new RuntimeException("The params key/value pairs should be passed as a map.")
+                }
+            } else if (key == 'payload') {
+                if (value instanceof List) {
+                    options = options.payload(*(value.collect { it.toString() }))
+                } else if (value instanceof String) {
+                    options = options.payload(value)
+                } else {
+                    options = options.payload(value.toString())
+                }
+            } else {
+                throw new RuntimeException("$key is not a valid task option.\n" +
+                    "Allowed: countdownMillis, etaMillis, taskName, url, headers, methods, params and payload")
+            }
+        }
+        return selfQueue.add(options)
+    }
+
+    /**
+     * Add a new task on the queue using a map for holding the task attributes instead of a TaskOptions builder object.
+     * This method adds a <code>&lt;&lt;</code> operator on the <code>Queue</code> for adding new tasks to it. 
+     * <p>
+     * Allowed keys are: <ul>
+     * <li><code>countdownMillis</code></li>
+     * <li><code>etaMillis</code></li>
+     * <li><code>headers</code> (a map of key/value pairs)</li>
+     * <li><code>method</code> (can be 'GET', 'POST', 'PUT', 'DELETE', 'HEAD' or an enum of TaskOptions.Method)</li>
+     * <li><code>params</code> (a map of key/value parameters)</li>
+     * <li><code>payload</code></li>
+     * <li><code>taskName</code></li>
+     * <li><code>url</code></li>
+     * </ul>
+     *
+     * @param params the map of task attributes
+     * @return a TaskHandle instance
+     */
+    static TaskHandle leftShift(Queue selfQueue, Map params) {
+        GaelykCategory.add(selfQueue, params)
     }
 }

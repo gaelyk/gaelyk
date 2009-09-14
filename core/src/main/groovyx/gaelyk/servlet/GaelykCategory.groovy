@@ -24,6 +24,12 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory
 import com.google.appengine.api.labs.taskqueue.Queue
 import com.google.appengine.api.labs.taskqueue.TaskHandle
 import com.google.appengine.api.labs.taskqueue.TaskOptions
+import com.google.appengine.api.xmpp.XMPPService
+import com.google.appengine.api.xmpp.MessageBuilder
+import groovy.xml.StreamingMarkupBuilder
+import com.google.appengine.api.xmpp.JID
+import com.google.appengine.api.xmpp.SendResponse
+import com.google.appengine.api.xmpp.MessageType
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -274,5 +280,100 @@ class GaelykCategory {
      */
     static TaskHandle leftShift(Queue selfQueue, Map params) {
         GaelykCategory.add(selfQueue, params)
+    }
+
+    /**
+     * Send an XMPP/Jabber message with the XMPP service using a map of attributes to build the message.
+     * <p>
+     * Possible attributes are:
+     * <ul>
+     * <li>from: the sender Jabber ID represented as a String</li>
+     * <li>to: a String or a list of String representing recepients' Jabber IDs</li>
+     * <li>type: an instance of the MessageType enum, or a String representation
+     * ('CHAT', 'ERROR', 'GROUPCHAT', 'HEADLINE', 'NORMAL')</li>
+     * <li>body: a String representing the raw text to send</li>
+     * <li>xml: a closure representing the XML you want to send (serialized using StreamingMarkupBuilder)</li>
+     * </ul>
+     *
+     * @param msgAttr a map of attributes as described
+     * @return an intance of SendResponse
+     */
+    static SendResponse send(XMPPService xmppService, Map msgAttr) {
+        MessageBuilder msgBuilder = new MessageBuilder()
+
+        if (msgAttr.xml && msgAttr.body) {
+            throw new RuntimeException("You have to choose between XML and text bodies, you can't have both!")
+        }
+
+        // sets the body of the message
+        if (msgAttr.xml) {
+            msgBuilder.asXml(true)
+            def xml = new StreamingMarkupBuilder().bind(msgAttr.xml)
+            msgBuilder.withBody(xml.toString())
+        } else if (msgAttr.body) {
+            msgBuilder.withBody(msgAttr.body)
+        }
+
+        // sets the recepients of the message
+        if (msgAttr.to) {
+            if (msgAttr.to instanceof String) {
+                msgBuilder.withRecipientJids(new JID(msgAttr.to))
+            } else if (msgAttr.to instanceof List) {
+                msgBuilder.withRecipientJids(msgAttr.to.collect{ new JID(it) } as JID[])
+            }
+        }
+
+        // sets the sender of the message
+        if (msgAttr.from) {
+            msgBuilder.withFromJid(new JID(msgAttr.from))
+        }
+
+        // sets the type of the message
+        if (msgAttr.type) {
+            if (msgAttr.type instanceof MessageType) {
+                msgBuilder.withMessageType(msgAttr.type)
+            } else if (msgAttr.type instanceof String) {
+                msgBuilder.withMessageType(MessageType.valueOf(msgAttr.type))
+            }
+        }
+
+        xmppService.sendMessage(msgBuilder.build())
+    }
+
+    /**
+     * Send a chat invitation to a Jabber ID.
+     *
+     * @param the Jabber ID to invite
+     */
+    static void sendInvitation(XMPPService xmppService, String jabberId) {
+        xmppService.sendInvitation(new JID(jabberId))
+    }
+
+    /**
+     * Send a chat invitation to a Jabber ID from another Jabber ID.
+     *
+     * @param the Jabber ID to invite
+     */
+    static void sendInvitation(XMPPService xmppService, String jabberIdTo, String jabberIdFrom) {
+        xmppService.sendInvitation(new JID(jabberIdTo), new JID(jabberIdFrom))
+    }
+
+    /**
+     * Get the presence of a Jabber ID.
+     *
+     * @param the Jabber ID
+     */
+    static void getPresence(XMPPService xmppService, String jabberId) {
+        xmppService.getPresence(new JID(jabberId))
+    }
+
+    /**
+     * Get the presence of a Jabber ID.
+     *
+     * @param the Jabber ID to get the presence from
+     * @param the Jabber ID to use to send the presence request
+     */
+    static void getPresence(XMPPService xmppService, String jabberIdTo, String jabberIdFrom) {
+        xmppService.getPresence(new JID(jabberIdTo), new JID(jabberIdFrom))
     }
 }

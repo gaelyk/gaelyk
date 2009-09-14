@@ -879,6 +879,16 @@ There is also a variant with an overloaded <code>&lt;&lt;</code> operator:
    ]
 </pre>
 
+<h2>XMPP/Jabber support</h2>
+
+<p>
+Since version 1.2.5 of the Google App Engine SDK, support for instant messaging with XMPP/Jabber support has been added.
+</p>
+
+<blockquote>
+<b>Note: </b> You can learn more about
+<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/xmpp/overview.html">XMPP support</a> on the online documentation.
+</blockquote>
 
 <h1>Running and deploying Gaelyk applications</h1>
 

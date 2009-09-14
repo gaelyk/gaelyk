@@ -25,6 +25,8 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory
 import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
 import com.google.appengine.api.labs.taskqueue.QueueFactory
+import com.google.appengine.api.xmpp.XMPPService
+import com.google.appengine.api.xmpp.XMPPServiceFactory
 
 /**
  * @author Marcel Overdijk
@@ -54,6 +56,9 @@ class GaelykBindingEnhancer {
         // New in GAE SDK 1.2.5: task queues
         binding.setVariable("defaultQueue", QueueFactory.getDefaultQueue())
         binding.setVariable("queues", new QueueAccessor())
+
+        // New in GAE SDK 1.2.5: XMPP support
+        binding.setVariable("xmppService", XMPPServiceFactory.getXMPPService())
 
     }
 }

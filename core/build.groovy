@@ -6,9 +6,15 @@ new AntBuilder().sequential {
 	// various directory places and file names
 	src 	= "src/main"
 	lib 	= "lib"
+
 	target 	= "target"
 	classes = "${target}/classes"
+
 	jarname = "${target}/gaelyk-${version}.jar"
+
+    tmpProj = "../template-project"
+    zipname = "${target}/gaelyk-template-project-${version}.zip"
+    projLib = "${tmpProj}/war/WEB-INF/lib"
 	
 	// create the target and classes directories
 	mkdir dir: classes
@@ -26,5 +32,14 @@ new AntBuilder().sequential {
 	}
 	
 	// create the Gaelyk JAR
-	jar basedir: classes, destfile: jarname, includes: '**/*.class'
+	jar basedir: classes, destfile: jarname
+
+    // copy latest Gaelyk JAR to the template project and remove the old one
+    delete {
+        fileset dir: projLib, includes: "gaelyk-*.jar"
+    }
+    copy file: jarname, todir: projLib
+
+    // create the template project ZIP file
+    zip basedir: tmpProj, destfile: zipname, excludes: '__MACOSX, *.iml'
 }

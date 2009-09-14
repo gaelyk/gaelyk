@@ -1,7 +1,7 @@
 new AntBuilder().sequential {
 	
 	// current Gaelyk version
-	version = '0.1'
+	version = '0.2-SNAPSHOT'
 	
 	// various directory places and file names
 	src 	= "src/main"
@@ -26,6 +26,5 @@ new AntBuilder().sequential {
 	}
 	
 	// create the Gaelyk JAR
-	jar basedir: classes, destfile: jarname
+	jar basedir: classes, destfile: jarname, includes: '**/*.class'
 }
-

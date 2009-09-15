@@ -15,12 +15,14 @@ and with the 1.2.5 version of the App Engine SDK.
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
 
-<h2>Version 0.1</h2>
+<h2>Version 0.2</h2>
 
 <ul>
     <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.2.jar">gaelyk-0.2.jar</a></li>
     <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.2.zip">gaelyk-template-project-0.2.zip</a></li>
 </ul>
+
+<h2>Version 0.1</h2>
 
 <ul>
     <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.1.jar">gaelyk-0.1.jar</a></li>

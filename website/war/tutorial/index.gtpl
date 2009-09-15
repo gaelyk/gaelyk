@@ -813,6 +813,34 @@ The <code>withTransaction()</code> method takes a closuer as sole parameter,
 and within that closure, upon its execution by <b>Gaelyk</b>, your code will be in the context of a transaction.
 </p>
 
+<h3>Querying</h3>
+
+<p>
+<b>Gaelyk</b> currently doesn't provide additional capabilities for querying the datastore
+beyond what is provided by the Google App Engine SDK &mdash; however, the situation may change in future releases.
+Below you will see an example of queries used in the <a href="http://groovyconsole.appspot.com">Groovy Web Console</a>
+to retrieve scripts written by a given author, sorted by descending date of creation:
+</p>
+
+<pre class="brush:groovy">
+    import com.google.appengine.api.datastore.*
+    import static com.google.appengine.api.datastore.FetchOptions.Builder.*
+
+    // query the scripts stored in the datastore
+    def query = new Query("savedscript")
+
+    // sort results by descending order of the creation date
+    query.addSort("dateCreated", Query.SortDirection.DESCENDING)
+
+    // filters the entities so as to return only scripts by a certain author
+    query.addFilter("author", Query.FilterOperator.EQUAL, params.author)
+
+    PreparedQuery preparedQuery = datastoreService.prepare(query)
+
+    // return only the first 10 results
+    def entities = preparedQuery.asList( withLimit(10) )
+</pre>
+
 <h2>The task queue API shortcuts</h2>
 
 <p>

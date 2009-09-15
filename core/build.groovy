@@ -51,8 +51,9 @@ new AntBuilder().sequential {
             packagenames: "**.*",
             windowtitle: "Gaelyk ${version}",
             doctitle: "Gaelyk ${version}", {
-                link packages: 'java.,org.xml.,javax.,org.xml.', href: 'http://java.sun.com/j2se/1.5.0/docs/api'
+                link packages: 'javax.servlet.', href: 'http://java.sun.com/javaee/5/docs/api/'
+                link packages: 'java.,org.xml.,org.xml.', href: 'http://java.sun.com/j2se/1.5.0/docs/api'
                 link packages: 'com.google.appengine.', href: 'http://code.google.com/appengine/docs/java/javadoc/'
-                link packages: 'org.codehaus.groovy.,groovy.', href: 'groovy.codehaus.org/api/'
+                link packages: 'org.codehaus.groovy.,groovy.', href: 'http://groovy.codehaus.org/gapi/'
             }
 }

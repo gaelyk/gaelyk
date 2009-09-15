@@ -3,9 +3,11 @@
     <version>1</version>
     
     <static-files>
+        <include path="**.html" />
         <include path="**.css" />
         <include path="**.jpg" />
         <include path="**.png" />
+        <include path="**.gif" />
         <include path="**.swf" />
         <include path="**.js" />
         <include path="/robots.txt" />

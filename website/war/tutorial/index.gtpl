@@ -22,6 +22,10 @@ It provides a ready-to-go project with the right configuration files pre-filled 
     <li>the needed JARs (Groovy, Gaelyk and Google App Engine SDK)</li>
 </ul>
 
+<p>
+You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composing <b>Gaelyk</b>.
+</p>
+
 <h1>Setting up your project</h1>
 
 <h2>Directory layout</h2>

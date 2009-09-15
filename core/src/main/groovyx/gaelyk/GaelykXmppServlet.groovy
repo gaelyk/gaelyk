@@ -30,9 +30,7 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory
  *
  * @author Guillaume Laforge
  */
-class GaelykXmppServlet extends HttpServlet implements ResourceConnector {
-
-    private GroovyScriptEngine gse = new GroovyScriptEngine(this)
+class GaelykXmppServlet extends HttpServlet {
 
     /**
      * Handles XMPP incoming messages.
@@ -47,25 +45,7 @@ class GaelykXmppServlet extends HttpServlet implements ResourceConnector {
         new GaelykBindingEnhancer(binding).bind()
 
         use (GaelykCategory) {
-            gse.createScript("xmpp.groovy", binding)
-        }
-    }
-
-    /**
-     * Create URLConnections from a resource name.
-     */
-    URLConnection getResourceConnection(String name) {
-        try {
-            URL url = servletContext.getResource("/$name")
-            if (url) {
-                url = servletContext.getResource("/WEB-INF/groovy/$name")
-            }
-            if (url) {
-                throw new ResourceException("Resource $name not found!")
-            }
-            return url.openConnection()
-        } catch (IOException e) {
-            throw new ResourceException("Problems getting resource named $name !", e);
+            new GroovyShell(binding).evaluate(new File('WEB-INF/groovy/xmpp.groovy'))
         }
     }
 }

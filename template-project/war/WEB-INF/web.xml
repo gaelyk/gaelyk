@@ -7,6 +7,13 @@
         <servlet-name>TemplateServlet</servlet-name>
         <servlet-class>groovyx.gaelyk.GaelykTemplateServlet</servlet-class>
     </servlet>
+    <!-- Uncomment the following servlet definition if you want to receive XMPP messages-->
+    <!--
+    <servlet>
+        <servlet-name>XmppServlet</servlet-name>
+        <servlet-class>groovyx.gaelyk.GaelykXmppServlet</servlet-class>
+    </servlet>
+    -->
 
     <servlet-mapping>
         <servlet-name>GroovletServlet</servlet-name>
@@ -16,7 +23,14 @@
         <servlet-name>TemplateServlet</servlet-name>
         <url-pattern>*.gtpl</url-pattern>
     </servlet-mapping>
-    
+    <!-- Uncomment the following servlet mapping if you want to receive XMPP messages-->
+    <!--
+    <servlet-mapping>
+        <servlet-name>XmppServlet</servlet-name>
+        <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
+    </servlet-mapping>
+    -->
+
     <welcome-file-list> 
         <welcome-file>index.gtpl</welcome-file> 
     </welcome-file-list>

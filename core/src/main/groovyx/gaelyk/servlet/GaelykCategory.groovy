@@ -30,6 +30,8 @@ import groovy.xml.StreamingMarkupBuilder
 import com.google.appengine.api.xmpp.JID
 import com.google.appengine.api.xmpp.SendResponse
 import com.google.appengine.api.xmpp.MessageType
+import com.google.appengine.api.xmpp.Presence
+import groovy.util.slurpersupport.GPathResult
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -362,8 +364,9 @@ class GaelykCategory {
      * Get the presence of a Jabber ID.
      *
      * @param the Jabber ID
+     * @return the presence information
      */
-    static void getPresence(XMPPService xmppService, String jabberId) {
+    static Presence getPresence(XMPPService xmppService, String jabberId) {
         xmppService.getPresence(new JID(jabberId))
     }
 
@@ -372,8 +375,48 @@ class GaelykCategory {
      *
      * @param the Jabber ID to get the presence from
      * @param the Jabber ID to use to send the presence request
+     * @return the presence information
      */
-    static void getPresence(XMPPService xmppService, String jabberIdTo, String jabberIdFrom) {
+    static Presence getPresence(XMPPService xmppService, String jabberIdTo, String jabberIdFrom) {
         xmppService.getPresence(new JID(jabberIdTo), new JID(jabberIdFrom))
+    }
+
+    /**
+     * Get the sender Jabber ID of the message in the form of a String.
+     *
+     * @return the Jabber ID of the sender
+     */
+    static String getFrom(com.google.appengine.api.xmpp.Message message) {
+        message.getFromJid().getId()
+    }
+
+    /**
+     * Get the XML content of this message (if it's an XML message) in the form of a DOM parsed with XmlSlurper.
+     *
+     * @return the slurped XML document 
+     */
+    static GPathResult getXml(com.google.appengine.api.xmpp.Message message) {
+        if (message.isXml()) {
+            def slurper = new XmlSlurper()
+            return slurper.parseText(message.getStanza())
+        } else {
+            throw new RuntimeException("You can't get the XML of this message as this is not an XML message.")
+        }
+    }
+
+    /**
+     * Gets the list of recipients of this message in the form of a list of Jabber ID strings.
+     *
+     * @return a list of Jabber ID strings
+     */
+    static List getRecipients(com.google.appengine.api.xmpp.Message message) {
+        message.getRecipientJids().collect { it.getId() }
+    }
+
+    /**
+     * Checks the status of the sending of the message was successful for all its recipients
+     */
+    static boolean isSuccessful(SendResponse status) {
+        status.statusMap.every { it.value == SendResponse.Status.SUCCESS }
     }
 }

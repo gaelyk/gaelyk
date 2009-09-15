@@ -13,13 +13,14 @@ If you haven't, please do so by reading the
 <p>
 The easiest way to get setup rapidly is to download the template project from the <a href="/download/">download section</a>.
 It provides a ready-to-go project with the right configuration files pre-filled and an appropriate directory layout:
+</p>
+
 <ul>
     <li><code>web.xml</code> precondigured with the <b>Gaelyk</b> servlets</li>
     <li><code>appengine-web.xml</code> with the right settings predefined (static file directive)</li>
     <li>a sample Groovlet and template</li>
     <li>the needed JARs (Groovy, Gaelyk and Google App Engine SDK)</li>
 </ul>
-</p>
 
 <h1>Setting up your project</h1>
 
@@ -63,6 +64,8 @@ We'll follow the directory layout proposed by the <b>Gaelyk</b> template project
 
 <p>
 At the root of your project, you'll find:
+</p>
+
 <ul>
     <li>
         <code>build.groovy</code>: a small Groovy build file using Groovy's AntBuilder to compiled Groovy and Java sources 
@@ -82,10 +85,11 @@ At the root of your project, you'll find:
         It also contains the classical <code>WEB-INF</code> directory from typical Java web applications.
     </li>
 </ul>
-</p>
 
 <p>
 In the <code>WEB-INF</code> directory, you'll find:
+</p>
+
 <ul>
     <li>
         <code>appengine-web.xml</code>: The App Engine specific configuration file we'll detail below.
@@ -103,11 +107,10 @@ In the <code>WEB-INF</code> directory, you'll find:
         <code>includes</code>: We propose to let you put included templates in that directory.
     </li>
     <li>
-        <code>lib</code>: All the needed libraries will be put here, the Groovy, Gaelyk and GAE SDK JARs, 
+        <code>lib</code>: All the needed libraries will be put here, the Groovy, <b>Gaelyk</b> and GAE SDK JARs, 
         as well as any third-party JARs you may need in your application.
     </li>
 </ul>
-</p>
 
 <blockquote>
 <b>Note: </b> You may decide to put the Groovy scripts and includes elsewhere, 
@@ -299,6 +302,9 @@ by injecting specific elements of the Google App Engine SDK:
     <li>
         <tt>queues</tt> : a map-like object with which you can access the configured queues
     </li>
+    <li>
+        <tt>xmppService</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/XMPPService.html">Jabber/XMPP service</a>.
+    </li>
 </ul>
 
 <p>
@@ -312,13 +318,14 @@ In the next section, we'll dive in the <b>Gaelyk</b> templates and groovlets.
 <p>
 <b>Gaelyk</b> templates are very similar to JSPs or PHP: they are pages containing scriptlets of code.
 You can:
+</p>
+
 <ul>
     <li>put blocks of Groovy code inside <code>&lt;% /* some code */ %&gt;</code>,</li>
     <li>call <code>print</code> and <code>println</code> inside those scriptlets for writing to the servlet writer,</li>
     <li>use the <code>&lt;%= variable %&gt;</code> notation to insert a value in the output,</li>
     <li>or also the GString notation <code>\${variable}</code> to insert some text or value.</li>
 </ul>
-</p>
 
 <p>
 Let's have a closer look at an example of what a template may look like:
@@ -816,7 +823,8 @@ An application has a default queue, but other queues can be added through the co
 
 <blockquote>
 <b>Note: </b> You can learn more about <a href="http://code.google.com/appengine/docs/java/config/queue.html">queues</a>
-and <a href="http://code.google.com/appengine/docs/java/taskqueue/overview.html">task queues</a> on the online documentation.
+and <a href="http://code.google.com/appengine/docs/java/taskqueue/overview.html">task queues</a>, and how to
+configure them on the online documentation.
 </blockquote>
 
 <p>
@@ -882,13 +890,196 @@ There is also a variant with an overloaded <code>&lt;&lt;</code> operator:
 <h2>XMPP/Jabber support</h2>
 
 <p>
-Since version 1.2.5 of the Google App Engine SDK, support for instant messaging with XMPP/Jabber support has been added.
+Since version 1.2.5 of the Google App Engine SDK, support for instant messaging through XMPP/Jabber support has been added.
+This also means your <b>Gaelyk</b> applications can now send and receive instant messages.
 </p>
 
 <blockquote>
 <b>Note: </b> You can learn more about
-<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/xmpp/overview.html">XMPP support</a> on the online documentation.
+<a href="http://code.google.com/appengine/docs/java/xmpp/overview.html">XMPP support</a> on the online documentation.
 </blockquote>
+
+<h3>Sending messages</h3>
+
+<p>
+<b>Gaelyk</b> provides a few additional methods to take care of sending instant messages, get the presence of users,
+or to send invitations to other users.
+Applications usually have a corresponding Jabber ID named after your application ID, such as <code>gaelyk@appspot.com</code>.
+To be able to send messages to other users, your application will have to invite other users, and be invited to chat.
+So make sure you do so for being able to send messages.
+</p>
+
+<p>
+Let's see what it would look like in a Groovlet for sending messages to a user:
+</p>
+
+<pre class="brush:groovy">
+    String recipient = "someone@gmail.com"
+
+    // check if the user is online
+    if (xmppService.getPresence(recipient).isAvailable()) {
+        // send the message
+        def status = xmpp.send to: recipient, body: "Hello, how are you?"
+
+        // checks the message was successfully delivered to all the recipients
+        assert status.isSuccessful()
+    }
+</pre>
+
+<p>
+<b>Gaelyk</b> once again decorates the various XMPP-related classes in the App Engine SDK with new methods:
+</p>
+
+<ul>
+    <li>on <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/XMPPService.html"><code>XMPPService</code></a>'s instance
+        <ul>
+            <li><code>SendResponse send(Map msgAttr)</code> : more details on this method below</li>
+            <li><code>void sendInvitation(String jabberId)</code> : send an invitation to a user</li>
+            <li><code>sendInvitation(String jabberIdTo, String jabberIdFrom)</code> : send an invitation to a user from a different Jabber ID</li>
+            <li><code>Presence getPresence(String jabberId)</code> : get the presence of this particular user</li>
+            <li><code>Presence getPresence(String jabberIdTo, String jabberIdFrom)</code> : same as above but using a different Jabber ID for the request</li>
+        </ul>
+    </li>
+    <li>on <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/Message.html"><code>Message</code></a> instances
+        <ul>
+            <li><code>String getFrom()</code> : get the Jabber ID of the sender of this message</li>
+            <li><code>GPathResult getXml()</code> : get the XmlSlurper parsed document of the XML payload</li>
+            <li><code>List&lt;String&gt; getRecipients()</code> : get a list of Strings representing the Jabber IDs of the recipients</li>
+        </ul>
+    </li>
+    <li>on <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/SendResponse.html"><code>SendResponse</code></a> instances
+        <ul>
+            <li><code>boolean isSuccessful()</code> : checks that all recipients received the message</li>
+        </ul>
+    </li>
+</ul>
+
+<p>
+To give you a little more details on the various attributes you can use to create messages to be sent,
+you can pass the following attributes to the <code>send()</code> method of <code>XMPPService</code>:
+</p>
+
+<ul>
+    <li><tt>body</tt> : the raw text content of your message</li>
+    <li><tt>xml</tt> : a closure representing the XML payload you want to send</li>
+    <li><tt>to</tt> : contains the recipients of the message (either a String or a List of String)</li>
+    <li><tt>from</tt> : a String representing the Jabber ID of the sender</li>
+    <li><tt>type</tt> : either an instance of the
+        <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/MessageType.html"><code>MessageType</code></a>
+        enum or a String (<code>'CHAT'</code>, <code>'ERROR'</code>, <code>'GROUPCHAT'</code>, <code>'HEADLINE'</code>,
+        <code>'NORMAL'</code>)</li>
+</ul>
+
+<blockquote>
+<b>Note: </b> <code>body</code> and <code>xml</code> are exclusive, you can't specify both at the same time.
+</blockquote>
+
+<p>
+We mentioned the ability to send XML payloads, instead of normal chat messages:
+this functionality is particularly interesting if you want to use XMPP/Jabber as a communication transport
+between services, computers, etc. (ie. not just real human beings in front of their computer).
+We've shown an example of sending raw text messages, here's how you could use closures in the <code>xml</code>
+to send XML fragments to a remote service:
+</p>
+
+<pre class="brush:groovy">
+    String recipient = "service@gmail.com"
+
+    // check if the service is online
+    if (xmppService.getPresence(recipient).isAvailable()) {
+        // send the message
+        def status = xmpp.send to: recipient, xml: {
+            customers {
+                customer(id: 1) {
+                    name 'Google'
+                }
+            }
+        }
+
+        // checks the message was successfully delivered to the service
+        assert status.isSuccessful()
+    }
+</pre>
+
+<blockquote>
+<b>Implementation detail: </b> the closure associated with the <code>xml</code> attribute is actually passed to
+an instance of <a href="http://groovy.codehaus.org/Reading+XML+using+Groovy's+XmlSlurper"><code>XmlSlurper</code></a>
+which creates an XML stanza.
+</blockquote>
+
+<h3>Receiving messages</h3>
+
+<p>
+It is also possible to receive messages from users.
+For that purpose, <b>Gaelyk</b> introduces a new servlet that will take care of being the receiver of those messages,
+which will arrive to your application, as a web request through this new Servlet (<code>GaelykXmppServlet</code>).
+To enable the reception of messages, you'll have to do two things:
+</p>
+
+<ul>
+    <li>add a new configuration fragment in <code>appengine-web.xml</code></li>
+    <li>defing the servlet in the <code>web.xml</code></li>
+</ul>
+
+<p>As a first step, let's configure <code>appengine-web.xml</code> by adding this new element:</p>
+
+<pre class="brush:xml">
+    &lt;inbound-services&gt;
+        &lt;service&gt;xmpp_message&lt;/service&gt;
+    &lt;/inbound-services&gt;
+</pre>
+
+<p>Then configure the new servlet as follows:</p>
+
+<pre class="brush:xml">
+    ...
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;XmppServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;groovyx.gaelyk.servlet.GaelykXmppServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    ...
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;XmppServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/_ah/xmpp/message/chat/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    ...
+</pre>
+
+<blockquote>
+<b>Note: </b> The URL pattern of the servlet mapping cannot be changed, as this is a hard-wired URL that the
+Google App Engine will look for in order to send messages to your application.
+</blockquote>
+
+<p>
+The XMPP servlet will look for a Groovy script named <code>xmpp.groovy</code> in <code>/</code> or <code>/WEB-INF/groovy</code>
+of your application &mdash; this is also hard-wired, but this time, mandated by <b>Gaelyk</b>.
+This script, similarily to how mere Groovlets work, will handle the incoming messages, through a <code>POST</code>
+to the <code>/_ah/xmpp/message/chat</code> URL.
+As usual, all the common variables are available in your script through the binding.
+But there's also a new variable that you can use: <code>message</code>, an instance of
+<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/Message.html"><code>Message</code></a>
+that you can use as shown below:
+</p>
+
+<pre class="brush:groovy">
+    // get the body of the message
+    message.body
+
+    // get the sender Jabber ID
+    message.from
+
+    // get the list of recipients Jabber IDs
+    message.recipients
+
+    // if the message is an XML document instead of a raw string message
+    if (message.isXml()) {
+        // get the raw XML
+        message.stanza
+
+        // get a document parsed with XmlSlurper
+        message.xml
+    }
+</pre>
 
 <h1>Running and deploying Gaelyk applications</h1>
 

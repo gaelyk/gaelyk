@@ -1,15 +1,15 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
     <servlet>
-        <servlet-name>GroovyServlet</servlet-name>
-        <servlet-class>groovyx.gaelyk.servlet.GaelykServlet</servlet-class>
+        <servlet-name>GroovletServlet</servlet-name>
+        <servlet-class>groovyx.gaelyk.GaelykServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TemplateServlet</servlet-name>
-        <servlet-class>groovyx.gaelyk.servlet.GaelykTemplateServlet</servlet-class>
+        <servlet-class>groovyx.gaelyk.GaelykTemplateServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>GroovyServlet</servlet-name>
+        <servlet-name>GroovletServlet</servlet-name>
         <url-pattern>*.groovy</url-pattern>
     </servlet-mapping>
     <servlet-mapping>

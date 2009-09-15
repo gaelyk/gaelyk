@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.servlet
+package groovyx.gaelyk
 
 import groovy.servlet.GroovyServlet
 import groovy.servlet.ServletBinding

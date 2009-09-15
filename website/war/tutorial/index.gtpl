@@ -7,7 +7,7 @@ The goal of this tutorial is to quickly get you started with using <b>Gaelyk</b>
 and deploy your Groovy applications on Google App Engine.
 We'll assume you have already downloaded and installed the Google App Engine SDK of your machine.
 If you haven't, please do so by reading the 
-<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/gettingstarted/installing.html">instructions</a> from Google.
+<a href="http://code.google.com/appengine/docs/java/gettingstarted/installing.html">instructions</a> from Google.
 </p>
 
 <p>
@@ -158,19 +158,19 @@ We instruct App Engine to not serve these files as mere resource files, like ima
     &lt;web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5"&gt;
         &lt;!-- The Gaelyk Groovlet servlet --&gt;
         &lt;servlet&gt;
-            &lt;servlet-name&gt;GroovyServlet&lt;/servlet-name&gt;
-            &lt;servlet-class&gt;groovyx.gaelyk.servlet.GaelykServlet&lt;/servlet-class&gt;
+            &lt;servlet-name&gt;GroovletServlet&lt;/servlet-name&gt;
+            &lt;servlet-class&gt;groovyx.gaelyk.GaelykServlet&lt;/servlet-class&gt;
         &lt;/servlet&gt;
         
         &lt;!-- The Gaelyk template servlet --&gt;
         &lt;servlet&gt;
             &lt;servlet-name&gt;TemplateServlet&lt;/servlet-name&gt;
-            &lt;servlet-class&gt;groovyx.gaelyk.servlet.GaelykTemplateServlet&lt;/servlet-class&gt;
+            &lt;servlet-class&gt;groovyx.gaelyk.GaelykTemplateServlet&lt;/servlet-class&gt;
         &lt;/servlet&gt;
 
         &lt;!-- Specify a mapping between *.groovy URLs and Groovlets --&gt;
         &lt;servlet-mapping&gt;
-            &lt;servlet-name&gt;GroovyServlet&lt;/servlet-name&gt;
+            &lt;servlet-name&gt;GroovletServlet&lt;/servlet-name&gt;
             &lt;url-pattern&gt;*.groovy&lt;/url-pattern&gt;
         &lt;/servlet-mapping&gt;
         
@@ -556,7 +556,7 @@ This is as simple as changing the servlet mappings in <code>web.xml</code>.
 <pre class="brush:xml">
     ...
     &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;GroovyServlet&lt;/servlet-name&gt;
+        &lt;servlet-name&gt;GroovletServlet&lt;/servlet-name&gt;
         &lt;url-pattern&gt;*.action&lt;/url-pattern&gt;
     &lt;/servlet-mapping&gt;
 
@@ -577,8 +577,8 @@ you can achieve making the <code>.groovy</code> extension optional:
 <pre class="brush:xml">
     ...
     &lt;servlet&gt;
-        &lt;servlet-name&gt;GroovyServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;groovyx.gaelyk.servlet.GaelykServlet&lt;/servlet-class&gt;
+        &lt;servlet-name&gt;GroovletServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;groovyx.gaelyk.GaelykServlet&lt;/servlet-class&gt;
         &lt;init-param&gt;
             &lt;!-- This parameter is true by default, you can omit it if you want to replace all occurrences --&gt;
             &lt;param-name&gt;resource.name.replace.all&lt;/param-name&gt;
@@ -648,8 +648,8 @@ You could do as follows:
 <pre class="brush:xml">
     ...
     &lt;servlet&gt;
-        &lt;servlet-name&gt;GroovyServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;groovyx.gaelyk.servlet.GaelykServlet&lt;/servlet-class&gt;
+        &lt;servlet-name&gt;GroovletServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;groovyx.gaelyk.GaelykServlet&lt;/servlet-class&gt;
         &lt;init-param&gt;
             &lt;param-name&gt;resource.name.replace.all&lt;/param-name&gt;
             &lt;param-value&gt;false&lt;/param-value&gt;
@@ -667,7 +667,7 @@ You could do as follows:
     &lt;/servlet&gt;
     ...
     &lt;servlet-mapping&gt;
-        &lt;servlet-name>GroovyServlet&lt;/servlet-name&gt;
+        &lt;servlet-name>GroovletServlet&lt;/servlet-name&gt;
         &lt;!-- Match all request URIs (servlet url pattern matching) --&gt;
         &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
     &lt;/servlet-mapping&gt;
@@ -1035,7 +1035,7 @@ To enable the reception of messages, you'll have to do two things:
     ...
     &lt;servlet&gt;
         &lt;servlet-name&gt;XmppServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;groovyx.gaelyk.servlet.GaelykXmppServlet&lt;/servlet-class&gt;
+        &lt;servlet-class&gt;groovyx.gaelyk.GaelykXmppServlet&lt;/servlet-class&gt;
     &lt;/servlet&gt;
     ...
     &lt;servlet-mapping&gt;

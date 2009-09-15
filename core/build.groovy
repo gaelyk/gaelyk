@@ -15,6 +15,8 @@ new AntBuilder().sequential {
     tmpProj = "../template-project"
     zipname = "${target}/gaelyk-template-project-${version}.zip"
     projLib = "${tmpProj}/war/WEB-INF/lib"
+
+    apidir  = "../website/war/api"
 	
 	// create the target and classes directories
 	mkdir dir: classes
@@ -42,4 +44,15 @@ new AntBuilder().sequential {
 
     // create the template project ZIP file
     zip basedir: tmpProj, destfile: zipname, excludes: '__MACOSX, *.iml'
+
+    taskdef name: 'groovydoc', classname: 'org.codehaus.groovy.ant.Groovydoc'
+    groovydoc destdir: apidir,
+            sourcepath: src,
+            packagenames: "**.*",
+            windowtitle: "Gaelyk ${version}",
+            doctitle: "Gaelyk ${version}", {
+                link packages: 'java.,org.xml.,javax.,org.xml.', href: 'http://java.sun.com/j2se/1.5.0/docs/api'
+                link packages: 'com.google.appengine.', href: 'http://code.google.com/appengine/docs/java/javadoc/'
+                link packages: 'org.codehaus.groovy.,groovy.', href: 'groovy.codehaus.org/api/'
+            }
 }

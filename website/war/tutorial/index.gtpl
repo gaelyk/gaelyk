@@ -951,7 +951,7 @@ Let's see what it would look like in a Groovlet for sending messages to a user:
     // check if the user is online
     if (xmppService.getPresence(recipient).isAvailable()) {
         // send the message
-        def status = xmpp.send to: recipient, body: "Hello, how are you?"
+        def status = xmppService.send to: recipient, body: "Hello, how are you?"
 
         // checks the message was successfully delivered to all the recipients
         assert status.isSuccessful()

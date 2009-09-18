@@ -1020,7 +1020,7 @@ to send XML fragments to a remote service:
     // check if the service is online
     if (xmppService.getPresence(recipient).isAvailable()) {
         // send the message
-        def status = xmpp.send to: recipient, xml: {
+        def status = xmppService.send to: recipient, xml: {
             customers {
                 customer(id: 1) {
                     name 'Google'

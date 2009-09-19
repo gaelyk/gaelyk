@@ -32,6 +32,7 @@ import com.google.appengine.api.xmpp.SendResponse
 import com.google.appengine.api.xmpp.MessageType
 import com.google.appengine.api.xmpp.Presence
 import groovy.util.slurpersupport.GPathResult
+import com.google.appengine.api.memcache.MemcacheService
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -184,7 +185,9 @@ class GaelykCategory {
         }
     }
 
-
+    // ----------------------------------------------------------------
+    // Category methods dedicated to the task queue system
+    // ----------------------------------------------------------------
 
     /**
      * Shorcut to get the name of the Queue.
@@ -197,8 +200,6 @@ class GaelykCategory {
     static String getName(Queue selfQueue) {
         selfQueue.getQueueName()
     }
-
-
 
     /**
      * Add a new task on the queue using a map for holding the task attributes instead of a TaskOptions builder object.
@@ -284,6 +285,10 @@ class GaelykCategory {
         GaelykCategory.add(selfQueue, params)
     }
 
+    // ----------------------------------------------------------------
+    // Category methods dedicated to the Jabber/XMPP support
+    // ----------------------------------------------------------------
+
     /**
      * Send an XMPP/Jabber message with the XMPP service using a map of attributes to build the message.
      * <p>
@@ -354,7 +359,8 @@ class GaelykCategory {
     /**
      * Send a chat invitation to a Jabber ID from another Jabber ID.
      *
-     * @param the Jabber ID to invite
+     * @param jabberIdTo the Jabber ID to invite
+     * @param jabberIdFrom the Jabber ID to use to send the invitation request
      */
     static void sendInvitation(XMPPService xmppService, String jabberIdTo, String jabberIdFrom) {
         xmppService.sendInvitation(new JID(jabberIdTo), new JID(jabberIdFrom))
@@ -373,8 +379,8 @@ class GaelykCategory {
     /**
      * Get the presence of a Jabber ID.
      *
-     * @param the Jabber ID to get the presence from
-     * @param the Jabber ID to use to send the presence request
+     * @param jabberIdTo the Jabber ID to get the presence from
+     * @param jabberIdFrom the Jabber ID to use to send the presence request
      * @return the presence information
      */
     static Presence getPresence(XMPPService xmppService, String jabberIdTo, String jabberIdFrom) {
@@ -418,5 +424,38 @@ class GaelykCategory {
      */
     static boolean isSuccessful(SendResponse status) {
         status.statusMap.every { it.value == SendResponse.Status.SUCCESS }
+    }
+
+    // ----------------------------------------------------------------
+    // Category methods dedicated to the memcache service
+    // ----------------------------------------------------------------
+
+    /**
+     * Get an object from the cache, identified by its key, using the subscript notation:
+     * <code>def obj = memcacheService[key]</code>
+     *
+     * @param key the key identifying the object to get from the cache
+     */
+    static Object getAt(MemcacheService memcache, Object key) {
+        memcache.get(key)
+    }
+
+    /**
+     * Put an object into the cache, identified by its key, using the subscript notation:
+     * <code>memcacheService[key] = value</code>
+     *
+     * @param key the key identifying the object to put in the cache
+     * @param value the value to put in the cache
+     */
+    static void putAt(MemcacheService memcache, Object key, Object value) {
+        memcache.put(key, value)
+    }
+
+    /**
+     * Shortcut to check whether a key is contained in the cache using the <code>in</code> operator:
+     * <code>key in memcacheService</code>
+     */
+    static boolean isCase(MemcacheService memcache, Object key) {
+        memcache.contains(key)
     }
 }

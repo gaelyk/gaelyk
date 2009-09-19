@@ -1113,6 +1113,28 @@ that you can use as shown below:
     }
 </pre>
 
+<h2>Enhancements to the Memcache service</h2>
+
+<p>
+<b>Gaelyk</b> provides a few additional methods to the Memcache service, to get and put values in the cache
+using Groovy's natural subscript notation, as well as for using the <code>in</code> keyword to check when a key
+is present in the cache or not.
+</p>
+
+<pre class="brush:groovy">
+    def countryFr = new Country(name: 'France')
+
+    // use the subscript notation to put a country object in the cache, identified by a string
+    memcacheService['FR'] = countryFr
+
+    // check that a key is present in the cache
+    if ('FR' in memcacheService) {
+        // use the subscript notation to get an entry from the cache using a key
+        def countryFromCache = memcacheService['FR']
+    }
+</pre>
+
+
 <h1>Running and deploying Gaelyk applications</h1>
 
 <h2>Running your application locally</h2>

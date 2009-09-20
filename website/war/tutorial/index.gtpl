@@ -272,27 +272,27 @@ by injecting specific elements of the Google App Engine SDK:
 
 <ul>
     <li>
-        <tt>datastoreService</tt> : the 
+        <tt>datastore</tt> : the
         <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/datastore/DatastoreService.html">Datastore service</a>
         </li>
     <li>
-        <tt>memcacheService</tt> : the 
+        <tt>memcache</tt> : the
         <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/memcache/MemcacheService.html">Memcache service</a>
     </li>
     <li>
-        <tt>urlFetchService</tt> : the 
+        <tt>urlFetch</tt> : the
         <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/urlfetch/URLFetchService.html">URL Fetch service</a>
     </li>
     <li>
-        <tt>mailService</tt> : the 
+        <tt>mail</tt> : the
         <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/mail/MailService.html">Mail service</a>
     </li>
     <li>
-        <tt>imagesService</tt> : the 
+        <tt>images</tt> : the
         <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/images/ImagesService.html">Images service</a>
     </li>
     <li>
-        <tt>userService</tt> : the 
+        <tt>users</tt> : the
         <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/users/UserService.html">User service</a>
     </li>
     <li>
@@ -307,7 +307,7 @@ by injecting specific elements of the Google App Engine SDK:
         <tt>queues</tt> : a map-like object with which you can access the configured queues
     </li>
     <li>
-        <tt>xmppService</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/XMPPService.html">Jabber/XMPP service</a>.
+        <tt>xmpp</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/XMPPService.html">Jabber/XMPP service</a>.
     </li>
 </ul>
 
@@ -524,11 +524,22 @@ We'll need a Groovlet and a template. The Groovlet <code>WEB-INF/groovy/controll
 </p>
 
 <pre class="brush:groovy">
-    request.setAttribute 'list', [1, 2, 3, 4]
-    request.setAttribute 'date', new Date()
+    request['list'] = [1, 2, 3, 4]
+    request['date'] = new Date()
     
     forward 'display.gtpl'
 </pre>
+
+<blockquote>
+<b>Note: </b> For accessing the request attributes, the following syntaxes are actually equivalent:
+<ul>
+    <li><code>request.setAttribute('list', [1, 2, 3, 4])</code></li>
+    <li><code>request.setAttribute 'list', [1, 2, 3, 4]</code></li>
+    <li><code>request['list'] = [1, 2, 3, 4]</code></li>
+    <li><code>request.list = [1, 2, 3, 4]</code></li>
+</ul>
+</blockquote>
+
 
 <p>
 The Groovlet uses the request attributes as a means to transfer data to the template.
@@ -538,10 +549,10 @@ The last line of the Groovlet then forwards the data back to the template view <
 <pre class="brush:xml">
     &lt;html&gt;
         &lt;body&gt;
-        &lt;% request.getAttribute('list').each { number -&gt; %&gt; 
+        &lt;% request.list.each { number -&gt; %&gt;
             &lt;p&gt;\${number}&lt;/p&gt;
         &lt;% } %&gt;
-            &lt;p&gt;\${request.getAttribute('date')}&lt;/p&gt;
+            &lt;p&gt;\${request.date}&lt;/p&gt;
         &lt;/body&gt;
     &lt;/html&gt;
 </pre>
@@ -726,7 +737,7 @@ In your Groovlet, for sending a message, you can do this:
 </p>
 
 <pre class="brush:groovy">
-    mailService.send to: 'foobar@gmail.com',
+    mail.send to: 'foobar@gmail.com',
             subject: 'Hello World',
             htmlBody: '<bold>Hello</bold>'
 </pre>
@@ -807,7 +818,7 @@ that <b>Gaelyk</b> adds on <code>DataService</code> and which takes care of that
 </p>
 
 <pre class="brush:groovy">
-    datastoreService.withTransaction {
+    datastore.withTransaction {
         // do stuff with your entities within the transaction
     }
 </pre>
@@ -839,7 +850,7 @@ to retrieve scripts written by a given author, sorted by descending date of crea
     // filters the entities so as to return only scripts by a certain author
     query.addFilter("author", Query.FilterOperator.EQUAL, params.author)
 
-    PreparedQuery preparedQuery = datastoreService.prepare(query)
+    PreparedQuery preparedQuery = datastore.prepare(query)
 
     // return only the first 10 results
     def entities = preparedQuery.asList( withLimit(10) )
@@ -949,9 +960,9 @@ Let's see what it would look like in a Groovlet for sending messages to a user:
     String recipient = "someone@gmail.com"
 
     // check if the user is online
-    if (xmppService.getPresence(recipient).isAvailable()) {
+    if (xmpp.getPresence(recipient).isAvailable()) {
         // send the message
-        def status = xmppService.send to: recipient, body: "Hello, how are you?"
+        def status = xmpp.send to: recipient, body: "Hello, how are you?"
 
         // checks the message was successfully delivered to all the recipients
         assert status.isSuccessful()
@@ -1018,9 +1029,9 @@ to send XML fragments to a remote service:
     String recipient = "service@gmail.com"
 
     // check if the service is online
-    if (xmppService.getPresence(recipient).isAvailable()) {
+    if (xmpp.getPresence(recipient).isAvailable()) {
         // send the message
-        def status = xmppService.send to: recipient, xml: {
+        def status = xmpp.send to: recipient, xml: {
             customers {
                 customer(id: 1) {
                     name 'Google'
@@ -1125,12 +1136,12 @@ is present in the cache or not.
     def countryFr = new Country(name: 'France')
 
     // use the subscript notation to put a country object in the cache, identified by a string
-    memcacheService['FR'] = countryFr
+    memcache['FR'] = countryFr
 
     // check that a key is present in the cache
-    if ('FR' in memcacheService) {
+    if ('FR' in memcache) {
         // use the subscript notation to get an entry from the cache using a key
-        def countryFromCache = memcacheService['FR']
+        def countryFromCache = memcache['FR']
     }
 </pre>
 

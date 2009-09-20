@@ -42,15 +42,15 @@ class GaelykBindingEnhancer {
     
     void bind() {
         // bind google app engine services
-        binding.setVariable("datastoreService", DatastoreServiceFactory.datastoreService)
-        binding.setVariable("memcacheService", MemcacheServiceFactory.memcacheService)
-        binding.setVariable("urlFetchService", URLFetchServiceFactory.URLFetchService)
-        binding.setVariable("mailService", MailServiceFactory.mailService)
-        binding.setVariable("imagesService", ImagesServiceFactory.imagesService)
+        binding.setVariable("datastore", DatastoreServiceFactory.datastoreService)
+        binding.setVariable("memcache", MemcacheServiceFactory.memcacheService)
+        binding.setVariable("urlFetch", URLFetchServiceFactory.URLFetchService)
+        binding.setVariable("mail", MailServiceFactory.mailService)
+        binding.setVariable("images", ImagesServiceFactory.imagesService)
         
         // bind user service and current user
         UserService userService = UserServiceFactory.userService
-        binding.setVariable("userService", userService)
+        binding.setVariable("users", userService)
         binding.setVariable("user", userService.getCurrentUser())
 
         // New in GAE SDK 1.2.5: task queues
@@ -58,7 +58,7 @@ class GaelykBindingEnhancer {
         binding.setVariable("queues", new QueueAccessor())
 
         // New in GAE SDK 1.2.5: XMPP support
-        binding.setVariable("xmppService", XMPPServiceFactory.getXMPPService())
+        binding.setVariable("xmpp", XMPPServiceFactory.getXMPPService())
 
     }
 }

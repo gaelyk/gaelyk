@@ -532,12 +532,12 @@ We'll need a Groovlet and a template. The Groovlet <code>WEB-INF/groovy/controll
 
 <blockquote>
 <b>Note: </b> For accessing the request attributes, the following syntaxes are actually equivalent:
-<ul>
-    <li><code>request.setAttribute('list', [1, 2, 3, 4])</code></li>
-    <li><code>request.setAttribute 'list', [1, 2, 3, 4]</code></li>
-    <li><code>request['list'] = [1, 2, 3, 4]</code></li>
-    <li><code>request.list = [1, 2, 3, 4]</code></li>
-</ul>
+<pre class="brush:groovy">
+    request.setAttribute('list', [1, 2, 3, 4])
+    request.setAttribute 'list', [1, 2, 3, 4]
+    request['list'] = [1, 2, 3, 4]
+    request.list = [1, 2, 3, 4]
+</pre>
 </blockquote>
 
 

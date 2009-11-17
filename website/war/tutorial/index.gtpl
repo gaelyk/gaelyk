@@ -748,9 +748,11 @@ In your Groovlet, for sending a message, you can do this:
 </p>
 
 <pre class="brush:groovy">
-    mail.send to: 'foobar@gmail.com',
-            subject: 'Hello World',
-            htmlBody: '<bold>Hello</bold>'
+    mail.send sender: "app-admin-email@gmail.com",
+            to: "recipient@somecompany.com",
+            subject: "Hello",
+            textBody: "Hello, how are you doing? -- MrG",
+            attachments: [data: "Chapter 1, Chapter 2".bytes, fileName: "outline.txt"]
 </pre>
 
 <p>

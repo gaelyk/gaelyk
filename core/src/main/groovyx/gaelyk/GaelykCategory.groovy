@@ -57,17 +57,25 @@ class GaelykCategory {
         m.each { k, v ->
             // to and bcc fields contain collection of addresses
             // so if only one is provided, wrap it in a collection
-            if (k in ['to', 'bcc']) v = [v]
+            if (k in ['to', 'bcc'] && v instanceof String) v = [v]
+
+            // adds a 'from' alias for 'sender'
+            if (k == 'from') k == 'sender'
+
+            // single email attachment
+            if (k == 'attachment' && v instanceof Map) {
+                k = 'attachments'
+                v = [new Attachment(v.fileName, v.data)] as Attachment[]
+            }
 
             // collects Attachments and maps representing attachments as a MailMessage.Attachment collection
             if (k == 'attachments') {
-                if (v instanceof Map) {
-                    v = [new Attachment(v.fileName, v.data)] as Attachment[]
-                } else {
-                    v = v.collect { attachment ->
-                        attachment instanceof Attachment ? attachment : new Attachment(attachment.fileName, attachment.data)
-                    } as Attachment[]
-                }
+                v = v.collect { attachment ->
+                    if (attachment instanceof Attachment)
+                        attachment
+                    else if (attachment instanceof Map)
+                        new Attachment(attachment.fileName, attachment.data)
+                } as Attachment[]
             }
 
             // set the property on Message object

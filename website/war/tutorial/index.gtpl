@@ -752,12 +752,32 @@ In your Groovlet, for sending a message, you can do this:
             to: "recipient@somecompany.com",
             subject: "Hello",
             textBody: "Hello, how are you doing? -- MrG",
-            attachments: [data: "Chapter 1, Chapter 2".bytes, fileName: "outline.txt"]
+            attachment: [data: "Chapter 1, Chapter 2".bytes, fileName: "outline.txt"]
 </pre>
 
 <p>
 Similarily, a <code>sendToAdmins()</code> method was added to, for sending emails to the administrators of the application.
 </p>
+
+<blockquote>
+    <b>Note: </b> There is a <code>from</code> alias for the <code>sender</code> attribute.
+</blockquote>
+
+<blockquote>
+    <b>Note: </b> There are two attachment attributes: <code>attachment</code> and <code>attachments</code>.
+    <ul>
+        <li>
+            <code>attachment</code> is used for when you want to send just one attachment.
+            You can pass a map with a <code>data</code> and a <code>fileName</code> keys.
+            Or you can use an instance of <code>MailMessage.Attachment</code>.
+        </li>
+        <li>
+            <code>attachments</code> lets you define a list of attachments.
+            Again, either the elements of that list are maps of <code>data</code> / <code>fileName</code> pairs,
+            or instances of <code>MailMessage.Attachment</code>.
+        </li>
+    </ul>
+</blockquote>
 
 <h2>Improvements to the low-level datastore API</h2>
 

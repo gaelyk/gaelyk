@@ -695,7 +695,7 @@ Whereas the <code>resource.name.regex</code> init parameter corresponds to a rea
 </blockquote>
 
 <p>
-Inside your <code>rest.groovy</code> Groovlet, you are then able to know which HTTP method was used, by using:
+Inside your <code>rest.groovy</code> Groovlet, you are then able to know which resource is requested, by using:
 </p>
 
 <pre class="brush:groovy">
@@ -948,7 +948,7 @@ This also means your <b>Gaelyk</b> applications can now send and receive instant
 <b>Gaelyk</b> provides a few additional methods to take care of sending instant messages, get the presence of users,
 or to send invitations to other users.
 Applications usually have a corresponding Jabber ID named after your application ID, such as <code>gaelyk@appspot.com</code>.
-To be able to send messages to other users, your application will have to invite other users, and be invited to chat.
+To be able to send messages to other users, your application will have to invite other users, or be invited to chat.
 So make sure you do so for being able to send messages.
 </p>
 
@@ -1046,7 +1046,7 @@ to send XML fragments to a remote service:
 
 <blockquote>
 <b>Implementation detail: </b> the closure associated with the <code>xml</code> attribute is actually passed to
-an instance of <a href="http://groovy.codehaus.org/Reading+XML+using+Groovy's+XmlSlurper"><code>XmlSlurper</code></a>
+an instance of <a href="http://groovy.codehaus.org/Creating+XML+using+Groovy%27s+StreamingMarkupBuilder"><code>StreamingMarkupBuilder</code></a>
 which creates an XML stanza.
 </blockquote>
 

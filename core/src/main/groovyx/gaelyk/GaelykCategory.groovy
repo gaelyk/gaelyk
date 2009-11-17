@@ -51,10 +51,9 @@ class GaelykCategory {
      * Create a <code>MailService.Message</code> out of Map parameters.
      * Each map key must correspond to a valid property on the message object.
      */
-
     private static Message createMessageFromMap(Map m) {
         def msg = new Message()
-        m.each {k, v ->
+        m.each { k, v ->
             if (v instanceof String) v = [v]
             msg[k] = v
         }
@@ -432,7 +431,7 @@ class GaelykCategory {
 
     /**
      * Get an object from the cache, identified by its key, using the subscript notation:
-     * <code>def obj = memcacheService[key]</code>
+     * <code>def obj = memcache[key]</code>
      *
      * @param key the key identifying the object to get from the cache
      */
@@ -442,7 +441,20 @@ class GaelykCategory {
 
     /**
      * Put an object into the cache, identified by its key, using the subscript notation:
-     * <code>memcacheService[key] = value</code>
+     * <code>memcache[key] = value</code>
+     *
+     * @param key the key identifying the object to put in the cache
+     * @param value the value to put in the cache
+     */
+    static void putAt(MemcacheService memcache, String key, Object value) {
+        //TODO this method should be removed once we only need a putAt() method taking Object key
+        // looks like a bug in current Groovy where the two variants are needed
+        memcache.put(key, value)
+    }
+
+    /**
+     * Put an object into the cache, identified by its key, using the subscript notation:
+     * <code>memcache[key] = value</code>
      *
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
@@ -453,9 +465,15 @@ class GaelykCategory {
 
     /**
      * Shortcut to check whether a key is contained in the cache using the <code>in</code> operator:
-     * <code>key in memcacheService</code>
+     * <code>key in memcache</code>
      */
     static boolean isCase(MemcacheService memcache, Object key) {
         memcache.contains(key)
     }
+
+    // ----------------------------------------------------------------
+    // Category methods dedicated to the URL fetcher service
+    // ----------------------------------------------------------------
+    
+    
 }

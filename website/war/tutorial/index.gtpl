@@ -1133,6 +1133,8 @@ is present in the cache or not.
 </p>
 
 <pre class="brush:groovy">
+    class Country implements Serialzable { String name }
+
     def countryFr = new Country(name: 'France')
 
     // use the subscript notation to put a country object in the cache, identified by a string
@@ -1145,6 +1147,9 @@ is present in the cache or not.
     }
 </pre>
 
+<blockquote>
+<b>Note: </b> Make sure the objects you put in the cache are serializable.
+</blockquote>
 
 <h1>Running and deploying Gaelyk applications</h1>
 

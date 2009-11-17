@@ -157,6 +157,17 @@ We instruct App Engine to not serve these files as mere resource files, like ima
     if you prefer to have URLs with extensions which don't <i>leak</i> the underlying technologies being used.
 </blockquote>
 
+<blockquote>
+    <b>Note: </b> In some cases, UTF-8 characters may not always be properly decoded by the template servlet.
+    You may solve this problem by using the following snippet in <code>appengine-web.xml</code>:
+    <pre class="brush:xml">
+        &lt;system-properties&gt;
+            &lt;property name="file.encoding" value="UTF-8"/&gt;
+            &lt;property name="groovy.source.encoding" value="UTF-8"/&gt;
+        &lt;/system-properties&gt;
+    </pre>
+</blockquote>
+
 <h3>web.xml</h3>
 <pre class="brush:xml">
     &lt;web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5"&gt;

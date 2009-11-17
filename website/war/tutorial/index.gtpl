@@ -761,6 +761,7 @@ Similarily, a <code>sendToAdmins()</code> method was added to, for sending email
 
 <blockquote>
     <b>Note: </b> There is a <code>from</code> alias for the <code>sender</code> attribute.
+    And instead of a <code>textBody</code> attribute, you can send HTML content with the <code>htmlBody</code> attribute.
 </blockquote>
 
 <blockquote>

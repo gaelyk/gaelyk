@@ -3,8 +3,8 @@
 <h1>Tutorial</h1>
 
 <p>
-The goal of this tutorial is to quickly get you started with using <b>Gaelyk</b> to let you write 
-and deploy your Groovy applications on Google App Engine.
+The goal of this tutorial is to quickly get you started with using <b>Gaelyk</b> to  write
+and deploy Groovy applications on Google App Engine.
 We'll assume you have already downloaded and installed the Google App Engine SDK of your machine.
 If you haven't, please do so by reading the 
 <a href="http://code.google.com/appengine/docs/java/gettingstarted/installing.html">instructions</a> from Google.
@@ -16,7 +16,7 @@ It provides a ready-to-go project with the right configuration files pre-filled 
 </p>
 
 <ul>
-    <li><code>web.xml</code> precondigured with the <b>Gaelyk</b> servlets</li>
+    <li><code>web.xml</code> preconfigured with the <b>Gaelyk</b> servlets</li>
     <li><code>appengine-web.xml</code> with the right settings predefined (static file directive)</li>
     <li>a sample Groovlet and template</li>
     <li>the needed JARs (Groovy, Gaelyk and Google App Engine SDK)</li>
@@ -273,7 +273,7 @@ A special servlet binding gives you direct access to some implicit variables tha
 <blockquote>
     <b>Note: </b>
     The <i>eager</i> variables are pre-populated in the binding of your Groovlets and templates.
-    The <i>lazy</i> variables are instanciated and inserted in the binding only upon the first request.
+    The <i>lazy</i> variables are instantiated and inserted in the binding only upon the first request.
 </blockquote>
 
 <p>
@@ -926,7 +926,7 @@ that <b>Gaelyk</b> adds on <code>DataService</code> and which takes care of that
 </pre>
 
 <p>
-The <code>withTransaction()</code> method takes a closuer as sole parameter,
+The <code>withTransaction()</code> method takes a closure as sole parameter,
 and within that closure, upon its execution by <b>Gaelyk</b>, your code will be in the context of a transaction.
 </p>
 

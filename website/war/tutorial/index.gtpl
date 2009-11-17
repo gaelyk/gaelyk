@@ -1138,6 +1138,7 @@ is present in the cache or not.
     def countryFr = new Country(name: 'France')
 
     // use the subscript notation to put a country object in the cache, identified by a string
+    // (you can also use non-string keys)
     memcache['FR'] = countryFr
 
     // check that a key is present in the cache

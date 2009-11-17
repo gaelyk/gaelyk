@@ -17,6 +17,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h2>Version 0.3</h2>
 
+<h3>Changes</h3>
 <ul>
     <li>Removing most of the <code>service</code> suffices in the binding variables for brevity and readibility.</li>
     <li>New methods for working with the memcache service (subscript notation, and <code>in</code> keyword support).</li>
@@ -32,14 +33,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h2>Version 0.2</h2>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.2.jar">gaelyk-0.2.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.2.zip">gaelyk-template-project-0.2.zip</a></li>
-</ul>
-
 <h3>Changes</h3>
-
 <ul>
     <li>
         The <b>Gaelyk</b> classes have been moved to the <code>groovyx.gaelyk</code> package,
@@ -55,6 +49,12 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>
         JavaDoc for the <b>Gaelyk</b> sources added and linked from the tutorial documentation.
     </li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.2.jar">gaelyk-0.2.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.2.zip">gaelyk-template-project-0.2.zip</a></li>
 </ul>
 
 <h2>Version 0.1</h2>

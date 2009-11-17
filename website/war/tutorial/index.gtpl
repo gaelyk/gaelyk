@@ -975,7 +975,7 @@ Let's see what it would look like in a Groovlet for sending messages to a user:
     // check if the user is online
     if (xmpp.getPresence(recipient).isAvailable()) {
         // send the message
-        def status = xmpp.send to: recipient, body: "Hello, how are you?"
+        def status = xmpp.send(to: recipient, body: "Hello, how are you?")
 
         // checks the message was successfully delivered to all the recipients
         assert status.isSuccessful()
@@ -1044,13 +1044,13 @@ to send XML fragments to a remote service:
     // check if the service is online
     if (xmpp.getPresence(recipient).isAvailable()) {
         // send the message
-        def status = xmpp.send to: recipient, xml: {
+        def status = xmpp.send(to: recipient, xml: {
             customers {
                 customer(id: 1) {
                     name 'Google'
                 }
             }
-        }
+        })
 
         // checks the message was successfully delivered to the service
         assert status.isSuccessful()

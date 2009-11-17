@@ -33,6 +33,7 @@ import com.google.appengine.api.xmpp.MessageType
 import com.google.appengine.api.xmpp.Presence
 import groovy.util.slurpersupport.GPathResult
 import com.google.appengine.api.memcache.MemcacheService
+import com.google.appengine.api.mail.MailService.Attachment
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -54,8 +55,23 @@ class GaelykCategory {
     private static Message createMessageFromMap(Map m) {
         def msg = new Message()
         m.each { k, v ->
-            if (v instanceof String) v = [v]
-            msg[k] = v
+            // to and bcc fields contain collection of addresses
+            // so if only one is provided, wrap it in a collection
+            if (k in ['to', 'bcc']) v = [v]
+
+            // collects Attachments and maps representing attachments as a MailMessage.Attachment collection
+            if (k == 'attachments') {
+                if (v instanceof Map) {
+                    v = [new Attachment(v.fileName, v.data)] as Attachment[]
+                } else {
+                    v = v.collect { attachment ->
+                        attachment instanceof Attachment ? attachment : new Attachment(attachment.fileName, attachment.data)
+                    } as Attachment[]
+                }
+            }
+
+            // set the property on Message object
+            msg."$k" = v
         }
         return msg
     }

@@ -738,7 +738,9 @@ Let's review some of these improvements.
 <b>Note: </b> These additions are not numerous, but other ones may be added in the future as the need arises.
 </blockquote>
 
-<h2>New <code>send()</code> method for the mail service</h2>
+<h2>Email support</h2>
+
+<h3>New <code>send()</code> method for the mail service</h3>
 
 <p>
 <b>Gaelyk</b> adds a new <code>send()</code> method to the 
@@ -778,6 +780,72 @@ Similarily, a <code>sendToAdmins()</code> method was added to, for sending email
             or instances of <code>MailMessage.Attachment</code>.
         </li>
     </ul>
+</blockquote>
+
+<h3>Incoming email messages</h3>
+
+<p>
+Since Google App Engine SDK version 1.2.6 (and <b>Gaelyk</b> 0.3), support for incoming email messages has been added,
+in a similar vein as the incoming XMPP messaging support.
+To enable incoming email support, you first need to update your <code>appengine-web.xml</code> file as follows:
+</p>
+
+<pre class="brush:xml">
+    &lt;inbound-services&gt;
+        &lt;service&gt;mail&lt;/service&gt;
+    &lt;/inbound-services&gt;
+</pre>
+
+<p>
+In your <code>web.xml</code> file, you must add a new servlet and a new servlet mapping:
+</p>
+
+<pre class="brush:xml">
+    ...
+    &lt;servlet>
+        &lt;servlet-name&gt;EmailServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;groovyx.gaelyk.GaelykIncomingEmailServlet&lt;/servlet-class&gt;
+    &lt;/servlet>
+    ...
+    &lt;servlet-mapping>
+        &lt;servlet-name&gt;EmailServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/_ah/mail/*&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    ...
+    &lt;!-- Only allow the SDK and administrators to have access to the incoming email endpoint --&gt;
+    &lt;security-constraint&gt;
+        &lt;web-resource-collection&gt;
+            &lt;url-pattern&gt;/_ah/mail/*&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+        &lt;auth-constraint&gt;
+            &lt;role-name&gt;admin&lt;/role-name&gt;
+        &lt;/auth-constraint&gt;
+    &lt;/security-constraint&gt;
+    ...
+</pre>
+
+<p>
+The <code>GaelykIncomingEmailServlet</code> will delegate the work of processing the incoming message to a script
+situated by defauly in the <code>/WEB-INF/groovy/email.groovy</code> groovlet.
+This groovlet has access to the usual services which are bound into the script's binding.
+But there's an additional object in the binding, a <code>message</code> instance of
+<a href="http://java.sun.com/products/javamail/javadocs/javax/mail/internet/MimeMessage.html"><code>javax.mail.MimeMessage</code></a>.
+Then, from the <code>email.groovy</code> groovlet, you can access the properties of this object:
+</p>
+
+<pre class="brush:groovy">
+    // access the sender of the email
+    message.from
+
+    // get the subject of the message
+    message.subject
+</pre>
+
+<blockquote>
+    <b>Note: </b> The <code>/_ah/mail/*</code> is hard-wired in the Google App Engine SDK.
+    The star pattern corresponds to the recepient of the email.
+    For instance, you may receive an email to <code>recipient@yourappid.appspot.com</code>,
+    and the star will be corresponding to <code>recipient</code>.
 </blockquote>
 
 <h2>Improvements to the low-level datastore API</h2>

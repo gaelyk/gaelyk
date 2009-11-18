@@ -1196,7 +1196,7 @@ Google App Engine will look for in order to send messages to your application.
 </blockquote>
 
 <p>
-The XMPP servlet will look for a Groovy script named <code>xmpp.groovy</code> in <code>/WEB-INF/groovy</code>
+The XMPP servlet will look for a Groovy script named <code>jabber.groovy</code> in <code>/WEB-INF/groovy</code>
 of your application &mdash; this is also hard-wired, but this time, mandated by <b>Gaelyk</b>.
 This script, similarily to how mere Groovlets work, will handle the incoming messages, through a <code>POST</code>
 to the <code>/_ah/xmpp/message/chat</code> URL.

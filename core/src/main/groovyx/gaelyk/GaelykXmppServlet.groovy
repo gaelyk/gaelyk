@@ -45,7 +45,7 @@ class GaelykXmppServlet extends HttpServlet {
         new GaelykBindingEnhancer(binding).bind()
 
         use (GaelykCategory) {
-            new GroovyShell(binding).evaluate(new File('WEB-INF/groovy/xmpp.groovy'))
+            new GroovyShell(binding).evaluate(new File('WEB-INF/groovy/jabber.groovy'))
         }
     }
 }

@@ -3,11 +3,14 @@
     
     <version>1</version>
 
-    <!-- Uncomment this section if you want your applicat to be able to receive XMPP messages -->
-    <!-- And create a file named xmpp.groovy in /WEB-INF/groovy -->
+    <!-- Uncomment this section if you want your application to be able to receive XMPP messages -->
+    <!-- And create a file named jabber.groovy in /WEB-INF/groovy -->
+    <!-- Similarily, if you want to receive incoming emails -->
+    <!-- And create a file named email.groovy in /WEB-INF/groovy -->
     <!--
     <inbound-services>
         <service>xmpp_message</service>
+        <service>mail</service>
     </inbound-services>
     -->
     

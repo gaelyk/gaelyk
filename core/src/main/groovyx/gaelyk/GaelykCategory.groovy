@@ -464,6 +464,18 @@ class GaelykCategory {
     }
 
     /**
+     * Get an object from the cache, identified by its key, using the subscript notation:
+     * <code>def obj = memcache[key]</code>
+     *
+     * @param key the key identifying the object to get from the cache
+     */
+    static Object getAt(MemcacheService memcache, String key) {
+        //TODO this method should be removed once we only need a getAt() method taking Object key
+        // looks like a bug in current Groovy where the two variants are needed
+        memcache.get(key)
+    }
+
+    /**
      * Put an object into the cache, identified by its key, using the subscript notation:
      * <code>memcache[key] = value</code>
      *

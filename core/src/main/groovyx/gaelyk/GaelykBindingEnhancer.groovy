@@ -15,8 +15,6 @@
  */
 package groovyx.gaelyk
 
-import groovy.lang.Binding;
-
 import com.google.appengine.api.datastore.DatastoreServiceFactory
 import com.google.appengine.api.images.ImagesServiceFactory
 import com.google.appengine.api.mail.MailServiceFactory
@@ -25,21 +23,26 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory
 import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
 import com.google.appengine.api.labs.taskqueue.QueueFactory
-import com.google.appengine.api.xmpp.XMPPService
 import com.google.appengine.api.xmpp.XMPPServiceFactory
+import com.google.apphosting.api.ApiProxy
 
 /**
+ * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
+ *
  * @author Marcel Overdijk
  * @author Guillaume Laforge
  */
 class GaelykBindingEnhancer {
 
     private Binding binding
-    
+
     GaelykBindingEnhancer(Binding binding) {
         this.binding = binding
     }
-    
+
+    /**
+     * Bind the various Google App Engine services and variables
+     */
     void bind() {
         // bind google app engine services
         binding.setVariable("datastore", DatastoreServiceFactory.datastoreService)
@@ -60,5 +63,8 @@ class GaelykBindingEnhancer {
         // New in GAE SDK 1.2.5: XMPP support
         binding.setVariable("xmpp", XMPPServiceFactory.getXMPPService())
 
+        // Tells whether the application is running in local development mode
+        // or is deployed on Google's cloud
+        binding.setVariable("localMode", ApiProxy.currentEnvironment.class.name.contains("LocalHttpRequestEnvironment"))
     }
 }

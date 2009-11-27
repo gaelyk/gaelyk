@@ -320,6 +320,10 @@ by injecting specific elements of the Google App Engine SDK:
     <li>
         <tt>xmpp</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/XMPPService.html">Jabber/XMPP service</a>.
     </li>
+    <li>
+        <tt>localMode</tt> : a boolean variable which is <code>true</code> when the application is running in local
+        development mode, and <code>false</code> when deployed on Google's cloud.
+    </li>
 </ul>
 
 <p>
@@ -726,6 +730,214 @@ You can retrieve the HTTP method being used with:
 </pre>
 
 And remember you can also get the request parameters thanks to the <code>params</code> variable.
+
+<h2>More flexible URL routing</h2>
+
+<p>
+Since <b>Gaelyk</b> 0.3.2, a more flexible and powerful URL routing system was introduced.
+Instead of suffering headaches when dealing with regular expression replacements,
+as provided by default by Groovy's basic Groovlet and Template servlets as shown in the previous section,
+you can use a small Groovy Domain-Specific Language for defining routes for nicer and friendlier URLs.
+</p>
+
+<h3>Configuring URL routing</h3>
+
+<p>
+To enable the URL routing system, you should configure the <code>RoutesFilter</code> servlet filter in <code>web.xml</code>:
+</p>
+
+<pre class="brush:xml">
+    ...
+    &lt;filter&gt;
+        &lt;filter-name&gt;RoutesFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;groovyx.gaelyk.routes.RoutesFilter&lt;/filter-class&gt;
+    &lt;/filter&gt;
+    ...
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;RoutesFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+    ...
+</pre>
+
+<blockquote>
+<b>Note: </b> We advise to setup only one route filter, but it is certainly possible to define several ones
+for different areas of your site.
+By default, the filter is looking for the file <code>WEB-INF/routes.groovy</code> for the routes definitions,
+but it is possible to override this setting by specifying a different route DSL file with a servlet filter configuration parameter:
+<pre class="brush:xml">
+    &lt;filter&gt;
+        &lt;filter-name&gt;RoutesFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;groovyx.gaelyk.routes.RoutesFilter&lt;/filter-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;routes.location&lt;/param-name&gt;
+            &lt;param-value&gt;WEB-INF/blogRoutes.groovy&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/filter&gt;
+</pre>
+</blockquote>
+
+<h3>Defining URL routes</h3>
+
+<p>
+By default, once the filter is configured, URL routes are defined in <code>WEB-INF/routes.groovy</code>,
+in the form of a simple Groovy scripts, defining routes in the form of a lightweight DSL.
+The capabilities of the routing system are as follow, you can:
+</p>
+
+<ul>
+    <li>match requests made with a certain method (GET, POST, PUT, DELETE), or all</li>
+    <li>define the final destination of the request</li>
+    <li>chose whether you want to forward or redirect to the destination URL (i.e. URL rewriting through forward vs. redirection)</li>
+    <li>express variables in the route definition and reuse them as variables in the final destination of the request</li>
+    <li>validate the variables according to some boolean expression, or regular expression matching</li>
+</ul>
+
+<p>
+Let's see those various capabilities in action.
+Imagine we want to define friendly URLs for our blog application.
+Let's configure a first route in <code>WEB-INF/routes.groovy</code>.
+Say you want to provide a shorthand URL <code>/about</code> that would redirect to your first blog post.
+You could configure the <code>/about</code> route for all GET requests calling the <code>get</code> method.
+You would then redirect those requests to the final destination with the <code>redirect</code> named argument:
+</p>
+
+<pre class="brush:groovy">
+    get "/about", redirect: "/blog/2008/10/20/welcome-to-my-blog"
+</pre>
+
+<p>If you prefer to do a forward, so as to do URL rewriting to keep the nice short URL,
+you would just replace <code>redirect</code> with <code>forward</code> as follows:</p>
+
+<pre class="brush:groovy">
+    get "/about", forward: "/blog/2008/10/20/welcome-to-my-blog"
+</pre>
+
+<p>
+If you have different routes for different HTTP methods, you can use the <code>get</code>, <code>post</code>,
+<code>put</code> and <code>delete</code> methods.
+If you want to catch all the requests independently of the HTTP method used, you can use the <code>all</code> function.
+Another example, if you want to post only to a URL to create a new blog article,
+and want to delegate the work to a <code>post.groovy</code> Groovlet, you would create a route like this one:
+</p>
+
+<pre class="brush:groovy">
+    post "/new-article", forward: "/WEB-INF/groovy/post.groovy"
+</pre>
+
+<blockquote>
+<b>Note: </b> When running your applications in development mode, <b>Gaelyk</b> is configured to take into accounts
+any changes made to the <code>routes.groovy</code> definition file.
+Each time a request is made, which goes through the route servlet filter, <b>Gaelyk</b> checks whether a more
+recent route definition file exists.
+However, once deployed on the Google App Engine cloud, the routes are set in stone and are not reloaded.
+The sole cost of the routing system is the regular expression mapping to match request URIs against route patterns.
+</blockquote>
+
+<h3>Using wildcards</h3>
+
+<p>
+You can use a single and a double star as wildcards in your routes, similarly to the Ant globing patterns.
+A single star matches a word (<code>/\\w+/</code>), where as a double start matches an arbitrary path.
+For instance, if you want to show information about the blog authors,
+you may forward all URLs starting with <code>/author</code> to the same Groovlet:
+</p>
+
+<pre class="brush:groovy">
+    get "/author/*", forward: "/WEB-INF/groovy/authorsInformation.groovy"
+</pre>
+
+<p>
+This route would match requests made to <code>/author/johnny</code> as well as to <code>/author/begood</code>.
+</p>
+
+<p>
+In the same vein, using the double star to forward all requests starting with <code>/author</code> to the same Groovlet:
+</p>
+
+<pre class="brush:groovy">
+    get "/author/**", forward: "/WEB-INF/groovy/authorsInformation.groovy"
+</pre>
+
+<p>
+This route would match requests made to <code>/author/johnny</code>, as well as <code>/author/johnny/begood</code>,
+or even <code>/author/johnny/begood/and/anyone/else</code>.
+</p>
+
+<blockquote>
+<b>Warning: </b> Beware of the abuse of too many wildcards in your routes,
+as they may be time consuming to compute when matching a request URI to a route pattern.
+Better prefer several explicit routes than a too complicated single route.
+</blockquote>
+
+<h3>Using path variables</h3>
+
+<p>
+Although you could use the request URI tokenization technique explained in the section on regular expression replacement,
+<b>Gaelyk</b> provides a more convenient way to retrieve the various parts of a request URI, thanks to path variables.
+</p>
+
+<p>
+In a blog application, you want your article to have friendly URLs.
+For example, a blog post announcing the release of Groovy 1.7-RC-1 could be located at:
+<code>/article/2009/11/27/groovy-17-RC-1-released</code>.
+And you want to be able to reuse the various elements of that URL to pass them in the query string of the Groovlet
+which is responsible for displaying the article.
+You can then define a route with path variables as shown in the example below:
+</p>
+
+<pre class="brush:groovy">
+    get "/article/@year/@month/@day/@title", forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day&title=@title"
+</pre>
+
+<p>
+The path variables are of the form <code>@something</code>, where something is a word (in terms of regular expressions).
+Here, with our original request URI, the variables will contains the string <code>'2009'</code> for the
+<code>year</code> variable, <code>'11'</code> for <code>month</code>, <code>'27'</code> for <code>day</code>,
+and <code>'groovy-17-RC-1-released</code> for the <code>title</code> variable.
+And the final Groovlet URI which will get the request will be
+<code>/WEB-INF/groovy/article.groovy?year=2009&month=11&day=27&title=groovy-17-RC-1-released</code>,
+once the path variable matching is done.
+</p>
+
+<blockquote>
+<b>Note: </b> If you want to have optional path variables, you should define as many routes as options.
+So you would define the following routes to display all the articles published on some year, month, or day:
+<pre class="brush:groovy">
+    get "/article/@year/@month/@day/@title", forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day&title=@title"
+    get "/article/@year/@month/@day",        forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day"
+    get "/article/@year/",                   forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month"
+    get "/article",                          forward: "/WEB-INF/groovy/article.groovy"
+</pre>
+Also, note that routes are matched in order of appearance.
+So if you have several routes which map an incoming request URI, the first one encountered in the route definition file will win.
+</blockquote>
+
+<h3>Validating path variables</h3>
+
+<p>
+The routing system also allows you to validate path variables thanks to the usage of a closure.
+So if you use path variable validation, a request URI will match a route if the route path matches,
+but also if the closure returns a boolean, or a value which is coercible to a boolean
+through to the usual <i>Groovy Truth</i> rules.
+Still using our article route, we would like the year to be 4 digits, the month and day 2 digits,
+and impose no particular constraints on the title path variable,
+we could define our route as follows:
+</p>
+
+<pre class="brush:groovy">
+    get "/article/@year/@month/@day/@title",
+        forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day&title=@title",
+        validate: { year ==~ /\\d{4}/ && month ==~ /\\d{2}/ && day ==~ /\\d{2}/ }
+</pre>
+
+<blockquote>
+<b>Note: </b> Just as the path variables found in the request URI are replaced in the rewritten URL,
+the path variables are also available inside the body of the closure,
+so you can apply your validation logic.
+Here in our closure, we used Groovy's regular expression matching support,
+but you can use boolean logic that you want, like <code>year.isNumber()</code>, etc.
+</blockquote>
 
 <h1>Google App Engine specific shortcuts</h1>
 

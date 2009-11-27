@@ -45,9 +45,9 @@
         <div id="navigation">
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/tutorial/">Tutorial</a></li>
-                <li><a href="/download/">Download</a></li>
-                <li><a href="/community/">Community</a></li>
+                <li><a href="/tutorial">Tutorial</a></li>
+                <li><a href="/download">Download</a></li>
+                <li><a href="/community">Community</a></li>
             </ul>
         </div>
         

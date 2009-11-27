@@ -11,7 +11,7 @@ If you haven't, please do so by reading the
 </p>
 
 <p>
-The easiest way to get setup rapidly is to download the template project from the <a href="/download/">download section</a>.
+The easiest way to get setup rapidly is to download the template project from the <a href="/download">download section</a>.
 It provides a ready-to-go project with the right configuration files pre-filled and an appropriate directory layout:
 </p>
 

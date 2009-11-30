@@ -93,14 +93,17 @@ class Route {
         if (matcher.matches()) {
             def variableMap = variables ?
                 // a map like ['@year': '2009', '@month': '11']
-                variables.inject([:]) { map, variable -> [*:map, (variable): matcher[0][map.size()+1]] } :
-                [:] // an empty variables map if no variables were present
+                variables.inject([:]) { map, variable ->
+                    map[variable] = matcher[0][map.size()+1]
+                    return map
+                } : [:] // an empty variables map if no variables were present
 
             // if a closure validator was defined, check all the variables match the regex pattern
             if (validator) {
                 // create a map so the properties
                 def delegateVariables = variableMap.inject([:]) { Map m, entry ->
-                    [*:m, (entry.key.substring(1)): entry.value]
+                    m[entry.key.substring(1)] = entry.value
+                    return m
                 }
 
                 def clonedValidator = this.validator.clone()

@@ -906,7 +906,8 @@ So you would define the following routes to display all the articles published o
 <pre class="brush:groovy">
     get "/article/@year/@month/@day/@title", forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day&title=@title"
     get "/article/@year/@month/@day",        forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day"
-    get "/article/@year/",                   forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month"
+    get "/article/@year/@month",             forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month"
+    get "/article/@year",                    forward: "/WEB-INF/groovy/article.groovy?year=@year"
     get "/article",                          forward: "/WEB-INF/groovy/article.groovy"
 </pre>
 Also, note that routes are matched in order of appearance.

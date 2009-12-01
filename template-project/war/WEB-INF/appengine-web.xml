@@ -3,6 +3,15 @@
     
     <version>1</version>
 
+    <!-- If all your templates and groovlets are encoding in UTF-8 -->
+    <!-- Please specify the settings below, otherwise weird characters may appear in your templates -->
+    <!--
+    <system-properties>
+        <property name="file.encoding" value="UTF-8"/>
+        <property name="groovy.source.encoding" value="UTF-8"/>
+    </system-properties>
+    -->
+
     <!-- Uncomment this section if you want your application to be able to receive XMPP messages -->
     <!-- And create a file named jabber.groovy in /WEB-INF/groovy -->
     <!-- Similarily, if you want to receive incoming emails -->

@@ -5,12 +5,10 @@
 
     <!-- If all your templates and groovlets are encoding in UTF-8 -->
     <!-- Please specify the settings below, otherwise weird characters may appear in your templates -->
-    <!--
     <system-properties>
         <property name="file.encoding" value="UTF-8"/>
         <property name="groovy.source.encoding" value="UTF-8"/>
     </system-properties>
-    -->
 
     <!-- Uncomment this section if you want your application to be able to receive XMPP messages -->
     <!-- And create a file named jabber.groovy in /WEB-INF/groovy -->
@@ -22,6 +20,11 @@
         <service>mail</service>
     </inbound-services>
     -->
+
+    <!-- It it advised to keep this parameter to true -->
+    <!-- as per the release of SDK 1.2.8, -->
+    <!-- this should speed up cold startups of applications by 10% -->
+    <precompilation-enabled>true</precompilation-enabled>
     
     <static-files>
         <exclude path="/WEB-INF/**.groovy" />

@@ -321,6 +321,9 @@ by injecting specific elements of the Google App Engine SDK:
         <tt>xmpp</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/XMPPService.html">Jabber/XMPP service</a>.
     </li>
     <li>
+        <tt>blobstore</tt> : the <a href="http://code.google.com/intl/fr/appengine/docs/java/javadoc/com/google/appengine/api/blobstore/BlobstoreService.html">Blobstore service</a>.
+    </li>
+    <li>
         <tt>localMode</tt> : a boolean variable which is <code>true</code> when the application is running in local
         development mode, and <code>false</code> when deployed on Google's cloud.
     </li>

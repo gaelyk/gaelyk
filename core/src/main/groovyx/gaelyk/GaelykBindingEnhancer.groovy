@@ -25,6 +25,7 @@ import com.google.appengine.api.users.UserServiceFactory
 import com.google.appengine.api.labs.taskqueue.QueueFactory
 import com.google.appengine.api.xmpp.XMPPServiceFactory
 import com.google.apphosting.api.ApiProxy
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -66,5 +67,8 @@ class GaelykBindingEnhancer {
         // Tells whether the application is running in local development mode
         // or is deployed on Google's cloud
         binding.setVariable("localMode", ApiProxy.currentEnvironment.class.name.contains("LocalHttpRequestEnvironment"))
+
+        // New in GAE SDK 1.3.0: blobstore support
+        binding.setVariable("blobstore", BlobstoreServiceFactory.blobstoreService)
     }
 }

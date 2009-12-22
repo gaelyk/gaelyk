@@ -1100,6 +1100,29 @@ The following example shows how you can access <code>Entity</code>s:
     println entity.age
 </pre>
 
+<p>
+A handy mechanism exists to assign several properties at once, on your entities, using the <code>&lt;&lt;</code> (leftshit) operator.
+This is particularly useful when you have properties coming from the request, in the <code>params</code> map variable.
+You can the do the following to assign all the key/values in the map as properties on your entity:
+</p>
+
+<pre class="brush:groovy">
+    // the request parameters contain a firstname, lastname and age key/values:
+    // params = [firstname: 'Guillaume', lastname: 'Laforge', title: 'Groovy Project Manager']
+
+    Entity entity = new Entity("person")
+
+    entity << params
+
+    assert entity.lastname == 'Laforge'
+    assert entity.firstname == 'Guillaume'
+    assert entity.title == 'Groovy Project Manager'
+
+    // you can also select only the key/value pairs you'd like to set on the entity
+    // thanks to Groovy's subMap() method, which will create a new map with just the keys you want to keep
+    entity << params.subMap([firstname, lastname])
+</pre>
+
 <h3>Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></h3>
 
 <p>

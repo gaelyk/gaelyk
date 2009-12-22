@@ -208,6 +208,16 @@ class GaelykCategory {
         }
     }
 
+    /**
+     * Set the <code>Entity</code> properties with the key / value pairs of the map,
+     * using the leftshift operator as follows:
+     * <code>entity &lt;&lt; params</code>
+     */
+    static Entity leftShift(Entity entity, Map params) {
+        params.each { k, v -> entity[k] = v }
+        return entity
+    }
+
     // ----------------------------------------------------------------
     // Category methods dedicated to the task queue system
     // ----------------------------------------------------------------

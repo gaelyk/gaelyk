@@ -1123,6 +1123,35 @@ You can the do the following to assign all the key/values in the map as properti
     entity << params.subMap([firstname, lastname])
 </pre>
 
+<blockquote>
+<b>Note: </b> <b>Gaelyk</b> adds a few converter methods to ease the creation of instances
+of some GAE SDK types that can be used as properties of entities, using the <code>as</code> operator:
+<pre class="brush:groovy">
+    "foobar@gmail.com" as Email
+    "foobar@gmail.com" as JID
+
+    "http://www.google.com" as Link
+    new URL("http://gaelyk.appspot.com") as Link
+
+    "+33612345678" as PhoneNumber
+    "50 avenue de la Madeleine, Paris" as PostalAddress
+
+    "groovy" as Category
+    
+    32 as Rating
+    "32" as Rating
+
+    "long text" as Text
+
+    "some byte".getBytes() as Blob
+    "some byte".getBytes() as ShortBlob
+
+    "foobar" as BlobKey
+
+    [45.32, 54.54] as GeoPt
+</pre>
+</blockquote>
+
 <h3>Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></h3>
 
 <p>

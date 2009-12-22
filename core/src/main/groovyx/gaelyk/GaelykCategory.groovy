@@ -34,6 +34,18 @@ import com.google.appengine.api.xmpp.Presence
 import groovy.util.slurpersupport.GPathResult
 import com.google.appengine.api.memcache.MemcacheService
 import com.google.appengine.api.mail.MailService.Attachment
+import com.google.appengine.api.datastore.Email
+import com.google.appengine.api.datastore.Text
+import com.google.appengine.api.datastore.Category as DatastoreCategory
+import com.google.appengine.api.blobstore.BlobKey
+import com.google.appengine.api.datastore.Link
+import com.google.appengine.api.datastore.PhoneNumber
+import com.google.appengine.api.datastore.PostalAddress
+import com.google.appengine.api.datastore.Rating
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
+import com.google.appengine.api.datastore.ShortBlob
+import com.google.appengine.api.datastore.Blob
+import com.google.appengine.api.datastore.GeoPt
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -216,6 +228,96 @@ class GaelykCategory {
     static Entity leftShift(Entity entity, Map params) {
         params.each { k, v -> entity[k] = v }
         return entity
+    }
+
+    // Additional converter methods for types that are storable as Entity properties
+
+    /**
+     * Converter method for converting strings into various GAE specific types
+     * <pre><code>
+     *  "foo@bar.com" as Email
+     *  "http://www.google.com" as Link
+     *  "+3361234543" as PhoneNumber
+     *  "50 avenue de la Madeleine, Paris" as PostalAddress
+     *  "groovy" as Category
+     *  "32" as Rating
+     *  "long text" as Text
+     *  "foobar" as BlobKey
+     *  "foo@gmail.com" as JID
+     * </code></pre>
+     */
+    static Object asType(String self, Class clazz) {
+        if (clazz == Email)
+            new Email(self)
+        else if (clazz == Text)
+            new Text(self)
+        else if (clazz == BlobKey)
+            new BlobKey(self)
+        else if (clazz == Link)
+            new Link(self)
+        else if (clazz == Category)
+            new DatastoreCategory(self)
+        else if (clazz == PhoneNumber)
+            new PhoneNumber(self)
+        else if (clazz == PostalAddress)
+            new PostalAddress(self)
+        else if (clazz == Rating)
+            new Rating(new Integer(self))
+        else if (clazz == JID)
+            new JID(self)
+        else DefaultGroovyMethods.asType(self, clazz)
+    }
+
+    /**
+     * Converter method for converting a URL into a Link instance
+     * <pre><code>
+     *  new URL("http://gaelyk.appspot.com") as Link
+     * </code></pre>
+     */
+    static Link asType(URL self, Class linkClass) {
+        if (linkClass == Link)
+            new Link(self.toString())
+        else DefaultGroovyMethods.asType(self, linkClass)
+    }
+
+    /**
+     * Converter method for converting an integer into a Rating instance
+     * <pre><code>
+     *  32 as Rating
+     * </code></pre>
+     */
+    static Object asType(Integer self, Class ratingClass) {
+        if (ratingClass == Rating)
+            new Rating(self)
+        else DefaultGroovyMethods.asType(self, ratingClass)
+    }
+
+    /**
+     * Converter method for converting a byte array into a Blob or ShortBlob instance
+     * <pre><code>
+     *  "some byte".getBytes() as Blob
+     *  "some byte".getBytes() as ShortBlob
+     * </code></pre>
+     */
+    static Object asType(byte[] self, Class blobClass) {
+        if (blobClass == ShortBlob)
+            new ShortBlob(self)
+        else if (blobClass == Blob)
+            new Blob(self)
+        else DefaultGroovyMethods.asType(self, blobClass)
+    }
+
+    /**
+     * Converter method for converting a pair of numbers (in a list) into a GeoPt instance
+     * <pre><code>
+     *  [45.32, 54.54f] as GeoPt
+     * </code></pre>
+     */
+    static Object asType(List floatPair, Class geoptClass) {
+        if (geoptClass == GeoPt && floatPair.size() == 2 &&
+            floatPair.every { it instanceof Number })
+                new GeoPt(*floatPair*.floatValue())
+        else DefaultGroovyMethods.asType(floatPair, geoptClass)
     }
 
     // ----------------------------------------------------------------

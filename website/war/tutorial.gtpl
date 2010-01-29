@@ -1212,6 +1212,7 @@ to retrieve scripts written by a given author, sorted by descending date of crea
     import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
     // query the scripts stored in the datastore
+    // "savedscript" corresponds to the entity table containing the scripts' text 
     def query = new Query("savedscript")
 
     // sort results by descending order of the creation date

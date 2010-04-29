@@ -24,6 +24,7 @@ import com.google.apphosting.api.ApiProxy
 import org.codehaus.groovy.control.CompilerConfiguration
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import groovyx.gaelyk.GaelykBindingEnhancer
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -68,8 +69,13 @@ class RoutesFilter implements Filter {
                 def config = new CompilerConfiguration()
                 config.scriptBaseClass = RoutesBaseScript.class.name
 
+                // define a binding for the routes definition,
+                // and inject the Google services
+                def binding = new Binding()
+                new GaelykBindingEnhancer(binding).bind()
+                
                 // evaluate the route definitions
-                RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(config).parse(routesFile)
+                RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(binding, config).parse(routesFile)
                 script.run()
                 this.routes = script.routes
 

@@ -72,7 +72,7 @@ class RoutesFilter implements Filter {
                 // define a binding for the routes definition,
                 // and inject the Google services
                 def binding = new Binding()
-                new GaelykBindingEnhancer(binding).bind()
+                GaelykBindingEnhancer.bind(binding)
                 
                 // evaluate the route definitions
                 RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(binding, config).parse(routesFile)

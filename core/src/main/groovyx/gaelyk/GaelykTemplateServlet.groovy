@@ -33,8 +33,7 @@ class GaelykTemplateServlet extends TemplateServlet {
 
     @Override
     protected void setVariables(ServletBinding binding) {
-        GaelykBindingEnhancer enhancer = new GaelykBindingEnhancer(binding)
-        enhancer.bind()
+        GaelykBindingEnhancer.bind(binding)
     }
 
     @Override

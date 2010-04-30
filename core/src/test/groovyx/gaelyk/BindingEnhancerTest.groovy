@@ -48,7 +48,7 @@ class BindingEnhancerTest extends GroovyTestCase {
         helper.setUp()
 
         binding = new Binding()
-        new GaelykBindingEnhancer(binding).bind()
+        GaelykBindingEnhancer.bind(binding)
     }
 
     protected void tearDown() {

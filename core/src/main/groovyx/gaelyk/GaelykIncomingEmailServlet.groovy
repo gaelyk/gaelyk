@@ -43,7 +43,7 @@ class GaelykIncomingEmailServlet extends HttpServlet {
         def message = new MimeMessage(session, req.inputStream)
         
         def binding = new Binding(message: message)
-        new GaelykBindingEnhancer(binding).bind()
+        GaelykBindingEnhancer.bind(binding)
 
         use (GaelykCategory) {
             new GroovyShell(binding).evaluate(new File('WEB-INF/groovy/email.groovy'))

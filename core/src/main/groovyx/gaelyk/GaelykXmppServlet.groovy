@@ -42,7 +42,7 @@ class GaelykXmppServlet extends HttpServlet {
         Message message = xmpp.parseMessage(req)
 
         def binding = new Binding(message: message)
-        new GaelykBindingEnhancer(binding).bind()
+        GaelykBindingEnhancer.bind(binding)
 
         use (GaelykCategory) {
             new GroovyShell(binding).evaluate(new File('WEB-INF/groovy/jabber.groovy'))

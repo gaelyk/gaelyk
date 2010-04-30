@@ -35,8 +35,7 @@ class GaelykServlet extends GroovyServlet {
 
     @Override
     protected void setVariables(ServletBinding binding) {
-        GaelykBindingEnhancer enhancer = new GaelykBindingEnhancer(binding)
-        enhancer.bind()
+        GaelykBindingEnhancer.bind(binding)
     }
 
     @Override

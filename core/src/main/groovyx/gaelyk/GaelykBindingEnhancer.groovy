@@ -35,16 +35,12 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory
  */
 class GaelykBindingEnhancer {
 
-    private Binding binding
-
-    GaelykBindingEnhancer(Binding binding) {
-        this.binding = binding
-    }
-
     /**
      * Bind the various Google App Engine services and variables
+     *
+     * @param binding Binding in which to bind the GAE services and variables
      */
-    void bind() {
+    static void bind(Binding binding) {
         // bind google app engine services
         binding.setVariable("datastore", DatastoreServiceFactory.datastoreService)
         binding.setVariable("memcache", MemcacheServiceFactory.memcacheService)

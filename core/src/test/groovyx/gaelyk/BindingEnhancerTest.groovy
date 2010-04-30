@@ -26,6 +26,7 @@ import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestC
  */
 class BindingEnhancerTest extends GroovyTestCase {
 
+    // setup the local environement stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalMemcacheServiceTestConfig(),
@@ -43,6 +44,7 @@ class BindingEnhancerTest extends GroovyTestCase {
     protected void setUp() {
         super.setUp()
 
+        // setting up the local environment
         helper.setUp()
 
         binding = new Binding()
@@ -50,13 +52,15 @@ class BindingEnhancerTest extends GroovyTestCase {
     }
 
     protected void tearDown() {
+        // uninstalling the local environment
         helper.tearDown()
 
         super.tearDown()
     }
 
-
-
+    /**
+     * Check the various GAE services variables are available in the binding
+     */
     void testVariablesPresent() {
         ["datastore", "memcache", "urlFetch", "mail",
                 "images", "users", "defaultQueue", "queues",
@@ -65,6 +69,9 @@ class BindingEnhancerTest extends GroovyTestCase {
         }
     }
 
+    /**
+     * Check implementations of the GAE services are available in the binding
+     */
     void testGaeServicesPresent() {
         assert binding.datastore    instanceof DatastoreService
         assert binding.memcache     instanceof MemcacheService

@@ -635,6 +635,7 @@ The capabilities of the routing system are as follow, you can:
     <li>chose whether you want to forward or redirect to the destination URL (i.e. URL rewriting through forward vs. redirection)</li>
     <li>express variables in the route definition and reuse them as variables in the final destination of the request</li>
     <li>validate the variables according to some boolean expression, or regular expression matching</li>
+    <li>use the available GAE services in the script (for instance, creating routes from records from the datastore)</li>
 </ul>
 
 <p>

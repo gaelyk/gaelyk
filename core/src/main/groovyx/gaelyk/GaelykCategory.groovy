@@ -72,7 +72,7 @@ class GaelykCategory {
             if (k in ['to', 'bcc'] && v instanceof String) v = [v]
 
             // adds a 'from' alias for 'sender'
-            if (k == 'from') k == 'sender'
+            if (k == 'from') k = 'sender'
 
             // single email attachment
             if (k == 'attachment' && v instanceof Map) {

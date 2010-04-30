@@ -9,7 +9,8 @@ import java.util.logging.Filter
 import java.util.logging.LogRecord
 
 /**
- * 
+ * Test the mail service enhancements.
+ *
  * @author Guillaume Laforge
  */
 class MailSupportTest extends GroovyTestCase {

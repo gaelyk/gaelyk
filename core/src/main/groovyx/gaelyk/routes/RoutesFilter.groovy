@@ -25,6 +25,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import groovyx.gaelyk.GaelykBindingEnhancer
+import groovyx.gaelyk.plugins.PluginsHandler
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -78,6 +79,11 @@ class RoutesFilter implements Filter {
                 RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(binding, config).parse(routesFile)
                 script.run()
                 this.routes = script.routes
+
+                // First initialization of the plugins if the routes filter is installed
+                PluginsHandler.instance.initPlugins()
+                // add the routes defined by the plugins
+                this.routes.addAll PluginsHandler.instance.routes
 
                 // update the last modified flag
                 lastRoutesFileModification = lastModified

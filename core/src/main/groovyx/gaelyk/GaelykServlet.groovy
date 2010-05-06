@@ -20,7 +20,9 @@ import groovy.servlet.ServletBinding
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import java.io.IOException
+
+import javax.servlet.ServletConfig
+import groovyx.gaelyk.plugins.PluginsHandler
 
 /**
  * The Gaelyk servlet extends Groovy's own Groovy servlet
@@ -34,13 +36,33 @@ import java.io.IOException
 class GaelykServlet extends GroovyServlet {
 
     @Override
-    protected void setVariables(ServletBinding binding) {
-        GaelykBindingEnhancer.bind(binding)
+    def void init(ServletConfig config) {
+        super.init(config)
+        PluginsHandler.instance.initPlugins()
     }
 
+    /**
+     * Injects the default variables and GAE services in the binding of Groovlets
+     *  
+     * @param binding the binding to enhance
+     */
+    @Override
+    protected void setVariables(ServletBinding binding) {
+        GaelykBindingEnhancer.bind(binding)
+        PluginsHandler.instance.enrich(binding)
+    }
+
+    /**
+     * Service incoming requests applying the <code>GaelykCategory</code>
+     * and the other categories defined by the installed plugins.
+     *
+     * @param request the request
+     * @param response the response
+     * @throws IOException when anything goes wrong
+     */
     @Override
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        use (GaelykCategory) {
+        use([GaelykCategory, * PluginsHandler.instance.categories]) {
             super.service(request, response)
         }
     }

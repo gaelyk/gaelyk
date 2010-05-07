@@ -1,7 +1,7 @@
 new AntBuilder().sequential {
 
     // current Gaelyk version
-    version = '0.3.3'
+    version = '0.4'
 
     // various directory places and file names
     src = "src/main"

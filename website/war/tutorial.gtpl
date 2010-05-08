@@ -1532,6 +1532,11 @@ as the one we explained in the <a href="#url-routing">URL routing</a> section.
 This means a plugin cannot overwrite the existing application routes, or routes defined by previous plugins in the chain.
 </blockquote>
 
+<blockquote>
+<b>Important:</b> If your plugins contribute routes, make sure your application has also configured the routes filter,
+as well as defined a <code>WEB-INF/routes.groovy</code> script, otherwise no plugin routes will be present. 
+</blockquote>
+
 <p>
 The <code>categories</code> method call takes a list of classes
 which are <a href="http://groovy.codehaus.org/Groovy+Categories">Groovy categories</a>.

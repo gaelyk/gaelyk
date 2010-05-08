@@ -2,15 +2,15 @@
 <html>
 <head>
 
-<title>groovyx.gaelyk.routes (Gaelyk 0.4)</title>
-<META NAME="keywords" CONTENT="groovyx.gaelyk.routes package">
+<title>groovyx.gaelyk.plugins (Gaelyk 0.4)</title>
+<META NAME="keywords" CONTENT="groovyx.gaelyk.plugins package">
 <LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
 <link href="../../../groovy.ico" type="image/x-icon" rel="shortcut icon">
 <link href="../../../groovy.ico" type="image/x-icon" rel="icon">
 <SCRIPT type="text/javascript">
 function windowTitle()
 {
-    parent.document.title="groovyx.gaelyk.routes (Gaelyk 0.4)";
+    parent.document.title="groovyx.gaelyk.plugins (Gaelyk 0.4)";
 }
 </SCRIPT>
 <NOSCRIPT>
@@ -52,7 +52,7 @@ function windowTitle()
 &nbsp;PREV&nbsp;
 &nbsp;NEXT</font></td>
 <td class="NavBarCell2" bgcolor="white"><font size="-2">
-  <a href="../../../index.html?groovyx/gaelyk/routes/package-summary.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+  <a href="../../../index.html?groovyx/gaelyk/plugins/package-summary.html" target="_top"><b>FRAMES</b></a>  &nbsp;
 &nbsp;<a href="package-summary.html" target="_top"><b>NO FRAMES</b></a>  &nbsp;
 &nbsp;<script type="text/javascript">
   <!--
@@ -74,7 +74,7 @@ function windowTitle()
 
 <HR>
 <H2>
-Package groovyx.gaelyk.routes
+Package groovyx.gaelyk.plugins
 </H2>
 
 
@@ -91,19 +91,24 @@ Package groovyx.gaelyk.routes
     </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="Route.html" title="class in groovyx/gaelyk/routes">Route</A></B></TD>
-        <TD>Representation of a route URL mapping.</TD>
+        <TD WIDTH="15%"><B><A HREF="LazyBinding.html" title="class in groovyx/gaelyk/plugins">LazyBinding</A></B></TD>
+        <TD>Implementation of a lazy binding which returns a String
+ representing the name of a variable that was not bound</TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="RoutesBaseScript.html" title="class in groovyx/gaelyk/routes">RoutesBaseScript</A></B></TD>
-        <TD>Base script class used for evaluating the routes.</TD>
+        <TD WIDTH="15%"><B><A HREF="PluginBaseScript.html" title="class in groovyx/gaelyk/plugins">PluginBaseScript</A></B></TD>
+        <TD>Base script class used for evaluating the plugin descriptors.</TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="RoutesFilter.html" title="class in groovyx/gaelyk/routes">RoutesFilter</A></B></TD>
-        <TD><code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
- Gaelyk application. </TD>
+        <TD WIDTH="15%"><B><A HREF="PluginsHandler.html" title="class in groovyx/gaelyk/plugins">PluginsHandler</A></B></TD>
+        <TD>Configure the installed plugins.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="PluginsListBaseScript.html" title="class in groovyx/gaelyk/plugins">PluginsListBaseScript</A></B></TD>
+        <TD>Base script class used for listing the plugins to configure.</TD>
         </TR>
 
 </TABLE>
@@ -114,30 +119,6 @@ Package groovyx.gaelyk.routes
 <hr>
     
 
-
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
-    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
-    <B>Enum Summary</B></FONT></TH>
-    </TR>
-
-        <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="HttpMethod.html" title="class in groovyx/gaelyk/routes">HttpMethod</A></B></TD>
-        <TD>Enum listing the various HTTP methods, as well as an <code>ALL</code> element matching all possible methods.</TD>
-        </TR>
-
-        <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="RedirectionType.html" title="class in groovyx/gaelyk/routes">RedirectionType</A></B></TD>
-        <TD>Type of redirection for the URL rewriting: either "redirect" or "forward" to a new location.</TD>
-        </TR>
-
-</TABLE>
-&nbsp;
-<P>
-<DL>
-</DL>
-<hr>
-    
 
 
 

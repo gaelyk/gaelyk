@@ -1366,6 +1366,7 @@ is present in the cache or not.
 <b>Note: </b> Make sure the objects you put in the cache are serializable.
 </blockquote>
 
+<a name="plugin"></a>
 <h1>Simple plugin system</h1>
 
 <p>

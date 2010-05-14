@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta name="google-site-verification" content="pRjMzfFYnCOlRsXiZAhkap05iv9Yl8VbPJsX2kV9sao" />
         <title>Gaelyk - a lightweight Groovy toolkit for Google App Engine Java</title>
         
         <link rel="shortcut icon" href="/images/gaelyk-small-favicon.png" type="image/png">

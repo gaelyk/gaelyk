@@ -1347,7 +1347,7 @@ is present in the cache or not.
 </p>
 
 <pre class="brush:groovy">
-    class Country implements Serialzable { String name }
+    class Country implements Serializable { String name }
 
     def countryFr = new Country(name: 'France')
 

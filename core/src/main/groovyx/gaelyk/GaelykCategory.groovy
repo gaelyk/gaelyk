@@ -161,7 +161,7 @@ class GaelykCategory {
      * Or
      * <code>entity['propertyName'] = value</code>
      */
-    static Object setAt(Entity entity, String name, Object value) {
+    static void setAt(Entity entity, String name, Object value) {
         entity.setProperty(name, value)
     }
 
@@ -174,7 +174,7 @@ class GaelykCategory {
      * Or
      * <code>entity['propertyName'] = value</code>
      */
-    static Object set(Entity entity, String name, Object value) {
+    static void set(Entity entity, String name, Object value) {
         entity.setProperty(name, value)
     }
 
@@ -218,6 +218,7 @@ class GaelykCategory {
             // rethrow the exception
             throw e
         }
+        return transaction
     }
 
     /**

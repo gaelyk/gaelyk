@@ -67,5 +67,15 @@ class GaelykBindingEnhancer {
 
         // New in GAE SDK 1.3.0: blobstore support
         binding.setVariable("blobstore", BlobstoreServiceFactory.blobstoreService)
+
+        // Since GAE SDK 1.3.3.1: special system properties
+        binding.setVariable("app", [
+                env: [
+                        name: SystemProperty.environment.value(),
+                        version: SystemProperty.version.get(),
+                ],
+                id: SystemProperty.applicationId.get(),
+                version: SystemProperty.applicationVersion.get()
+        ])
     }
 }

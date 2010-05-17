@@ -15,6 +15,24 @@ and with the 1.3.3.1 version of the App Engine SDK.
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
 
+<h2>Version 0.4.1</h2>
+
+<h3>Changes</h3>
+<ul>
+    <li>
+        Give access to new variables in the binding, such as
+        <code>app.id</code>, <code>app.version</code>, <code>app.env.name</code>, and <code>app.env.version</code>
+    </li>
+    <li>Changed the <code>localMode</code> binding variable implementation to use the new underlying environment information</li>
+    <li>A few minor bug fixes</li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.4..1jar">gaelyk-0.4.1.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.4.1.zip">gaelyk-template-project-0.4.zip</a></li>
+</ul>
+
 <h2>Version 0.4</h2>
 
 <h3>Changes</h3>

@@ -327,7 +327,41 @@ by injecting specific elements of the Google App Engine SDK:
         <tt>localMode</tt> : a boolean variable which is <code>true</code> when the application is running in local
         development mode, and <code>false</code> when deployed on Google's cloud.
     </li>
+    <li>
+        <tt>app</tt> : a map variable with the following keys and values:
+        <ul>
+            <li><tt>id</tt> : the application ID (here: ${app.id})</li>
+            <li><tt>version</tt> : the application version (here: ${app.version})</li>
+            <li>
+                <tt>env</tt> : a map with the following keys and values:
+                <ul>
+                    <li><tt>name</tt> : the environment name (here: ${app.env.name})</li>
+                    <li><tt>version</tt> : the Google App Engine SDK version (here: ${app.env.version})</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
 </ul>
+
+<blockquote>
+    <b>Note: </b>
+    Regarding the <code>app</code> variable, this means you can access those values with the following syntax
+    in your groovlets and templates:
+    <pre class="brush:groovy">
+        app.id
+        app.version
+        app.env.name
+        app.env.version
+    </pre>
+</blockquote>
+
+<blockquote>
+    <b>Note: </b>
+    You can learn more about the
+    <a href="http://code.google.com/intl/fr/appengine/docs/java/runtime.html#The_Environment">environment and system properties</a>
+    Google App Engine exposes.
+</blockquote>
+
 
 <p>
 Thanks to all these variables and services available, you'll be able to access the Google services and Servlet specific artifacts
@@ -719,7 +753,6 @@ Better prefer several explicit routes than a too complicated single route.
 <h3>Using path variables</h3>
 
 <p>
-Although you could use the request URI tokenization technique explained in the section on regular expression replacement,
 <b>Gaelyk</b> provides a more convenient way to retrieve the various parts of a request URI, thanks to path variables.
 </p>
 

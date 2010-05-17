@@ -702,7 +702,7 @@ and want to delegate the work to a <code>post.groovy</code> Groovlet, you would 
 </p>
 
 <pre class="brush:groovy">
-    post "/new-article", forward: "/WEB-INF/groovy/post.groovy"
+    post "/new-article", forward: "/post.groovy"     // shortcut for "/WEB-INF/groovy/post.groovy"
 </pre>
 
 <blockquote>
@@ -724,7 +724,7 @@ you may forward all URLs starting with <code>/author</code> to the same Groovlet
 </p>
 
 <pre class="brush:groovy">
-    get "/author/*", forward: "/WEB-INF/groovy/authorsInformation.groovy"
+    get "/author/*", forward: "/authorsInformation.groovy"
 </pre>
 
 <p>
@@ -736,7 +736,7 @@ In the same vein, using the double star to forward all requests starting with <c
 </p>
 
 <pre class="brush:groovy">
-    get "/author/**", forward: "/WEB-INF/groovy/authorsInformation.groovy"
+    get "/author/**", forward: "/authorsInformation.groovy"
 </pre>
 
 <p>
@@ -766,7 +766,7 @@ You can then define a route with path variables as shown in the example below:
 </p>
 
 <pre class="brush:groovy">
-    get "/article/@year/@month/@day/@title", forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day&title=@title"
+    get "/article/@year/@month/@day/@title", forward: "/article.groovy?year=@year&month=@month&day=@day&title=@title"
 </pre>
 
 <p>
@@ -783,11 +783,11 @@ once the path variable matching is done.
 <b>Note: </b> If you want to have optional path variables, you should define as many routes as options.
 So you would define the following routes to display all the articles published on some year, month, or day:
 <pre class="brush:groovy">
-    get "/article/@year/@month/@day/@title", forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day&title=@title"
-    get "/article/@year/@month/@day",        forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day"
-    get "/article/@year/@month",             forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month"
-    get "/article/@year",                    forward: "/WEB-INF/groovy/article.groovy?year=@year"
-    get "/article",                          forward: "/WEB-INF/groovy/article.groovy"
+    get "/article/@year/@month/@day/@title", forward: "/article.groovy?year=@year&month=@month&day=@day&title=@title"
+    get "/article/@year/@month/@day",        forward: "/article.groovy?year=@year&month=@month&day=@day"
+    get "/article/@year/@month",             forward: "/article.groovy?year=@year&month=@month"
+    get "/article/@year",                    forward: "/article.groovy?year=@year"
+    get "/article",                          forward: "/article.groovy"
 </pre>
 Also, note that routes are matched in order of appearance.
 So if you have several routes which map an incoming request URI, the first one encountered in the route definition file will win.
@@ -807,7 +807,7 @@ we could define our route as follows:
 
 <pre class="brush:groovy">
     get "/article/@year/@month/@day/@title",
-        forward: "/WEB-INF/groovy/article.groovy?year=@year&month=@month&day=@day&title=@title",
+        forward: "/article.groovy?year=@year&month=@month&day=@day&title=@title",
         validate: { year ==~ /\\d{4}/ && month ==~ /\\d{2}/ && day ==~ /\\d{2}/ }
 </pre>
 
@@ -1537,7 +1537,7 @@ binding {
 
 // add new routes with the usual routing system format
 routes {
-    get "/scaffolding", forward: "/scaff.groovy"
+    get "/json", forward: "/json.groovy"
 }
 
 // install a category you've developped

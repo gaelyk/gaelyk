@@ -943,7 +943,7 @@ Then, from the <code>email.groovy</code> groovlet, you can access the properties
 <h2>Improvements to the low-level datastore API</h2>
 
 <p>
-Although it's possible to use JDO and JPA in Google App Engine, as explained in the <i>Views and Controllers</i> section,
+Although it's possible to use JDO and JPA in Google App Engine,
 <b>Gaelyk</b> also lets you use the low-level raw API for accessing the datastore,
 and makes the <code>Entity</code> class from that API a bit more Groovy-friendly.
 </p>

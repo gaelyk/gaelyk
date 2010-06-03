@@ -1471,11 +1471,11 @@ As hinted above, the content of a plugin would look something like the following
     +-- images                                  // your static content
     +-- js
     |
-    +-- plugins
-    |   |
-    |   +-- myPluginDescriptor.groovy           // your plugin descriptor
-    |
     +-- WEB-INF
+        |
+        +-- plugins
+        |   |
+        |   +-- myPluginDescriptor.groovy       // your plugin descriptor
         |
         +-- groovy
         |    |

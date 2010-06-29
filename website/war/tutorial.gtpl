@@ -262,7 +262,32 @@ A special servlet binding gives you direct access to some implicit variables tha
     <li>
         <tt>headers</tt> : map of all <tt>request</tt> header fields
     </li>
+    <li>
+        <tt>log</tt> : a Groovy logger is available for logging messages through <code>java.util.logging</code>
+    </li>
 </ul>
+
+<h4>Logging messages</h4>
+
+<p>
+In your Groovlets and Templates, thanks to the <code>log</code> variable in the binding,
+you can log messages through the <code>java.util.logging</code> infrastructure.
+The <code>log</code> variable is an instance of <code>groovyx.gaelyk.logging.Logger</code>, and provides the methods:
+<code>severe(String)</code>, <code>warning(String)</code>, <code>info(String)</code>, <code>config(String)</code>,
+<code>fine(String)</code>, <code>finer(String)</code>, and <code>finest(String)</code>.
+<p>
+
+</p>
+You can also use the <code>GroovyLogger</code> in your Groovy classes:
+</p>
+
+<pre class="brush:groovy">
+    import groovyx.gaelyk.logging.GroovyLogger
+    // ...
+    def log = new GroovyLogger("myLogger")
+    log.info("This is a logging message with level INFO")
+</pre>
+
 <h3>Lazy variables</h3>
 <ul>
     <li><tt>out</tt> : shorhand for <code>response.getWriter()</code> which returns a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/PrintWriter.html"><code>PrintWriter</code></a></li>

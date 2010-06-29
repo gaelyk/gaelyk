@@ -23,6 +23,9 @@ But to get you started quickly, you may use a ready-made template project which 
         Give access to new variables in the binding, such as
         <code>app.id</code>, <code>app.version</code>, <code>app.env.name</code>, and <code>app.env.version</code>
     </li>
+    <li>
+        Added a <code>log</code> variable in the binding, so that you can easily log from groovlets and templates
+    </li>
     <li>Changed the <code>localMode</code> binding variable implementation to use the new underlying environment information</li>
     <li>A few minor bug fixes</li>
 </ul>

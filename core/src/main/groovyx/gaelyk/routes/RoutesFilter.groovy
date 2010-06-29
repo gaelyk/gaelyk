@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import groovyx.gaelyk.GaelykBindingEnhancer
 import groovyx.gaelyk.plugins.PluginsHandler
+import com.google.appengine.api.utils.SystemProperty
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -97,7 +98,7 @@ class RoutesFilter implements Filter {
      */
     void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         // reload the routes in local dev mode in case the routes definition has changed since the last request
-        if (ApiProxy.currentEnvironment.class.name.contains("LocalHttpRequestEnvironment")) {
+        if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
             loadRoutes()
         }
 

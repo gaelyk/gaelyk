@@ -28,7 +28,7 @@ class QueueAccessor {
     /**
      * Retrieve a queue by its name using the subscript syntax: <code>queues['queueA']</code>.
      *
-     * @param the name of the queue to retrieve
+     * @param queueName the name of the queue to retrieve
      * @return the queue identified by its name
      */
     def getAt(String queueName) {
@@ -41,7 +41,7 @@ class QueueAccessor {
     /**
      * Retrieve a queue by its name using the property access notation: <code>queues.queueA</code>.
      *
-     * @param the name of the queue to retrieve
+     * @param queueName the name of the queue to retrieve
      * @return the queue identified by its name
      */
     def getProperty(String queueName) {

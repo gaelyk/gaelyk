@@ -51,7 +51,7 @@ class GaelykServlet extends GroovyServlet {
     protected void setVariables(ServletBinding binding) {
         GaelykBindingEnhancer.bind(binding)
         PluginsHandler.instance.enrich(binding)
-        binding.setVariable("log", new GroovyLogger(super.getScriptUri(binding.request)))
+        binding.setVariable("log", new GroovyLogger(super.getScriptUri(binding.request), true))
     }
 
     /**

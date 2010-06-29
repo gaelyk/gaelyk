@@ -42,8 +42,18 @@ class GroovyLogger {
     /** The underlying logger used for logging */
     Logger logger
 
-    GroovyLogger(String name) {
+    /** If the logger is for a groovlet or template */
+    private boolean groovletOrTemplate
+
+    /**
+     * Groovy-friendly logger.
+     *
+     * @param name the name of the logger
+     * @param groovletOrTemplate false by default, but can be set to true to say it's a logger for templates or groovlets
+     */
+    GroovyLogger(String name, boolean groovletOrTemplate = false) {
         logger = Logger.getLogger(name)
+        this.groovletOrTemplate = groovletOrTemplate
     }
 
 
@@ -58,13 +68,20 @@ class GroovyLogger {
      * @param level the level of logging
      * @param msg the message to log
      */
-    void log(Level level, String msg) {
-        def stack = Thread.currentThread().stackTrace
-        // find the proper caller class and method
-        def caller = stack.find { elem ->
-            EXCLUDE_LIST.every { !elem.className.startsWith(it) }
+    protected void log(Level level, String msg) {
+        if (groovletOrTemplate) {
+            // if it's a Groovlet or Template, just use the logger name
+            // as otherwise, the class name and method name aren't really significant
+            // as they are just generated groovy scripts
+            logger.logp(level, logger.name, null, msg)
+        } else {
+            def stack = Thread.currentThread().stackTrace
+            // find the proper caller class and method
+            def caller = stack.find { StackTraceElement elem ->
+                EXCLUDE_LIST.every { !elem.className.startsWith(it) }
+            }
+            logger.logp(level, caller.className, caller.methodName, msg)
         }
-        logger.logp(level, logger.name, caller.methodName, msg)
     }
 
     void severe (String msg) { log(Level.SEVERE,  msg) }

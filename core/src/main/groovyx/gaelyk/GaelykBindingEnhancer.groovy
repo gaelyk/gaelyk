@@ -27,6 +27,7 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory
 import com.google.apphosting.api.ApiProxy
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.utils.SystemProperty
+import groovyx.gaelyk.logging.LoggerAccessor
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -77,5 +78,8 @@ class GaelykBindingEnhancer {
                 id: SystemProperty.applicationId.get(),
                 version: SystemProperty.applicationVersion.get()
         ])
+
+        // Add a logger variable to easily access any logger
+        binding.setVariable("logger", new LoggerAccessor())
     }
 }

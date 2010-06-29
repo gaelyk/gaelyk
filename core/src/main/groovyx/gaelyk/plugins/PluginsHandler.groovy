@@ -96,6 +96,11 @@ class PluginsHandler {
         return []
     }
 
+    /**
+     * Add the variables in the binding, as defined by the plugin descriptors.
+     *
+     * @param binding the binding to add the variables to
+     */
     void enrich(Binding binding) {
         bindingVariables.each { String k, Object v -> binding.setVariable(k, v) }
     }

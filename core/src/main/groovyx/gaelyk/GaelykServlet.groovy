@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse
 
 import javax.servlet.ServletConfig
 import groovyx.gaelyk.plugins.PluginsHandler
+import groovyx.gaelyk.logging.GroovyLogger
 
 /**
  * The Gaelyk servlet extends Groovy's own Groovy servlet
@@ -50,6 +51,7 @@ class GaelykServlet extends GroovyServlet {
     protected void setVariables(ServletBinding binding) {
         GaelykBindingEnhancer.bind(binding)
         PluginsHandler.instance.enrich(binding)
+        binding.setVariable("log", new GroovyLogger(super.getScriptUri(binding.request)))
     }
 
     /**

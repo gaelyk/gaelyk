@@ -19,6 +19,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
+    <li>Updated Gaelyk and the template project to using GAE SDK 1.3.5 and Groovy 1.7.3</li>
     <li>
         Give access to new variables in the binding, such as
         <code>app.id</code>, <code>app.version</code>, <code>app.env.name</code>, and <code>app.env.version</code>

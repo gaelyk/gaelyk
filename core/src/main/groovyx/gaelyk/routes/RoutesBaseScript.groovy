@@ -34,13 +34,15 @@ abstract class RoutesBaseScript extends Script {
      * Handle all routes.
      *
      * @param m a map containing the forward or redirect location,
-     * as well as potential validation rules for the variables appearing in the route 
+     * as well as potential validation rules for the variables appearing in the route,
+     * and a definition of a caching duration.
      */
     private handle(Map m, String route, HttpMethod method) {
         RedirectionType redirectionType = m.forward ? RedirectionType.FORWARD : RedirectionType.REDIRECT
         def destination = m.forward ?: m.redirect
         def validator = m.validate ?: null
+        def cacheExpiration = m.cache ?: 0
 
-        routes << new Route(route, destination, method, redirectionType, validator)
+        routes << new Route(route, destination, method, redirectionType, validator, cacheExpiration)
     }
 }

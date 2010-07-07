@@ -638,9 +638,7 @@ The last line of the Groovlet then forwards the data back to the template view <
 <h2>Flexible URL routing</h2>
 
 <p>
-Since <b>Gaelyk</b> 0.3.2, a more flexible and powerful URL routing system was introduced.
-Instead of suffering headaches when dealing with regular expression replacements,
-as provided by default by Groovy's basic Groovlet and Template servlets as shown in the previous section,
+Since <b>Gaelyk</b> 0.3.2, a flexible and powerful URL routing system was introduced:
 you can use a small Groovy Domain-Specific Language for defining routes for nicer and friendlier URLs.
 </p>
 
@@ -696,6 +694,7 @@ The capabilities of the routing system are as follow, you can:
     <li>express variables in the route definition and reuse them as variables in the final destination of the request</li>
     <li>validate the variables according to some boolean expression, or regular expression matching</li>
     <li>use the available GAE services in the script (for instance, creating routes from records from the datastore)</li>
+    <li>cache the output of groovlets and templates pointed by that route for a specified period of time</li>
 </ul>
 
 <p>
@@ -842,6 +841,39 @@ the path variables are also available inside the body of the closure,
 so you can apply your validation logic.
 Here in our closure, we used Groovy's regular expression matching support,
 but you can use boolean logic that you want, like <code>year.isNumber()</code>, etc.
+</blockquote>
+
+<h3>Caching groovlet and template output</h3>
+
+<p>
+Since <b>Gaelyk</b> 0.4.1, support for caching groovlet and template output has been added,
+and can be defined through the URL routing system.
+This caching capability obviously leverages the Memcache service of Google App Engine.
+In the definition of your routes, you simply have to add a new named parameter: <code>cache</code>,
+indicating the number of seconds, minutes or hours you want the page to be cached.
+Here are a few examples:
+</p>
+
+<pre class="brush:groovy">
+    get "/news",     forward: "/new.groovy",     cache: 10.minutes
+    get "/tickers",  forward: "/tickers.groovy", cache: 1.second
+    get "/download", forward: "/download.gtpl",  cache: 2.hours
+</pre>
+
+<p>
+The duration can be any number (an int) of second(s), minute(s) or hour(s):
+both plural and singular forms are supported.
+</p>
+
+<blockquote>
+<b>Note: </b> byte arrays (the content to be cached) and strings (the URI, the content-type and last modified information)
+are stored in Memcache, and as they are simple types, they should even survive Google App Engine loading requests.
+</blockquote>
+
+<blockquote>
+<b>Warning: </b> There is a known issue, in some cases, when you include other templates in your template you want to cache,
+thanks to the <code>include</code> directive, the output of the various templates is mixed up.
+Please report back to us if you encounter such issues, and help us fix it!
 </blockquote>
 
 <h1>Google App Engine specific shortcuts</h1>
@@ -1422,6 +1454,9 @@ is present in the cache or not.
 
 <blockquote>
 <b>Note: </b> Make sure the objects you put in the cache are serializable.
+Also, be careful with the last example above as the <code>'FR'</code> entry in the cache
+may have disappeared between the time you do the <code>if (... in ...)</code> check
+and the time you actually retrieve the value associated with the key from memcache.
 </blockquote>
 
 <h2>Enhancements related to the BlobStore</h2>
@@ -1449,7 +1484,7 @@ so that you don't have to take care of that aspect yourself.
     }
 
     // specifying the encoding of your choice
-    blobKey.withReader("UTF-8) { Reader reader ->
+    blobKey.withReader("UTF-8") { Reader reader ->
         // do something with the reader
     }
 </pre>

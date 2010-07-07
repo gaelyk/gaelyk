@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,9 @@ class Route {
     /** Whether we're doing a redirect or a forward to the new location */
     RedirectionType redirectionType
 
+    /** The time in seconds the resource to stay in memcache */
+    int cacheExpiration
+
     /* The list of variables in the route */
     private List variables
 
@@ -49,13 +52,16 @@ class Route {
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
      * and a closure for validating the variables against regular expression patterns.
      */
-    Route(String route, String destination, HttpMethod method = HttpMethod.ALL, RedirectionType redirectionType = RedirectionType.FORWARD, Closure validator = null) {
+    Route(String route, String destination, HttpMethod method = HttpMethod.ALL,
+          RedirectionType redirectionType = RedirectionType.FORWARD,
+          Closure validator = null, int cacheExpiration = 0) {
         this.route = route
         this.destination = destination
         this.variables = extractParameters(route)
         this.regex = Pattern.compile(transformRouteIntoRegex(route))
         this.method = method
         this.redirectionType = redirectionType
+        this.cacheExpiration = cacheExpiration
 
         this.validator = validator
     }

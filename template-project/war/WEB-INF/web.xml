@@ -37,13 +37,11 @@
     </servlet>
     -->
     <!-- Uncomment this servlet filter if you want to enable URL routing -->
-    <!--
     <filter>
         <filter-name>RoutesFilter</filter-name>
         <filter-class>groovyx.gaelyk.routes.RoutesFilter</filter-class>
     </filter>
-    -->
-
+    
     <servlet-mapping>
         <servlet-name>GroovletServlet</servlet-name>
         <url-pattern>*.groovy</url-pattern>
@@ -68,12 +66,10 @@
     -->
 
     <!-- Uncomment the following filter mapping if you want to enable URL routing -->
-    <!--
     <filter-mapping>
         <filter-name>RoutesFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    -->
 
     <!-- Uncomment the following security constraint if you want to secure your incoming email endpoint -->
     <!-- Only allow the SDK and administrators to have access to the incoming email endpoint -->

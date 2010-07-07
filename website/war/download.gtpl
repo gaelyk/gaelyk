@@ -28,6 +28,7 @@ But to get you started quickly, you may use a ready-made template project which 
     </li>
     <li>Changed the <code>localMode</code> binding variable implementation to use the new underlying environment information</li>
     <li>New methods on BlobKey to allow easy reading of the resource with an input stream or a reader</li>
+    <li>Memcache caching support for groovlet and template output, when specifying a cache duration in the URL routes</li>
     <li>A few minor bug fixes</li>
 </ul>
 

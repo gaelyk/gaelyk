@@ -46,6 +46,7 @@ import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import com.google.appengine.api.datastore.ShortBlob
 import com.google.appengine.api.datastore.Blob
 import com.google.appengine.api.datastore.GeoPt
+import com.google.appengine.api.blobstore.BlobstoreInputStream
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -621,8 +622,61 @@ class GaelykCategory {
     }
 
     // ----------------------------------------------------------------
-    // Category methods dedicated to the URL fetcher service
+    // Category methods dedicated to the blobstore service
     // ----------------------------------------------------------------
-    
-    
+
+    /**
+     * Creates an <code>InputStream</code> over the blob.
+     * The stream is passed as parameter of the closure.
+     * This methods takes care of properly opening and closing the stream.
+     * You can use this method as follows:
+     * <pre><code>
+     * blobKey.withStream { inputstream -> ... }
+     * </code></pre>
+     *
+     * @param selfKey a BlobKey
+     * @param c the closure to execute, passing in the stream as parameter of the closure
+     * @return the return value of the closure execution
+     */
+    static Object withStream(BlobKey selfKey, Closure c) {
+        def stream = new BlobstoreInputStream(selfKey)
+        stream.withStream(c)
+    }
+
+    /**
+     * Creates a (buffered) <code>Reader</code> over the blob with a specified encoding.
+     * The reader is passed as parameter of the closure.
+     * This methods takes care of properly opening and closing the reader and underlying stream.
+     * You can use this method as follows:
+     * <pre><code>
+     * blobKey.withReader("UTF-8") { reader -> ... }
+     * </code></pre>
+     *
+     * @param selfKey a BlobKey
+     * @param encoding the encoding used to read from the stream (UTF-8, etc.)
+     * @param c the closure to execute, passing in the stream as parameter of the closure
+     * @return the return value of the closure execution
+     */
+    static Object withReader(BlobKey selfKey, String encoding, Closure c) {
+        def stream = new BlobstoreInputStream(selfKey)
+        stream.withReader(encoding, c)
+    }
+
+    /**
+     * Creates a (buffered) <code>Reader</code> over the blob using UTF-8 as default encoding.
+     * The reader is passed as parameter of the closure.
+     * This methods takes care of properly opening and closing the reader and underlying stream.
+     * You can use this method as follows:
+     * <pre><code>
+     * blobKey.withReader { reader -> ... }
+     * </code></pre>
+     *
+     * @param selfKey a BlobKey
+     * @param encoding the encoding used to read from the stream (UTF-8, etc.)
+     * @param c the closure to execute, passing in the stream as parameter of the closure
+     * @return the return value of the closure execution
+     */
+    static Object withReader(BlobKey selfKey, Closure c) {
+        withReader(selfKey, "UTF-8", c)
+    }
 }

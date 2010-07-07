@@ -27,6 +27,7 @@ But to get you started quickly, you may use a ready-made template project which 
         Added a <code>log</code> variable in the binding, so that you can easily log from groovlets and templates
     </li>
     <li>Changed the <code>localMode</code> binding variable implementation to use the new underlying environment information</li>
+    <li>New methods on BlobKey to allow easy reading of the resource with an input stream or a reader</li>
     <li>A few minor bug fixes</li>
 </ul>
 

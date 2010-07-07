@@ -1424,6 +1424,36 @@ is present in the cache or not.
 <b>Note: </b> Make sure the objects you put in the cache are serializable.
 </blockquote>
 
+<h2>Enhancements related to the BlobStore</h2>
+
+<p>
+Since version 1.3.5 of Google App Engine's SDK, there is the possibility of
+<a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/blobstore/BlobstoreInputStream.html">obtaining an <code>InputStream</code></a>
+to read the content of the blob.
+<b>Gaelyk</b> 0.4.1 adds three convenient methods on <code>BlobKey</code>
+to easily deal with a raw input stream or with a reader, leveraging Groovy's own input stream and reader methods.
+The stream and reader are handled properly with regards to cleanly open and close those resources
+so that you don't have to take care of that aspect yourself.
+</p>
+
+<pre class="brush:groovy">
+    BlobKey blobKey = ...
+
+    blobKey.withStream { InputStream stream ->
+        // do something with the stream
+    }
+
+    // defaults to using UTF-8 as encodin for reading from the underlying stream
+    blobKey.withReader { Reader reader ->
+        // do something with the reader
+    }
+
+    // specifying the encoding of your choice
+    blobKey.withReader("UTF-8) { Reader reader ->
+        // do something with the reader
+    }
+</pre>
+
 <a name="plugin"></a>
 <h1>Simple plugin system</h1>
 

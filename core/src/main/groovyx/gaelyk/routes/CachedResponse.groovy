@@ -32,7 +32,7 @@ class CachedResponse /* implements HttpServletResponse */ {
      * @return the associated writer
      */
     PrintWriter getWriter() {
-        new PrintWriter(output)
+        new PrintWriter(new OutputStreamWriter(output, "UTF-8"))
     }
 
     /**

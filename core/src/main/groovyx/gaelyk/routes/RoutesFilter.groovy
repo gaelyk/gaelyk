@@ -182,7 +182,6 @@ class RoutesFilter implements Filter {
 
         // the resource is still present in the cache
         if (content && type) {
-
             // if it's in the cache, return the page from the cache
             response.contentType = type
             response.outputStream << content
@@ -214,10 +213,11 @@ class RoutesFilter implements Filter {
 
         // put the output in memcache
         memcache.put(contentKey, byteArray, duration)
-        memcache.put(typeKey, response.contentType, duration)
+        memcache.put(typeKey, cachedResponse.contentType, duration)
         memcache.put(lastModifiedKey, lastModifiedString, duration)
 
         // output back to the screen
+        response.contentType = cachedResponse.contentType
         response.outputStream << byteArray
     }
 

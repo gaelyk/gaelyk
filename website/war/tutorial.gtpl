@@ -1459,15 +1459,73 @@ may have disappeared between the time you do the <code>if (... in ...)</code> ch
 and the time you actually retrieve the value associated with the key from memcache.
 </blockquote>
 
+<a name="blobstore"></a>
 <h2>Enhancements related to the BlobStore</h2>
 
 <p>
-Since version 1.3.5 of Google App Engine's SDK, there is the possibility of
+<b>Gaelyk</b> provides several enhancements around the usage of the blobstore service.
+</p>
+
+<h3>Getting blob information</h3>
+
+<p>
+Given a blob key, you can retrieve various details about the blob when it was uploaded:
+</p>
+
+<pre class="brush:groovy">
+    BlobKey blob = ...
+
+    // retrieve an instance of BlobInfo
+    BlobInfo info = blob.info
+
+    // directly access the BlobInfo details from the key itself
+    String filename     = blob.filename
+    String contentType  = blob.contentType
+    Date creation       = blob.creation
+    long size           = blob.size
+</pre>
+
+<h3>Deleting a blob</h3>
+
+<p>Given a blob key, you can easily delete it thanks to the <code>delete()</code> method:</p>
+
+<pre class="brush:groovy">
+    BlobKey blob = ...
+
+    blob.delete()
+</pre>
+
+<h3>Serving blobs</h3>
+
+<p>
+With the blobstore service, you can stream the content of blobs back to the browser, directly on the respone object:
+</p>
+
+<pre class="brush:groovy">
+    BlobKey blob = ...
+
+    // serve the whole blob
+    blob.serve response
+
+    // serve a fragment of the blob
+    def range = new ByteRange(1000) // starting from 1000
+    blob.serve response, range
+
+    // serve a fragment of the blob using an int range
+    blob.serve response, 1000..2000
+</pre>
+
+<h3>Reading the content of a Blob</h3>
+
+<p>
+Beyond the ability to serve blobs directly to the response output stream with
+<code>blobstoreService.serve(blobKey, response)</code> from your groovlet,
+since version 1.3.5 of Google App Engine's SDK, there is the possibility of
 <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/blobstore/BlobstoreInputStream.html">obtaining an <code>InputStream</code></a>
 to read the content of the blob.
 <b>Gaelyk</b> 0.4.1 adds three convenient methods on <code>BlobKey</code>
 to easily deal with a raw input stream or with a reader, leveraging Groovy's own input stream and reader methods.
-The stream and reader are handled properly with regards to cleanly open and close those resources
+The stream and reader are handled properly with regards to cleanly openning and close those resources
 so that you don't have to take care of that aspect yourself.
 </p>
 
@@ -1488,6 +1546,146 @@ so that you don't have to take care of that aspect yourself.
         // do something with the reader
     }
 </pre>
+
+<p>
+You can also fetch byte arrays for a given range:
+</p>
+
+<pre class="brush:groovy">
+    BlobKey blob = ...
+    byte[] bytes
+
+    // using longs
+    bytes = blob.fetchData 1000, 2000
+
+    // using a Groovy int range
+    bytes = blob.fetchData 1000..2000
+
+    // using a ByteRange
+    def range = new ByteRange(1000, 2000) // or 1000..2000 as ByteRange
+    bytes = blob.fetchData range
+</pre>
+
+<h2>Example Blobstore service usage</h2>
+
+<p>
+In this section, we'll show you a full-blown example.
+First of all, let's create a form to submit a file to the blobstore,
+in a template named <code>upload.gtpl</code> at the root of your war:
+</p>
+
+<pre class="brush:xml">
+    &lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Please upload a text file&lt;/h1&gt;
+        &lt;form action="\${blobstore.createUploadUrl('/uploadBlob.groovy')}"
+                method="post" enctype="multipart/form-data"&gt;
+            &lt;input type="file" name="myTextFile"&gt;
+            &lt;input type="submit" value="Submit"&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</pre>
+
+<p>
+The form will be posted to a URL created by the blobstore service,
+that will then forward back to the URL you've provided when calling
+<code>blobstore.createUploadUrl('/uploadBlob.groovy')</code>
+</p>
+
+<blockquote>
+<b>Warning: </b> The URL to he groovlet to which the blobstore service will forward the uploaded blob details
+should be a direct path to the groovlet like <code>/WEB-INF/groovy/uploadBlob.groovy</code> or the shortcut
+<code>/uploadBlob.groovy</code>.
+For an unknown reason, you cannot use a URL defined through the URL routing system.
+This is not necessarily critical, in the sense that this URL is never deplayed in the browser anyway.
+</blockquote>
+
+<p>
+Now, create a groovlet named <code>uploadBlob.groovy</code> stored in <code>/WEB-INF/groovy</code>
+with the following content:
+</p>
+
+<pre class="brush:groovy">
+    def blobs = blobstore.getUploadedBlobs(request)
+    def blob = blobs["myTextFile"]
+
+    response.status = 302
+
+    if (blobKey) {
+        redirect "/success?key=\${blob.keyString}"
+    } else {
+        redirect "/failure"
+    }
+</pre>
+
+<p>
+In the groovlet, you retrieve all the blobs uploaded in the <code>upload.gtpl</code> page,
+and more particularly, the blob coming from the <code>myTextFile</code> input file element.
+</p>
+
+<blockquote>
+<b>Warning: </b> Google App Engine mandates that you specify explicitely a redirection status code (301, 302 or 303),
+and that you <b>do</b> redirect the user somewhere else, otherwise you'll get some runtime errors.
+</blockquote>
+
+<p>
+We define some friendly URLs in the URL routing definitions for the upload form template, the success and failure pages:
+</p>
+
+<pre class="brush:groovy">
+    get "/upload",  forward: "/upload.gtpl"
+    get "/success", forward: "/success.gtpl"
+    get "/failure", forward: "/failure.gtpl"
+</pre>
+
+<p>
+You then create a <code>failure.gtpl</code> page at the root of your war directory:
+</p>
+
+<pre class="brush:xml">
+    &lt;html&gt;
+        &lt;body&gt;
+            &lt;h1&gt;Failure&lt;/h1&gt;
+            &lt;h2&gt;Impossible to store or access the uploaded blob&lt;/h2&gt;
+        &lt;/body&gt;
+    &lt;/html&gt;
+</pre>
+
+<p>
+And a <code>success.gtpl</code> page at the root of your war directory,
+showing the blob details, and outputing the content of the blob (a text file in our case):
+</p>
+
+<pre class="brush:xml">
+    &lt;% import com.google.appengine.api.blobstore.BlobKey %&gt;
+    &lt;html&gt;
+        &lt;body&gt;
+            &lt;h1&gt;Success&lt;/h1&gt;
+            &lt;% def blob = new BlobKey(params.key) %&gt;
+
+            &lt;div>
+                File name: \${blob.filename} &lt;br/&gt;
+                Content type: \${blob.contentType}&lt;br/&gt;
+                Creation date: \${blob.creation}&lt;br/&gt;
+                Size: \${blob.size}
+            &lt;/div&gt;
+
+            &lt;h2&gt;Content of the blob&lt;/h2&gt;
+
+            &lt;div&gt;
+                &lt;% blob.withReader { out << it.text } %&gt;
+            &lt;/div&gt;
+        &lt;/body&gt;
+    &lt;/html&gt;
+</pre>
+
+<p>
+    Now that you're all set up, you can access <code>http://localhost:8080/upload</code>,
+    submit a text file to upload, and click on the button.
+    Google App Engine will store the blob and forward the blob information to your <code>uploadBlob.groovy</code> groovlet
+    that will then redirect to the success page (or failure page in case something goes wrong).
+</p>
 
 <a name="plugin"></a>
 <h1>Simple plugin system</h1>

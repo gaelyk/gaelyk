@@ -47,6 +47,12 @@ import com.google.appengine.api.datastore.ShortBlob
 import com.google.appengine.api.datastore.Blob
 import com.google.appengine.api.datastore.GeoPt
 import com.google.appengine.api.blobstore.BlobstoreInputStream
+import com.google.appengine.api.blobstore.ByteRange
+import com.google.appengine.api.blobstore.BlobInfo
+import com.google.appengine.api.blobstore.BlobInfoFactory
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory
+import com.google.appengine.api.blobstore.BlobstoreFailureException
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -232,7 +238,9 @@ class GaelykCategory {
         return entity
     }
 
-    // Additional converter methods for types that are storable as Entity properties
+    // ------------------------------
+    // Additional converter methods
+    // ------------------------------
 
     /**
      * Converter method for converting strings into various GAE specific types
@@ -320,6 +328,23 @@ class GaelykCategory {
             floatPair.every { it instanceof Number })
                 new GeoPt(*floatPair*.floatValue())
         else DefaultGroovyMethods.asType(floatPair, geoptClass)
+    }
+
+    /**
+     * Converter method for converting an int range to a blobstore <code>ByteRange</code>:
+     * <pre><code>
+     *     300..400 as ByteRange
+     * </code></pre>
+     * Note that Groovy already allowed: <code>[300, 400] as ByteRange</code>.
+     *
+     * @param range the range to convert
+     * @param byteRangeClass the class of the byte range
+     * @return a <code>ByteRange</code> instance
+     */
+    static Object asType(IntRange range, Class byteRangeClass) {
+        if (byteRangeClass == ByteRange)
+            new ByteRange(range.fromInt, range.toInt)
+        else DefaultGroovyMethods.asType(range, byteRangeClass)
     }
 
     // ----------------------------------------------------------------
@@ -668,7 +693,7 @@ class GaelykCategory {
      * This methods takes care of properly opening and closing the reader and underlying stream.
      * You can use this method as follows:
      * <pre><code>
-     * blobKey.withReader { reader -> ... }
+     *  blobKey.withReader { reader -> ... }
      * </code></pre>
      *
      * @param selfKey a BlobKey
@@ -679,4 +704,115 @@ class GaelykCategory {
     static Object withReader(BlobKey selfKey, Closure c) {
         withReader(selfKey, "UTF-8", c)
     }
+
+    /**
+     * Get the <code>BlobInfo</code> associated with a blob key with:
+     * <pre><code>
+     *  blobKey.info
+     * </code></pre>
+     * @param selfKey the blob key to get information from
+     * @return an instance of <code>BlobInfo</code>
+     */
+    static BlobInfo getInfo(BlobKey selfKey) {
+        new BlobInfoFactory().loadBlobInfo(selfKey)
+    }
+
+    /**
+     * @return the name of the file stored in the blob
+     */
+    static String getFilename(BlobKey selfKey) {
+        getInfo(selfKey).filename
+    }
+
+    /**
+     * @return the content-type of the blob
+     */
+    static String getContentType(BlobKey selfKey) {
+        getInfo(selfKey).contentType
+    }
+
+    /**
+     * @return the creation date of the file stored in the blob
+     */
+    static Date getCreation(BlobKey selfKey) {
+        getInfo(selfKey).creation
+    }
+
+    /**
+     * @return the size of the blob
+     */
+    static long getSize(BlobKey selfKey) {
+        getInfo(selfKey).size
+    }
+
+    /**
+     * Delete the blob associated with this blob key.
+     *
+     * @param selfKey the blob to delete, identified by its key
+     */
+    static void delete(BlobKey selfKey) {
+        BlobstoreServiceFactory.blobstoreService.delete selfKey
+    }
+
+    /**
+     * Serve a range of the blob to the response
+     *
+     * @param selfKey the blob to serve
+     * @param the response on which to serve the blob
+     * @param range the range of the blob (parameter can be ommitted)
+     */
+    static void serve(BlobKey selfKey, HttpServletResponse response, ByteRange range = null) {
+        if (range)
+            BlobstoreServiceFactory.blobstoreService.serve selfKey, range, response
+        else
+            BlobstoreServiceFactory.blobstoreService.serve selfKey, response
+    }
+
+    /**
+     *
+     * @param selfKey
+     * @param response
+     * @param range
+     */
+    static void serve(BlobKey selfKey, HttpServletResponse response, IntRange range) {
+        BlobstoreServiceFactory.blobstoreService.serve selfKey, new ByteRange(range.fromInt, range.toInt), response
+    }
+
+    /**
+     * Fetch a segment of a blob
+     *
+     * @param selfKey the blob key identifying the blob
+     * @param start the beginning of the segment
+     * @param end the end of the segment
+     * @return an array of bytes
+     */
+    static byte[] fetchData(BlobKey selfKey, long start, long end) {
+        BlobstoreServiceFactory.blobstoreService.fetchData selfKey, start, end
+    }
+
+    /**
+     * Fetch a segment of a blob
+     * <pre><code>
+     * blobKey.fetchData 1000..2000
+     * </code></pre>
+     *
+     * @param selfKey the blob key identifying the blob
+     * @param a Groovy int range
+     * @return an array of bytes
+     */
+    static byte[] fetchData(BlobKey selfKey, IntRange intRange) {
+        fetchData(selfKey, intRange.fromInt, intRange.toInt)
+    }
+
+    /**
+     * Fetch a segment of a blob
+     *
+     * @param selfKey the blob key identifying the blob
+     * @param byteRange a <code>ByteRange</code> representing the segment
+     * @return an array of bytes
+     */
+    static byte[] fetchData(BlobKey selfKey, ByteRange byteRange) {
+        fetchData(selfKey, byteRange.start, byteRange.end)
+    }
+
 }

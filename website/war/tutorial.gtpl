@@ -48,7 +48,10 @@ We'll follow the directory layout proposed by the <b>Gaelyk</b> template project
         |
         +-- appengine-web.xml
         +-- web.xml
+        +-- plugins.groovy // if you use plugins
+        +-- routes.groovy  // if you use the URL routing system
         +-- classes
+        |
         +-- groovy
         |    |
         |    +-- controller.groovy
@@ -265,6 +268,9 @@ A special servlet binding gives you direct access to some implicit variables tha
     <li>
         <tt>log</tt> : a Groovy logger is available for logging messages through <code>java.util.logging</code>
     </li>
+    <li>
+        <tt>logger</tt> : a logger accessor can be used to get access to any logger
+    </li>
 </ul>
 
 <h4>Logging messages</h4>
@@ -275,9 +281,9 @@ you can log messages through the <code>java.util.logging</code> infrastructure.
 The <code>log</code> variable is an instance of <code>groovyx.gaelyk.logging.GroovyLogger</code>, and provides the methods:
 <code>severe(String)</code>, <code>warning(String)</code>, <code>info(String)</code>, <code>config(String)</code>,
 <code>fine(String)</code>, <code>finer(String)</code>, and <code>finest(String)</code>.
-<p>
-
 </p>
+
+<p>
 You can also use the <code>GroovyLogger</code> in your Groovy classes:
 </p>
 
@@ -285,7 +291,21 @@ You can also use the <code>GroovyLogger</code> in your Groovy classes:
     import groovyx.gaelyk.logging.GroovyLogger
     // ...
     def log = new GroovyLogger("myLogger")
-    log.info("This is a logging message with level INFO")
+    log.info "This is a logging message with level INFO"
+</pre>
+
+<p>
+It is possible to access any logger thanks to the logger accessor,
+which is available in the binding under the name <code>logger</code>.
+From a Groovlet or a Template, you can do:
+</p>
+
+<pre class="brush:groovy">
+    // access a logger by its name, as a property access
+    logger.myNamedLogger.info "logging an info message"
+
+    // when the logger has a complex name (like a package name with dots), prefer the subscript operator:
+    logger['com.foo.Bar'].info "logging an info message"
 </pre>
 
 <h3>Lazy variables</h3>
@@ -1729,6 +1749,10 @@ Possible examples of plugins can:
 <p>
 A plugin is actually just some content you'll drop in your <code>war/</code> folder, at the root of your <b>Gaelyk</b> application!
 This is why you can add all kind of static content, as well as groovlets and templates, or additional JARs in <code>WEB-INF/lib</code>.
+Furthermore, plugins don't even need to be external plugins that you install in your applications,
+but you can just customize your application by using the conventions and capabilities offered by the plugin system.
+Then, you really just need to have <code>/WEB-INF/plugins.groovy</code> referencing
+<code>/WEB-INF/plugins/myPluginDescriptor.groovy</code>, your plugin descriptor.
 </p>
 
 <p>
@@ -1785,6 +1809,9 @@ As hinted above, the content of a plugin would look something like the following
 We'll look at the plugin descriptor in a moment, but otherwise, all the content you have in your plugin
 is actually following the same usual web application conventions in terms of structure,
 and the ones usually used by <b>Gaelyk</b> applications (ie. includes, groovlets, etc).
+The bare minimum to have a plugin in your application is to have a plugin descriptor,
+like <code>/WEB-INF/plugins/myPluginDescriptor.groovy</code> in this example,
+that is referenced in <code>/WEB-INF/plugins.groovy</code>.
 </p>
 
 <p>
@@ -1888,7 +1915,7 @@ you will have to restart the container.
 <p>
 If you recall, we mentioned the <code>plugins.groovy</code> script.
 This is a new script since <b>Gaelyk</b> 0.4, that lives alongside the <code>routes.groovy</code> script
-(if you have one) in <code>WEB-INF/</code>.
+(if you have one) in <code>/WEB-INF</code>.
 If you don't have a <code>plugins.groovy</code> script, obviously, no plugin will be installed &mdash;
 or at least none of the initialization and configuration done in the various plugin descriptors will ever get run.
 </p>
@@ -1921,6 +1948,7 @@ should there be any.
 <p>
 If you want to share a plugin you've worked on, you just need to zip everything that constitutes the plugin.
 Then you can share this zip, and someone who wishes to install it on his application will just need to unzip it
+and pickup the various files of that archive and stick them up in the appropriate directories
 in his/her <b>Gaelyk</b> <code>war/</code> folder, and reference that plugin, as explained in the previous section.
 </p>
 

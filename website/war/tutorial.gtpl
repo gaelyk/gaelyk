@@ -285,19 +285,28 @@ The <code>log</code> variable is an instance of <code>groovyx.gaelyk.logging.Gro
 </p>
 
 <p>
-The default loggers in your groovlets and templates follow a naming conventions.
+The default loggers in your groovlets and templates follow a naming convention.
 The groovlet loggers' name starts with the <code>gaelyk.groovlet</code> prefix,
 whereas the template loggers' name starts with <code>gaelyk.template</code>.
 The name also contains the internal URI of the groovlet and template but transformed:
 the slashes are exchanged with dots, and the extension of the file is removed.
+</p>
+
+<blockquote>
+    <b>Note: </b>
+    The extension is dropped, as one may have configured a different extension name for groovlets and templates
+    than the usual ones (ie. <code>.groovy</code> and <code>.gtpl</code>).
+</blockquote>
+
+<p>
 A few examples to illustrate this:
 </p>
 
-<table>
-    <th>
-        <td>URI</td>
-        <td>Logger name</td>
-    </th>
+<table cellspacing="10">
+    <tr>
+        <th>URI</th>
+        <th>Logger name</th>
+    </tr>
     <tr>
         <td><code>/myTemplate.gtpl</code></td>
         <td><code>gaelyk.template.myTemplate</code></td>
@@ -311,11 +320,13 @@ A few examples to illustrate this:
         <td><code>gaelyk.template.WEB-INF.templates.aTemplate</code></td>
     </tr>
     <tr>
-        <td><code>/upload.groovy</code> (ie. in <code>/WEB-INF/groovy</code>)</td>
+        <td><code>/upload.groovy</code><br/>
+            (ie. <code>/WEB-INF/groovy/upload.groovy</code>)</td>
         <td><code>gaelyk.groovlet.upload</code></td>
     </tr>
     <tr>
-        <td><code>/account/credit.groovy</code></td>
+        <td><code>/account/credit.groovy</code><br/>
+            (ie. <code>/WEB-INF/groovy/account/credit.groovy</code>)</td>
         <td><code>gaelyk.groovlet.account.credit</code></td>
     </tr>
 </table>
@@ -333,29 +344,29 @@ please refer to the <a href="http://download.oracle.com/docs/cd/E17409_01/javase
 
 <p>
 Concretely, it means you'll be able to have a fine grained way of defining your loggers hierarchy
-and how they should configured, as a child inherits from its parent configuration,
-and a child able to override parent's configuration.
-So in your <code>logging.properties file</code>, you can have something like:
+and how they should be configured, as a child inherits from its parent configuration,
+and a child is able to override parent's configuration.
+So in your <code>logging.properties</code> file, you can have something like:
 </p>
 
 <pre>
-    # Set default log level to INFO
-    .level = INFO
+# Set default log level to INFO
+.level = INFO
 
-    # Configure Gaelyk's log level to WARNING, including groovlet's and template's
-    gaelyk.level = WARNING
+# Configure Gaelyk's log level to WARNING, including groovlet's and template's
+gaelyk.level = WARNING
 
-    # Configure groovlet's log level to FINE
-    gaelyk.groovlet.level = FINE
+# Configure groovlet's log level to FINE
+gaelyk.groovlet.level = FINE
 
-    # Override a specific groovlet familty to FINER
-    gaelyk.groovlet.crud.level = FINER
+# Override a specific groovlet familty to FINER
+gaelyk.groovlet.crud.level = FINER
 
-    # Set a specific groovlet level to FINEST
-    gaelyk.groovlet.crud.scaffoldingGroovlet.level = FINEST
+# Set a specific groovlet level to FINEST
+gaelyk.groovlet.crud.scaffoldingGroovlet.level = FINEST
 
-    # Set a specific template level to FINE
-    gaelyk.template.crud.editView.level = FINE
+# Set a specific template level to FINE
+gaelyk.template.crud.editView.level = FINE
 </pre>
 
 <p class="brush:groovy">

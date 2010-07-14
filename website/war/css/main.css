@@ -39,6 +39,10 @@ blockquote {
 	width: 90% !important;
 }
 
+table tr th {
+    background-color: #FFAAFF;
+}
+
 a:visited, a:active, a:link {
 	color: #D33381;
 }

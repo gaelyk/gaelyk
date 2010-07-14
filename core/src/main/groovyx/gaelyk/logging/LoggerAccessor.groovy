@@ -15,10 +15,15 @@
  */
 package groovyx.gaelyk.logging
 
-import java.util.logging.Logger
-
 /**
- * 
+ * Logger accessor to access a logger identified by its name.
+ * The logger accessor is available in the binding of groovlets and templates under the <code>logger</code> variable.
+ * Thus inside groovlets and templates, you can do:
+ * <pre><code>
+ *  logger.myLogger.info "an info message"
+ *  logger["com.foo.bar"].info "an info message"
+ * </code></pre>
+ *
  * @author Guillaume Laforge
  */
 class LoggerAccessor {
@@ -30,7 +35,7 @@ class LoggerAccessor {
      * @return the logger identified by its name
      */
     def getAt(String loggerName) {
-        Logger.getLogger(loggerName)
+        new GroovyLogger(loggerName)
     }
 
     /**

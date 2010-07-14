@@ -278,7 +278,8 @@ A special servlet binding gives you direct access to some implicit variables tha
 <p>
 In your Groovlets and Templates, thanks to the <code>log</code> variable in the binding,
 you can log messages through the <code>java.util.logging</code> infrastructure.
-The <code>log</code> variable is an instance of <code>groovyx.gaelyk.logging.GroovyLogger</code>, and provides the methods:
+The <code>log</code> variable is an instance of <code>groovyx.gaelyk.logging.GroovyLogger</code>
+(which is a subclass of <code>java.util.logging.Logger</code>) and provides the methods:
 <code>severe(String)</code>, <code>warning(String)</code>, <code>info(String)</code>, <code>config(String)</code>,
 <code>fine(String)</code>, <code>finer(String)</code>, and <code>finest(String)</code>.
 </p>
@@ -307,6 +308,10 @@ From a Groovlet or a Template, you can do:
     // when the logger has a complex name (like a package name with dots), prefer the subscript operator:
     logger['com.foo.Bar'].info "logging an info message"
 </pre>
+
+<p>
+
+</p>
 
 <h3>Lazy variables</h3>
 <ul>

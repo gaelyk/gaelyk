@@ -26,7 +26,7 @@ import java.util.logging.*
  * @author ksky@jggug.org (original implementation)
  * @author Guillaume Laforge (minor groovyfications and comments)
  */
-class GroovyLogger {
+class GroovyLogger extends Logger {
     /** list of packages we're not interested in */
     static final EXCLUDE_LIST = [
             // ignore the GroovyLogger class itself
@@ -40,7 +40,7 @@ class GroovyLogger {
     ]
 
     /** The underlying logger used for logging */
-    Logger logger
+    @Delegate Logger logger
 
     /** If the logger is for a groovlet or template */
     private boolean groovletOrTemplate
@@ -52,14 +52,22 @@ class GroovyLogger {
      * @param groovletOrTemplate false by default, but can be set to true to say it's a logger for templates or groovlets
      */
     GroovyLogger(String name, boolean groovletOrTemplate = false) {
+        super(name, null)
         logger = Logger.getLogger(name)
         this.groovletOrTemplate = groovletOrTemplate
     }
 
+    static GroovyLogger forTemplateUri(String uri) {
+        new GroovyLogger("gaelyk.template.${uri[1..<uri.lastIndexOf('.')].replaceAll(/\//, '.')}", true)
+    }
 
-     /**
-      * @return the name of the logger 
-      */
+    static GroovyLogger forGroovletUri(String uri) {
+        new GroovyLogger("gaelyk.groovlet.${uri[1..<uri.lastIndexOf('.')].replaceAll(/\//, '.')}", true)
+    }
+
+    /**
+     * @return the name of the logger
+     */
     String getName() { logger.name }
 
     /**

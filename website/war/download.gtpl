@@ -15,6 +15,24 @@ and with the 1.3.3.1 version of the App Engine SDK.
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
 
+<h2>Version 0.4.3</h2>
+
+<h3>Changes</h3>
+<ul>
+    <li>
+        Improvements in the logging infrastructure for Groovlets and Templates so they follow a standard hierarchy approach
+        (make sure to read the updated tutorial section on this topic)
+    </li>
+    <li>A new <code>delete()</code> method was added on Datastore's <code>Key</code></li>
+    <li>Simple Entity and POJO/POGO mapping through type coercion</li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.4.3.jar">gaelyk-0.4.3.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.4.3.zip">gaelyk-template-project-0.4.3.zip</a></li>
+</ul>
+
 <h2>Version 0.4.2</h2>
 
 <h3>Changes</h3>

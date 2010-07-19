@@ -600,11 +600,11 @@ In your main page, you may include a template as follows:
 </p>
 
 <pre class="brush:xml">
-    &lt;% include 'WEB-INF/includes/header.gtpl' %&gt;
+    &lt;% include '/WEB-INF/includes/header.gtpl' %&gt;
 
     &lt;div&gt;My main content here.&lt;/div&gt;
 
-    &lt;% include 'WEB-INF/includes/footer.gtpl' %&gt;
+    &lt;% include '/WEB-INF/includes/footer.gtpl' %&gt;
 </pre>
 
 <h3>Redirect and forward</h3>
@@ -1191,6 +1191,59 @@ of some GAE SDK types that can be used as properties of entities, using the <cod
 </pre>
 </blockquote>
 
+<h3>Converting beans to entities and back</h3>
+
+<p>
+The mechanism explained above with type conversions (actually called "coercion") is also available
+and can be handy for converting between a concrete bean and an entity.
+Any POJO or POGO can thus be converted into an <code>Entity</code>,
+and you can also convert an <code>Entity</code> to a POJO or POGO.
+</p>
+
+<pre class="brush:groovy">
+    // given a POJO
+    class Person {
+        String name
+        int age
+    }
+
+    def e1 = new Entity("Person")
+    e1.name = "Guillaume"
+    e1.age = 33
+
+    // coerce an entity into a POJO
+    def p1 = e1 as Person
+
+    assert e1.name == p1.name
+    assert e1.age == p1.age
+
+    def p2 = new Person(name: "Guillaume", age: 33)
+    // coerce a POJO into an entity
+    def e2 = p2 as Entity
+
+    assert p2.name == e2.name
+    assert p2.age == e2.age
+</pre>
+
+<blockquote>
+<b>Note: </b> The POJO/POGO class simpleName property is used as the entity kind.
+So for example, if the <code>Person</code> class was in a package <code>com.foo</code>,
+the entity kind used would be <code>Person</code>, not the fully-qualified name.
+This is the same default strategy that <a href="http://code.google.com/p/objectify-appengine/">Objectify</a>
+is using.
+</blockquote>
+
+
+<blockquote>
+<b>Note: </b> In turn, with this feature, you have a lightweight object/entity mapper.
+However, remember it's a simplistic solution for doing object/entity mapping,
+and this solution doesn't take into accounts relationships and such.
+If you're really interested in a fully featured mapper, you should have a look at
+<a href="http://code.google.com/p/objectify-appengine/">Objectify</a>
+or <a href="http://code.google.com/p/twig-persist/">Twig</a>.
+</blockquote>
+
+
 <h3>Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></h3>
 
 <p>
@@ -1215,6 +1268,18 @@ Afterwards, if you need to delete the <code>Entity</code> you're working on, you
 
 <pre class="brush:groovy">
     entity.delete()
+</pre>
+
+<h3>Added <code>delete()</code> method on <code>Key</code></h3>
+
+<p>
+Sometimes, you are dealing with keys, rather than dealing with entities directly &mdash;
+the main reaons being often for performance sake, as you don't have to load the full entity.
+If you want to delete an element in the datastore, when you just have the key, you can do so as follows:
+</p>
+
+<pre class="brush:groovy">
+    someEntityKey.delete()
 </pre>
 
 <h3>Added <code>withTransaction()</code> method on the datastore service</h3>

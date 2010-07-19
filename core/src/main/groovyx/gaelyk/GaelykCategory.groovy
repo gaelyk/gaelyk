@@ -53,6 +53,7 @@ import com.google.appengine.api.blobstore.BlobInfoFactory
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.blobstore.BlobstoreFailureException
 import javax.servlet.http.HttpServletResponse
+import com.google.appengine.api.datastore.Key
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -197,8 +198,16 @@ class GaelykCategory {
      * Delete this entity from the data store.
      * Usage: <code>entity.delete()</code>
      */
-    static Object delete(Entity entity) {
+    static void delete(Entity entity) {
         DatastoreServiceFactory.datastoreService.delete(entity.key)
+    }
+
+    /**
+     * Delete the entity represented by that key, from the data store.
+     * Usage: <code>key.delete()</code> 
+     */
+    static void delete(Key key) {
+        DatastoreServiceFactory.datastoreService.delete(key)
     }
 
     /**
@@ -276,6 +285,66 @@ class GaelykCategory {
         else if (clazz == JID)
             new JID(self)
         else DefaultGroovyMethods.asType(self, clazz)
+    }
+
+    /**
+     * Gaelyk supports a simplistic object/entity mapping, thanks to type coercion.
+     * You can use this type coercion mechanism to coerce POJOs/POGOs and datastore Entities.
+     * The <code>Entity</code> kind will be the simple name of the POJO/POGO (same approach as Objectify).
+     * So with this mechanism, you can do:
+     *
+     * <pre><code>
+     *  class Person { String name, int age }
+     *
+     *  def p = new Person(name: "Guillaume", age: 33)
+     *  def e = p as Entity
+     *
+     *  assert p.name == e.name
+     *  assert p.age == e.age
+     * </code></pre>
+     *
+     * @return an instance of Entity 
+     */
+    static Object asType(Object self, Class clazz) {
+        if (clazz == Entity) {
+            def e = new Entity(self.class.simpleName)
+            self.properties.each { k, v ->
+                if (!(k in ['class', 'metaClass'])) {
+                    e.setProperty(k, v)
+                }
+            }
+            return e
+        } else if (self.class == Entity) {
+            asType((Entity)self, clazz)
+        } else if (self.class instanceof String) {
+            asType((String)self, clazz)
+        } else DefaultGroovyMethods.asType(self, clazz)
+    }
+
+    /**
+     * Gaelyk supports a simplistic object/entity mapping, thanks to type coercion.
+     * You can use this type coercion mechanism to coerce POJOs/POGOs and datastore Entities.
+     * The <code>Entity</code> kind will be the simple name of the POJO/POGO (same approach as Objectify).
+     * So with this mechanism, you can do:
+     *
+     * <pre><code>
+     *  class Person { String name, int age }
+     *
+     *  def e = new Entity("Person")
+     *  e.name = "Guillaume"
+     *  e.age = 33
+     *
+     *  def p = e as Person
+     *
+     *  assert e.name == p.name
+     *  assert e.age == p.age
+     * </code></pre>
+     *
+     * @return an instance of a POJO/POGO to coerce into
+     */
+    
+    static Object asType(Entity self, Class clazz) {
+        return clazz.newInstance(self.properties)
     }
 
     /**

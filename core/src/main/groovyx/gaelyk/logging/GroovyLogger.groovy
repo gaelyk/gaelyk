@@ -26,7 +26,7 @@ import java.util.logging.*
  * @author ksky@jggug.org (original implementation)
  * @author Guillaume Laforge (minor groovyfications and comments)
  */
-class GroovyLogger extends Logger {
+class GroovyLogger {
     /** list of packages we're not interested in */
     static final EXCLUDE_LIST = [
             // ignore the GroovyLogger class itself
@@ -52,7 +52,6 @@ class GroovyLogger extends Logger {
      * @param groovletOrTemplate false by default, but can be set to true to say it's a logger for templates or groovlets
      */
     GroovyLogger(String name, boolean groovletOrTemplate = false) {
-        super(name, null)
         logger = Logger.getLogger(name)
         this.groovletOrTemplate = groovletOrTemplate
     }

@@ -415,31 +415,31 @@ by injecting specific elements of the Google App Engine SDK:
 <ul>
     <li>
         <tt>datastore</tt> : the
-        <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/datastore/DatastoreService.html">Datastore service</a>
+        <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/DatastoreService.html">Datastore service</a>
         </li>
     <li>
         <tt>memcache</tt> : the
-        <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/memcache/MemcacheService.html">Memcache service</a>
+        <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/memcache/MemcacheService.html">Memcache service</a>
     </li>
     <li>
         <tt>urlFetch</tt> : the
-        <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/urlfetch/URLFetchService.html">URL Fetch service</a>
+        <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/urlfetch/URLFetchService.html">URL Fetch service</a>
     </li>
     <li>
         <tt>mail</tt> : the
-        <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/mail/MailService.html">Mail service</a>
+        <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/mail/MailService.html">Mail service</a>
     </li>
     <li>
         <tt>images</tt> : the
-        <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/images/ImagesService.html">Images service</a>
+        <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/images/ImagesService.html">Images service</a>
     </li>
     <li>
         <tt>users</tt> : the
-        <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/users/UserService.html">User service</a>
+        <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/users/UserService.html">User service</a>
     </li>
     <li>
         <tt>user</tt> : the currently logged in 
-        <a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/users/User.html">user</a> 
+        <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/users/User.html">user</a> 
         (<code>null</code> if no user logged in)
     </li>
     <li>
@@ -452,7 +452,10 @@ by injecting specific elements of the Google App Engine SDK:
         <tt>xmpp</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/XMPPService.html">Jabber/XMPP service</a>.
     </li>
     <li>
-        <tt>blobstore</tt> : the <a href="http://code.google.com/intl/fr/appengine/docs/java/javadoc/com/google/appengine/api/blobstore/BlobstoreService.html">Blobstore service</a>.
+        <tt>blobstore</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/blobstore/BlobstoreService.html">Blobstore service</a>.
+    </li>
+    <li>
+        <tt>oauth</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/oauth/OAuthService.html">OAuth service</a>.
     </li>
     <li>
         <tt>localMode</tt> : a boolean variable which is <code>true</code> when the application is running in local
@@ -489,7 +492,7 @@ by injecting specific elements of the Google App Engine SDK:
 <blockquote>
     <b>Note: </b>
     You can learn more about the
-    <a href="http://code.google.com/intl/fr/appengine/docs/java/runtime.html#The_Environment">environment and system properties</a>
+    <a href="http://code.google.com/appengine/docs/java/runtime.html#The_Environment">environment and system properties</a>
     Google App Engine exposes.
 </blockquote>
 

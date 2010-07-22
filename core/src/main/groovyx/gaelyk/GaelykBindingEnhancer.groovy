@@ -28,6 +28,7 @@ import com.google.apphosting.api.ApiProxy
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.utils.SystemProperty
 import groovyx.gaelyk.logging.LoggerAccessor
+import com.google.appengine.api.oauth.OAuthServiceFactory
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -56,11 +57,11 @@ class GaelykBindingEnhancer {
         binding.setVariable("user", userService.getCurrentUser())
 
         // New in GAE SDK 1.2.5: task queues
-        binding.setVariable("defaultQueue", QueueFactory.getDefaultQueue())
+        binding.setVariable("defaultQueue", QueueFactory.defaultQueue)
         binding.setVariable("queues", new QueueAccessor())
 
         // New in GAE SDK 1.2.5: XMPP support
-        binding.setVariable("xmpp", XMPPServiceFactory.getXMPPService())
+        binding.setVariable("xmpp", XMPPServiceFactory.XMPPService)
 
         // Tells whether the application is running in local development mode
         // or is deployed on Google's cloud
@@ -81,5 +82,7 @@ class GaelykBindingEnhancer {
 
         // Add a logger variable to easily access any logger
         binding.setVariable("logger", new LoggerAccessor())
+
+        binding.setVariable("oauth", OAuthServiceFactory.OAuthService)
     }
 }

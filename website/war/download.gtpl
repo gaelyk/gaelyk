@@ -26,6 +26,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>A new <code>delete()</code> method was added on Datastore's <code>Key</code></li>
     <li>Simple Entity and POJO/POGO mapping through type coercion</li>
     <li>Added the OAuth service in the binding</li>
+    <li>Updated Groovy to the latest 1.7.4 version</li>
 </ul>
 
 <h3>Artifacts</h3>

@@ -1786,7 +1786,7 @@ with the following content:
 
     response.status = 302
 
-    if (blobKey) {
+    if (blob) {
         redirect "/success?key=\${blob.keyString}"
     } else {
         redirect "/failure"

@@ -207,7 +207,7 @@ class RoutesFilter implements Filter {
         //response.addHeader "ETag", "\"\""
         def duration = Expiration.byDeltaSeconds(cacheExpiration)
 
-        def cachedResponse = new CachedResponse(response: response)
+        def cachedResponse = new CachedResponse(response)
         filterConfig.servletContext.getRequestDispatcher(destination).forward request, cachedResponse
         def byteArray = cachedResponse.output.toByteArray()
 

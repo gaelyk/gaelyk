@@ -15,24 +15,28 @@
  */
 package groovyx.gaelyk.routes
 
-import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpServletResponseWrapper
 import javax.servlet.ServletOutputStream
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Cached response used to implement the caching capabilities through the URL routing filter
  * 
  * @author Guillaume Laforge
  */
-class CachedResponse /* implements HttpServletResponse */ {
-    @Delegate HttpServletResponse response
+class CachedResponse extends HttpServletResponseWrapper {
 
     ByteArrayOutputStream output = new ByteArrayOutputStream(8192)
+
+    CachedResponse(HttpServletResponse response) {
+        super(response);
+    }
 
     /**
      * @return the associated writer
      */
     PrintWriter getWriter() {
-        new PrintWriter(new OutputStreamWriter(output, "UTF-8"))
+        new PrintWriter(new OutputStreamWriter(getOutputStream(), "UTF-8"))
     }
 
     /**
@@ -53,11 +57,16 @@ class CachedResponse /* implements HttpServletResponse */ {
         }
 
         CustomServletOutputStream(OutputStream output) {
+            this()
             this.output = output
         }
 
         void write(int i) {
             output << i
+        }
+
+        void write(byte[] bytes) {
+            output.write(bytes)
         }
 
         void write(byte[] bytes, int offset, int length) {

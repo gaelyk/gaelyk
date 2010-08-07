@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletResponse
 import com.google.appengine.api.xmpp.XMPPService
 import com.google.appengine.api.xmpp.Message
 import com.google.appengine.api.xmpp.XMPPServiceFactory
+import groovyx.gaelyk.plugins.PluginsHandler
+import groovyx.gaelyk.logging.GroovyLogger
 
 /**
  * Servlet for handling incoming XMPP/Jabber messages.
@@ -43,8 +45,10 @@ class GaelykXmppServlet extends HttpServlet {
 
         def binding = new Binding(message: message)
         GaelykBindingEnhancer.bind(binding)
+        PluginsHandler.instance.enrich(binding)
+        binding.setVariable("log", new GroovyLogger("gaelyk.jabber"))
 
-        use (GaelykCategory) {
+        use([GaelykCategory, * PluginsHandler.instance.categories]) {
             new GroovyShell(binding).evaluate(new File('WEB-INF/groovy/jabber.groovy'))
         }
     }

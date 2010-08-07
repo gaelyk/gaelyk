@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse
 
 import javax.mail.internet.MimeMessage
 import javax.mail.Session
+import groovyx.gaelyk.plugins.PluginsHandler
+import groovyx.gaelyk.logging.GroovyLogger
 
 /**
  * Servlet for handling incoming Email messages.
@@ -44,8 +46,10 @@ class GaelykIncomingEmailServlet extends HttpServlet {
         
         def binding = new Binding(message: message)
         GaelykBindingEnhancer.bind(binding)
+        PluginsHandler.instance.enrich(binding)
+        binding.setVariable("log", new GroovyLogger("gaelyk.email"))
 
-        use (GaelykCategory) {
+        use([GaelykCategory, * PluginsHandler.instance.categories]) {
             new GroovyShell(binding).evaluate(new File('WEB-INF/groovy/email.groovy'))
         }
     }

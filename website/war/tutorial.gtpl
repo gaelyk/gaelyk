@@ -332,6 +332,11 @@ A few examples to illustrate this:
 </table>
 
 <p>
+Additionally, there are two special loggers for the incoming Email servlet, and the Jabber/XPP servlet, with
+<code>gaelyk.email</code> and <code>gaelyk.jabber</code>.
+</p>
+
+<p>
 This naming convention is particularly interesting as the <code>java.util.logging</code> infrastructure
 follows a hierarchy of loggers depending on their names, using dot delimiters, where
 <code>gaelyk.template.crud.scaffolding</code> inherits from
@@ -339,7 +344,7 @@ follows a hierarchy of loggers depending on their names, using dot delimiters, w
 <code>gaelyk.template</code>, then from
 <code>gaelyk</code>. You get the idea!
 For more information on this hierarchy aspect,
-please refer to the <a href="http://download.oracle.com/docs/cd/E17409_01/javase/6/docs/api/java/util/logging/LogManager.html">Java documentation</a>.
+please refer to the <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/util/logging/class-use/LogManager.html">Java documentation</a>.
 </p>
 
 <p>

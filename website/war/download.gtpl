@@ -7,8 +7,8 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.6 or 1.7 and with
 </p>
 
 <p>
-The latest version was tested with Groovy 1.7.2,
-and with the 1.3.3.1 version of the App Engine SDK.
+The latest version was tested with Groovy 1.7.4,
+and with the 1.3.5 version of the App Engine SDK.
 </p>
 
 <p>

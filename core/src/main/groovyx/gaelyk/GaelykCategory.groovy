@@ -258,7 +258,7 @@ class GaelykCategory {
      *  "http://www.google.com" as Link
      *  "+3361234543" as PhoneNumber
      *  "50 avenue de la Madeleine, Paris" as PostalAddress
-     *  "groovy" as Category
+     *  "groovy" as DatastoreCategory
      *  "32" as Rating
      *  "long text" as Text
      *  "foobar" as BlobKey
@@ -274,7 +274,7 @@ class GaelykCategory {
             new BlobKey(self)
         else if (clazz == Link)
             new Link(self)
-        else if (clazz == Category)
+        else if (clazz == DatastoreCategory)
             new DatastoreCategory(self)
         else if (clazz == PhoneNumber)
             new PhoneNumber(self)

@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse
 import javax.servlet.ServletConfig
 import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.logging.GroovyLogger
-import groovyx.gaelyk.routes.RoutingHandler
 
 /**
  * The Gaelyk servlet extends Groovy's own Groovy servlet

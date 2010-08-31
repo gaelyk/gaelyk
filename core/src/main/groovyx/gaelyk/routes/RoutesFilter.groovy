@@ -30,6 +30,8 @@ import groovyx.gaelyk.ExpirationTimeCategory
 import com.google.appengine.api.memcache.MemcacheServiceFactory
 import com.google.appengine.api.memcache.Expiration
 import java.text.SimpleDateFormat
+import groovyx.gaelyk.cache.CachedResponse
+import groovyx.gaelyk.cache.CacheHandler
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -53,12 +55,6 @@ class RoutesFilter implements Filter {
     private long lastRoutesFileModification = 0
     private List<Route> routes = []
     private FilterConfig filterConfig
-
-    // Date formatter for caching headers date creation
-    private static final SimpleDateFormat httpDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
-    static {
-        httpDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"))
-    }
 
     void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig
@@ -91,12 +87,12 @@ class RoutesFilter implements Filter {
                 use(ExpirationTimeCategory) {
                     script.run()
                 }
-                this.routes = script.routes
+                routes = script.routes
 
                 // First initialization of the plugins if the routes filter is installed
                 PluginsHandler.instance.initPlugins()
                 // add the routes defined by the plugins
-                this.routes.addAll PluginsHandler.instance.routes
+                routes.addAll PluginsHandler.instance.routes
 
                 // update the last modified flag
                 lastRoutesFileModification = lastModified
@@ -120,9 +116,6 @@ class RoutesFilter implements Filter {
         def requestURI = request.requestURI
         def method = request.method
 
-        def uri = requestURI + (request.queryString ? "?$request.queryString" : "")
-        def contentKey = "content-for-$uri"
-
         boolean foundRoute = false
         for (Route route in routes) {
             // first, check that the HTTP methods are compatible
@@ -130,33 +123,7 @@ class RoutesFilter implements Filter {
                 def result = route.forUri(requestURI)
                 if (result.matches) {
                     if (route.redirectionType == RedirectionType.FORWARD) {
-                        if (route.cacheExpiration > 0) {
-                            def memcache = MemcacheServiceFactory.memcacheService
-
-                            def ifModifiedSince = request.getHeader("If-Modified-Since")
-                            // if an "If-Modified-Since" header is present in the incoming requestion
-                            if (ifModifiedSince) {
-                                def sinceDate = httpDateFormat.parse(ifModifiedSince)
-                                def lastModifiedKey = "last-modified-$uri"
-                                String lastModifiedString = memcache.get(lastModifiedKey)
-                                if (lastModifiedString && httpDateFormat?.parse(lastModifiedString).before(sinceDate)) {
-                                    response.sendError HttpServletResponse.SC_NOT_MODIFIED
-                                    response.setHeader("Last-Modified", ifModifiedSince)
-                                } else {
-                                    // check if the page is already in the cache
-                                    if (memcache.contains(contentKey)) {
-                                        sendFromCache(request, response, result.destination, uri, route.cacheExpiration)
-                                    } else { // the resource was not present in the cache
-                                        sendOutputAndCache(request, response, result.destination, uri, route.cacheExpiration)
-                                    }
-                                }
-                            } else {
-                                sendFromCache(request, response, result.destination, uri, route.cacheExpiration)
-                            }
-
-                        } else {
-                            filterConfig.servletContext.getRequestDispatcher(result.destination).forward request, response
-                        }
+                        CacheHandler.serve(route, request, response)
                     } else {
                         response.sendRedirect result.destination
                     }
@@ -169,56 +136,6 @@ class RoutesFilter implements Filter {
         if (!foundRoute) {
             filterChain.doFilter servletRequest, servletResponse
         }
-    }
-
-    private sendFromCache(HttpServletRequest request, HttpServletResponse response, String destination, String uri, int cacheExpiration) {
-        def contentKey = "content-for-$uri"
-        def typeKey = "content-type-for-$uri"
-
-        def memcache = MemcacheServiceFactory.memcacheService
-
-        def content = memcache.get(contentKey)
-        def type = memcache.get(typeKey)
-
-        // the resource is still present in the cache
-        if (content && type) {
-            // if it's in the cache, return the page from the cache
-            response.contentType = type
-            response.outputStream << content
-        } else {
-            sendOutputAndCache(request, response, destination, uri, cacheExpiration)
-        }
-    }
-
-    private sendOutputAndCache(HttpServletRequest request, HttpServletResponse response, String destination, String uri, int cacheExpiration) {
-        def now = new Date()
-        def lastModifiedString = httpDateFormat.format(now)
-
-        def contentKey = "content-for-$uri"
-        def typeKey = "content-type-for-$uri"
-        def lastModifiedKey = "last-modified-$uri"
-
-        def memcache = MemcacheServiceFactory.memcacheService
-
-        // specify caching durations
-        response.addHeader "Cache-Control", "max-age=${cacheExpiration}"
-        response.addHeader "Last-Modified", lastModifiedString
-        response.addHeader "Expires", httpDateFormat.format(new Date(now.time + cacheExpiration * 1000))
-        //response.addHeader "ETag", "\"\""
-        def duration = Expiration.byDeltaSeconds(cacheExpiration)
-
-        def cachedResponse = new CachedResponse(response)
-        filterConfig.servletContext.getRequestDispatcher(destination).forward request, cachedResponse
-        def byteArray = cachedResponse.output.toByteArray()
-
-        // put the output in memcache
-        memcache.put(contentKey, byteArray, duration)
-        memcache.put(typeKey, cachedResponse.contentType, duration)
-        memcache.put(lastModifiedKey, lastModifiedString, duration)
-
-        // output back to the screen
-        response.contentType = cachedResponse.contentType
-        response.outputStream << byteArray
     }
 
     void destroy() { }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.routes
+package groovyx.gaelyk.cache
 
 import javax.servlet.http.HttpServletResponseWrapper
 import javax.servlet.ServletOutputStream
@@ -29,7 +29,7 @@ class CachedResponse extends HttpServletResponseWrapper {
     ByteArrayOutputStream output = new ByteArrayOutputStream(8192)
 
     CachedResponse(HttpServletResponse response) {
-        super(response);
+        super(response)
     }
 
     /**
@@ -43,23 +43,14 @@ class CachedResponse extends HttpServletResponseWrapper {
      * @return the associated output stream
      */
     ServletOutputStream getOutputStream() {
-        new CustomServletOutputStream(output)
+        new CustomServletOutputStream(output: output)
     }
 
     /**
      * Custom extension of <code>CustomServletOutpuStream</code>
      */
     static class CustomServletOutputStream extends ServletOutputStream {
-        final OutputStream output
-
-        protected CustomServletOutputStream() {
-            super()
-        }
-
-        CustomServletOutputStream(OutputStream output) {
-            this()
-            this.output = output
-        }
+        OutputStream output
 
         void write(int i) {
             output << i

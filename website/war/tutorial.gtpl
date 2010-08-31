@@ -5,13 +5,13 @@
 <p>
 The goal of this tutorial is to quickly get you started with using <b>Gaelyk</b> to  write
 and deploy Groovy applications on Google App Engine.
-We'll assume you have already downloaded and installed the Google App Engine SDK of your machine.
+We'll assume you have already downloaded and installed the Google App Engine SDK on your machine.
 If you haven't, please do so by reading the 
 <a href="http://code.google.com/appengine/docs/java/gettingstarted/installing.html">instructions</a> from Google.
 </p>
 
 <p>
-The easiest way to get setup rapidly is to download the template project from the <a href="/download">download section</a>.
+The easiest way to get setup quickly is to download the template project from the <a href="/download">download section</a>.
 It provides a ready-to-go project with the right configuration files pre-filled and an appropriate directory layout:
 </p>
 
@@ -122,7 +122,7 @@ In the <code>WEB-INF</code> directory, you'll find:
 <blockquote>
 <b>Note: </b> You may decide to put the Groovy scripts and includes elsewhere, 
 but the other files and directories can't be changed, 
-as they are files App Engine or the servlet container expects to find at that specific locaction.
+as they are files App Engine or the servlet container expects to find at that specific location.
 </blockquote>
 
 <h2>Configuration files</h2>
@@ -1148,7 +1148,7 @@ The following example shows how you can access <code>Entity</code>s:
 </pre>
 
 <p>
-A handy mechanism exists to assign several properties at once, on your entities, using the <code>&lt;&lt;</code> (leftshit) operator.
+A handy mechanism exists to assign several properties at once, on your entities, using the <code>&lt;&lt;</code> (left shift) operator.
 This is particularly useful when you have properties coming from the request, in the <code>params</code> map variable.
 You can the do the following to assign all the key/values in the map as properties on your entity:
 </p>
@@ -1306,7 +1306,7 @@ that <b>Gaelyk</b> adds on <code>DataService</code> and which takes care of that
 </pre>
 
 <p>
-The <code>withTransaction()</code> method takes a closure as sole parameter,
+The <code>withTransaction()</code> method takes a closure as the sole parameter,
 and within that closure, upon its execution by <b>Gaelyk</b>, your code will be in the context of a transaction.
 </p>
 
@@ -1704,7 +1704,7 @@ since version 1.3.5 of Google App Engine's SDK, there is the possibility of
 to read the content of the blob.
 <b>Gaelyk</b> 0.4.1 adds three convenient methods on <code>BlobKey</code>
 to easily deal with a raw input stream or with a reader, leveraging Groovy's own input stream and reader methods.
-The stream and reader are handled properly with regards to cleanly openning and close those resources
+The stream and reader are handled properly with regards to cleanly opening and closing those resources
 so that you don't have to take care of that aspect yourself.
 </p>
 
@@ -1715,7 +1715,7 @@ so that you don't have to take care of that aspect yourself.
         // do something with the stream
     }
 
-    // defaults to using UTF-8 as encodin for reading from the underlying stream
+    // defaults to using UTF-8 as encoding for reading from the underlying stream
     blobKey.withReader { Reader reader ->
         // do something with the reader
     }
@@ -1777,7 +1777,7 @@ that will then forward back to the URL you've provided when calling
 should be a direct path to the groovlet like <code>/WEB-INF/groovy/uploadBlob.groovy</code> or the shortcut
 <code>/uploadBlob.groovy</code>.
 For an unknown reason, you cannot use a URL defined through the URL routing system.
-This is not necessarily critical, in the sense that this URL is never deplayed in the browser anyway.
+This is not necessarily critical, in the sense that this URL is never deployed in the browser anyway.
 </blockquote>
 
 <p>
@@ -1804,7 +1804,7 @@ and more particularly, the blob coming from the <code>myTextFile</code> input fi
 </p>
 
 <blockquote>
-<b>Warning: </b> Google App Engine mandates that you specify explicitely a redirection status code (301, 302 or 303),
+<b>Warning: </b> Google App Engine mandates that you explicitly specify a redirection status code (301, 302 or 303),
 and that you <b>do</b> redirect the user somewhere else, otherwise you'll get some runtime errors.
 </blockquote>
 
@@ -2048,7 +2048,7 @@ as well as defined a <code>WEB-INF/routes.groovy</code> script, otherwise no plu
 <p>
 The <code>categories</code> method call takes a list of classes
 which are <a href="http://groovy.codehaus.org/Groovy+Categories">Groovy categories</a>.
-It's actually just a <em>varags</em> method taking as many classes as you want.
+It's actually just a <em>varargs</em> method taking as many classes as you want.
 </p>
 
 <p>
@@ -2058,7 +2058,7 @@ Wherever in your plugin descriptor, you can put any initialization code you may 
 <blockquote>
 <b>Important:</b> The plugins are loaded once, as soon as the first request is served.
 So your initialization code, adding binding variables, categories and routes, will only be done once per application load.
-Knowing that Google App Engine can load and unload apps depending on trafic, this is important to keep in mind as well.
+Knowing that Google App Engine can load and unload apps depending on traffic, this is important to keep in mind as well.
 </blockquote>
 
 <blockquote>
@@ -2095,7 +2095,7 @@ In this example, this means <b>Gaelyk</b> will load <code>WEB-INF/plugins/jsonPl
 </blockquote>
 
 <p>
-As mentioned previously while talking about the precendence rules, the order with which the plugins are loaded
+As mentioned previously while talking about the precedence rules, the order with which the plugins are loaded
 may have an impact on your application or other plugins previously installed and initialized.
 But hopefully, such conflicts shouldn't happen too often, and this should be resolved easily,
 as you have full control over the code you're installing through these plugins to make the necessary amendments

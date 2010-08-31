@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse
 import groovyx.gaelyk.plugins.PluginsHandler
 import javax.servlet.ServletConfig
 import groovyx.gaelyk.logging.GroovyLogger
+import groovyx.gaelyk.routes.RoutingHandler
 
 /**
  * The Gaelyk template servlet extends Groovy's own template servlet 
@@ -35,7 +36,7 @@ import groovyx.gaelyk.logging.GroovyLogger
 class GaelykTemplateServlet extends TemplateServlet {
 
     @Override
-    def void init(ServletConfig config) {
+    void init(ServletConfig config) {
         super.init(config)
         PluginsHandler.instance.initPlugins()
     }

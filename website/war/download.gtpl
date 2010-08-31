@@ -7,7 +7,7 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.6 or 1.7 and with
 </p>
 
 <p>
-The latest version was tested with Groovy 1.7.4,
+The latest version was tested with Groovy 1.7.4 and Groovy 1.8-beta-1,
 and with the 1.3.5 version of the App Engine SDK.
 </p>
 
@@ -24,6 +24,7 @@ But to get you started quickly, you may use a ready-made template project which 
         (<code>gaelyk.email</code> and <code>gaelyk.jabber</code>)
     </li>
     <li>Plugins are now impacting Jabber and incoming email groovlets as well</li>
+    <li>Fixed a bug the conversion of String to Datastore's Category type</li>
 </ul>
 
 <h3>Artifacts</h3>

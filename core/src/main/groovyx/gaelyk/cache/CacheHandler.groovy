@@ -25,7 +25,6 @@ class CacheHandler {
     static void serve(Route route, HttpServletRequest request, HttpServletResponse response) {
         def requestURI = request.requestURI
         def uri = requestURI + (request.queryString ? "?$request.queryString" : "")
-        def contentKey = "content-for-$uri"
         def result = route.forUri(requestURI)
 
         if (route.cacheExpiration > 0) {
@@ -40,24 +39,16 @@ class CacheHandler {
                 if (lastModifiedString && httpDateFormat?.parse(lastModifiedString).before(sinceDate)) {
                     response.sendError HttpServletResponse.SC_NOT_MODIFIED
                     response.setHeader("Last-Modified", ifModifiedSince)
-                } else {
-                    // check if the page is already in the cache
-                    if (memcache.contains(contentKey)) {
-                        sendFromCache(request, response, result.destination, uri, route.cacheExpiration)
-                    } else { // the resource was not present in the cache
-                        sendOutputAndCache(request, response, result.destination, uri, route.cacheExpiration)
-                    }
+                    return
                 }
-            } else {
-                sendFromCache(request, response, result.destination, uri, route.cacheExpiration)
             }
-
+            serveAndCacheOrServeFromCache(request, response, result.destination, uri, route.cacheExpiration)
         } else {
             request.getRequestDispatcher(result.destination).forward request, response
         }
     }
 
-    static private sendFromCache(HttpServletRequest request, HttpServletResponse response, String destination, String uri, int cacheExpiration) {
+    static private serveAndCacheOrServeFromCache(HttpServletRequest request, HttpServletResponse response, String destination, String uri, int cacheExpiration) {
         def contentKey = "content-for-$uri"
         def typeKey = "content-type-for-$uri"
 
@@ -71,40 +62,31 @@ class CacheHandler {
             // if it's in the cache, return the page from the cache
             response.contentType = type
             response.outputStream << content
-        } else {
-            sendOutputAndCache(request, response, destination, uri, cacheExpiration)
+        } else { // serve and cache
+            def now = new Date()
+            def lastModifiedString = httpDateFormat.format(now)
+
+            def lastModifiedKey = "last-modified-$uri"
+
+            // specify caching durations
+            response.addHeader "Cache-Control", "max-age=${cacheExpiration}"
+            response.addHeader "Last-Modified", lastModifiedString
+            response.addHeader "Expires", httpDateFormat.format(new Date(now.time + cacheExpiration * 1000))
+            //response.addHeader "ETag", "\"\""
+            def duration = Expiration.byDeltaSeconds(cacheExpiration)
+
+            def cachedResponse = new CachedResponse(response)
+            request.getRequestDispatcher(destination).forward request, cachedResponse
+            def byteArray = cachedResponse.output.toByteArray()
+
+            // put the output in memcache
+            memcache.put(contentKey, byteArray, duration)
+            memcache.put(typeKey, cachedResponse.contentType, duration)
+            memcache.put(lastModifiedKey, lastModifiedString, duration)
+
+            // output back to the screen
+            response.contentType = cachedResponse.contentType
+            response.outputStream << byteArray
         }
     }
-
-    static private sendOutputAndCache(HttpServletRequest request, HttpServletResponse response, String destination, String uri, int cacheExpiration) {
-        def now = new Date()
-        def lastModifiedString = httpDateFormat.format(now)
-
-        def contentKey = "content-for-$uri"
-        def typeKey = "content-type-for-$uri"
-        def lastModifiedKey = "last-modified-$uri"
-
-        def memcache = MemcacheServiceFactory.memcacheService
-
-        // specify caching durations
-        response.addHeader "Cache-Control", "max-age=${cacheExpiration}"
-        response.addHeader "Last-Modified", lastModifiedString
-        response.addHeader "Expires", httpDateFormat.format(new Date(now.time + cacheExpiration * 1000))
-        //response.addHeader "ETag", "\"\""
-        def duration = Expiration.byDeltaSeconds(cacheExpiration)
-
-        def cachedResponse = new CachedResponse(response)
-        request.getRequestDispatcher(destination).forward request, cachedResponse
-        def byteArray = cachedResponse.output.toByteArray()
-
-        // put the output in memcache
-        memcache.put(contentKey, byteArray, duration)
-        memcache.put(typeKey, cachedResponse.contentType, duration)
-        memcache.put(lastModifiedKey, lastModifiedString, duration)
-
-        // output back to the screen
-        response.contentType = cachedResponse.contentType
-        response.outputStream << byteArray
-    }
-
 }

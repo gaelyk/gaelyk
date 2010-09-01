@@ -25,6 +25,7 @@ But to get you started quickly, you may use a ready-made template project which 
     </li>
     <li>Plugins are now impacting Jabber and incoming email groovlets as well</li>
     <li>Fixed a bug the conversion of String to Datastore's Category type</li>
+    <li>Internal refactorings of the caching logic</li>
 </ul>
 
 <h3>Artifacts</h3>

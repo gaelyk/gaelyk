@@ -1,7 +1,7 @@
 new AntBuilder().sequential {
 
     // current Gaelyk version
-    version = '0.4.3'
+    version = '0.4.4'
 
     // various directory places and file names
     src = "src/main"
@@ -16,7 +16,9 @@ new AntBuilder().sequential {
     zipname = "${target}/gaelyk-template-project-${version}.zip"
     projLib = "${tmpProj}/war/WEB-INF/lib"
 
-    apidir = "../website/war/api"
+    website = "../website"
+    apidir = "${website}/war/api"
+    websiteLib = "${website}/war/WEB-INF/lib" 
 
     if (!args) {
         echo "Usage: groovy build (jar|template|javadoc|dist)"
@@ -70,6 +72,14 @@ new AntBuilder().sequential {
                         link packages: 'com.google.appengine.', href: 'http://code.google.com/appengine/docs/java/javadoc/'
                         link packages: 'org.codehaus.groovy.,groovy.', href: 'http://groovy.codehaus.org/gapi/'
                     }
+        }
+
+        if (action == 'dist') {
+            echo "Updating the Gaelyk JAR of the website"
+            delete {
+                fileset dir: websiteLib, includes: "gaelyk-*.jar"
+            }
+            copy file: jarname, todir: websiteLib
         }
 
         echo "Done."

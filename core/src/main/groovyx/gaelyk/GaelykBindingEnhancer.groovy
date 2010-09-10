@@ -29,6 +29,7 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.utils.SystemProperty
 import groovyx.gaelyk.logging.LoggerAccessor
 import com.google.appengine.api.oauth.OAuthServiceFactory
+import com.google.appengine.api.NamespaceManager
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -84,5 +85,9 @@ class GaelykBindingEnhancer {
         binding.setVariable("logger", new LoggerAccessor())
 
         binding.setVariable("oauth", OAuthServiceFactory.OAuthService)
+
+        // Namespace added in SDK 1.3.7
+        binding.setVariable("namespace", NamespaceManager)
+
     }
 }

@@ -1,4 +1,5 @@
 groovyx.gaelyk
+groovyx.gaelyk.cache
 groovyx.gaelyk.logging
 groovyx.gaelyk.plugins
 groovyx.gaelyk.routes

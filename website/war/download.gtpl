@@ -19,6 +19,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
+    <li>Updated to GAE SDK 1.3.7</li>
     <li>
         Jabber and incoming email groovlets now have their implicit logger
         (<code>gaelyk.email</code> and <code>gaelyk.jabber</code>)
@@ -26,6 +27,13 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Plugins are now impacting Jabber and incoming email groovlets as well</li>
     <li>Fixed a bug the conversion of String to Datastore's Category type</li>
     <li>Internal refactorings of the caching logic</li>
+    <li>
+        Added <a href="/tutorial#namespace">namespace support</a>:
+        <ul>
+            <li><code>namespace</code> added in the binding, pointing at <code>NamespaceManager</code></li>
+            <li>new method namespace.of("customerA") { ... } to execute a closure in the context of a specific namespace</li>
+        </ul>
+    </li>
 </ul>
 
 <h3>Artifacts</h3>

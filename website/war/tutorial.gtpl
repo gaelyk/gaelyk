@@ -401,9 +401,9 @@ From a Groovlet or a Template, you can do:
 
 <h3>Lazy variables</h3>
 <ul>
-    <li><tt>out</tt> : shorhand for <code>response.getWriter()</code> which returns a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/PrintWriter.html"><code>PrintWriter</code></a></li>
-    <li><tt>sout</tt> : shorhand for <code>response.getOutputStream()</code> which returns a <a href="http://java.sun.com/javaee/5/docs/api/javax/servlet/ServletOutputStream.html"><code>ServletOutputStream</code></a></li>
-    <li><tt>html</tt> : shorhand for <code>new MarkupBuilder(response.getWriter())</code> which returns a <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html"><code>MarkupBuilder</code></a></li>
+    <li><tt>out</tt> : shorthand for <code>response.getWriter()</code> which returns a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/io/PrintWriter.html"><code>PrintWriter</code></a></li>
+    <li><tt>sout</tt> : shorthand for <code>response.getOutputStream()</code> which returns a <a href="http://java.sun.com/javaee/5/docs/api/javax/servlet/ServletOutputStream.html"><code>ServletOutputStream</code></a></li>
+    <li><tt>html</tt> : shorthand for <code>new MarkupBuilder(response.getWriter())</code> which returns a <a href="http://groovy.codehaus.org/api/groovy/xml/MarkupBuilder.html"><code>MarkupBuilder</code></a></li>
 </ul>
 
 <blockquote>
@@ -461,6 +461,9 @@ by injecting specific elements of the Google App Engine SDK:
     </li>
     <li>
         <tt>oauth</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/oauth/OAuthService.html">OAuth service</a>.
+    </li>
+    <li>
+        <tt>namespace</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/NamespaceManager.html">Namespace manager</a>
     </li>
     <li>
         <tt>localMode</tt> : a boolean variable which is <code>true</code> when the application is running in local
@@ -1865,6 +1868,34 @@ showing the blob details, and outputing the content of the blob (a text file in 
     Google App Engine will store the blob and forward the blob information to your <code>uploadBlob.groovy</code> groovlet
     that will then redirect to the success page (or failure page in case something goes wrong).
 </p>
+
+<a name="namespace"></a>
+<h2>Namespace support</h2>
+
+<p>
+Google App Engine SDK 1.3.7 introduced
+<a href="http://code.google.com/appengine/docs/java/multitenancy/multitenancy.html">multitenancy support</a>,
+through the concept of namespace, that you can handle through the
+<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/NamespaceManager.html">NamespaceManager</a> class.
+</p>
+
+<p>
+<b>Gaelyk</b> 0.4.4 adds the variable <code>namespace</code> into the binding of your groovlets and templates.
+This <code>namespace</code> variable is simply the <code>NamespaceManager</code> class.
+<b>Gaelyk</b> adds a handy method for automating the pattern of setting a temporary namespace and restoring it to its previous value,
+thanks to the added <code>of()</code> method, taking a namespace name in the form of a string,
+and a closure to be executed when that namespace is active.
+This method can be used as follows:
+</p>
+
+<pre class="brush:groovy">
+    // temporarily set a new namespace
+    namespace.of("customerA") {
+        // use whatever service leveraging the namespace support
+        // like the datastore or memcache
+    }
+    // once the closure is executed, the old namespace is restored
+</pre>
 
 <a name="plugin"></a>
 <h1>Simple plugin system</h1>

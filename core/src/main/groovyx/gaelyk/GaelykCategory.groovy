@@ -928,15 +928,29 @@ class GaelykCategory {
      * <pre><code>
      * def cropTransform = ...
      * def rotateTransform = ...
-     * 
+     *
+     * croptTransform << rotateTransform
      * </code></pre>
-     * @param leftTransform
-     * @param rightTransform
-     * @return
+     * @param leftTransform a transform
+     * @param rightTransform another transform
+     * @return a composite transform
      */
     static CompositeTransform leftShift(CompositeTransform leftTransform, Transform rightTransform) {
         leftTransform.concatenate(rightTransform)
     }
+
+    /**
+     * Use the rightShift operator, >>, to "pre-concatenate" a transform to the composite transform.
+     * <pre><code>
+     * def cropTransform = ...
+     * def rotateTransform = ...
+     *
+     * croptTransform >> rotateTransform
+     * </code></pre>
+     * @param leftTransform a transform
+     * @param rightTransform another transform
+     * @return a composite transform
+     */
 
     static CompositeTransform rightShift(CompositeTransform leftTransform, Transform rightTransform) {
         leftTransform.preConcatenate(rightTransform)

@@ -51,10 +51,11 @@ import com.google.appengine.api.blobstore.ByteRange
 import com.google.appengine.api.blobstore.BlobInfo
 import com.google.appengine.api.blobstore.BlobInfoFactory
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
-import com.google.appengine.api.blobstore.BlobstoreFailureException
-import javax.servlet.http.HttpServletResponse
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.NamespaceManager
+import com.google.appengine.api.images.Transform
+import com.google.appengine.api.images.CompositeTransform
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -166,12 +167,10 @@ class GaelykCategory {
      * Instead of writing
      * <code>entity.setProperty('propertyName', value)</code>
      * You can use the shortcut
-     * <code>entity.propertyName = value</code>
-     * Or
      * <code>entity['propertyName'] = value</code>
      */
     static void setAt(Entity entity, String name, Object value) {
-        entity.setProperty(name, value)
+        entity.setProperty(name, transformeEntityFieldValue(value))
     }
 
     /**
@@ -180,11 +179,17 @@ class GaelykCategory {
      * <code>entity.setProperty('propertyName', value)</code>
      * You can use the shortcut
      * <code>entity.propertyName = value</code>
-     * Or
-     * <code>entity['propertyName'] = value</code>
      */
     static void set(Entity entity, String name, Object value) {
-        entity.setProperty(name, value)
+        entity.setProperty(name, transformeEntityFieldValue(value))
+    }
+
+    // All transformations that needs to be done on entity fields
+    // prior to their insertion in the datastore
+    private Object transformeEntityFieldValue(Object value) {
+        // the datastore doesn't allow to store GStringImpl
+        // so we need a toString() first
+        value instanceof GString ? value.toString() : value
     }
 
     /**
@@ -912,6 +917,29 @@ class GaelykCategory {
         } finally {
             NamespaceManager.set(oldNs)
         }
+    }
+
+    // ----------------------------------------------------------------
+    // Category methods dedicated to the ImageService
+    // ----------------------------------------------------------------
+
+    /**
+     * Use the leftShift operator, <<, to concatenate a transform to the composite transform.
+     * <pre><code>
+     * def cropTransform = ...
+     * def rotateTransform = ...
+     * 
+     * </code></pre>
+     * @param leftTransform
+     * @param rightTransform
+     * @return
+     */
+    static CompositeTransform leftShift(CompositeTransform leftTransform, Transform rightTransform) {
+        leftTransform.concatenate(rightTransform)
+    }
+
+    static CompositeTransform rightShift(CompositeTransform leftTransform, Transform rightTransform) {
+        leftTransform.preConcatenate(rightTransform)
     }
 
 }

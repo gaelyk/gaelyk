@@ -1,6 +1,6 @@
-def ctx = context(scope: scriptScope())
+def ctx = context(scope: scriptScope(), filetypes: ['groovy'])
 
-contributor(ctx) {
+contributor([ctx]) {
     property name: "request",       type: "javax.servlet.http.HttpServletRequest"
     property name: "response",      type: "javax.servlet.http.HttpServletResponse"
     property name: "context",       type: "javax.servlet.ServletContext"
@@ -12,9 +12,13 @@ contributor(ctx) {
     property name: "sout",          type: "javax.servlet.ServletOutputStream"
     property name: "html",          type: "groovy.xml.MarkupBuilder"
 
+    property name: "app",           type: "java.util.Map"
     property name: "queues",        type: "com.google.appengine.api.labs.taskqueue.Queue"
     property name: "defaultQueue",  type: "com.google.appengine.api.labs.taskqueue.Queue"
     property name: "mail",          type: "com.google.appengine.api.mail.MailService"
+    property name: "namespace",     type: "com.google.appengine.api.NamespaceManager"
+    property name: "logger",        type: "groovyx.gaelyk.logging.LoggerAccessor"
+    property name: "log",           type: "groovyx.gaelyk.logging.GroovyLogger"
 
     property name: "datastore",     type: "com.google.appengine.api.datastore.DatastoreService"
     property name: "memcache",      type: "com.google.appengine.api.memcache.MemcacheService"
@@ -23,7 +27,8 @@ contributor(ctx) {
     property name: "users",         type: "com.google.appengine.api.users.UserService"
     property name: "user",          type: "com.google.appengine.api.users.User"
     property name: "xmpp",          type: "com.google.appengine.api.xmpp.XMPPService"
-    property name: "blob",          type: "com.google.appengine.api.blobstore.BlobstoreService"
+    property name: "blobstore",     type: "com.google.appengine.api.blobstore.BlobstoreService"
+    property name: "oauth",         type: "com.google.appengine.api.oauth.OAuthService"
 
     property name: "localMode",     type: "java.lang.Boolean"
 

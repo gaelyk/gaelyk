@@ -32,6 +32,7 @@ import com.google.appengine.api.memcache.Expiration
 import java.text.SimpleDateFormat
 import groovyx.gaelyk.cache.CachedResponse
 import groovyx.gaelyk.cache.CacheHandler
+import groovyx.gaelyk.logging.GroovyLogger
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -55,10 +56,12 @@ class RoutesFilter implements Filter {
     private long lastRoutesFileModification = 0
     private List<Route> routes = []
     private FilterConfig filterConfig
+    private GroovyLogger log
 
     void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig
         this.routesFileLocation = filterConfig.getInitParameter("routes.location") ?: "WEB-INF/routes.groovy"
+        this.log = new GroovyLogger('gaelyk.routesfilter')
         loadRoutes()
     }
 
@@ -66,6 +69,8 @@ class RoutesFilter implements Filter {
      * Load the routes configuration
      */
     private loadRoutes() {
+        log.config "Loading routes configuration"
+
         def routesFile = new File(this.routesFileLocation)
 
         if (routesFile.exists()) {
@@ -122,6 +127,11 @@ class RoutesFilter implements Filter {
             if (route.method == HttpMethod.ALL || route.method.toString() == method) {
                 def result = route.forUri(requestURI)
                 if (result.matches) {
+                    if (route.ignore) {
+                        log.config "Ignoring route for '${requestURI}' (${route})"
+                        // skip out completely
+                        break
+                    }
                     if (route.redirectionType == RedirectionType.FORWARD) {
                         CacheHandler.serve(route, request, response)
                     } else {
@@ -134,6 +144,7 @@ class RoutesFilter implements Filter {
         }
         
         if (!foundRoute) {
+            log.config "Going through the regular filter chain"
             filterChain.doFilter servletRequest, servletResponse
         }
     }

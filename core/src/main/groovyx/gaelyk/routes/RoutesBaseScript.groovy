@@ -35,14 +35,17 @@ abstract class RoutesBaseScript extends Script {
      *
      * @param m a map containing the forward or redirect location,
      * as well as potential validation rules for the variables appearing in the route,
-     * and a definition of a caching duration.
+     * a definition of a caching duration, and the ability to ignore certain paths
+     * like GAE's /_ah/* special URLs.
      */
     private handle(Map m, String route, HttpMethod method) {
         RedirectionType redirectionType = m.forward ? RedirectionType.FORWARD : RedirectionType.REDIRECT
+
         def destination = m.forward ?: m.redirect
         def validator = m.validate ?: null
         def cacheExpiration = m.cache ?: 0
+        def ignore = m.ignore ?: false
 
-        routes << new Route(route, destination, method, redirectionType, validator, cacheExpiration)
+        routes << new Route(route, destination, method, redirectionType, validator, cacheExpiration, ignore)
     }
 }

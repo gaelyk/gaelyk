@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletResponse
 class CachedResponse extends HttpServletResponseWrapper {
 
     ByteArrayOutputStream output = new ByteArrayOutputStream(8192)
+    CustomServletOutputStream stream = new CustomServletOutputStream(output: output)
+    PrintWriter writer = new PrintWriter(new OutputStreamWriter(getOutputStream(), "UTF-8"))
 
     CachedResponse(HttpServletResponse response) {
         super(response)
@@ -36,14 +38,14 @@ class CachedResponse extends HttpServletResponseWrapper {
      * @return the associated writer
      */
     PrintWriter getWriter() {
-        new PrintWriter(new OutputStreamWriter(getOutputStream(), "UTF-8"))
+        writer
     }
 
     /**
      * @return the associated output stream
      */
     ServletOutputStream getOutputStream() {
-        new CustomServletOutputStream(output: output)
+        stream
     }
 
     /**

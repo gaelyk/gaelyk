@@ -1,3 +1,5 @@
+get "/",            forward: "/index.gtpl",     cache: 1.hour
+
 get "/tutorial",    forward: "/tutorial.gtpl",  cache: 1.hour
 get "/download",    forward: "/download.gtpl",  cache: 1.hour
 get "/community",   forward: "/community.gtpl", cache: 1.hour

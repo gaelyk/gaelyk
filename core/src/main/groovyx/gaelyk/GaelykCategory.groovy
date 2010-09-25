@@ -186,7 +186,7 @@ class GaelykCategory {
 
     // All transformations that needs to be done on entity fields
     // prior to their insertion in the datastore
-    private Object transformeEntityFieldValue(Object value) {
+    private static Object transformeEntityFieldValue(Object value) {
         // the datastore doesn't allow to store GStringImpl
         // so we need a toString() first
         value instanceof GString ? value.toString() : value

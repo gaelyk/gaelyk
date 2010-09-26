@@ -16,7 +16,6 @@ class CacheHandlerTest extends GroovyTestCase {
             new LocalMemcacheServiceTestConfig(),
     )
 
-
     protected void setUp() {
         super.setUp()
         // setting up the local environment

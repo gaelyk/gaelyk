@@ -29,6 +29,7 @@ But to get you started quickly, you may use a ready-made template project which 
             <li>A DSL for manipulating and transforming images</li>
         </ul>
     </li>
+    <li>Possibility to clear the cache for a given URI</li>
 </ul>
 
 <h3>Artifacts</h3>

@@ -25,11 +25,20 @@ class CacheHandler {
 
     private static final GroovyLogger log = new GroovyLogger("gaelyk.cache")
 
+    static void clearCacheForUri(String uri) {
+        MemcacheServiceFactory.memcacheService.deleteAll([
+                "content-for-$uri", "content-type-for-$uri"
+        ])
+    }
+
     static void serve(Route route, HttpServletRequest request, HttpServletResponse response) {
         log.config "Serving for route $route"
 
         def requestURI = request.requestURI
         def uri = requestURI + (request.queryString ? "?$request.queryString" : "")
+
+        log.config "Request URI to cache: $uri"
+
         def result = route.forUri(requestURI)
 
         if (route.cacheExpiration > 0) {

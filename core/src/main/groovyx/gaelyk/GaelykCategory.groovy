@@ -58,6 +58,7 @@ import com.google.appengine.api.images.CompositeTransform
 import javax.servlet.http.HttpServletResponse
 import com.google.appengine.api.images.Image
 import com.google.appengine.api.images.ImagesServiceFactory as ISF
+import groovyx.gaelyk.cache.CacheHandler
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -721,6 +722,15 @@ class GaelykCategory {
      */
     static boolean isCase(MemcacheService memcache, Object key) {
         memcache.contains(key)
+    }
+
+    /**
+     * Clear the cached content for a given URI.
+     * 
+     * @param uri the URI for which to clear the cache
+     */
+    static void clearCacheForUri(MemcacheService memcache, String uri) {
+        CacheHandler.clearCacheForUri(uri)
     }
 
     // ----------------------------------------------------------------

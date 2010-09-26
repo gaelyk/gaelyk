@@ -999,10 +999,18 @@ both plural and singular forms are supported.
 are stored in Memcache, and as they are simple types, they should even survive Google App Engine loading requests.
 </blockquote>
 
+<p>
+It is possible to clear the cache for a given URI if you want to provide a fresher page to your users:
+</p>
+
+<pre class="brush:groovy">
+    memcache.clearCacheForUri('/breaking-news')
+</pre>
+
 <blockquote>
-<b>Warning: </b> There is a known issue, in some cases, when you include other templates in your template you want to cache,
-thanks to the <code>include</code> directive, the output of the various templates is mixed up.
-Please report back to us if you encounter such issues, and help us fix it!
+<b>Note: </b> There are as many cache entries as URIs with query strings.
+So if you have <code>/breaking-news</code> and <code>/breaking-news?category=politics</code>,
+you will have to clear the cache for both, as <b>Gaelyk</b> doesn't track all the query parameters.
 </blockquote>
 
 <h1>Google App Engine specific shortcuts</h1>

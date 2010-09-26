@@ -18,6 +18,8 @@ import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
 import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
+import com.google.appengine.api.utils.SystemProperty
+import com.google.appengine.api.oauth.OAuthService
 
 /**
  * Test the binding enhancer binds the GAE services in the binding.
@@ -47,6 +49,9 @@ class BindingEnhancerTest extends GroovyTestCase {
         // setting up the local environment
         helper.setUp()
 
+        // sets the environment to "Development"
+        SystemProperty.environment.set("Development")
+
         binding = new Binding()
         GaelykBindingEnhancer.bind(binding)
     }
@@ -58,11 +63,18 @@ class BindingEnhancerTest extends GroovyTestCase {
         super.tearDown()
     }
 
+    void testEnvironmentVariable() {
+        def currentEnv = SystemProperty.environment.value()
+        def devEnv = SystemProperty.Environment.Value.Development
+
+        assert currentEnv == devEnv
+    }
+
     /**
      * Check the various GAE services variables are available in the binding
      */
     void testVariablesPresent() {
-        ["datastore", "memcache", "urlFetch", "mail",
+        ["datastore", "memcache", "urlFetch", "mail", "oauth", 
                 "images", "users", "defaultQueue", "queues",
                 "xmpp", "localMode", "blobstore"].each {
             assert binding.variables.containsKey(it)
@@ -82,5 +94,6 @@ class BindingEnhancerTest extends GroovyTestCase {
         assert binding.defaultQueue instanceof com.google.appengine.api.labs.taskqueue.Queue
         assert binding.xmpp         instanceof XMPPService
         assert binding.blobstore    instanceof BlobstoreService
+        assert binding.oauth        instanceof OAuthService
     }
 }

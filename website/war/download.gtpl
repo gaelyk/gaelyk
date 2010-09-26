@@ -22,7 +22,13 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Fixed the problem of badly placed includes when cache was enabled</li>
     <li>Added an <code>ignore: true</code> parameter in route definitions if you want to quickly skip certain patterns</li>
     <li>The GDSL file for IntelliJ IDEA has been updated so that you have code-completion in your groovlets and templates</li>
-    <li>Provide a convenient wrapper class for the <code>ImagesService</code> and <code>ImagesServiceFactory</code></li>
+    <li>Many <a href="/tutorial#images">enhancements around the images service</a>
+        <ul>
+            <li>Provide a convenient wrapper class for the <code>ImagesService</code> and <code>ImagesServiceFactory</code></li>
+            <li>New methods dedicated to the handling of images</li>
+            <li>A DSL for manipulating and transforming images</li>
+        </ul>
+    </li>
 </ul>
 
 <h3>Artifacts</h3>

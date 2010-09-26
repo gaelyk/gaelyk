@@ -57,7 +57,7 @@ import com.google.appengine.api.images.Transform
 import com.google.appengine.api.images.CompositeTransform
 import javax.servlet.http.HttpServletResponse
 import com.google.appengine.api.images.Image
-import com.google.appengine.api.images.ImagesServiceFactory
+import com.google.appengine.api.images.ImagesServiceFactory as ISF
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -903,7 +903,7 @@ class GaelykCategory {
      * @return an Image
      */
     static Image getImage(BlobKey selfKey) {
-        ImagesServiceFactory.makeImageFromBlob(selfKey)
+        ISF.makeImageFromBlob(selfKey)
     }
 
     // ----------------------------------------------------------------
@@ -972,4 +972,155 @@ class GaelykCategory {
         leftTransform.preConcatenate(rightTransform)
     }
 
+    /**
+     * Transform a byte array into an Image.
+     *
+     * <pre><code>
+     * def byteArray = ...
+     * def image = byteArray.image
+     * </code></pre>
+     *
+     * @param byteArray a byte array
+     * @return an Image
+     */
+    static Image getImage(byte[] byteArray) {
+        ISF.makeImage(byteArray)
+    }
+
+
+     /**
+      * Image transform DSL.
+      * <pre><code>
+      *  bytes.image.transform {
+      *      resize 100, 100
+      *      crop 0.1, 0.1, 0.9, 0.9
+      *      flip horizontal
+      *      flip vertical
+      *      rotate 90
+      *      feeling lucky
+      *  }
+      * </code></pre>
+      *
+      * @param selfImage the image to transform
+      * @param c the closure containg the various transform steps
+      * @return a transformed image
+      */
+    static Image transform(Image selfImage, Closure c) {
+        Closure clone = c.clone()
+        clone.resolveStrategy = Closure.DELEGATE_ONLY
+
+        // create an empty composite transform
+        CompositeTransform compTransf = ISF.makeCompositeTransform()
+
+        clone.delegate = new Expando([
+                // methods
+                resize:  { width, height ->                compTransf << ISF.makeResize(width, height) },
+                crop:    { leftX, topY, rightX, bottomY -> compTransf << ISF.makeCrop(leftX, topY, rightX, bottomY) },
+                flip:    { horiz ->                        compTransf << (horiz ? ISF.makeHorizontalFlip() : ISF.makeVerticalFlip() ) },
+                rotate:  { degrees ->                      compTransf << ISF.makeRotate(degrees) },
+                feeling: { luck ->                         compTransf << ISF.makeImFeelingLucky() },
+
+                // variables
+                horizontal:     true,
+                vertical:       false,
+                lucky:          true
+        ])
+
+        // calculate a combined transform
+        clone()
+
+        // apply the composite transform and generate the resulting image
+        return ISF.imagesService.applyTransform(compTransf, selfImage)
+    }
+
+    /**
+     * Create a new resized image.
+     *
+     * <pre><code>
+     *  def thumbnail = image.resize(100, 100)
+     * </code></pre>
+     *
+     * @param selfImage image to resize
+     * @param width new width
+     * @param height new height
+     * @return a resized image
+     */
+    static Image resize(Image selfImage, int width, int height) {
+        ISF.imagesService.applyTransform(ISF.makeResize(width, height), selfImage)
+    }
+
+    /**
+     * Create a new cropped image.
+     *
+     * <pre><code>
+     *  def cropped = image.crop(0.1, 0.1, 0.9, 0.9)
+     * </code></pre>
+     *
+     * @param selfImage image to crop
+     * @param leftX
+     * @param topY
+     * @param rightX
+     * @param bottomY
+     * @return a cropped image
+     */
+    static Image crop(Image selfImage, double leftX, double topY, double rightX, double bottomY) {
+        ISF.imagesService.applyTransform(ISF.makeCrop(leftX, topY, rightX, bottomY), selfImage)
+    }
+
+    /**
+     * Create a new image flipped horizontally.
+     *
+     * <pre><code>
+     *  def himage = image.horizontalFlip()
+     * </code></pre>
+     *
+     * @param selfImage image to flip horizontally
+     * @return a flipped image
+     */
+    static Image horizontalFlip(Image selfImage) {
+        ISF.imagesService.applyTransform(ISF.makeHorizontalFlip(), selfImage)
+    }
+
+    /**
+     * Create a new image flipped vertically.
+     *
+     * <pre><code>
+     *  def vimage = image.verticalFlip()
+     * </code></pre>
+     *
+     * @param selfImage image to flip vertically
+     * @return a flipped image
+     */
+    static Image verticalFlip(Image selfImage) {
+        ISF.imagesService.applyTransform(ISF.makeVerticalFlip(), selfImage)
+    }
+
+    /**
+     * Create a new rotated image.
+     *
+     * <pre><code>
+     *  def rotated = image.rotate(90)
+     * </code></pre>
+     *
+     * @param selfImage image to rotate
+     * @param degrees number of degrees to rotate (must be a multiple of 90)
+     * @return a rotated image
+     */
+    static Image rotate(Image selfImage, int degrees) {
+        ISF.imagesService.applyTransform(ISF.makeRotate(degrees), selfImage)
+    }
+
+    /**
+     * Create a new image applying the "I'm feeling lucky" transformation.
+     *
+     * <pre><code>
+     *  def adjusted = image.iAmFeelingLucky()
+     * </code></pre>
+     *
+     * @param selfImage image to adjust
+     * @return an adjusted image
+     */
+    static Image imFeelingLucky(Image selfImage) {
+        ISF.imagesService.applyTransform(ISF.makeImFeelingLucky(), selfImage)
+    }
 }

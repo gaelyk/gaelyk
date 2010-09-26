@@ -1909,7 +1909,10 @@ This method can be used as follows:
     // once the closure is executed, the old namespace is restored
 </pre>
 
+<a name="images"></a>
 <h2>Images service enhancements</h2>
+
+<h3>The images service and service factory wrapper</h3>
 
 <p>
 The Google App Engine SDK is providing two classes for handling images:
@@ -1938,7 +1941,7 @@ So you can call any method on either of them on the same <code>images</code> ins
     def image = images.makeImageFromBlob(blob)
 
     // apply a resize transform on the image to create a thumbnail
-    def thumbnail = images.applyTransform(makeResize(260, 260), image)
+    def thumbnail = images.applyTransform(images.makeResize(260, 260), image)
 
     // serve the binary data of the image to the servlet output stream
     sout << thumbnail.imageData
@@ -1952,6 +1955,51 @@ but there is also a more rapid shortcut for retrieving an image when given a blo
 <pre class="brush:groovy">
     def blobKey = ...
     def image = blobKey.image
+</pre>
+
+<p>
+In case you have a byte array representing your image, you can also easily instanciate an <code>Image</code> with:
+</p>
+
+<pre class="brush:groovy">
+    byte[] byteArray = new File('/images/myimg.png').bytes
+    def image = byteArray.image
+</pre>
+
+<h3>An image manipulation language</h3>
+
+<p>
+The images service permits the manipulation of images by applying various transforms,
+like resize, crop, flip (vertically or horizontally), rotate, and even an "I'm feeling lucky" transform!
+The <b>Gaelyk</b> image manipulation DSL allows to simplify the combination of such operations=
+</p>
+
+<pre class="brush:groovy">
+    blobKey.image.transform {
+        resize 100, 100
+        crop 0.1, 0.1, 0.9, 0.9
+        flip horizontal
+        flip vertical
+        rotate 90
+        feeling lucky
+    }
+</pre>
+
+<p>
+The benefit of this approach is that transforms are combined within a single composite transform,
+which will be applied in one row to the original image, thus saving on CPU computation.
+But if you just need to make one transform, you can also call new methods on <code>Image</code> as follows:
+</p>
+
+<pre class="brush:groovy">
+    def image = ...
+
+    def thumbnail   = image.resize(100, 100)
+    def cropped     = image.crop(0.1, 0.1, 0.9, 0.9)
+    def hmirror     = image.horizontalFlip()
+    def vmirror     = image.verticalFlip()
+    def rotated     = image.rotate(90)
+    def lucky       = image.imFeelingLucky()
 </pre>
 
 <a name="plugin"></a>

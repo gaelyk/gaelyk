@@ -1789,8 +1789,7 @@ that will then forward back to the URL you've provided when calling
 
 <blockquote>
 <b>Warning: </b> The URL to he groovlet to which the blobstore service will forward the uploaded blob details
-should be a direct path to the groovlet like <code>/WEB-INF/groovy/uploadBlob.groovy</code> or the shortcut
-<code>/uploadBlob.groovy</code>.
+should be a direct path to the groovlet like <code>/uploadBlob.groovy</code>.
 For an unknown reason, you cannot use a URL defined through the URL routing system.
 This is not necessarily critical, in the sense that this URL is never deployed in the browser anyway.
 </blockquote>

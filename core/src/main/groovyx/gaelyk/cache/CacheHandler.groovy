@@ -25,9 +25,9 @@ class CacheHandler {
 
     private static final GroovyLogger log = new GroovyLogger("gaelyk.cache")
 
-    static void clearCacheForUri(String uri) {
+    static Set clearCacheForUri(String uri) {
         MemcacheServiceFactory.memcacheService.deleteAll([
-                "content-for-$uri", "content-type-for-$uri"
+                "content-for-$uri".toString(), "content-type-for-$uri".toString()
         ])
     }
 

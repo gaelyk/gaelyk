@@ -729,7 +729,7 @@ class GaelykCategory {
      * 
      * @param uri the URI for which to clear the cache
      */
-    static void clearCacheForUri(MemcacheService memcache, String uri) {
+    static Set clearCacheForUri(MemcacheService memcache, String uri) {
         CacheHandler.clearCacheForUri(uri)
     }
 

@@ -1958,12 +1958,16 @@ but there is also a more rapid shortcut for retrieving an image when given a blo
 </pre>
 
 <p>
-In case you have a byte array representing your image, you can also easily instanciate an <code>Image</code> with:
+In case you have a file or a byte array representing your image, you can also easily instanciate an <code>Image</code> with:
 </p>
 
 <pre class="brush:groovy">
-    byte[] byteArray = new File('/images/myimg.png').bytes
+    // from a byte array
+    byte[] byteArray = ...
     def image = byteArray.image
+
+    // from a file directly
+    image = new File('/images/myimg.png').image
 </pre>
 
 <h3>An image manipulation language</h3>

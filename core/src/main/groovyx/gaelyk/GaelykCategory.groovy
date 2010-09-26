@@ -1123,4 +1123,14 @@ class GaelykCategory {
     static Image imFeelingLucky(Image selfImage) {
         ISF.imagesService.applyTransform(ISF.makeImFeelingLucky(), selfImage)
     }
+
+    /**
+     * Create an image from a file.
+     *
+     * @param f PNG or JPEG file
+     * @return an instance of <code>Image</code>
+     */
+    static Image getImage(File f) {
+        ISF.makeImage(f.bytes)
+    }
 }

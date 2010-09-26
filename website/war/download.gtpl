@@ -30,6 +30,7 @@ But to get you started quickly, you may use a ready-made template project which 
         </ul>
     </li>
     <li>Possibility to clear the cache for a given URI</li>
+    <li>Closure memoization through memcache</li>
 </ul>
 
 <h3>Artifacts</h3>

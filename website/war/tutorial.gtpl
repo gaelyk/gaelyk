@@ -1661,6 +1661,39 @@ may have disappeared between the time you do the <code>if (... in ...)</code> ch
 and the time you actually retrieve the value associated with the key from memcache.
 </blockquote>
 
+<h3>Closure memoization</h3>
+
+<p>
+As Wikipedia puts it, <a href="http://en.wikipedia.org/wiki/Memoization">memoization</a> is an <i>optimization technique
+used primarily to speed up computer programs by having function calls avoid repeating the calculation
+of results for previously-processed inputs</i>.
+<b>Gaelyk</b> provides such a mechanism for closures, storing invocation information
+(a closure call with its arguments values) in memcache.
+</p>
+
+<p>
+An example, if you want to avoid computing expansive operations (like repeatedly fetching results from the datastore)
+in a complex algorithm:
+</p>
+
+<pre class="brush:groovy">
+    Closure countEntities = memcache.memoize { String kind ->
+        datastore.prepare( new Query(kind) ).countEntities()
+    }
+
+    // the first time, the expensive datastore operation will be performed and cached
+    def totalPics = countEntities('photo')
+
+    /* add new pictures to the datastore */
+
+    // the second invocation, the result of the call will be the same as before, coming from the cache
+    def totalPics2 = countEntities('photo')
+</pre>
+
+<blockquote>
+<b>Note: </b> Invocations are stored in memcache only up to the 30 seconds request time limit of App Engine.
+</blockquote>
+
 <a name="blobstore"></a>
 <h2>Enhancements related to the BlobStore</h2>
 

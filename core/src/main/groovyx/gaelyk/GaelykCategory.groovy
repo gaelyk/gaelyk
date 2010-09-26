@@ -59,6 +59,7 @@ import javax.servlet.http.HttpServletResponse
 import com.google.appengine.api.images.Image
 import com.google.appengine.api.images.ImagesServiceFactory as ISF
 import groovyx.gaelyk.cache.CacheHandler
+import com.google.appengine.api.memcache.Expiration
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -732,6 +733,42 @@ class GaelykCategory {
      */
     static Set clearCacheForUri(MemcacheService memcache, String uri) {
         CacheHandler.clearCacheForUri(uri)
+    }
+
+    /**
+     * Memoize a closure invocation in memcache.
+     * Closure call result are stored in memcache, retaining the closure hashCode and the argument values as key.
+     * The results are kept in memcache only up to the 30 seconds request time limit of Google App Engine.
+     *
+     * <pre><code>
+     * def countEntities = memcache.memoize { String kind -> datastore.prepare( new Query(kind) ).countEntities() }
+     * def totalPhotos = countEntities('photos')
+     * </pre></code>
+     *
+     * @param closure the closure to memoize
+     * @return a memoized closure
+     */
+    static Closure memoize(MemcacheService memcache, Closure closure) {
+        return new Closure(closure.owner) {
+            Object call(Object[] args) {
+                // a closure call is identified by its hashcode and its call argument values
+                def key = [
+                        closure: closure.hashCode(),
+                        arguments: args.toList()
+                ]
+                // search for a result for such a call in memcache
+                def result = memcache.get(key)
+                if (result != null) {
+                    // a previous invocation exists
+                    return result
+                } else {
+                    // no previous invocation, so calling the closure and caching the result 
+                    result = closure(* args)
+                    memcache.put(key, result, Expiration.byDeltaSeconds(30))
+                    return result
+                }
+            }
+        }
     }
 
     // ----------------------------------------------------------------

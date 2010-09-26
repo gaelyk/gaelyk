@@ -437,6 +437,8 @@ by injecting specific elements of the Google App Engine SDK:
     <li>
         <tt>images</tt> : the
         <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/images/ImagesService.html">Images service</a>
+        (actually a convenient wrapper class combining both the methods of <code>ImagesService</code> and <code>ImagesServiceFactory</code>
+        and implementing the <code>ImagesService</code> interface)
     </li>
     <li>
         <tt>users</tt> : the
@@ -933,6 +935,16 @@ So you would define the following routes to display all the articles published o
 Also, note that routes are matched in order of appearance.
 So if you have several routes which map an incoming request URI, the first one encountered in the route definition file will win.
 </blockquote>
+
+<h3>Ignoring certain routes</h3>
+
+<p>
+As a fast path to bypass certain URL patterns, you can use the <code>ignore: true</code> parameter in your route definition:
+</p>
+
+<pre class="brush:groovy">
+    all "/_ah/**", ignore: true
+</pre>
 
 <h3>Validating path variables</h3>
 
@@ -1876,7 +1888,7 @@ showing the blob details, and outputing the content of the blob (a text file in 
 Google App Engine SDK 1.3.7 introduced
 <a href="http://code.google.com/appengine/docs/java/multitenancy/multitenancy.html">multitenancy support</a>,
 through the concept of namespace, that you can handle through the
-<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/NamespaceManager.html">NamespaceManager</a> class.
+<a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/NamespaceManager.html">NamespaceManager</a> class.
 </p>
 
 <p>
@@ -1895,6 +1907,51 @@ This method can be used as follows:
         // like the datastore or memcache
     }
     // once the closure is executed, the old namespace is restored
+</pre>
+
+<h2>Images service enhancements</h2>
+
+<p>
+The Google App Engine SDK is providing two classes for handling images:
+</p>
+
+<ul>
+    <li>
+        <code><a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/images/ImagesServiceFactory.html">ImageServiceFactory</a></code>
+        is used to retrieve the Images service, to create images (from blobs, byte arrays), and to make transformation operations.
+    </li>
+    <li>
+        <code><a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/images/ImagesService.html">ImageService</a></code>
+        is used for applying transforms to images, create composite images, serve images, etc.
+    </li>
+</ul>
+
+<p>
+Very quickly, as you use the images handling capabilities of the API,
+you quickly end up jumping between the factory and the service class all the time.
+But thanks to <b>Gaelyk</b>, both <code>ImagesServiceFactory</code> and <code>ImagesService</code> are combined into one.
+So you can call any method on either of them on the same <code>images</code> instance available in your groovlets and templates.
+</p>
+
+<pre class="brush:groovy">
+    // retrieve an image stored in the blobstore
+    def image = images.makeImageFromBlob(blob)
+
+    // apply a resize transform on the image to create a thumbnail
+    def thumbnail = images.applyTransform(makeResize(260, 260), image)
+
+    // serve the binary data of the image to the servlet output stream
+    sout << thumbnail.imageData
+</pre>
+
+<p>
+On the first line above, we created the image out of the blobstore using the images service,
+but there is also a more rapid shortcut for retrieving an image when given a blob key:
+</p>
+
+<pre class="brush:groovy">
+    def blobKey = ...
+    def image = blobKey.image
 </pre>
 
 <a name="plugin"></a>

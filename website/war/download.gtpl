@@ -7,13 +7,30 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.6 or 1.7 and with
 </p>
 
 <p>
-The latest version was tested with Groovy 1.7.4 and Groovy 1.8-beta-1,
-and with the 1.3.5 version of the App Engine SDK.
+The latest version was tested with Groovy 1.7.5 and Groovy 1.8-beta-2,
+and with the 1.3.7 version of the App Engine SDK.
 </p>
 
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 0.5</h2>
+
+<h3>Changes</h3>
+<ul>
+    <li>Fixed the problem of badly placed includes when cache was enabled</li>
+    <li>Added an <code>ignore: true</code> parameter in route definitions if you want to quickly skip certain patterns</li>
+    <li>The GDSL file for IntelliJ IDEA has been updated so that you have code-completion in your groovlets and templates</li>
+    <li>Provide a convenient wrapper class for the <code>ImagesService</code> and <code>ImagesServiceFactory</code></li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.5.jar">gaelyk-0.5.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.5.zip">gaelyk-template-project-0.5.zip</a></li>
+</ul>
+
 
 <h2>Version 0.4.4</h2>
 

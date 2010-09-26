@@ -9,10 +9,17 @@ import com.google.appengine.api.images.ImagesService
  *
  * @author Guillaume Laforge
  */
-class ImagesServiceWrapper {
-    @Delegate ImagesService service = ImagesServiceFactory.getImagesService()
+@Singleton
+class ImagesServiceWrapper implements ImagesService {
+    @Delegate ImagesService service = ImagesServiceFactory.imagesService
 
     def methodMissing(String name, args) {
+        // special case for makeImage which takes byte[] as param
+        // for some reason, we have to force coercion to byte array
+        if (name == "makeImage") {
+            return ImagesServiceFactory.makeImage(args[0] as byte[])
+        }
+
         ImagesServiceFactory."$name"(*args)
     }
 }

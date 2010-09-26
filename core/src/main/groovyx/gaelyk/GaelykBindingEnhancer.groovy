@@ -16,7 +16,6 @@
 package groovyx.gaelyk
 
 import com.google.appengine.api.datastore.DatastoreServiceFactory
-import com.google.appengine.api.images.ImagesServiceFactory
 import com.google.appengine.api.mail.MailServiceFactory
 import com.google.appengine.api.memcache.MemcacheServiceFactory
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory
@@ -24,7 +23,6 @@ import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
 import com.google.appengine.api.labs.taskqueue.QueueFactory
 import com.google.appengine.api.xmpp.XMPPServiceFactory
-import com.google.apphosting.api.ApiProxy
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.utils.SystemProperty
 import groovyx.gaelyk.logging.LoggerAccessor
@@ -50,7 +48,7 @@ class GaelykBindingEnhancer {
         binding.setVariable("memcache", MemcacheServiceFactory.memcacheService)
         binding.setVariable("urlFetch", URLFetchServiceFactory.URLFetchService)
         binding.setVariable("mail", MailServiceFactory.mailService)
-        binding.setVariable("images", ImagesServiceFactory.imagesService)
+        binding.setVariable("images", ImagesServiceWrapper.instance)
         
         // bind user service and current user
         UserService userService = UserServiceFactory.userService

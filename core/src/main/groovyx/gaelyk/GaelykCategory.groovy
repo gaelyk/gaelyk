@@ -56,6 +56,8 @@ import com.google.appengine.api.NamespaceManager
 import com.google.appengine.api.images.Transform
 import com.google.appengine.api.images.CompositeTransform
 import javax.servlet.http.HttpServletResponse
+import com.google.appengine.api.images.Image
+import com.google.appengine.api.images.ImagesServiceFactory
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -888,6 +890,20 @@ class GaelykCategory {
      */
     static byte[] fetchData(BlobKey selfKey, ByteRange byteRange) {
         fetchData(selfKey, byteRange.start, byteRange.end)
+    }
+
+    /**
+     * Fetch an image stored in the blobstore.
+     * <pre><code>
+     * def image = blobKey.image
+     * // equivalent of ImagesServiceFactory.makeImageFromBlob(selfKey)
+     * </code></pre>
+     *
+     * @param selfKey the key
+     * @return an Image
+     */
+    static Image getImage(BlobKey selfKey) {
+        ImagesServiceFactory.makeImageFromBlob(selfKey)
     }
 
     // ----------------------------------------------------------------

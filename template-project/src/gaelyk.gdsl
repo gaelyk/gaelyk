@@ -1,6 +1,11 @@
-def ctx = context(scope: scriptScope(), filetypes: ['groovy'])
+def all     = context(scope: scriptScope(), filetypes: ['groovy', 'gtpl'])
 
-contributor([ctx]) {
+def jabber  = context(scope: scriptScope(name: 'jabber.groovy'))
+def mail    = context(scope: scriptScope(name: 'email.groovy'))
+
+def routes  = context(scope: scriptScope(name: 'routes.groovy'))
+
+contributor([all, jabber, mail]) {
     property name: "request",       type: "javax.servlet.http.HttpServletRequest"
     property name: "response",      type: "javax.servlet.http.HttpServletResponse"
     property name: "context",       type: "javax.servlet.ServletContext"
@@ -11,7 +16,9 @@ contributor([ctx]) {
     property name: "out",           type: "java.io.PrintWriter"
     property name: "sout",          type: "javax.servlet.ServletOutputStream"
     property name: "html",          type: "groovy.xml.MarkupBuilder"
+}
 
+contributor([all, jabber, mail, routes]) {
     property name: "app",           type: "java.util.Map"
     property name: "queues",        type: "com.google.appengine.api.labs.taskqueue.Queue"
     property name: "defaultQueue",  type: "com.google.appengine.api.labs.taskqueue.Queue"
@@ -23,7 +30,7 @@ contributor([ctx]) {
     property name: "datastore",     type: "com.google.appengine.api.datastore.DatastoreService"
     property name: "memcache",      type: "com.google.appengine.api.memcache.MemcacheService"
     property name: "urlFetch",      type: "com.google.appengine.api.urlfetch.URLFetchService"
-    property name: "images",        type: "com.google.appengine.api.images.ImagesService"
+    property name: "images",        type: "groovyx.gaelyk.ImagesServiceWrapper"
     property name: "users",         type: "com.google.appengine.api.users.UserService"
     property name: "user",          type: "com.google.appengine.api.users.User"
     property name: "xmpp",          type: "com.google.appengine.api.xmpp.XMPPService"
@@ -35,4 +42,16 @@ contributor([ctx]) {
     method name: 'forward',         type: 'void',       params: [path: 'java.lang.String']
     method name: 'include',         type: 'void',       params: [path: 'java.lang.String']
     method name: 'redirect',        type: 'void',       params: [path: 'java.lang.String']
+}
+
+contributor([jabber]) {
+    property name: "message",       type: "com.google.appengine.api.xmpp.Message"
+}
+
+contributor([mail]) {
+    property name: "message",       type: "javax.mail.MimeMessage"
+}
+
+contributor([routes]) {
+    
 }

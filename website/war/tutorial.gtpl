@@ -256,7 +256,7 @@ A special servlet binding gives you direct access to some implicit variables tha
         <tt>application</tt> : same as <code>context</code>
     </li>
     <li>
-        <tt>session</tt> : shorthand for <code>request.getSession(<tt>false</tt>)</code> (can be null) which returns an 
+        <tt>session</tt> : shorthand for <code>request.getSession(false)</code> (can be null) which returns an 
         <a href="http://java.sun.com/javaee/5/docs/api/javax/servlet/http/HttpSession.html"><code>HttpSession</code></a>
     </li>
     <li>
@@ -1691,7 +1691,7 @@ in a complex algorithm:
 </pre>
 
 <blockquote>
-<b>Note: </b> Invocations are stored in memcache only up to the 30 seconds request time limit of App Engine.
+<b>Note: </b> Invocations are stored in memcache only for up to the 30 seconds request time limit of App Engine.
 </blockquote>
 
 <a name="blobstore"></a>

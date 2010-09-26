@@ -1014,16 +1014,16 @@ class GaelykCategory {
 
         clone.delegate = new Expando([
                 // methods
-                resize:  { width, height ->                compTransf << ISF.makeResize(width, height) },
-                crop:    { leftX, topY, rightX, bottomY -> compTransf << ISF.makeCrop(leftX, topY, rightX, bottomY) },
-                flip:    { horiz ->                        compTransf << (horiz ? ISF.makeHorizontalFlip() : ISF.makeVerticalFlip() ) },
-                rotate:  { degrees ->                      compTransf << ISF.makeRotate(degrees) },
-                feeling: { luck ->                         compTransf << ISF.makeImFeelingLucky() },
+                resize:     { width, height ->                compTransf << ISF.makeResize(width, height) },
+                crop:       { leftX, topY, rightX, bottomY -> compTransf << ISF.makeCrop(leftX, topY, rightX, bottomY) },
+                horizontal: { flip ->                         compTransf << ISF.makeHorizontalFlip() },
+                vertical:   { flip ->                         compTransf << ISF.makeVerticalFlip() },
+                rotate:     { degrees ->                      compTransf << ISF.makeRotate(degrees) },
+                feeling:    { luck ->                         compTransf << ISF.makeImFeelingLucky() },
 
                 // variables
-                horizontal:     true,
-                vertical:       false,
-                lucky:          true
+                lucky:          true,
+                flip:           true
         ])
 
         // calculate a combined transform

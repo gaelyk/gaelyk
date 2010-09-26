@@ -63,8 +63,8 @@ class ImagesServiceTest extends GroovyTestCase {
             bytes.image.transform {
                 resize 100, 100
                 crop 0.1, 0.1, 0.9, 0.9
-                flip horizontal
-                flip vertical
+                horizontal flip
+                vertical flip
                 rotate 90
                 feeling lucky
             }
@@ -82,9 +82,10 @@ class ImagesServiceTest extends GroovyTestCase {
             assert image.resize(100, 100) == image.transform { resize 100, 100 }
             assert image.crop(0.1, 0.1, 0.9, 0.9) == image.transform { crop 0.1, 0.1, 0.9, 0.9 }
 
-            assert image.rotate(180) == image.transform {
-                flip horizontal
-                flip vertical
+            assert image.rotate(270) == image.transform {
+                horizontal flip
+                vertical flip
+                rotate 90
             }
         }
     }

@@ -1978,8 +1978,8 @@ The <b>Gaelyk</b> image manipulation DSL allows to simplify the combination of s
     blobKey.image.transform {
         resize 100, 100
         crop 0.1, 0.1, 0.9, 0.9
-        flip horizontal
-        flip vertical
+        horizontal flip
+        vertical flip
         rotate 90
         feeling lucky
     }

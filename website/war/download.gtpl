@@ -29,8 +29,8 @@ But to get you started quickly, you may use a ready-made template project which 
             <li>A DSL for manipulating and transforming images</li>
         </ul>
     </li>
-    <li>Possibility to clear the cache for a given URI</li>
-    <li>Closure memoization through memcache</li>
+    <li>Possibility to <a href="/tutorial#cacheclear">clear the cache for a given URI</a></li>
+    <li>Closure <a href="/tutorial#memoize">memoization</a> through memcache</li>
 </ul>
 
 <h3>Artifacts</h3>

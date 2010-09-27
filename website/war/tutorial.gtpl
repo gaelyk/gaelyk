@@ -999,6 +999,7 @@ both plural and singular forms are supported.
 are stored in Memcache, and as they are simple types, they should even survive Google App Engine loading requests.
 </blockquote>
 
+<a name="cacheclear"></a>
 <p>
 It is possible to clear the cache for a given URI if you want to provide a fresher page to your users:
 </p>
@@ -1661,6 +1662,7 @@ may have disappeared between the time you do the <code>if (... in ...)</code> ch
 and the time you actually retrieve the value associated with the key from memcache.
 </blockquote>
 
+<a name="memoize"></a>
 <h3>Closure memoization</h3>
 
 <p>

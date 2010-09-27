@@ -32,6 +32,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Possibility to <a href="/tutorial#cacheclear">clear the cache for a given URI</a></li>
     <li>Closure <a href="/tutorial#memoize">memoization</a> through memcache</li>
     <li><a href="/tutorial#capabilities">Capabilities service additions</a> to query the status of the App Engine services</li>
+    <li><a href="/tutorial#urlfetch">URLFetch service enhancements</a></li>
     <li>Upgrade of the website and template project to Groovy 1.7.5</li>
 </ul>
 

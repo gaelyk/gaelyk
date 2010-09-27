@@ -140,6 +140,9 @@ function windowTitle()
  </dd>
 <dt><a href="groovyx/gaelyk/routes/RoutesBaseScript.html#all(java.util.Map, java.lang.String)" title="Method in RoutesBaseScript"><b>all</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/routes/RoutesBaseScript.html">RoutesBaseScript</a>
 </dt><dd></dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#asBoolean(CapabilityStatus)" title="Method in GaelykCategory"><b>asBoolean</b>(CapabilityStatus)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>Coerces a capability status into a boolean.
+ </dd>
 <dt><a href="groovyx/gaelyk/GaelykCategory.html#asType(groovy.lang.IntRange, java.lang.Class)" title="Method in GaelykCategory"><b>asType</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
 </dt><dd>Converter method for converting an int range to a blobstore <code>ByteRange</code>:
  <pre><code>
@@ -200,8 +203,8 @@ function windowTitle()
 
 <dl>
 
-<dt><a href="groovyx/gaelyk/GaelykCategory.html#delete(BlobKey)" title="Method in GaelykCategory"><b>delete</b>(BlobKey)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
-</dt><dd>Delete the blob associated with this blob key.</dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#delete(java.net.URL, java.util.Map)" title="Method in GaelykCategory"><b>delete</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>Use the URLFetch Service to do a DELETE on the URL.</dd>
 <dt><a href="groovyx/gaelyk/routes/RoutesBaseScript.html#delete(java.util.Map, java.lang.String)" title="Method in RoutesBaseScript"><b>delete</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/routes/RoutesBaseScript.html">RoutesBaseScript</a>
 </dt><dd></dd>
 <dt><a href="groovyx/gaelyk/routes/RoutesFilter.html#destroy()" title="Method in RoutesFilter"><b>destroy</b>()</b></a> - Method in <a href="groovyx/gaelyk/routes/RoutesFilter.html">RoutesFilter</a>
@@ -285,14 +288,12 @@ function windowTitle()
 <dt><a href="groovyx/gaelyk/GaelykXmppServlet.html" title="Class in groovyx.gaelyk"><b>GaelykXmppServlet</b></a> - Class in <a href="./groovyx/gaelyk/package-summary.html">groovyx.gaelyk</a>
 </dt><dd>Servlet for handling incoming XMPP/Jabber messages.
  </dd>
-<dt><a href="groovyx/gaelyk/GaelykCategory.html#get(Entity, java.lang.String)" title="Method in GaelykCategory"><b>get</b>(Entity, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
-</dt><dd>Provides a shortcut notation to get a property of an entity.
- </dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#get(java.net.URL, java.util.Map)" title="Method in GaelykCategory"><b>get</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>Use the URLFetch Service to do a GET on the URL.</dd>
 <dt><a href="groovyx/gaelyk/routes/RoutesBaseScript.html#get(java.util.Map, java.lang.String)" title="Method in RoutesBaseScript"><b>get</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/routes/RoutesBaseScript.html">RoutesBaseScript</a>
 </dt><dd></dd>
-<dt><a href="groovyx/gaelyk/GaelykCategory.html#getAt(MemcacheService, java.lang.String)" title="Method in GaelykCategory"><b>getAt</b>(MemcacheService, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
-</dt><dd>Get an object from the cache, identified by its key, using the subscript notation:
- <code>def obj = memcache[key]</code></dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#getAt(CapabilitiesService, Capability)" title="Method in GaelykCategory"><b>getAt</b>(CapabilitiesService, Capability)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>Query the status of the various App Engine services.</dd>
 <dt><a href="groovyx/gaelyk/logging/LoggerAccessor.html#getAt(java.lang.String)" title="Method in LoggerAccessor"><b>getAt</b>(null)</b></a> - Method in <a href="groovyx/gaelyk/logging/LoggerAccessor.html">LoggerAccessor</a>
 </dt><dd>Retrieve a logger by its name using the subscript syntax: <code>logger['logName']</code>.</dd>
 <dt><a href="groovyx/gaelyk/QueueAccessor.html#getAt(java.lang.String)" title="Method in QueueAccessor"><b>getAt</b>(null)</b></a> - Method in <a href="groovyx/gaelyk/QueueAccessor.html">QueueAccessor</a>
@@ -305,6 +306,8 @@ function windowTitle()
 </dt><dd>@return the name of the file stored in the blob</dd>
 <dt><a href="groovyx/gaelyk/GaelykCategory.html#getFrom(def)" title="Method in GaelykCategory"><b>getFrom</b>(def)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
 </dt><dd>Get the sender Jabber ID of the message in the form of a String.</dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#getHeadersMap(HTTPResponse)" title="Method in GaelykCategory"><b>getHeadersMap</b>(HTTPResponse)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>@return a convenient Map<String, String> of HTTP Headers from the response</dd>
 <dt><a href="groovyx/gaelyk/ExpirationTimeCategory.html#getHour(java.lang.Integer)" title="Method in ExpirationTimeCategory"><b>getHour</b>(null)</b></a> - Method in <a href="groovyx/gaelyk/ExpirationTimeCategory.html">ExpirationTimeCategory</a>
 </dt><dd>Category method to support the notation: <code>1.hour</code> in the URL routing configuration file
  for defining the duration the output of the template or groovlet must stay in the cache</dd>
@@ -347,6 +350,10 @@ function windowTitle()
  for defining the duration the output of the template or groovlet must stay in the cache</dd>
 <dt><a href="groovyx/gaelyk/GaelykCategory.html#getSize(BlobKey)" title="Method in GaelykCategory"><b>getSize</b>(BlobKey)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
 </dt><dd>@return the size of the blob</dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#getStatusCode(HTTPResponse)" title="Method in GaelykCategory"><b>getStatusCode</b>(HTTPResponse)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>@return the HTTP status code (synonym of <code>getResponseCode()</code>)</dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#getText(HTTPResponse, java.lang.String)" title="Method in GaelykCategory"><b>getText</b>(HTTPResponse, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>Gets the text of the response.</dd>
 <dt><a href="groovyx/gaelyk/plugins/LazyBinding.html#getVariable(java.lang.String)" title="Method in LazyBinding"><b>getVariable</b>(null)</b></a> - Method in <a href="groovyx/gaelyk/plugins/LazyBinding.html">LazyBinding</a>
 </dt><dd></dd>
 <dt><a href="groovyx/gaelyk/cache/CachedResponse.html#getWriter()" title="Method in CachedResponse"><b>getWriter</b>()</b></a> - Method in <a href="groovyx/gaelyk/cache/CachedResponse.html">CachedResponse</a>
@@ -368,6 +375,8 @@ function windowTitle()
 
 <dl>
 
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#head(java.net.URL, java.util.Map)" title="Method in GaelykCategory"><b>head</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>Use the URLFetch Service to do a HEAD on the URL.</dd>
 <dt><a href="groovyx/gaelyk/GaelykCategory.html#horizontalFlip(Image)" title="Method in GaelykCategory"><b>horizontalFlip</b>(Image)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
 </dt><dd>Create a new image flipped horizontally.</dd>
 <dt><a href="groovyx/gaelyk/routes/HttpMethod.html" title="Enum in groovyx.gaelyk.routes"><b>HttpMethod</b></a> - Enum in <a href="./groovyx/gaelyk/routes/package-summary.html">groovyx.gaelyk.routes</a>
@@ -501,8 +510,12 @@ function windowTitle()
 </dt><dd>Configure the installed plugins.</dd>
 <dt><a href="groovyx/gaelyk/plugins/PluginsListBaseScript.html" title="Class in groovyx.gaelyk.plugins"><b>PluginsListBaseScript</b></a> - Class in <a href="./groovyx/gaelyk/plugins/package-summary.html">groovyx.gaelyk.plugins</a>
 </dt><dd>Base script class used for listing the plugins to configure.</dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#post(java.net.URL, java.util.Map)" title="Method in GaelykCategory"><b>post</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>Use the URLFetch Service to do a POST on the URL.</dd>
 <dt><a href="groovyx/gaelyk/routes/RoutesBaseScript.html#post(java.util.Map, java.lang.String)" title="Method in RoutesBaseScript"><b>post</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/routes/RoutesBaseScript.html">RoutesBaseScript</a>
 </dt><dd></dd>
+<dt><a href="groovyx/gaelyk/GaelykCategory.html#put(java.net.URL, java.util.Map)" title="Method in GaelykCategory"><b>put</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>
+</dt><dd>Use the URLFetch Service to do a PUT on the URL.</dd>
 <dt><a href="groovyx/gaelyk/routes/RoutesBaseScript.html#put(java.util.Map, java.lang.String)" title="Method in RoutesBaseScript"><b>put</b>(null, null)</b></a> - Method in <a href="groovyx/gaelyk/routes/RoutesBaseScript.html">RoutesBaseScript</a>
 </dt><dd></dd>
 <dt><a href="groovyx/gaelyk/GaelykCategory.html#putAt(MemcacheService, java.lang.Object, java.lang.Object)" title="Method in GaelykCategory"><b>putAt</b>(MemcacheService, null, null)</b></a> - Method in <a href="groovyx/gaelyk/GaelykCategory.html">GaelykCategory</a>

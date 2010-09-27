@@ -60,6 +60,10 @@ import com.google.appengine.api.images.Image
 import com.google.appengine.api.images.ImagesServiceFactory as ISF
 import groovyx.gaelyk.cache.CacheHandler
 import com.google.appengine.api.memcache.Expiration
+import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
+import com.google.appengine.api.capabilities.Capability
+import com.google.appengine.api.capabilities.CapabilityStatus
+import com.google.appengine.api.capabilities.CapabilitiesService
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -1180,5 +1184,36 @@ class GaelykCategory {
      */
     static Image getImage(File f) {
         ISF.makeImage(f.bytes)
+    }
+
+    // ----------------------------------------------------------------
+    // Category methods dedicated to the Capabilities service
+    // ----------------------------------------------------------------
+
+    /**
+     * Query the status of the various App Engine services.
+     *
+     * <pre><code>
+     * import static com.google.appengine.api.capabilities.Capability.*
+     * import static com.google.appengine.api.capabilities.CapabilityStatus.*
+     *
+     * capabilities[DATASTORE] == ENABLED
+     * </code></pre>
+     *
+     * @param capa the capability to know the status of
+     * @return a status
+     */
+    static CapabilityStatus getAt(CapabilitiesService capabilities, Capability capa) {
+        return capabilities.getStatus(capa).getStatus()
+    }
+
+    /**
+     * Coerces a capability status into a boolean.
+     * This mechanism is used by the "Groovy Truth".
+     *
+     * @return true if the capability status is ENABLED, otherwise false.
+     */
+    static boolean asBoolean(CapabilityStatus capabilityStatus) {
+        capabilityStatus == CapabilityStatus.ENABLED
     }
 }

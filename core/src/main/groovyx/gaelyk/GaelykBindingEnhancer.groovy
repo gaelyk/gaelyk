@@ -28,6 +28,7 @@ import com.google.appengine.api.utils.SystemProperty
 import groovyx.gaelyk.logging.LoggerAccessor
 import com.google.appengine.api.oauth.OAuthServiceFactory
 import com.google.appengine.api.NamespaceManager
+import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -86,6 +87,9 @@ class GaelykBindingEnhancer {
 
         // Namespace added in SDK 1.3.7
         binding.setVariable("namespace", NamespaceManager)
+
+        // Capabilities service to know the status of the various GAE services
+        binding.setVariable("capabilities", CapabilitiesServiceFactory.capabilitiesService)
 
     }
 }

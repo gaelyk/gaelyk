@@ -83,6 +83,31 @@ import com.google.appengine.api.urlfetch.HTTPHeader
 class GaelykCategory {
 
     // ----------------------------------------------------------------
+    // New methods related to the Servlet API,
+    // not covered by the ServletCategory from Groovy
+    // ----------------------------------------------------------------
+
+    /**
+     * Adds a fake <code>getHeaders()</code> method to <code>HttpServletResponse</code>.
+     * It allows the similar subscript notation syntax of request,
+     * but for adding headers to the response.
+     *
+     * <pre><code>
+     *  response.headers['Content-Type'] == 
+     * </code></pre>
+     *
+     * @param response
+     * @return
+     */
+    static Map getHeaders(HttpServletResponse response) {
+        new HashMap() {
+            Object put(Object k, Object v) {
+                response.addHeader(k.toString(), v.toString())
+            }
+        }
+    }
+
+    // ----------------------------------------------------------------
     // Category methods dedicated to the Mail service
     // ----------------------------------------------------------------
 

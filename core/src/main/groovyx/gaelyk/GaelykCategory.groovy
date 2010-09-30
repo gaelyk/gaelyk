@@ -90,19 +90,36 @@ class GaelykCategory {
     /**
      * Adds a fake <code>getHeaders()</code> method to <code>HttpServletResponse</code>.
      * It allows the similar subscript notation syntax of request,
-     * but for adding headers to the response.
+     * but for setting or overriding a header on the response
+     * (ie. calling <code>response.setHeader()</code>).
+     * It also allows the leftShift notation for adding a header to the response
+     * (ie. calling <code>response.addHeader()</code>.
      *
      * <pre><code>
-     *  response.headers['Content-Type'] == 
+     *  // sets or overrides the header 'a'
+     *  response.headers['a'] == 'b'
+     *
+     *  // adds an additional value to an existing header
+     *  // or sets a first value for a non-existant header
+     *  response.headers['a'] << 'b' 
      * </code></pre>
      *
      * @param response
-     * @return
+     * @return a custom map on which you can use the subscript notation to add headers
      */
     static Map getHeaders(HttpServletResponse response) {
         new HashMap() {
             Object put(Object k, Object v) {
-                response.addHeader(k.toString(), v.toString())
+                def vString = v.toString()
+                response.setHeader(k.toString(), vString)
+                return vString
+            }
+
+            Object get(Object k) {
+                [leftShift: {
+                    def vString = it.toString()
+                    response.addHeader(k.toString(), vString)
+                    return vString }]
             }
         }
     }

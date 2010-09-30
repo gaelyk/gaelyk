@@ -14,12 +14,30 @@ class NewServletCategoryMethodsTest extends GroovyTestCase {
         use (GaelykCategory) {
             def h = [:]
             def response = [
-                    addHeader: { k, v -> h[k.toString()] = v.toString() }
+                    setHeader: { k, v -> h[k.toString()] = v.toString() },
+                    addHeader: { k, v ->
+                        def currentValueInMap = h[k.toString()]
+                        def valueToSetOrAdd = v.toString()
+                        if (currentValueInMap) {
+                            if (currentValueInMap instanceof List) {
+                                h[k.toString()] << valueToSetOrAdd
+                            } else {
+                                h[k.toString()] = [currentValueInMap, valueToSetOrAdd]
+                            }
+                        } else {
+                            h[k.toString()] = valueToSetOrAdd
+                        }
+                    }
             ] as HttpServletResponse
 
-            response.headers['Content-Type'] = "text/html"
+            response.headers['a'] = "1"
+            assert h['a'] == "1"
 
-            assert h['Content-Type'] == "text/html"
+            response.headers['a'] = "2"
+            assert h['a'] == "2"
+
+            response.headers['a'] << "3"
+            assert h['a'] == ["2", "3"]
         }
     }
 }

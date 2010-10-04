@@ -19,7 +19,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
-    <li>Added a <a href="/tutorial#capaawareroute">capability-aware URL routing</a> mechanism</li>
+    <li>Added a <a href="/tutorial/url-routing#capability-routing">capability-aware URL routing</a> mechanism</li>
 </ul>
 
 <h3>Artifacts</h3>
@@ -35,17 +35,17 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Fixed the problem of badly placed includes when cache was enabled</li>
     <li>Added an <code>ignore: true</code> parameter in route definitions if you want to quickly skip certain patterns</li>
     <li>The GDSL file for IntelliJ IDEA has been updated so that you have code-completion in your groovlets and templates</li>
-    <li>Many <a href="/tutorial#images">enhancements around the images service</a>
+    <li>Many <a href="/tutorial/app-engine-shortcuts#images">enhancements around the images service</a>
         <ul>
             <li>Provide a convenient wrapper class for the <code>ImagesService</code> and <code>ImagesServiceFactory</code></li>
             <li>New methods dedicated to the handling of images</li>
             <li>A DSL for manipulating and transforming images</li>
         </ul>
     </li>
-    <li>Possibility to <a href="/tutorial#cacheclear">clear the cache for a given URI</a></li>
-    <li>Closure <a href="/tutorial#memoize">memoization</a> through memcache</li>
-    <li><a href="/tutorial#capabilities">Capabilities service additions</a> to query the status of the App Engine services</li>
-    <li><a href="/tutorial#urlfetch">URLFetch service enhancements</a></li>
+    <li>Possibility to <a href="/tutorial/url-routing#cacheclear">clear the cache for a given URI</a></li>
+    <li>Closure <a href="/tutorial/app-engine-shortcuts#memoize">memoization</a> through memcache</li>
+    <li><a href="/tutorial/app-engine-shortcuts#capabilities">Capabilities service additions</a> to query the status of the App Engine services</li>
+    <li><a href="/tutorial/app-engine-shortcuts#urlfetch">URLFetch service enhancements</a></li>
     <li>Upgrade of the website and template project to Groovy 1.7.5</li>
 </ul>
 
@@ -68,7 +68,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Fixed a bug the conversion of String to Datastore's Category type</li>
     <li>Internal refactorings of the caching logic</li>
     <li>
-        Added <a href="/tutorial#namespace">namespace support</a>:
+        Added <a href="/tutorial/app-engine-shortcuts#namespace">namespace support</a>:
         <ul>
             <li><code>namespace</code> added in the binding, pointing at <code>NamespaceManager</code></li>
             <li>new method namespace.of("customerA") { ... } to execute a closure in the context of a specific namespace</li>
@@ -144,7 +144,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
-    <li>Created a <a href="/tutorial#plugin">simple plugin system</a> to futher modularize your applications and share commonalities between projects</li>
+    <li>Created a <a href="/tutorial/plugins">simple plugin system</a> to futher modularize your applications and share commonalities between projects</li>
 </ul>
 
 <h3>Artifacts</h3>

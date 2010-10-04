@@ -69,46 +69,46 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <li><a href="/tutorial/url-routing#caching">Caching groovlet and template output</a></li>
     </ul>
 
-    <li><a href="/tutorial/app-engine-shorcuts">Google App Engine specific shortcuts</a></li>
+    <li><a href="/tutorial/app-engine-shortcuts">Google App Engine specific shortcuts</a></li>
     <ul>
-        <li><a href="/tutorial/app-engine-shorcuts#email">Email support</a></li>
-        <li><a href="/tutorial/app-engine-shorcuts#incoming-mail">Incoming email messages</a></li>
-        <li><a href="/tutorial/app-engine-shorcuts#datastore">Improvements to the low-level datastore API</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#email">Email support</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#incoming-mail">Incoming email messages</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#datastore">Improvements to the low-level datastore API</a></li>
         <ul>
-            <li><a href="/tutorial/app-engine-shorcuts#entity">Using <code>Entity</code>s as maps or POJOs/POGOs</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#conversion">Converting beans to entities and back</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#save-delete">Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#transaction">Added <code>withTransaction()</code> method on the datastore service</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#query">Querying</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#entity">Using <code>Entity</code>s as maps or POJOs/POGOs</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#conversion">Converting beans to entities and back</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#save-delete">Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#transaction">Added <code>withTransaction()</code> method on the datastore service</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#query">Querying</a></li>
         </ul>
-        <li><a href="/tutorial/app-engine-shorcuts#task-queue">The task queue API shortcuts</a></li>
-        <li><a href="/tutorial/app-engine-shorcuts#jabber">XMPP/Jabber support</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#task-queue">The task queue API shortcuts</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#jabber">XMPP/Jabber support</a></li>
         <ul>
-            <li><a href="/tutorial/app-engine-shorcuts#jabber-sending">Sending messages</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#jabber-receiving">Receiving messages</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#jabber-sending">Sending messages</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#jabber-receiving">Receiving messages</a></li>
         </ul>
-        <li><a href="/tutorial/app-engine-shorcuts#memcache">Enhancements to the Memcache service</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#memcache">Enhancements to the Memcache service</a></li>
         <ul>
-            <li><a href="/tutorial/app-engine-shorcuts#memoize">Closure memoization</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#memoize">Closure memoization</a></li>
         </ul>
-        <li><a href="/tutorial/app-engine-shorcuts#blobstore">Enhancements related to the BlobStore</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#blobstore">Enhancements related to the BlobStore</a></li>
         <ul>
-            <li><a href="/tutorial/app-engine-shorcuts#blob-info">Getting blob information</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#serving-blob">Serving blobs</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#reading-blob">Reading the content of a Blob</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#delete-blob">Deleting a blob</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#blobstore-example">Example Blobstore service usage</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#blob-info">Getting blob information</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#serving-blob">Serving blobs</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#reading-blob">Reading the content of a Blob</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#delete-blob">Deleting a blob</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#blobstore-example">Example Blobstore service usage</a></li>
         </ul>
-        <li><a href="/tutorial/app-engine-shorcuts#namespace">Namespace support</a></li>
-        <li><a href="/tutorial/app-engine-shorcuts#images">Images service enhancements</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#namespace">Namespace support</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#images">Images service enhancements</a></li>
         <ul>
-            <li><a href="/tutorial/app-engine-shorcuts#images-wrapper">The images service and service factory wrapper</a></li>
-            <li><a href="/tutorial/app-engine-shorcuts#image-dsl">An image manipulation language</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#images-wrapper">The images service and service factory wrapper</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#image-dsl">An image manipulation language</a></li>
         </ul>
-        <li><a href="/tutorial/app-engine-shorcuts#capabilities">Capabilities service support</a></li>
-        <li><a href="/tutorial/app-engine-shorcuts#urlfetch">URLFetch Service improvements</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#capabilities">Capabilities service support</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#urlfetch">URLFetch Service improvements</a></li>
         <ul>
-            <li><a href="/tutorial/app-engine-shorcuts#urlfetch-options">Allowed options</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#urlfetch-options">Allowed options</a></li>
         </ul>
     </ul>
 

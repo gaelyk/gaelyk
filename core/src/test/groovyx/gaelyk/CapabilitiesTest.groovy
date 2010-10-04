@@ -48,7 +48,7 @@ class CapabilitiesTest extends GroovyTestCase {
 
             assert ENABLED
             assert !DISABLED
-            assert !SCHEDULED_MAINTENANCE
+            assert SCHEDULED_MAINTENANCE
             assert !UNKNOWN
         }
     }

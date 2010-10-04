@@ -1264,7 +1264,7 @@ class GaelykCategory {
      * @return true if the capability status is ENABLED, otherwise false.
      */
     static boolean asBoolean(CapabilityStatus capabilityStatus) {
-        capabilityStatus == CapabilityStatus.ENABLED
+        capabilityStatus == CapabilityStatus.ENABLED || capabilityStatus == CapabilityStatus.SCHEDULED_MAINTENANCE
     }
 
     // ----------------------------------------------------------------

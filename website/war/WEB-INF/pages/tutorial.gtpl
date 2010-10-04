@@ -1,0 +1,134 @@
+<% include '/WEB-INF/includes/header.gtpl' %>
+
+<h1>Tutorial</h1>
+
+<p>
+The goal of this tutorial is to quickly get you started with using <b>Gaelyk</b> to  write
+and deploy Groovy applications on Google App Engine.
+We'll assume you have already downloaded and installed the Google App Engine SDK on your machine.
+If you haven't, please do so by reading the 
+<a href="http://code.google.com/appengine/docs/java/gettingstarted/installing.html">instructions</a> from Google.
+</p>
+
+<p>
+The easiest way to get setup quickly is to download the template project from the <a href="/download">download section</a>.
+It provides a ready-to-go project with the right configuration files pre-filled and an appropriate directory layout:
+</p>
+
+<ul>
+    <li><code>web.xml</code> preconfigured with the <b>Gaelyk</b> servlets</li>
+    <li><code>appengine-web.xml</code> with the right settings predefined (static file directive)</li>
+    <li>a sample Groovlet and template</li>
+    <li>the needed JARs (Groovy, Gaelyk and Google App Engine SDK)</li>
+</ul>
+
+<p>
+You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composing <b>Gaelyk</b>.
+</p>
+
+<h1>Table of Content</h1>
+
+<ul>
+    <li><a href="/tutorial/setup">Setting up your project</a></li>
+    <ul>
+        <li><a href="/tutorial/setup#layout">Directory layout</a></li>
+        <li><a href="/tutorial/setup#configuration">Configuration files</a></li>
+    </ul>
+
+    <li><a href="/tutorial/views-and-controllers">Views and controllers</a></li>
+    <ul>
+        <li><a href="/tutorial/views-and-controllers#variables">Variables available in the binding</a></li>
+        <ul>
+            <li><a href="/tutorial/views-and-controllers#eager">Eager variables</a></li>
+            <li><a href="/tutorial/views-and-controllers#lazy">Lazy variables</a></li>
+        </ul>
+        <li><a href="/tutorial/views-and-controllers#templates">Templates</a></li>
+        <ul>
+            <li><a href="/tutorial/views-and-controllers#includes">Incldues</a></li>
+            <li><a href="/tutorial/views-and-controllers#redirect-forward">Redirect and forward</a></li>
+        </ul>
+        <li><a href="/tutorial/views-and-controllers#groovlets">Groovlets</a></li>
+        <ul>
+            <li><a href="/tutorial/views-and-controllers#markup-builder">Using MarkupBuilder to render XML or HTML snippets</a></li>
+            <li><a href="/tutorial/views-and-controllers#view-delegation">Delegating to a view template</a></li>
+        </ul>
+        <li><a href="/tutorial/views-and-controllers#logging">Logging messages</a></li>
+    </ul>
+
+    <li><a href="/tutorial/url-routing">Flexible URL routing system</a></li>
+    <ul>
+        <li><a href="/tutorial/url-routing#configuration">Configuring URL routing</a></li>
+        <li><a href="/tutorial/url-routing#route-definition">Defining URL routes</a></li>
+        <li><a href="/tutorial/url-routing#wildcards">Using wildcards</a></li>
+        <li><a href="/tutorial/url-routing#path-variables">Using path variables</a></li>
+        <ul>
+            <li><a href="/tutorial/url-routing#path-variable-validation">Validating path variables</a></li>
+        </ul>
+        <li><a href="/tutorial/url-routing#capability-routing">Capability-aware routing</a></li>
+        <li><a href="/tutorial/url-routing#ignore">Ignoring certain routes</a></li>
+        <li><a href="/tutorial/url-routing#caching">Caching groovlet and template output</a></li>
+    </ul>
+
+    <li><a href="/tutorial/app-engine-shorcuts">Google App Engine specific shortcuts</a></li>
+    <ul>
+        <li><a href="/tutorial/app-engine-shorcuts#email">Email support</a></li>
+        <li><a href="/tutorial/app-engine-shorcuts#incoming-mail">Incoming email messages</a></li>
+        <li><a href="/tutorial/app-engine-shorcuts#datastore">Improvements to the low-level datastore API</a></li>
+        <ul>
+            <li><a href="/tutorial/app-engine-shorcuts#entity">Using <code>Entity</code>s as maps or POJOs/POGOs</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#conversion">Converting beans to entities and back</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#save-delete">Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#transaction">Added <code>withTransaction()</code> method on the datastore service</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#query">Querying</a></li>
+        </ul>
+        <li><a href="/tutorial/app-engine-shorcuts#task-queue">The task queue API shortcuts</a></li>
+        <li><a href="/tutorial/app-engine-shorcuts#jabber">XMPP/Jabber support</a></li>
+        <ul>
+            <li><a href="/tutorial/app-engine-shorcuts#jabber-sending">Sending messages</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#jabber-receiving">Receiving messages</a></li>
+        </ul>
+        <li><a href="/tutorial/app-engine-shorcuts#memcache">Enhancements to the Memcache service</a></li>
+        <ul>
+            <li><a href="/tutorial/app-engine-shorcuts#memoize">Closure memoization</a></li>
+        </ul>
+        <li><a href="/tutorial/app-engine-shorcuts#blobstore">Enhancements related to the BlobStore</a></li>
+        <ul>
+            <li><a href="/tutorial/app-engine-shorcuts#blob-info">Getting blob information</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#serving-blob">Serving blobs</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#reading-blob">Reading the content of a Blob</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#delete-blob">Deleting a blob</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#blobstore-example">Example Blobstore service usage</a></li>
+        </ul>
+        <li><a href="/tutorial/app-engine-shorcuts#namespace">Namespace support</a></li>
+        <li><a href="/tutorial/app-engine-shorcuts#images">Images service enhancements</a></li>
+        <ul>
+            <li><a href="/tutorial/app-engine-shorcuts#images-wrapper">The images service and service factory wrapper</a></li>
+            <li><a href="/tutorial/app-engine-shorcuts#image-dsl">An image manipulation language</a></li>
+        </ul>
+        <li><a href="/tutorial/app-engine-shorcuts#capabilities">Capabilities service support</a></li>
+        <li><a href="/tutorial/app-engine-shorcuts#urlfetch">URLFetch Service improvements</a></li>
+        <ul>
+            <li><a href="/tutorial/app-engine-shorcuts#urlfetch-options">Allowed options</a></li>
+        </ul>
+    </ul>
+
+    <li><a href="/tutorial/plugins">Simple plugin system</a></li>
+    <ul>
+        <li><a href="/tutorial/plugins#what">What a plugin can do for you</a></li>
+        <li><a href="/tutorial/plugins#anatomy">Anatomy of a Gaelyk plugin</a></li>
+        <ul>
+            <li><a href="/tutorial/plugins#hierarchy">Hierarchy</a></li>
+            <li><a href="/tutorial/plugins#descriptor">The plugin descriptor</a></li>
+        </ul>
+        <li><a href="/tutorial/plugins#using">Using a plugin</a></li>
+        <li><a href="/tutorial/plugins#distribute">How to distribute and deploy a plugin</a></li>
+    </ul>
+
+    <li><a href="/tutorial/run-deploy">Running and deploying Gaelyk applications</a></li>
+    <ul>
+        <li><a href="/tutorial/run-deploy#run">Running and deploying Gaelyk applications</a></li>
+        <li><a href="/tutorial/run-deploy#deploy">Deploying your application in the cloud</a></li>
+    </ul>
+</ul>
+
+<% include '/WEB-INF/includes/footer.gtpl' %>

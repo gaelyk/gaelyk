@@ -1,20 +1,14 @@
-get "/",            forward: "/index.gtpl",     cache: 1.hour
+get "/",            forward: "/WEB-INF/pages/index.gtpl",     cache: 1.hour
 
-get "/tutorial",    forward: "/tutorial.gtpl",  cache: 1.hour
-get "/download",    forward: "/download.gtpl",  cache: 1.hour
-get "/community",   forward: "/community.gtpl", cache: 1.hour
+get "/tutorial",    forward: "/WEB-INF/pages/tutorial.gtpl",  cache: 1.hour
 
-// bypass all admin urls
+get "/tutorial/setup",                  forward: "/WEB-INF/pages/tutorial/setup.gtpl",                  cache: 1.hour
+get "/tutorial/views-and-controllers",  forward: "/WEB-INF/pages/tutorial/viewsAndControllers.gtpl",    cache: 1.hour
+get "/tutorial/url-routing",            forward: "/WEB-INF/pages/tutorial/flexibleUrlRouting.gtpl"//,     cache: 1.hour
+get "/tutorial/app-engine-shorcuts",    forward: "/WEB-INF/pages/tutorial/gaeShortcuts.gtpl",           cache: 1.hour
+get "/tutorial/plugins",                forward: "/WEB-INF/pages/tutorial/plugins.gtpl",                cache: 1.hour
+get "/tutorial/run-deploy",             forward: "/WEB-INF/pages/tutorial/runDeploy.gtpl",              cache: 1.hour
 
-all "/_ah/**", ignore: true
-
-// for compatibility-sake with older allowed URLs
-
-get "/tutorial/",    forward: "/tutorial.gtpl",     cache: 1.hour
-get "/download/",    forward: "/download.gtpl",     cache: 1.hour
-get "/community/",   forward: "/community.gtpl",    cache: 1.hour
-
-get "/tutorial/index.gtpl",    forward: "/tutorial.gtpl",   cache: 1.hour
-get "/download/index.gtpl",    forward: "/download.gtpl",   cache: 1.hour
-get "/community/index.gtpl",   forward: "/community.gtpl",  cache: 1.hour
+get "/download",    forward: "/WEB-INF/pages/download.gtpl",  cache: 1.hour
+get "/community",   forward: "/WEB-INF/pages/community.gtpl", cache: 1.hour
 

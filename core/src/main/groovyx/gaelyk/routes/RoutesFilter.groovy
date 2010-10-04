@@ -33,6 +33,8 @@ import java.text.SimpleDateFormat
 import groovyx.gaelyk.cache.CachedResponse
 import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
+import com.google.appengine.api.capabilities.Capability
+import com.google.appengine.api.capabilities.CapabilityStatus
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -68,7 +70,7 @@ class RoutesFilter implements Filter {
     /**
      * Load the routes configuration
      */
-    private loadRoutes() {
+    private void loadRoutes() {
         log.config "Loading routes configuration"
 
         def routesFile = new File(this.routesFileLocation)
@@ -128,7 +130,6 @@ class RoutesFilter implements Filter {
                 def result = route.forUri(requestURI)
                 if (result.matches) {
                     if (route.ignore) {
-                        log.config "Ignoring route for '${requestURI}' (${route})"
                         // skip out completely
                         break
                     }
@@ -144,7 +145,6 @@ class RoutesFilter implements Filter {
         }
         
         if (!foundRoute) {
-            log.config "Going through the regular filter chain"
             filterChain.doFilter servletRequest, servletResponse
         }
     }

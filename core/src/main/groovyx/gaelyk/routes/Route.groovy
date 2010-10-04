@@ -27,8 +27,8 @@ class Route {
     /** The route pattern */
     String route
 
-    /** The destination pattern when the route is matched */
-    String destination
+    /** The destination pattern when the route is matched, can be a String or a RoutingRule */
+    def destination
 
     /** The HTTP method used to reach that route */
     HttpMethod method
@@ -55,18 +55,25 @@ class Route {
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
      * and a closure for validating the variables against regular expression patterns.
      */
-    Route(String route, String destination, HttpMethod method = HttpMethod.ALL,
+    Route(String route, /* String or Closure */ destination, HttpMethod method = HttpMethod.ALL,
           RedirectionType redirectionType = RedirectionType.FORWARD,
           Closure validator = null, int cacheExpiration = 0, boolean ignore = false) {
         this.route = route
-        this.destination = destination
-        this.variables = extractParameters(route)
-        this.regex = Pattern.compile(transformRouteIntoRegex(route))
         this.method = method
         this.redirectionType = redirectionType
         this.cacheExpiration = cacheExpiration
         this.validator = validator
         this.ignore = ignore
+
+        // extract the path variables from the route
+        this.variables = extractParameters(route)
+
+        // create a regular expression out of the route string
+        this.regex = Pattern.compile(transformRouteIntoRegex(route))
+
+        // either a normal String route definition,
+        // or a closure route with capability aware routing rules
+        this.destination = destination instanceof String ? destination : RoutingRule.buildRoutingRule((Closure)destination)
     }
 
     String toString() {
@@ -99,6 +106,8 @@ class Route {
     def forUri(String uri) {
         Matcher matcher = regex.matcher(uri)
 
+        String finalDestination = destination instanceof String ? destination : destination.finalDestination
+
         if (matcher.matches()) {
             def variableMap = variables ?
                 // a map like ['@year': '2009', '@month': '11']
@@ -126,7 +135,7 @@ class Route {
             }
 
             // replace all the variables
-            def effectiveDestination = variableMap.inject (destination) { String dest, var ->
+            def effectiveDestination = variableMap.inject (finalDestination) { String dest, var ->
                 dest.replaceAll(var.key, var.value)
             }
 

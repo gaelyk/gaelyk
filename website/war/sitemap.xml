@@ -2,15 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>http://gaelyk.appspot.com/</loc>
-        <priority>1.0</priority>
+        <priority>0.8</priority>
     </url>
     <url>
         <loc>http://gaelyk.appspot.com/tutorial/</loc>
-        <priority>0.8</priority>
+        <priority>1.0</priority>
     </url>
     <url>
         <loc>http://gaelyk.appspot.com/community/</loc>
         <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>http://gaelyk.appspot.com/tutorial/setup</loc>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://gaelyk.appspot.com/tutorial/views-and-controllers</loc>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://gaelyk.appspot.com/tutorial/url-routing</loc>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://gaelyk.appspot.com/tutorial/app-engine-shortcuts</loc>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://gaelyk.appspot.com/tutorial/plugins</loc>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>http://gaelyk.appspot.com/tutorial/run-deploy</loc>
+        <priority>1.0</priority>
     </url>
     <url>
         <loc>http://gaelyk.appspot.com/download/</loc>

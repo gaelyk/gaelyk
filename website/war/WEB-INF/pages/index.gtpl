@@ -1,4 +1,8 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Welcome</title>
+</head>
+<body>
 
 <h1>About Gaelyk</h1>
 
@@ -9,18 +13,29 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
 <ul>
     <li><b>Gaelyk</b> lets you deploy small applications on Google App Engine Java.</li>
     <li><b>Gaelyk</b> gives you the choice to use Groovy for developing your applications.</li>
-    <li><b>Gaelyk</b> builds on <a href="http://groovy.codehaus.org/Groovlets">Groovlets.</a> 
-        and the <a href="http://groovy.codehaus.org/Groovy+Templates">Groovy template servlet</a> 
-        to add a few niceties on top of the GAE SDK APIs.</li>
+    <li><b>Gaelyk</b> builds upon <a href="http://groovy.codehaus.org/Groovlets">Groovlets.</a>
+        and the <a href="http://groovy.codehaus.org/Groovy+Templates">Groovy template servlet</a></li>
     <li><b>Gaelyk</b> allows you to cleanly seperate your views with Groovy templates and your actions in Groovlets.</li>
+    <li><b>Gaelyk</b> simplifies the usage of the Google App Engine SDK by providing more concise and more powerful shortcuts
+        when using the <a href="/tutorial/app-engine-shortcuts#datastore">datastore</a>,
+        <a href="/tutorial/app-engine-shortcuts#memcache">memcache</a>,
+        the <a href="/tutorial/app-engine-shortcuts#blobstore">blobstore</a>,
+        the <a href="tutorial/app-engine-shortcuts#images">images service</a>,
+        the <a href="/tutorial/app-engine-shortcuts#urlfetch">URL fetch service</a>,
+        when sending and receiving <a href="/tutorial/app-engine-shortcuts#email">emails</a>
+        or <a href="/tutorial/app-engine-shortcuts#jabber">Jabber messages</a>,
+        and much more.
+    </li>
+    <li><b>Gaelyk</b> lets you define friendly REST-ful URLs thanks to its <a href="/tutorial/url-routing">URL routing</a> system</li>
+    <li><b>Gaelyk</b> provides a simple <a href="/tutorial/plugins">plugin system</a> for improving code reuse and code sharing</li>
 </ul>
 
 <p>
 You can:
 <ul>
-    <li>download <b>Gaelyk</b> in the <a href="/download/">download area</a>,</li>
-    <li>learn how to create <b>Gaelyk</b> applications by reading the <a href="/tutorial/">tutorial</a>,</li>
-    <li>and participate in the <a href="/community/">community</a>.</li>
+    <li>download <b>Gaelyk</b> in the <a href="/download">download area</a>,</li>
+    <li>learn how to create <b>Gaelyk</b> applications by reading the extensive <a href="/tutorial">tutorial</a>,</li>
+    <li>and participate in the <a href="/community">community</a>.</li>
 </ul>  
 </p>
 
@@ -45,6 +60,8 @@ At the time of the creation of the project, <a href="http://grails.org">Grails</
 and we felt a streamlined toolkit would be interesting.
 For bigger applications, you should be considering <a href="http://grails.org">Grails</a> though,
 but for little applications, <b>Gaelyk</b> is ideal!
+The project is also a test-bed that was used when working with Google App Engine engineers
+to ensure <a href="http://groovy.codehaus.org">Groovy</a> would run well on the Java platform when it was launched.
 </p>
 
 <h2>What is the license of Gaelyk?</h2>
@@ -63,7 +80,8 @@ The source code of <b>Gaelyk</b> is hosted by <a href="http://github.com/glaforg
 
 <p>
 If you're interested in participating in the project, providing patches, reporting bugs, writing documentation, and more,
-please have a look at our <a href="/community/">community section</a>.
+please have a look at our <a href="/community">community section</a>.
 </p>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

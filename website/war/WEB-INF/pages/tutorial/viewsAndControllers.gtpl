@@ -1,4 +1,8 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Views and controllers</title>
+</head>
+<body>
 
 <h1>Views and controllers</h1>
 
@@ -552,4 +556,5 @@ From a Groovlet or a Template, you can do:
     logger['com.foo.Bar'].info "logging an info message"
 </pre>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

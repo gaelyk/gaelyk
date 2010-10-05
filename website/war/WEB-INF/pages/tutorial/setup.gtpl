@@ -1,4 +1,9 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Setting up your project</title>
+</head>
+<body>
+
 
 <h1>Setting up your project</h1>
 
@@ -187,4 +192,5 @@ as well as their respective mappings to URLs ending with <code>.groovy</code> an
 We then define a welcome file for <code>index.gtpl</code>, so that URLs looking like a directory search for and template with that default name.
 </p>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

@@ -9,6 +9,6 @@ get "/tutorial/app-engine-shortcuts",   forward: "/WEB-INF/pages/tutorial/gaeSho
 get "/tutorial/plugins",                forward: "/WEB-INF/pages/tutorial/plugins.gtpl",                cache: 1.hour
 get "/tutorial/run-deploy",             forward: "/WEB-INF/pages/tutorial/runDeploy.gtpl",              cache: 1.hour
 
-get "/download",    forward: "/WEB-INF/pages/download.gtpl",  cache: 1.hour
-get "/community",   forward: "/WEB-INF/pages/community.gtpl", cache: 1.hour
+get "/download",    forward: "/WEB-INF/pages/download.gtpl",  cache: 30.minutes
+get "/community",   forward: "/WEB-INF/pages/community.gtpl", cache: 30.minutes
 

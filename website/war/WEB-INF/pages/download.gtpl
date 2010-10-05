@@ -1,4 +1,8 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Download and release notes</title>
+</head>
+<body>
 
 <h1>Download</h1>
 
@@ -253,4 +257,5 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.1.zip">gaelyk-template-project-0.1.zip</a></li>
 </ul>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

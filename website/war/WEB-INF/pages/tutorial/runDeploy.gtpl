@@ -1,4 +1,8 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Simple plugin system</title>
+</head>
+<body>
 
 <h1>Running and deploying Gaelyk applications</h1>
 
@@ -32,4 +36,5 @@ Once you're at the root of your application, simply run the usual deployment com
 appcfg.sh update war
 </pre>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

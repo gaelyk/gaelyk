@@ -1,4 +1,8 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Flexible URL routing</title>
+</head>
+<body>
 
 <h1>Flexible URL routing</h1>
 
@@ -377,4 +381,5 @@ So if you have <code>/breaking-news</code> and <code>/breaking-news?category=pol
 you will have to clear the cache for both, as <b>Gaelyk</b> doesn't track all the query parameters.
 </blockquote>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

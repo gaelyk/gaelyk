@@ -1,4 +1,8 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Simple plugin system</title>
+</head>
+<body>
 
 <h1>Simple plugin system</h1>
 
@@ -250,4 +254,5 @@ and pickup the various files of that archive and stick them up in the appropriat
 in his/her <b>Gaelyk</b> <code>war/</code> folder, and reference that plugin, as explained in the previous section.
 </p>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

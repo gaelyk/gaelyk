@@ -1,4 +1,8 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Tutorial</title>
+</head>
+<body>
 
 <h1>Tutorial</h1>
 
@@ -72,7 +76,9 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
     <li><a href="/tutorial/app-engine-shortcuts">Google App Engine specific shortcuts</a></li>
     <ul>
         <li><a href="/tutorial/app-engine-shortcuts#email">Email support</a></li>
-        <li><a href="/tutorial/app-engine-shortcuts#incoming-mail">Incoming email messages</a></li>
+        <ul>
+            <li><a href="/tutorial/app-engine-shortcuts#incoming-mail">Incoming email messages</a></li>
+        </ul>
         <li><a href="/tutorial/app-engine-shortcuts#datastore">Improvements to the low-level datastore API</a></li>
         <ul>
             <li><a href="/tutorial/app-engine-shortcuts#entity">Using <code>Entity</code>s as maps or POJOs/POGOs</a></li>
@@ -131,4 +137,5 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
     </ul>
 </ul>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

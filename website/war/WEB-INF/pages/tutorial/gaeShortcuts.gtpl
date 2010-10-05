@@ -1,4 +1,8 @@
-<% include '/WEB-INF/includes/header.gtpl' %>
+<html>
+<head>
+    <title>Google App Engine specific shortcuts</title>
+</head>
+<body>
 
 <h1>Google App Engine specific shortcuts</h1>
 
@@ -724,7 +728,7 @@ Given a blob key, you can retrieve various details about the blob when it was up
 <h3>Serving blobs</h3>
 
 <p>
-With the blobstore service, you can stream the content of blobs back to the browser, directly on the respone object:
+With the blobstore service, you can stream the content of blobs back to the browser, directly on the response object:
 </p>
 
 <pre class="brush:groovy">
@@ -1264,4 +1268,5 @@ And notice the convenient <code>response.headersMap</code> shortcut which return
 <code>List&lt;HTTPHeader&gt;</code>.
 </blockquote>
 
-<% include '/WEB-INF/includes/footer.gtpl' %>
+</body>
+</html>

@@ -12,17 +12,17 @@ def result = slurper.parseText(url.text)
 // transform JSON into a valid list/map Groovy construct
 def struct = evaluate(url.text.replaceAll(/}/, ']').replaceAll(/\{/, '['))
 
+def sdf = new SDF("yyyy/MM/dd HH:mm:ss Z", Locale.US)
+
 html.ul {
 	struct.issues.each { issue ->
 		li {
 			a href: "http://github.com/glaforge/gaelyk/issues#issue/${issue.number}", issue.title
 			br()
-			i "by ${issue.user}"
-			br()
 //			2009/07/20 01:41:25 -0700
-			def sdf = new SDF("yyyy/MM/dd HH:mm:ss Z", Locale.US)
 			def prettyTime = new PrettyTime().format(sdf.parse(issue.created_at))
 			i " opened ${prettyTime}"
+            i "by ${issue.user}"
 		}
 	}
 }

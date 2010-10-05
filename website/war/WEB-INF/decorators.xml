@@ -1,0 +1,15 @@
+<decorators defaultdir="/decorators"> 
+    <excludes>
+        <pattern>/latestmessages.groovy</pattern>
+        <pattern>/latestcommits.groovy</pattern>
+        <pattern>/latestissues.groovy</pattern>
+        <pattern>/_ah/admin*</pattern>
+        <pattern>/_ah/admin/datastore*</pattern>
+        <pattern>/_ah/admin/taskqueue*</pattern>
+        <pattern>/_ah/admin/xmpp*</pattern>
+        <pattern>/_ah/admin/inboundmail*</pattern>
+    </excludes>
+    <decorator name="main" page="decorator.jsp"> 
+        <pattern>/*</pattern> 
+    </decorator> 
+</decorators>

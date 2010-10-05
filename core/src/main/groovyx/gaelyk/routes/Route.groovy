@@ -39,6 +39,9 @@ class Route {
     /** The time in seconds the resource to stay in memcache */
     int cacheExpiration
 
+    /** Closure defining a namespace for the scope of the request */
+    Closure namespace
+
     /* The list of variables in the route */
     private List variables
 
@@ -50,17 +53,18 @@ class Route {
 
     /* Should a uri matching this route just be ignored? */
     private boolean ignore
-    
+
     /**
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
      * and a closure for validating the variables against regular expression patterns.
      */
     Route(String route, /* String or Closure */ destination, HttpMethod method = HttpMethod.ALL,
-          RedirectionType redirectionType = RedirectionType.FORWARD,
-          Closure validator = null, int cacheExpiration = 0, boolean ignore = false) {
+          RedirectionType redirectionType = RedirectionType.FORWARD, Closure validator = null,
+          Closure namespace = null, int cacheExpiration = 0, boolean ignore = false) {
         this.route = route
         this.method = method
         this.redirectionType = redirectionType
+        this.namespace = namespace
         this.cacheExpiration = cacheExpiration
         this.validator = validator
         this.ignore = ignore
@@ -110,23 +114,17 @@ class Route {
 
         if (matcher.matches()) {
             def variableMap = variables ?
-                // a map like ['@year': '2009', '@month': '11']
+                // a map like ['year': '2009', 'month': '11']
                 variables.inject([:]) { map, variable ->
-                    map[variable] = matcher[0][map.size()+1]
+                    map[variable.substring(1)] = matcher[0][map.size()+1]
                     return map
                 } : [:] // an empty variables map if no variables were present
 
             // if a closure validator was defined, check all the variables match the regex pattern
             if (validator) {
-                // create a map so the properties
-                def delegateVariables = variableMap.inject([:]) { Map m, entry ->
-                    m[entry.key.substring(1)] = entry.value
-                    return m
-                }
-
                 def clonedValidator = this.validator.clone()
                 clonedValidator.resolveStrategy = Closure.DELEGATE_ONLY
-                clonedValidator.delegate = delegateVariables
+                clonedValidator.delegate = variableMap
 
                 boolean validated = clonedValidator()
                 if (!validated) {
@@ -134,9 +132,16 @@ class Route {
                 }
             }
 
+            // if a closure namespace was defined, clone it, and inject the variables if any
+            if (namespace) {
+                namespace = namespace.clone()
+                namespace.resolveStrategy = Closure.DELEGATE_ONLY
+                namespace.delegate = variableMap
+            }
+
             // replace all the variables
             def effectiveDestination = variableMap.inject (finalDestination) { String dest, var ->
-                dest.replaceAll(var.key, var.value)
+                dest.replaceAll('@' + var.key, var.value)
             }
 
             [matches: true, variables: variableMap, destination: effectiveDestination]

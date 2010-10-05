@@ -73,15 +73,15 @@ class RoutesTest extends GroovyTestCase {
     void testRoutesAndVariableMatches() {
         def routeAndMatchingPaths = [
             "/blog/@year/@month/@day/@title":    [
-                    "/blog/2009/11/27/Thanksgiving": ['@year': '2009', '@month': '11', '@day': '27', '@title': 'Thanksgiving'],
-                    "/blog/2008/03/04/birth": ['@year': '2008', '@month': '03', '@day': '04', '@title': 'birth']
+                    "/blog/2009/11/27/Thanksgiving": ['year': '2009', 'month': '11', 'day': '27', 'title': 'Thanksgiving'],
+                    "/blog/2008/03/04/birth": ['year': '2008', 'month': '03', 'day': '04', 'title': 'birth']
             ],
             "/**/@author/file/@file.@extension": [
-                    "/foo/bar/glaforge/file/cv.doc": ['@author': 'glaforge', '@file': 'cv', '@extension': 'doc']
+                    "/foo/bar/glaforge/file/cv.doc": ['author': 'glaforge', 'file': 'cv', 'extension': 'doc']
             ],
             "/*.*": ["/cv.doc": [:]],
             "/company/about": ["/company/about": [:]],
-            "/*/@from/*/@to": ["/groovy/glaforge/gaelyk/me": ['@from': 'glaforge', '@to': 'me']],
+            "/*/@from/*/@to": ["/groovy/glaforge/gaelyk/me": ['from': 'glaforge', 'to': 'me']],
         ]
 
         routeAndMatchingPaths.each { String route, Map urisVariables ->

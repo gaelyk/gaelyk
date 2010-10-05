@@ -381,5 +381,28 @@ So if you have <code>/breaking-news</code> and <code>/breaking-news?category=pol
 you will have to clear the cache for both, as <b>Gaelyk</b> doesn't track all the query parameters.
 </blockquote>
 
+<a name="namespace-scoped"></a>
+<h3>Namespace scoped routes</h3>
+
+<p>
+Another feature of the URL routing system, with the combination of Google App Engine's namespace handling support,
+is the ability to define a namespace, for a given route.
+This mechanism is particularly useful when you want to segregate data for a user, a customer, a company, etc.,
+i.e. as soon as you're looking for making your application multitenant.
+Let's see this in action with an example:
+</p>
+
+<pre class="brush:groovy">
+    post "/customer/@cust/update", forward: "/customerUpdate.groovy?cust=@cust", namespace: { "namespace-\$cust" }
+</pre>
+
+<p>
+For the route above, we want to use a namespace per customer.
+The <code>namespace</code> closure will be called for each request to that route,
+returning the name of the namespace to use, in the scope of that request.
+If the incoming URI is <code>/customer/acme/update</code>, the resulting namespace used for that request
+will be <code>namespace-acme</code>.
+</p>
+
 </body>
 </html>

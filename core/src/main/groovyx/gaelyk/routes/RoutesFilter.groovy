@@ -35,6 +35,8 @@ import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
 import com.google.appengine.api.capabilities.Capability
 import com.google.appengine.api.capabilities.CapabilityStatus
+import groovyx.gaelyk.GaelykCategory
+import com.google.appengine.api.NamespaceManager
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -134,7 +136,13 @@ class RoutesFilter implements Filter {
                         break
                     }
                     if (route.redirectionType == RedirectionType.FORWARD) {
-                        CacheHandler.serve(route, request, response)
+                        if (route.namespace) {
+                            GaelykCategory.of(NamespaceManager, route.namespace()) {
+                                CacheHandler.serve(route, request, response)
+                            }
+                        } else {
+                            CacheHandler.serve(route, request, response)
+                        }
                     } else {
                         response.sendRedirect result.destination
                     }

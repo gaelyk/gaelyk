@@ -71,6 +71,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <li><a href="/tutorial/url-routing#capability-routing">Capability-aware routing</a></li>
         <li><a href="/tutorial/url-routing#ignore">Ignoring certain routes</a></li>
         <li><a href="/tutorial/url-routing#caching">Caching groovlet and template output</a></li>
+        <li><a href="/tutorial/url-routing#namespace-scoped">Namespace scoped routes</a></li>
     </ul>
 
     <li><a href="/tutorial/app-engine-shortcuts">Google App Engine specific shortcuts</a></li>

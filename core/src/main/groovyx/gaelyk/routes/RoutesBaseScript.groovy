@@ -45,7 +45,8 @@ abstract class RoutesBaseScript extends Script {
         def validator = m.validate ?: null
         def cacheExpiration = m.cache ?: 0
         def ignore = m.ignore ?: false
+        def ns = m.namespace ?: null
 
-        routes << new Route(route, destination, method, redirectionType, validator, cacheExpiration, ignore)
+        routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore)
     }
 }

@@ -24,6 +24,7 @@ But to get you started quickly, you may use a ready-made template project which 
 <h3>Changes</h3>
 <ul>
     <li>Added a <a href="/tutorial/url-routing#capability-routing">capability-aware URL routing</a> mechanism</li>
+    <li>Added a <a href="/tutorial/url-routing#namespace-scoped">namespace-aware URL routing</a> mechanism</li>
     <li>Completely reorganized the documentation, particularly splitting the content over several pages and providing a table of content.</li>
 </ul>
 

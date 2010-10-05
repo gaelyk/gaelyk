@@ -404,5 +404,10 @@ If the incoming URI is <code>/customer/acme/update</code>, the resulting namespa
 will be <code>namespace-acme</code>.
 </p>
 
+<blockquote>
+<b>Note: </b> Make sure to have a look at the
+<a href="/tutorial/app-engine-shortcuts#namespace">namespace support</a> also built-in <b>Gaelyk</b>.
+</blockquote>
+
 </body>
 </html>

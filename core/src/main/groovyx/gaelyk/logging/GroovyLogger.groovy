@@ -61,7 +61,7 @@ class GroovyLogger {
     }
 
     static GroovyLogger forGroovletUri(String uri) {
-        new GroovyLogger("gaelyk.groovlet.${uri[1..<uri.lastIndexOf('.')].replaceAll(/\//, '.')}", true)
+        new GroovyLogger("gaelyk.groovlet.${uri[1..<uri.lastIndexOf('.')].replaceAll(/\//, '.') - 'WEB-INF.groovy.'}", true)
     }
 
     /**

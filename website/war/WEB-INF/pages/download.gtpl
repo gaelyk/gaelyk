@@ -19,7 +19,7 @@ and with the 1.3.7 version of the App Engine SDK.
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
 
-<h2>Version 0.5.1</h2>
+<h2>Version 0.5.5</h2>
 
 <h3>Changes</h3>
 <ul>
@@ -30,8 +30,8 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Artifacts</h3>
 <ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.5.1.jar">gaelyk-0.5.1.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.5.1.zip">gaelyk-template-project-0.5.1.zip</a></li>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.5.5.jar">gaelyk-0.5.5.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.5.5.zip">gaelyk-template-project-0.5.5.zip</a></li>
 </ul>
 
 <h2>Version 0.5</h2>

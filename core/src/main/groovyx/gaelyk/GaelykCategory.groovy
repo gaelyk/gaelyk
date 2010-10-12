@@ -380,7 +380,7 @@ class GaelykCategory {
             return e
         } else if (self.class == Entity) {
             asType((Entity)self, clazz)
-        } else if (self.class instanceof String) {
+        } else if (self.class == String) {
             asType((String)self, clazz)
         } else DefaultGroovyMethods.asType(self, clazz)
     }

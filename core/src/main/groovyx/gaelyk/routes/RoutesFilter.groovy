@@ -20,23 +20,20 @@ import javax.servlet.FilterChain
 import javax.servlet.ServletResponse
 import javax.servlet.ServletRequest
 import javax.servlet.FilterConfig
-import org.codehaus.groovy.control.CompilerConfiguration
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+
 import groovyx.gaelyk.GaelykBindingEnhancer
 import groovyx.gaelyk.plugins.PluginsHandler
-import com.google.appengine.api.utils.SystemProperty
 import groovyx.gaelyk.ExpirationTimeCategory
-import com.google.appengine.api.memcache.MemcacheServiceFactory
-import com.google.appengine.api.memcache.Expiration
-import java.text.SimpleDateFormat
-import groovyx.gaelyk.cache.CachedResponse
 import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
-import com.google.appengine.api.capabilities.Capability
-import com.google.appengine.api.capabilities.CapabilityStatus
 import groovyx.gaelyk.GaelykCategory
+
+import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.NamespaceManager
+
+import org.codehaus.groovy.control.CompilerConfiguration
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your

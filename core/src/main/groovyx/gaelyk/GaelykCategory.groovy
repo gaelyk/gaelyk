@@ -72,6 +72,7 @@ import com.google.appengine.api.urlfetch.HTTPRequest
 import com.google.appengine.api.urlfetch.HTTPMethod
 import com.google.appengine.api.urlfetch.FetchOptions
 import com.google.appengine.api.urlfetch.HTTPHeader
+import com.google.appengine.api.memcache.MemcacheService.SetPolicy
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -726,6 +727,16 @@ class GaelykCategory {
     // ----------------------------------------------------------------
 
     /**
+     * Get an object from the cache, with a GString key, coerced to a String.
+     *
+     * @param key the GString key
+     * @return the value stored under that key
+     */
+    static Object get(MemcacheService memcache, GString key) {
+        memcache.get(key.toString())
+    }
+
+    /**
      * Get an object from the cache, identified by its key, using the subscript notation:
      * <code>def obj = memcache[key]</code>
      *
@@ -745,6 +756,39 @@ class GaelykCategory {
         //TODO this method should be removed once we only need a getAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
         memcache.get(key)
+    }
+
+    /**
+     * Put an object in the cache under a GString key, coerced to a String.
+     *
+     * @param key a GString key
+     * @param value the value to put in the cache
+     */
+    static void put(MemcacheService memcache, GString key, Object value) {
+        memcache.put(key.toString(), value)
+    }
+
+    /**
+     * Put an object in the cache under a GString key, coerced to a String, with an expiration.
+     *
+     * @param key a GString key
+     * @param value the value to put in the cache
+     * @param expiration expiration of the key/value
+     */
+    static void put(MemcacheService memcache, GString key, Object value, Expiration expiration) {
+        memcache.put(key.toString(), value, expiration)
+    }
+
+    /**
+     * Put an object in the cache under a GString key, coerced to a String, with an expiration and a SetPolicy.
+     *
+     * @param key a GString key
+     * @param value the value to put in the cache
+     * @param expiration expiration of the key/value
+     * @param policy a SetPolicy 
+     */
+    static void put(MemcacheService memcache, GString key, Object value, Expiration expiration, SetPolicy policy) {
+        memcache.put(key.toString(), value, expiration, policy)
     }
 
     /**

@@ -33,11 +33,13 @@ class CacheHandlerTest extends GroovyTestCase {
         use(GaelykCategory) {
             memcache['content-for-/photos'] = '1234'
             memcache['content-type-for-/photos'] = 'text/html'
+            memcache['last-modified-/photos'] = new Date().time.toString()
 
             memcache.clearCacheForUri('/photos')
 
             assert memcache['content-for-/photos'] == null
             assert memcache['content-type-for-/photos'] == null
+            assert memcache['last-modified-/photos'] == null
         }
     }
 }

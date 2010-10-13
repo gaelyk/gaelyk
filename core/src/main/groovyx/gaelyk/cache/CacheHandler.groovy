@@ -27,7 +27,7 @@ class CacheHandler {
 
     static Set clearCacheForUri(String uri) {
         MemcacheServiceFactory.memcacheService.deleteAll([
-                "content-for-$uri".toString(), "content-type-for-$uri".toString()
+                "content-for-$uri".toString(), "content-type-for-$uri".toString(), "last-modified-$uri".toString()
         ])
     }
 
@@ -52,7 +52,7 @@ class CacheHandler {
                 log.config "If-Modified-Since header present"
 
                 def sinceDate = httpDateFormat.parse(ifModifiedSince)
-                def lastModifiedKey = "last-modified-$uri"
+                String lastModifiedKey = "last-modified-$uri"
                 String lastModifiedString = memcache.get(lastModifiedKey)
                 if (lastModifiedString && httpDateFormat?.parse(lastModifiedString).before(sinceDate)) {
                     log.config "Sending NOT_MODIFIED"
@@ -73,8 +73,8 @@ class CacheHandler {
     static private serveAndCacheOrServeFromCache(HttpServletRequest request, HttpServletResponse response, String destination, String uri, int cacheExpiration) {
         log.config "Serve and/or cache for URI $uri"
 
-        def contentKey = "content-for-$uri"
-        def typeKey = "content-type-for-$uri"
+        String contentKey = "content-for-$uri"
+        String typeKey = "content-type-for-$uri"
 
         def memcache = MemcacheServiceFactory.memcacheService
 
@@ -94,7 +94,7 @@ class CacheHandler {
             def now = new Date()
             def lastModifiedString = httpDateFormat.format(now)
 
-            def lastModifiedKey = "last-modified-$uri"
+            String lastModifiedKey = "last-modified-$uri"
 
             // specify caching durations
             response.addHeader "Cache-Control", "max-age=${cacheExpiration}"

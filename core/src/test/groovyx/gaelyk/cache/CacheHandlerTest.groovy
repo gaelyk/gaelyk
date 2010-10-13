@@ -6,7 +6,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory
 import groovyx.gaelyk.GaelykCategory
 
 /**
- * Memcache enhancements tests
+ * Cache handler tests
  *
  * @author Guillaume Laforge
  */

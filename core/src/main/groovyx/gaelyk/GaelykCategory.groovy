@@ -126,6 +126,23 @@ class GaelykCategory {
     }
 
     // ----------------------------------------------------------------
+    // General utility category methods
+    // ----------------------------------------------------------------
+
+    /**
+     * Transforms a map of key / value pairs into a properly URL encoded query string.
+     *
+     * <pre><code>
+     *  assert "title=
+     * </code></pre>
+     *
+     * @return a query string
+     */
+    static String toQueryString(Map self) {
+        self.collect { k, v -> "${URLEncoder.encode(k.toString())}=${URLEncoder.encode(v.toString())}" }.join('&')
+    }
+
+    // ----------------------------------------------------------------
     // Category methods dedicated to the Mail service
     // ----------------------------------------------------------------
 

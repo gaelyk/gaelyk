@@ -1,5 +1,6 @@
 new AntBuilder().sequential {
 	webinf = "war/WEB-INF"
+    mkdir dir:"${webinf}/classes"
 
     gaeHome = System.getenv("APPENGINE_HOME")
     if(!gaeHome) {

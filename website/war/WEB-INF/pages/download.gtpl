@@ -7,7 +7,7 @@
 <h1>Download</h1>
 
 <p>
-You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.6 or 1.7 and with the latest Google App Engine SDK.
+You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.7 and beyond and with the latest Google App Engine SDK.
 </p>
 
 <p>

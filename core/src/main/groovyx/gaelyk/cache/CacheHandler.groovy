@@ -75,6 +75,7 @@ class CacheHandler {
 
         String contentKey = "content-for-$uri"
         String typeKey = "content-type-for-$uri"
+        String lastModifiedKey = "last-modified-$uri"
 
         def memcache = MemcacheServiceFactory.memcacheService
 
@@ -93,8 +94,6 @@ class CacheHandler {
 
             def now = new Date()
             def lastModifiedString = httpDateFormat.format(now)
-
-            String lastModifiedKey = "last-modified-$uri"
 
             // specify caching durations
             response.addHeader "Cache-Control", "max-age=${cacheExpiration}"

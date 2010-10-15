@@ -12,12 +12,32 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.6 or 1.7 and with
 
 <p>
 The latest version was tested with Groovy 1.7.5 and Groovy 1.8-beta-2,
-and with the 1.3.7 version of the App Engine SDK.
+and with the 1.3.8 version of the App Engine SDK.
 </p>
 
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 0.5.6</h2>
+
+<h3>Changes</h3>
+<ul>
+    <li>Upgraded to GAE SDK 1.3.8</li>
+    <li>Fixed a bug when using <code>memcache.clearCacheForUri()</code> which didn't clear all the cache entries</li>
+    <li>Added a method <code>Map#toQueryString()</code> to simplify the creation of a query string when you have a map on hands</li>
+    <li>
+        Additonal checks when using Memcache's <code>get()</code> and <code>put()</code> methods when using GString keys
+        (now automatically coerced to normal Strings)
+    </li>
+    <li>Fixed a small bug with the type coercion of Strings into built-in Datastore types</li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.5.6.jar">gaelyk-0.5.6.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.5.6.zip">gaelyk-template-project-0.5.6.zip</a></li>
+</ul>
 
 <h2>Version 0.5.5</h2>
 

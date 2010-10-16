@@ -185,7 +185,7 @@ You can the do the following to assign all the key/values in the map as properti
 
     // you can also select only the key/value pairs you'd like to set on the entity
     // thanks to Groovy's subMap() method, which will create a new map with just the keys you want to keep
-    entity << params.subMap([firstname, lastname])
+    entity << params.subMap(['firstname', 'lastname'])
 </pre>
 
 <blockquote>

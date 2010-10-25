@@ -44,7 +44,12 @@ new AntBuilder().sequential {
             }
 
             echo "Creating the Gaelyk JAR"
-            jar basedir: classes, destfile: jarname
+            jar basedir: classes, destfile: jarname, {
+                manifest {
+                    attribute name: "Implementation-Title", value: "Gaelyk"
+                    attribute name: "Implementation-Version", value: version
+                }
+            }
         }
 
         if (action in ['template', 'dist']) {

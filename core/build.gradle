@@ -1,0 +1,80 @@
+apply plugin: 'groovy'
+
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
+defaultTasks 'clean', 'build'
+
+// current Gaelyk version
+version = '0.5.6'
+
+// various directory places and file names
+tmpProj = "../template-project"
+zipname = "${buildDir}/gaelyk-template-project-${version}.zip"
+projLib = "${tmpProj}/war/WEB-INF/lib"
+
+website = "../website"
+apidir = "${website}/war/api"
+websiteLib = "${website}/war/WEB-INF/lib"
+
+sourceSets {
+    main {
+        groovy {
+            srcDir 'src/main'
+        }
+    }
+
+    test {
+        groovy {
+            srcDir 'src/test'
+        }
+    }
+}
+
+dependencies {
+    groovy fileTree(dir: 'lib', includes: ['groovy-all-1.7.4.jar'])
+    compile fileTree(dir: 'lib', includes: ['*.jar'])
+}
+
+jar {
+    baseName = 'gaelyk'
+    manifest {
+        attributes 'Implementation-Title': 'Gaelyk', 'Implementation-Version': version
+    }
+}
+
+groovydoc {
+    def title = "Gaelyk ${version}"
+    destinationDir = new File(apidir)
+    windowTitle = title
+    docTitle = title
+    link 'http://java.sun.com/javaee/5/docs/api/', 'javax.servlet.'
+    link 'http://java.sun.com/j2se/1.5.0/docs/api', 'java.,org.xml.,org.xml.'
+    link 'http://code.google.com/appengine/docs/java/javadoc/', 'com.google.appengine.'
+    link 'http://groovy.codehaus.org/gapi/', 'org.codehaus.groovy.,groovy.'
+}
+
+task template << {
+    description = "Packaging the template project"
+    println "Deleting old Gaelyk JARs from the template project"
+
+    ant.delete {
+        fileset dir: projLib, includes: "gaelyk-*.jar"
+    }
+
+    println "Copying the latest Gaelyk JAR in the template project"
+    ant.copy file: jar.archivePath, todir: projLib
+
+    println "Creating the template project ZIP file"
+    ant.zip basedir: tmpProj, destfile: zipname, excludes: '__MACOSX, *.iml'
+}
+
+task dist(dependsOn: [groovydoc, template]) << {
+    description = "Updating the Gaelyk JAR of the website"
+    println description
+
+    ant.delete {
+        fileset dir: websiteLib, includes: "gaelyk-*.jar"
+    }
+  
+    ant.copy file: jar.archivePath, todir: websiteLib
+}

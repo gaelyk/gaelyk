@@ -15,20 +15,21 @@
  */
 package groovyx.gaelyk
 
+import com.google.appengine.api.NamespaceManager
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory
+import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
 import com.google.appengine.api.datastore.DatastoreServiceFactory
+import com.google.appengine.api.labs.taskqueue.QueueFactory
 import com.google.appengine.api.mail.MailServiceFactory
 import com.google.appengine.api.memcache.MemcacheServiceFactory
+import com.google.appengine.api.oauth.OAuthServiceFactory
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory
 import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
-import com.google.appengine.api.labs.taskqueue.QueueFactory
-import com.google.appengine.api.xmpp.XMPPServiceFactory
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.utils.SystemProperty
+import com.google.appengine.api.xmpp.XMPPServiceFactory
 import groovyx.gaelyk.logging.LoggerAccessor
-import com.google.appengine.api.oauth.OAuthServiceFactory
-import com.google.appengine.api.NamespaceManager
-import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
+import groovyx.gaelyk.utils.GaelykProperty
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -75,6 +76,9 @@ class GaelykBindingEnhancer {
                 env: [
                         name: SystemProperty.environment.value(),
                         version: SystemProperty.version.get(),
+                ],
+                gaelyk: [
+                        version: GaelykProperty.library.version
                 ],
                 id: SystemProperty.applicationId.get(),
                 version: SystemProperty.applicationVersion.get()

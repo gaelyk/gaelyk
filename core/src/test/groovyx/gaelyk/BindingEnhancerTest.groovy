@@ -96,4 +96,8 @@ class BindingEnhancerTest extends GroovyTestCase {
         assert binding.blobstore    instanceof BlobstoreService
         assert binding.oauth        instanceof OAuthService
     }
+
+    void testGaelykVersionPresent() {
+        assert binding.app.gaelyk.version ==~ /\d+\.\d+\.\d+/
+    }
 }

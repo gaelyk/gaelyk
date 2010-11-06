@@ -28,14 +28,15 @@ import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.xmpp.XMPPServiceFactory
+
 import groovyx.gaelyk.logging.LoggerAccessor
-import groovyx.gaelyk.utils.GaelykProperty
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
  *
  * @author Marcel Overdijk
  * @author Guillaume Laforge
+ * @author Benjamin Muschko
  */
 class GaelykBindingEnhancer {
 
@@ -78,7 +79,7 @@ class GaelykBindingEnhancer {
                         version: SystemProperty.version.get(),
                 ],
                 gaelyk: [
-                        version: GaelykProperty.library.version
+                        version: '0.5.6'
                 ],
                 id: SystemProperty.applicationId.get(),
                 version: SystemProperty.applicationVersion.get()

@@ -52,12 +52,12 @@ class ImagesServiceTest extends GroovyTestCase {
         def stubBlobKey = new BlobKey("key")
         assert wrapper.makeImageFromBlob(stubBlobKey) instanceof Image
 
-        byte[] bytes = new File('graphics/gaelyk-small-favicon.png').bytes
+        byte[] bytes = new File('../graphics/gaelyk-small-favicon.png').bytes
         assert wrapper.makeImage(bytes) instanceof Image
     }
 
     void testCompositeTransformDSL() {
-        byte[] bytes = new File('graphics/gaelyk-small-favicon.png').bytes
+        byte[] bytes = new File('../graphics/gaelyk-small-favicon.png').bytes
 
         use(GaelykCategory) {
             bytes.image.transform {
@@ -72,7 +72,7 @@ class ImagesServiceTest extends GroovyTestCase {
     }
 
     void testIndividualTransformMethods() {
-        byte[] bytes = new File('graphics/gaelyk-small-favicon.png').bytes
+        byte[] bytes = new File('../graphics/gaelyk-small-favicon.png').bytes
 
         use(GaelykCategory) {
             def image = bytes.image

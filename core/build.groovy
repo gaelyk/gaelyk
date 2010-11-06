@@ -7,7 +7,7 @@ new AntBuilder().sequential {
     src = "src/main"
     lib = "lib"
 
-    target = "target"
+    target = "build"
     classes = "${target}/classes"
 
     jarname = "${target}/gaelyk-${version}.jar"

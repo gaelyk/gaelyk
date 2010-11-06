@@ -9,11 +9,11 @@ version = '0.5.6'
 
 // various directory places and file names
 tmpProj = "../template-project"
-zipname = "${buildDir}/gaelyk-template-project-${version}.zip"
+zipName = "${buildDir}/gaelyk-template-project-${version}.zip"
 projLib = "${tmpProj}/war/WEB-INF/lib"
 
 website = "../website"
-apidir = "${website}/war/api"
+apiDir = "${website}/war/api"
 websiteLib = "${website}/war/WEB-INF/lib"
 
 sourceSets {
@@ -31,7 +31,7 @@ sourceSets {
 }
 
 dependencies {
-    groovy fileTree(dir: 'lib', includes: ['groovy-all-1.7.4.jar'])
+    groovy fileTree(dir: 'lib', includes: ['groovy-all-1.7.5.jar'])
     compile fileTree(dir: 'lib', includes: ['*.jar'])
 }
 
@@ -44,7 +44,7 @@ jar {
 
 groovydoc {
     def title = "Gaelyk ${version}"
-    destinationDir = new File(apidir)
+    destinationDir = new File(apiDir)
     windowTitle = title
     docTitle = title
     link 'http://java.sun.com/javaee/5/docs/api/', 'javax.servlet.'
@@ -65,7 +65,7 @@ task template << {
     ant.copy file: jar.archivePath, todir: projLib
 
     println "Creating the template project ZIP file"
-    ant.zip basedir: tmpProj, destfile: zipname, excludes: '__MACOSX, *.iml'
+    ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX, *.iml'
 }
 
 task dist(dependsOn: [groovydoc, template]) << {

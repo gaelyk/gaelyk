@@ -77,7 +77,9 @@ class Route {
 
         // either a normal String route definition,
         // or a closure route with capability aware routing rules
-        this.destination = destination instanceof String ? destination : RoutingRule.buildRoutingRule((Closure)destination)
+        this.destination = destination instanceof String || ignore == true ?
+            destination :
+            RoutingRule.buildRoutingRule((Closure) destination)
     }
 
     String toString() {
@@ -110,7 +112,8 @@ class Route {
     def forUri(String uri) {
         Matcher matcher = regex.matcher(uri)
 
-        String finalDestination = destination instanceof String ? destination : destination.finalDestination
+        String finalDestination = destination instanceof String || ignore == true ? 
+            destination : destination.finalDestination
 
         if (matcher.matches()) {
             def variableMap = variables ?

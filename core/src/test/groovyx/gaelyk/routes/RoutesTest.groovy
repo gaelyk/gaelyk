@@ -105,4 +105,8 @@ class RoutesTest extends GroovyTestCase {
         assert new Route("/isbn/@isbn/toc", d, m, r, { isbn ==~ /\d{9}(\d|X)/ }).forUri("/isbn/012345678X/toc").matches
         assert !new Route("/isbn/@isbn/toc", d, m, r, { isbn =~ /\d{9}(\d|X)/ }).forUri("/isbn/XYZ/toc").matches
     }
+
+    void testIgnoreRoute() {
+        new Route("/ignore", null, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, true).forUri("/ignore").matches
+    }
 }

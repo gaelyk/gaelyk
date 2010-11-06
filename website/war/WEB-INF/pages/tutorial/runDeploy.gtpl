@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Simple plugin system</title>
+    <title>Running and deploying Gaelyk applications</title>
 </head>
 <body>
 

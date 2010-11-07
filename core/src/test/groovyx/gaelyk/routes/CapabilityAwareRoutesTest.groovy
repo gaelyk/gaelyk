@@ -23,7 +23,6 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.api.capabilities.CapabilitiesService
 import com.google.appengine.api.capabilities.Capability
 import com.google.appengine.api.capabilities.CapabilityState
-import static com.google.appengine.api.capabilities.CapabilityStatus.SCHEDULED_MAINTENANCE
 
 /**
  * @author Guillaume Laforge

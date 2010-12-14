@@ -38,7 +38,7 @@ abstract class RoutesBaseScript extends Script {
      * a definition of a caching duration, and the ability to ignore certain paths
      * like GAE's /_ah/* special URLs.
      */
-    private handle(Map m, String route, HttpMethod method) {
+    protected handle(Map m, String route, HttpMethod method) {
         RedirectionType redirectionType = m.forward ? RedirectionType.FORWARD : RedirectionType.REDIRECT
 
         def destination = m.forward ?: m.redirect

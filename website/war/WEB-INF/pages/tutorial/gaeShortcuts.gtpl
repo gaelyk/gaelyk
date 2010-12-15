@@ -1282,7 +1282,9 @@ but without the need of creating an instance of <code>ChannelMessage</code>:
 </p>
 
 <pre class="brush:groovy">
-    channel.send someClientId, "hello"
+    def clientId = "1234"
+    channel.createChannel(clientId)
+    channel.send clientId, "hello"
 </pre>
 
 </body>

@@ -159,6 +159,12 @@ by injecting specific elements of the Google App Engine SDK:
                     <li><tt>version</tt> : the Google App Engine SDK version (here: ${app.env.version})</li>
                 </ul>
             </li>
+            <li>
+                <tt>gaelyk</tt> : a map with the following keys and values:
+                <ul>
+                    <li><tt>version</tt> : the version of the <b>Gaelyk</b> toolkit used (here: ${app.gaelyk.version})</li>
+                </ul>
+            </li>
         </ul>
     </li>
 </ul>
@@ -172,6 +178,7 @@ by injecting specific elements of the Google App Engine SDK:
         app.version
         app.env.name
         app.env.version
+        app.gaelyk.version
     </pre>
 </blockquote>
 

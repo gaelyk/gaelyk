@@ -19,7 +19,7 @@ import com.google.appengine.api.NamespaceManager
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
 import com.google.appengine.api.datastore.DatastoreServiceFactory
-import com.google.appengine.api.labs.taskqueue.QueueFactory
+import com.google.appengine.api.taskqueue.QueueFactory
 import com.google.appengine.api.mail.MailServiceFactory
 import com.google.appengine.api.memcache.MemcacheServiceFactory
 import com.google.appengine.api.oauth.OAuthServiceFactory

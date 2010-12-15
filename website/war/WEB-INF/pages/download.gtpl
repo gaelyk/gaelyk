@@ -19,10 +19,11 @@ and with the 1.3.8 version of the App Engine SDK.
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
 
-<h2>Version 0.5.7</h2>
+<h2>Version 0.6</h2>
 
 <h3>Changes</h3>
 <ul>
+    <li>Updated to GAE SDK 1.4.0</li>
     <li>Added <code>app.gaelyk.version</code> in the binding</li>
     <li>Fixed a bug with <code>ignore</code> URL routes which triggered NPEs after the capabilities routing was added</li>
     <li>Fixed typos in the tutorials</li>
@@ -31,8 +32,8 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Artifacts</h3>
 <ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.5.7.jar">gaelyk-0.5.7.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.5.7.zip">gaelyk-template-project-0.5.7.zip</a></li>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.jar">gaelyk-0.6.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.zip">gaelyk-template-project-0.6.zip</a></li>
 </ul>
 
 <h2>Version 0.5.6</h2>

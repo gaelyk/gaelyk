@@ -20,6 +20,7 @@ import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.oauth.OAuthService
+import com.google.appengine.api.channel.ChannelService
 
 /**
  * Test the binding enhancer binds the GAE services in the binding.
@@ -91,13 +92,14 @@ class BindingEnhancerTest extends GroovyTestCase {
         assert binding.mail         instanceof MailService
         assert binding.images       instanceof ImagesService
         assert binding.users        instanceof UserService
-        assert binding.defaultQueue instanceof com.google.appengine.api.labs.taskqueue.Queue
+        assert binding.defaultQueue instanceof com.google.appengine.api.taskqueue.Queue
         assert binding.xmpp         instanceof XMPPService
         assert binding.blobstore    instanceof BlobstoreService
         assert binding.oauth        instanceof OAuthService
+        assert binding.channel      instanceof ChannelService
     }
 
     void testGaelykVersionPresent() {
-        assert binding.app.gaelyk.version ==~ /\d+\.\d+\.\d+/
+        assert binding.app.gaelyk.version ==~ /\d+\.\d+(\.\d+)?/
     }
 }

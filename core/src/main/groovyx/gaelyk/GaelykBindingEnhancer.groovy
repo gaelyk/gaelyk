@@ -30,6 +30,7 @@ import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.xmpp.XMPPServiceFactory
 
 import groovyx.gaelyk.logging.LoggerAccessor
+import com.google.appengine.api.channel.ChannelServiceFactory
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -96,5 +97,7 @@ class GaelykBindingEnhancer {
         // Capabilities service to know the status of the various GAE services
         binding.setVariable("capabilities", CapabilitiesServiceFactory.capabilitiesService)
 
+        // Channel service in SDK 1.4.0 for Comet-style applications
+        binding.setVariable("channel", ChannelServiceFactory.channelService)
     }
 }

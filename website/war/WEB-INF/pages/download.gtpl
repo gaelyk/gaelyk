@@ -24,6 +24,7 @@ But to get you started quickly, you may use a ready-made template project which 
 <h3>Changes</h3>
 <ul>
     <li>Updated to GAE SDK 1.4.0</li>
+    <li>Channel service added in the binding</li>
     <li>Added <code>app.gaelyk.version</code> in the binding</li>
     <li>Updated the task queue enhancements to use the new package (as task queues migrated from labs)</li>
     <li>Fixed a bug with <code>ignore</code> URL routes which triggered NPEs after the capabilities routing was added</li>

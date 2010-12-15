@@ -73,6 +73,8 @@ import com.google.appengine.api.urlfetch.HTTPMethod
 import com.google.appengine.api.urlfetch.FetchOptions
 import com.google.appengine.api.urlfetch.HTTPHeader
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy
+import com.google.appengine.api.channel.ChannelService
+import com.google.appengine.api.channel.ChannelMessage
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -1488,5 +1490,19 @@ class GaelykCategory {
      */
     static head(URL url, Map<String, String> options = [:]) {
         fetch(url, HTTPMethod.HEAD, options)
+    }
+
+    // ----------------------------------------------------------------
+    // Category methods dedicated to the Channel service
+    // ----------------------------------------------------------------
+
+    /**
+     * Send a message through the Channel service
+     *
+     * @param clientId the client ID
+     * @param message the message to send
+     */
+    static void send(ChannelService channel, String clientId, String message) {
+        channel.sendMessage(new ChannelMessage(clientId, message))
     }
 }

@@ -144,6 +144,9 @@ by injecting specific elements of the Google App Engine SDK:
         <tt>capabilities</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/capabilities/CapabilitiesService.html">Capabilities service</a>
     </li>
     <li>
+        <tt>channel</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/channel/ChannelService.html">Channel service</a>
+    </li>
+    <li>
         <tt>localMode</tt> : a boolean variable which is <code>true</code> when the application is running in local
         development mode, and <code>false</code> when deployed on Google's cloud.
     </li>

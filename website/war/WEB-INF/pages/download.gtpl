@@ -25,6 +25,7 @@ But to get you started quickly, you may use a ready-made template project which 
 <ul>
     <li>Updated to GAE SDK 1.4.0</li>
     <li>Added <code>app.gaelyk.version</code> in the binding</li>
+    <li>Updated the task queue enhancements to use the new package (as task queues migrated from labs)</li>
     <li>Fixed a bug with <code>ignore</code> URL routes which triggered NPEs after the capabilities routing was added</li>
     <li>Fixed typos in the tutorials</li>
     <li>Introduced a <a href="http://www.gradle.org">Gradle</a> build script for building Gaelyk itself</li>

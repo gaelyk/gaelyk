@@ -21,9 +21,9 @@ import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.Transaction
 import com.google.appengine.api.datastore.DatastoreService
 import com.google.appengine.api.datastore.DatastoreServiceFactory
-import com.google.appengine.api.labs.taskqueue.Queue
-import com.google.appengine.api.labs.taskqueue.TaskHandle
-import com.google.appengine.api.labs.taskqueue.TaskOptions
+import com.google.appengine.api.taskqueue.Queue
+import com.google.appengine.api.taskqueue.TaskHandle
+import com.google.appengine.api.taskqueue.TaskOptions
 import com.google.appengine.api.xmpp.XMPPService
 import com.google.appengine.api.xmpp.MessageBuilder
 import groovy.xml.StreamingMarkupBuilder

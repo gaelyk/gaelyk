@@ -15,7 +15,7 @@
  */
 package groovyx.gaelyk
 
-import com.google.appengine.api.labs.taskqueue.QueueFactory
+import com.google.appengine.api.taskqueue.QueueFactory
 
 /**
  * Holder for queues providing a Groovy map-like syntax for accessing queues.

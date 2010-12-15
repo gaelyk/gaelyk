@@ -75,6 +75,7 @@ import com.google.appengine.api.urlfetch.HTTPHeader
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy
 import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelMessage
+import com.google.appengine.api.taskqueue.RetryOptions
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -534,7 +535,7 @@ class GaelykCategory {
      * @return a TaskHandle instance
      */
     static TaskHandle add(Queue selfQueue, Map params) {
-        def options = TaskOptions.Builder.withDefaults()
+        TaskOptions options = TaskOptions.Builder.withDefaults()
         params.each { key, value ->
             if (key in ['countdownMillis', 'etaMillis', 'taskName', 'url']) {
                 options = options."$key"(value)
@@ -545,6 +546,23 @@ class GaelykCategory {
                     }
                 } else {
                     throw new RuntimeException("The headers key/value pairs should be passed as a map.")
+                }
+            } else if (key == 'retryOptions') {
+                if (value instanceof Map) {
+                    def retryOptions = RetryOptions.Builder.withDefaults()
+                    value.each { retryKey, retryValue ->
+                        if (retryKey in ['taskRetryLimit', 'taskAgeLimitSeconds',
+                                'minBackoffSeconds', 'maxBackoffSeconds', 'maxDoublings']) {
+                            retryOptions."${retryKey}"(retryValue)
+                        } else {
+                            throw new RuntimeException("'$retryKey' is not a valid retry option parameter.")
+                        }
+                    }
+                    options.retryOptions(retryOptions)
+                } else if (value instanceof RetryOptions) {
+                    options.retryOptions(value)
+                } else {
+                    throw new RuntimeException("The retry options parameter should either be a map or an instance of RetryOptions.")
                 }
             } else if (key == 'method') {
                 if (value instanceof TaskOptions.Method) {

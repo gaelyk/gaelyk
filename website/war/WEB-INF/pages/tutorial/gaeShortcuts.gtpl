@@ -415,9 +415,9 @@ In addition to this builder approach, <b>Gaelyk</b> provides a shortcut notation
 <pre class="brush:groovy">
     // add a task to the queue
     queue.add countdownMillis: 1000, url: "/task/dailyEmail",
-        taskName: "Send daily email newsletter",
-        method: 'PUT', params: [date: '20090914'],
-        payload: content
+        taskName: "dailyNewsletter",
+        method: 'PUT', params: [date: '20101214'],
+        payload: content, retryOptions: RetryOptions.Builder.withDefaults()
 </pre>
 
 <p>
@@ -428,10 +428,17 @@ There is also a variant with an overloaded <code>&lt;&lt;</code> operator:
     // add a task to the queue
     queue << [
         countdownMillis: 1000, url: "/task/dailyEmail",
-        taskName: "Send daily email newsletter",
-        method: 'PUT', params: [date: '20090914'],
-        payload: content
-   ]
+        taskName: "dailyNewsletter",
+        method: 'PUT', params: [date: '20101214'],
+        payload: content,
+        retryOptions: [
+            taskRetryLimit: 10,
+            taskAgeLimitSeconds: 100,
+            minBackoffSeconds: 40,
+            maxBackoffSeconds: 50,
+            maxDoublings: 15
+        ]
+    ]
 </pre>
 
 <a name="jabber"></a>

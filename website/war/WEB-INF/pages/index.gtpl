@@ -15,7 +15,7 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
     <li><b>Gaelyk</b> gives you the choice to use Groovy for developing your applications.</li>
     <li><b>Gaelyk</b> builds upon <a href="http://groovy.codehaus.org/Groovlets">Groovlets.</a>
         and the <a href="http://groovy.codehaus.org/Groovy+Templates">Groovy template servlet</a></li>
-    <li><b>Gaelyk</b> allows you to cleanly seperate your views with Groovy templates and your actions in Groovlets.</li>
+    <li><b>Gaelyk</b> allows you to cleanly separate your views with Groovy templates and your actions in Groovlets.</li>
     <li><b>Gaelyk</b> simplifies the usage of the Google App Engine SDK by providing more concise and more powerful shortcuts
         when using the <a href="/tutorial/app-engine-shortcuts#datastore">datastore</a>,
         <a href="/tutorial/app-engine-shortcuts#memcache">memcache</a>,

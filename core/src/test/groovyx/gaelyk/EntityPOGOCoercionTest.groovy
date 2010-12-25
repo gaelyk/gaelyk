@@ -49,9 +49,37 @@ class EntityPOGOCoercionTest extends GroovyTestCase {
             assert p.age == e.age
         }
     }
+
+    void testCoercionWithoutAllPropertiesFilled() {
+        use(GaelykCategory) {
+            def e = new Entity("UserPreferences")
+            e.owner = "me"
+            e.alertViaEmail = true
+
+            assert e as UserPreferences
+
+            def up = new UserPreferences(owner: "me", alertViaEmail: true)
+
+            assert up as Entity
+        }
+    }
 }
 
 class Person {
     String name
     int age
+}
+
+class UserPreferences {
+
+	String owner
+	String seeds
+	String keywords
+	boolean alertViaEmail
+	boolean alertViaGTalk
+	int runInterval
+
+	String toString() {
+		"owner: $owner, seeds: $seeds, keywords: $keywords, alertViaEmail: $alertViaEmail, alertViaGTalk: $alertViaGTalk, runInterval: $runInterval"
+	}
 }

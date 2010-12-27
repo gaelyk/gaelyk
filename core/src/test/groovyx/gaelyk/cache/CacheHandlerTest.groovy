@@ -27,20 +27,22 @@ class CacheHandlerTest extends GroovyTestCase {
             new LocalMemcacheServiceTestConfig(),
     )
 
+    private recorder = []
+
     private String dateBefore = "Sat, 29 Oct 1994 19:43:31 GMT"
     private String dateAfter  = "Fri, 29 Oct 2094 19:43:31 GMT"
 
     private String uri = "/index"
 
     private request = [
-            getRequestURI: {-> uri },
-            getQueryString: {-> "" },
-            getRequestDispatcher: { String s -> requestDispatcher },
-            getHeader: { String h -> dateAfter }
+            getRequestURI: { -> recorder << "req.getRequestURI"; uri },
+            getQueryString: { -> recorder << "req.getQueryString"; "" },
+            getRequestDispatcher: { String s -> recorder << "req.getRequestDispatcher"; requestDispatcher },
+            getHeader: { String h -> recorder << "req.getHeader"; dateAfter }
     ] as HttpServletRequest
 
     private requestDispatcher = [
-            forward: { ServletRequest servletRequest, ServletResponse servletResponse -> }
+            forward: { ServletRequest servletRequest, ServletResponse servletResponse -> recorder << "reqDisp.forward" }
     ] as RequestDispatcher
 
     private stream = new OutputStream() {
@@ -51,12 +53,12 @@ class CacheHandlerTest extends GroovyTestCase {
     private output = new CustomServletOutputStream(output: stream)
 
     private response = [
-            addHeader: { String h, String v -> },
-            getContentType: { -> "text/html" },
-            setContentType: { String ct -> },
-            getOutputStream: { -> output },
-            sendError: { int errCode -> },
-            setHeader: { k, v -> }
+            addHeader: { String h, String v -> recorder << "resp.addHeader" },
+            getContentType: { -> recorder << "resp.getContentType"; "text/html" },
+            setContentType: { String ct -> recorder << "resp.setContentType" },
+            getOutputStream: { -> recorder << "resp.getOutputStream"; output },
+            sendError: { int errCode -> recorder << "resp.sendError" },
+            setHeader: { k, v -> recorder << "resp.setHeader" }
     ] as HttpServletResponse
 
     protected void setUp() {
@@ -88,29 +90,36 @@ class CacheHandlerTest extends GroovyTestCase {
 
     void testCacheServingWithoutCaching() {
         def route = new Route(uri, "/index.groovy")
-
         CacheHandler.serve route, request, response
+
+        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestDispatcher', 'reqDisp.forward']
     }
 
     void testCacheServingWithCaching() {
         def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
-
         CacheHandler.serve route, request, response
+
+        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getHeader', 'resp.addHeader',
+                'resp.addHeader', 'resp.addHeader', 'req.getRequestDispatcher', 'reqDisp.forward',
+                'resp.getContentType', 'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream']
     }
 
     void testCacheServingWithCachingAndNothingInCacheButLastModified() {
         def memcache = MemcacheServiceFactory.memcacheService
         memcache.put("last-modified-$uri".toString(), dateBefore)
+        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
+        CacheHandler.serve route, request, response
 
-        testCacheServingWithCaching()
+        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getHeader', 'resp.sendError', 'resp.setHeader']
     }
 
     void testCacheServingWithCachingAndInCache() {
         def memcache = MemcacheServiceFactory.memcacheService
-
         memcache.put("content-for-$uri".toString(), "Hello")
         memcache.put("content-type-for-$uri".toString(), "text/html")
+        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
+        CacheHandler.serve route, request, response
 
-        testCacheServingWithCaching()
+        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getHeader', 'resp.setContentType', 'resp.getOutputStream']
     }
 }

@@ -134,7 +134,7 @@ class RoutesFilter implements Filter {
                     }
                     if (route.redirectionType == RedirectionType.FORWARD) {
                         if (route.namespace) {
-                            GaelykCategory.of(NamespaceManager, route.namespace()) {
+                            GaelykCategory.of(NamespaceManager, result.namespace) {
                                 CacheHandler.serve(route, request, response)
                             }
                         } else {

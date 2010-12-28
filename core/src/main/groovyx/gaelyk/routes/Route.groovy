@@ -135,19 +135,24 @@ class Route {
                 }
             }
 
-            // if a closure namespace was defined, clone it, and inject the variables if any
-            if (namespace) {
-                namespace = namespace.clone()
-                namespace.resolveStrategy = Closure.DELEGATE_ONLY
-                namespace.delegate = variableMap
-            }
-
             // replace all the variables
             def effectiveDestination = variableMap.inject (finalDestination) { String dest, var ->
                 dest.replaceAll('@' + var.key, var.value)
             }
 
-            [matches: true, variables: variableMap, destination: effectiveDestination]
+            def result = [matches: true, variables: variableMap, destination: effectiveDestination]
+
+            // if a closure namespace was defined, clone it, and inject the variables if any
+            if (namespace) {
+                def ns = namespace.clone()
+                ns.resolveStrategy = Closure.DELEGATE_ONLY
+                ns.delegate = variableMap
+
+                // add the namespace to the found matching route
+                result.namespace = ns()
+            }
+
+            return result
         } else {
             [matches: false]
         }

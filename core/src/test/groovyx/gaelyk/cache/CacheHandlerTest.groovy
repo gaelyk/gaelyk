@@ -104,7 +104,7 @@ class CacheHandlerTest extends GroovyTestCase {
                 'resp.getContentType', 'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream']
     }
 
-    void testCacheServingWithCachingAndNothingInCacheButLastModified() {
+    void testCacheServingWithLastModified() {
         def memcache = MemcacheServiceFactory.memcacheService
         memcache.put("last-modified-$uri".toString(), dateBefore)
         def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)

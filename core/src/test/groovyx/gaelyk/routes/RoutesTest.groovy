@@ -107,6 +107,11 @@ class RoutesTest extends GroovyTestCase {
     }
 
     void testIgnoreRoute() {
-        new Route("/ignore", null, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, true).forUri("/ignore").matches
+        assert new Route("/ignore", null, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, true).forUri("/ignore").matches
+    }
+
+    void testNamespacedRoute() {
+        assert new Route("/@cust/show", "/showCust.groovy?ns=@cust", HttpMethod.ALL, RedirectionType.FORWARD, null, { cust })
+                .forUri("/acme/show").matches
     }
 }

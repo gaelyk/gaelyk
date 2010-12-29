@@ -69,7 +69,7 @@ class RoutesFilter implements Filter {
     /**
      * Load the routes configuration
      */
-    private void loadRoutes() {
+    void loadRoutes() {
         log.config "Loading routes configuration"
 
         def routesFile = new File(this.routesFileLocation)

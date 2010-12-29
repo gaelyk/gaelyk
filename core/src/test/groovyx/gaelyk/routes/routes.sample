@@ -1,0 +1,7 @@
+get "/somewhere", forward: "/somewhere.groovy"
+
+all "/ignore", ignore: true
+
+get "/redirect", redirect: "/elsewhere.gtpl"
+
+get "/@cust/home", forward: "/customer.groovy?cust=@cust", namespace: { cust }

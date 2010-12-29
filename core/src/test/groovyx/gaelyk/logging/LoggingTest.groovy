@@ -1,5 +1,10 @@
 package groovyx.gaelyk.logging
 
+import java.util.logging.Handler
+import java.util.logging.LogRecord
+import java.util.logging.Logger
+import java.util.logging.Level
+
 /**
  * 
  * @author Guillaume Laforge
@@ -28,14 +33,28 @@ class LoggingTest extends GroovyTestCase {
         GroovyLogger groovletLogger = GroovyLogger.forGroovletUri('/media/upload.groovy')
         GroovyLogger nonGroovletOrTemplateLogger = new GroovyLogger('foo')
 
-        [groovletLogger, nonGroovletOrTemplateLogger].each {
-            it.severe "severe"
-            it.warning "warning"
-            it.info "info"
-            it.config "config"
-            it.fine "fine"
-            it.finer "finer"
-            it.finest "finest"
+        [groovletLogger, nonGroovletOrTemplateLogger].each { GroovyLogger logger ->
+            logger.level = Level.FINEST
+
+            def result = new StringBuilder()
+            logger.addHandler new Handler() {
+                void close() { }
+                void flush() { }
+
+                void publish(LogRecord logRecord) {
+                    result << "($logRecord.level)$logRecord.message"
+                }
+            }
+
+            logger.severe  "severe"
+            logger.warning "warning"
+            logger.info    "info"
+            logger.config  "config"
+            logger.fine    "fine"
+            logger.finer   "finer"
+            logger.finest  "finest"
+
+            assert result.toString() == "(SEVERE)severe(WARNING)warning(INFO)info(CONFIG)config(FINE)fine(FINER)finer(FINEST)finest"
         }
     }
 }

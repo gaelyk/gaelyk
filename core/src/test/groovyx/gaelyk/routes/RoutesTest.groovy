@@ -94,6 +94,11 @@ class RoutesTest extends GroovyTestCase {
         }
     }
 
+    void testNonMatchingRoute() {
+        def r = new Route("/somewhere", "/somewhere.groovy")
+        assert !r.forUri("/elsewhere").matches
+    }
+
     void testValidatorClosure() {
         def d = "/destination"
         def m = HttpMethod.GET

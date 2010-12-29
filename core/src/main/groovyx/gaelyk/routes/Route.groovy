@@ -82,10 +82,6 @@ class Route {
             RoutingRule.buildRoutingRule((Closure) destination)
     }
 
-    String toString() {
-        "[Route: $route, method: $method, redirection: $redirectionType, to: $destination, ignore: $ignore]"
-    }
-
     /**
      * Extract a list of parameters in the route URI.
      */

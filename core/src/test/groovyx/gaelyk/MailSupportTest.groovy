@@ -62,4 +62,18 @@ class MailSupportTest extends GroovyTestCase {
         assert logResult.contains("new message")
         assert logResult.contains("hello")
     }
+
+    void testSendToAdmins() {
+        use (GaelykCategory) {
+            mail.sendToAdmins from: "glaforge@gmail.com",
+                    textBody: "hello",
+                    subject: "new message"
+        }
+
+        println logResult
+
+        assert logResult.contains("glaforge@gmail.com")
+        assert logResult.contains("new message")
+        assert logResult.contains("hello")
+    }
 }

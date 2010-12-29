@@ -63,8 +63,4 @@ class CapabilityAwareDestination {
         this.comparison = CapabilityComparisonOperator.NOT
         return this
     }
-
-    String toString() {
-        "[destination: $destination, capability: $capability, comparison: $comparison, status: $status, main route? ${isMainRoute()}"
-    }
 }

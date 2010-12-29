@@ -52,8 +52,6 @@ class RoutingRule {
                 service.getStatus(dest.capability).getStatus() == dest.status
             } else if(dest.comparison == CapabilityAwareDestination.CapabilityComparisonOperator.NOT) {
                 service.getStatus(dest.capability).getStatus() != dest.status
-            } else {
-                return false
             }
         }
 

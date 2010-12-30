@@ -11,6 +11,7 @@ import com.google.appengine.api.xmpp.JID
 import com.google.appengine.api.datastore.ShortBlob
 import com.google.appengine.api.datastore.Blob
 import com.google.appengine.api.datastore.GeoPt
+import com.google.appengine.api.blobstore.ByteRange
 
 class GaelykCategoryTest extends GroovyTestCase {
 
@@ -60,6 +61,12 @@ class GaelykCategoryTest extends GroovyTestCase {
     void testPairToGeoPtCoercion() {
         use(GaelykCategory) {
             assert [48.829978, 2.495055] as GeoPt == new GeoPt(48.829978, 2.495055)
+        }
+    }
+
+    void testIntRangeToByteRangeCoercion() {
+        use(GaelykCategory) {
+            assert 300..400 as ByteRange == new ByteRange(300, 400)
         }
     }
 }

@@ -39,4 +39,10 @@ class GaelykCategoryTest extends GroovyTestCase {
             assert new URL("http://gaelyk.appspot.com") as Link == new Link("http://gaelyk.appspot.com")
         }
     }
+
+    void testIntegerToRatingCoercion() {
+        use(GaelykCategory) {
+            assert 10 as Rating == new Rating(10)
+        }
+    }
 }

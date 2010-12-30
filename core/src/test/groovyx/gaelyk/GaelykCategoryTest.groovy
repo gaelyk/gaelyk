@@ -8,6 +8,9 @@ import com.google.appengine.api.datastore.PhoneNumber
 import com.google.appengine.api.datastore.PostalAddress
 import com.google.appengine.api.datastore.Rating
 import com.google.appengine.api.xmpp.JID
+import com.google.appengine.api.datastore.ShortBlob
+import com.google.appengine.api.datastore.Blob
+import com.google.appengine.api.datastore.GeoPt
 
 class GaelykCategoryTest extends GroovyTestCase {
 
@@ -43,6 +46,20 @@ class GaelykCategoryTest extends GroovyTestCase {
     void testIntegerToRatingCoercion() {
         use(GaelykCategory) {
             assert 10 as Rating == new Rating(10)
+        }
+    }
+
+    void testByteArrayToBlobAndShortBlobCoercion() {
+        use(GaelykCategory) {
+            byte[] bytes = [1, 2, 3, 4]
+            assert bytes as ShortBlob == new ShortBlob(bytes)
+            assert bytes as Blob == new Blob(bytes)
+        }
+    }
+
+    void testPairToGeoPtCoercion() {
+        use(GaelykCategory) {
+            assert [48.829978, 2.495055] as GeoPt == new GeoPt(48.829978, 2.495055)
         }
     }
 }

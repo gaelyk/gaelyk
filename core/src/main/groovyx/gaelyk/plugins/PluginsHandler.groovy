@@ -34,6 +34,8 @@ class PluginsHandler {
     Map bindingVariables = [:]
     List routes = []
     List categories = []
+    List beforeActions = []
+    List afterActions = []
 
     /**
      * Initializes the plugins
@@ -64,8 +66,14 @@ class PluginsHandler {
                     bindingVariables.putAll script.getBindingVariables()
                     routes.addAll script.getRoutes()
                     categories.addAll script.getCategories()
+
+                    if (script.getBeforeAction()) beforeActions.add script.getBeforeAction()
+                    if (script.getAfterAction())  afterActions .add script.getAfterAction()
                 }
             }
+
+            // reverse the order of the "after" actions so they are executed in reverse order
+            if (afterActions) afterActions = afterActions.reverse()
 
             initialized = true
         }

@@ -30,6 +30,12 @@ abstract class PluginBaseScript extends RoutesBaseScript {
     /** contributed categories */
     List<Class> categories = []
 
+    /** "before" request hook */
+    Closure beforeAction = null
+
+    /** "after" request hook */
+    Closure afterAction = null
+
     /**
      * Inject new variables in the binding
      *
@@ -61,5 +67,25 @@ abstract class PluginBaseScript extends RoutesBaseScript {
      */
     void categories(Class... cats) {
         categories = cats as List
+    }
+
+    /**
+     * Add a "before" action before the execution of the request
+     *
+     * @param c the closure action to execute
+     */
+    void before(Closure c) {
+        beforeAction = c.clone()
+        beforeAction.resolveStrategy = Closure.DELEGATE_FIRST
+    }
+
+    /**
+     * Add an "after" action after the execution of the request
+     *
+     * @param c the closure action to execute
+     */
+    void after(Closure c) {
+        afterAction = c.clone()
+        afterAction.resolveStrategy = Closure.DELEGATE_FIRST
     }
 }

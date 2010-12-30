@@ -63,7 +63,9 @@ class GaelykTemplateServlet extends TemplateServlet {
     @Override
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         use([GaelykCategory, * PluginsHandler.instance.categories]) {
+            PluginsHandler.instance.beforeActions.each { Closure action -> action(request, response) }
             super.service(request, response)
+            PluginsHandler.instance.afterActions.each  { Closure action -> action(request, response) }
         }
     }
 }

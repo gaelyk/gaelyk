@@ -366,7 +366,7 @@ class GaelykCategory {
         else if (clazz == PostalAddress)
             new PostalAddress(self)
         else if (clazz == Rating)
-            new Rating(new Integer(self))
+            new Rating(Integer.valueOf(self))
         else if (clazz == JID)
             new JID(self)
         else DefaultGroovyMethods.asType(self, clazz)

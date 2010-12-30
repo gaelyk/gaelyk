@@ -31,11 +31,11 @@ class EntityPOGOCoercionTest extends GroovyTestCase {
         use(GaelykCategory) {
             def e = new Entity("Person")
             e.name = "Guillaume"
-            e.age = 33
+            e['age'] = 33
 
             def p = e as Person
 
-            assert e.name == p.name
+            assert e['name'] == p.name
             assert e.age == p.age
         }
     }
@@ -45,7 +45,7 @@ class EntityPOGOCoercionTest extends GroovyTestCase {
             def p = new Person(name: "Guillaume", age: 33)
             def e = p as Entity
 
-            assert p.name == e.name
+            assert p.name == e['name']
             assert p.age == e.age
         }
     }
@@ -53,7 +53,7 @@ class EntityPOGOCoercionTest extends GroovyTestCase {
     void testCoercionWithoutAllPropertiesFilled() {
         use(GaelykCategory) {
             def e = new Entity("UserPreferences")
-            e.owner = "me"
+            e['owner'] = "me"
             e.alertViaEmail = true
 
             assert e as UserPreferences

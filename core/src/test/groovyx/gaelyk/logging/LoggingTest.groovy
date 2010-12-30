@@ -34,6 +34,8 @@ class LoggingTest extends GroovyTestCase {
         GroovyLogger nonGroovletOrTemplateLogger = new GroovyLogger('foo')
 
         [groovletLogger, nonGroovletOrTemplateLogger].each { GroovyLogger logger ->
+            def oldLevel = logger.level
+
             logger.level = Level.FINEST
 
             def result = new StringBuilder()
@@ -55,6 +57,8 @@ class LoggingTest extends GroovyTestCase {
             logger.finest  "finest"
 
             assert result.toString() == "(SEVERE)severe(WARNING)warning(INFO)info(CONFIG)config(FINE)fine(FINER)finer(FINEST)finest"
+
+            logger.level = oldLevel
         }
     }
 }

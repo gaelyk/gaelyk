@@ -1,18 +1,18 @@
 package groovyx.gaelyk
 
+import com.google.appengine.api.mail.MailServiceFactory
 import com.google.appengine.tools.development.testing.LocalMailServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.google.appengine.api.mail.MailServiceFactory
-import java.util.logging.Logger
 import java.util.logging.Filter
 import java.util.logging.LogRecord
+import java.util.logging.Logger
 
 /**
  * Test the mail service enhancements.
  *
  * @author Guillaume Laforge
  */
-class MailSupportTest extends GroovyTestCase {
+class MailToAdminSupportTest extends GroovyTestCase {
 
     // setup the local environement with a mail service stub
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
@@ -39,21 +39,19 @@ class MailSupportTest extends GroovyTestCase {
         super.tearDown()
     }
 
-    void testSend() {
+    void testSendToAdmins() {
         def mail = MailServiceFactory.mailService
 
         use (GaelykCategory) {
-            mail.send from: "glaforge@gmail.com",
-                    to: "someone@gmail.com",
-                    textBody: "hello you",
+            mail.sendToAdmins from: "glaforge@gmail.com",
+                    textBody: "hello admin",
                     subject: "new message"
         }
 
         println logResult
 
         assert logResult.contains("glaforge@gmail.com")
-        assert logResult.contains("someone@gmail.com")
         assert logResult.contains("new message")
-        assert logResult.contains("hello you")
+        assert logResult.contains("hello admin")
     }
 }

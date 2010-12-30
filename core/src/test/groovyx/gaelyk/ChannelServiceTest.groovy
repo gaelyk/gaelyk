@@ -1,3 +1,5 @@
+package groovyx.gaelyk
+
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalChannelServiceTestConfig
 import groovyx.gaelyk.GaelykCategory

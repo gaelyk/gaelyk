@@ -2,7 +2,6 @@ package groovyx.gaelyk
 
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.taskqueue.QueueFactory
 
 /**

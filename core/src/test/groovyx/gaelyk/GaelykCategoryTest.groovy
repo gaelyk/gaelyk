@@ -33,4 +33,10 @@ class GaelykCategoryTest extends GroovyTestCase {
             assert ("foo@gmail.com" as JID).toString() == new JID("foo@gmail.com").toString()
         }
     }
+
+    void testUrlToLinkCoercion() {
+        use(GaelykCategory) {
+            assert new URL("http://gaelyk.appspot.com") as Link == new Link("http://gaelyk.appspot.com")
+        }
+    }
 }

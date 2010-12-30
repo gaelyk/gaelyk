@@ -2,7 +2,6 @@ package groovyx.gaelyk
 
 import com.google.appengine.tools.development.testing.LocalMailServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.google.appengine.api.mail.MailService
 import com.google.appengine.api.mail.MailServiceFactory
 import java.util.logging.Logger
 import java.util.logging.Filter
@@ -17,24 +16,19 @@ class MailSupportTest extends GroovyTestCase {
 
     // setup the local environement with a mail service stub
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-            new LocalMailServiceTestConfig().setLogMailBody(true)
+            new LocalMailServiceTestConfig().setLogMailBody(true)//.setLogMailLevel(Level.INFO)
     )
 
-    private MailService mail
-
-    private String logResult
+    private String logResult = ""
 
     protected void setUp() {
         super.setUp()
         // setting up the local environment
         helper.setUp()
 
-        mail = MailServiceFactory.mailService
-
-        logResult = ""
-
         Logger log = Logger.getLogger("com.google.appengine.api.mail.dev.LocalMailService")
         log.filter = { LogRecord logRecord ->
+            println ">>>>>> " + logRecord.message
             logResult += logRecord.message + '\n'
             return false
         } as Filter
@@ -44,14 +38,31 @@ class MailSupportTest extends GroovyTestCase {
         // uninstalling the local environment
         helper.tearDown()
         super.tearDown()
-        logResult = ""
+    }
+
+    void testSendToAdmins() {
+        def mail = MailServiceFactory.mailService
+
+        use (GaelykCategory) {
+            mail.sendToAdmins from: "glaforge@gmail.com",
+                    textBody: "hello admin",
+                    subject: "new message"
+        }
+
+        println logResult
+
+        assert logResult.contains("glaforge@gmail.com")
+        assert logResult.contains("new message")
+        assert logResult.contains("hello admin")
     }
 
     void testSend() {
+        def mail = MailServiceFactory.mailService
+
         use (GaelykCategory) {
             mail.send from: "glaforge@gmail.com",
                     to: "someone@gmail.com",
-                    textBody: "hello",
+                    textBody: "hello you",
                     subject: "new message"
         }
 
@@ -60,20 +71,6 @@ class MailSupportTest extends GroovyTestCase {
         assert logResult.contains("glaforge@gmail.com")
         assert logResult.contains("someone@gmail.com")
         assert logResult.contains("new message")
-        assert logResult.contains("hello")
-    }
-
-    void testSendToAdmins() {
-        use (GaelykCategory) {
-            mail.sendToAdmins from: "glaforge@gmail.com",
-                    textBody: "hello",
-                    subject: "new message"
-        }
-
-        println logResult
-
-        assert logResult.contains("glaforge@gmail.com")
-        assert logResult.contains("new message")
-        assert logResult.contains("hello")
+        assert logResult.contains("hello you")
     }
 }

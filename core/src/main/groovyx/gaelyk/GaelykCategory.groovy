@@ -1107,7 +1107,7 @@ class GaelykCategory {
      */
     static void of(Class nm, String ns, Closure c) {
         if (nm != NamespaceManager)
-            throw new MissingMethodException("with", nm, [ns, c] as Object[])
+            throw new MissingMethodException("of", nm, [ns, c] as Object[])
         
         def oldNs = NamespaceManager.get()
         NamespaceManager.set(ns)

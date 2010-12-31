@@ -66,8 +66,22 @@ class MemcacheCategoryMethodsTest extends GroovyTestCase {
             memcache.put("age-of-${name}", 33, Expiration.byDeltaMillis(1000))
             assert memcache['age-of-Guillaume'] == 33
 
+            assert 'age-of-Guillaume' in memcache
+
             memcache.put("sex-of-${name}", 'Male', Expiration.byDeltaMillis(1000), SetPolicy.SET_ALWAYS)
             assert memcache['sex-of-Guillaume'] == 'Male'
+        }
+    }
+
+    void testPutAtObjectMethod() {
+        def memcache = MemcacheServiceFactory.memcacheService
+
+        use(GaelykCategory) {
+            def now = new Date()
+            memcache[now] = "aujourd'hui"
+
+            assert now in memcache
+            assert memcache[now] == "aujourd'hui"
         }
     }
 }

@@ -10,7 +10,7 @@ import com.google.appengine.api.datastore.Transaction
 /**
  * @author Guillaume Laforge
  */
-class GaelykCategoryWithDatastoreEnvironmentTest extends GroovyTestCase {
+class DatastoreShortcutsTest extends GroovyTestCase {
     // setup the local environement stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig()

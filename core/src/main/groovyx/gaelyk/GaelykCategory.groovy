@@ -769,6 +769,16 @@ class GaelykCategory {
      * @param key the GString key
      * @return the value stored under that key
      */
+    static Object get(MemcacheService memcache, String key) {
+        memcache.get((Object)key)
+    }
+
+    /**
+     * Get an object from the cache, with a GString key, coerced to a String.
+     *
+     * @param key the GString key
+     * @return the value stored under that key
+     */
     static Object get(MemcacheService memcache, GString key) {
         memcache.get(key.toString())
     }
@@ -793,6 +803,16 @@ class GaelykCategory {
         //TODO this method should be removed once we only need a getAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
         memcache.get(key)
+    }
+
+    /**
+     * Put an object in the cache under a GString key, coerced to a String.
+     *
+     * @param key a GString key
+     * @param value the value to put in the cache
+     */
+    static void set(MemcacheService memcache, String key, Object value) {
+        memcache.put(key, value)
     }
 
     /**

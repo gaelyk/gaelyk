@@ -84,4 +84,16 @@ class MemcacheCategoryMethodsTest extends GroovyTestCase {
             assert memcache[now] == "aujourd'hui"
         }
     }
+
+    void testSetAndGetStringKeyMethod() {
+        def memcache = MemcacheServiceFactory.memcacheService
+
+        use(GaelykCategory) {
+            memcache.number = 1234
+
+            assert 'number' in memcache
+            assert memcache.number == 1234
+        }
+
+    }
 }

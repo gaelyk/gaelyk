@@ -69,7 +69,7 @@ class RoutesFilter implements Filter {
     /**
      * Load the routes configuration
      */
-    void loadRoutes() {
+    synchronized void loadRoutes() {
         log.config "Loading routes configuration"
 
         def routesFile = new File(this.routesFileLocation)
@@ -95,8 +95,6 @@ class RoutesFilter implements Filter {
                 }
                 routes = script.routes
 
-                // First initialization of the plugins if the routes filter is installed
-                PluginsHandler.instance.initPlugins()
                 // add the routes defined by the plugins
                 routes.addAll PluginsHandler.instance.routes
 
@@ -113,6 +111,10 @@ class RoutesFilter implements Filter {
     void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         // reload the routes in local dev mode in case the routes definition has changed since the last request
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
+            log.config "Development mode: reloading plugin descriptors and routes configuration"
+            // re-read plugins descriptor to reload plugins in development mode
+            PluginsHandler.instance.reinit()
+            PluginsHandler.instance.initPlugins()
             loadRoutes()
         }
 

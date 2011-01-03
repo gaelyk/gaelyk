@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
 import groovyx.gaelyk.GaelykCategory
 import groovy.servlet.ServletCategory
+import groovyx.gaelyk.logging.GroovyLogger
 
 /**
  * Configure the installed plugins.
@@ -46,6 +47,8 @@ class PluginsHandler {
         file.exists() ? file.text : ""
     }
 
+    GroovyLogger log = new GroovyLogger('gaelyk.pluginshandler')
+
     void reinit() {
         initialized = false
         bindingVariables = [:]
@@ -60,14 +63,18 @@ class PluginsHandler {
      */
     synchronized void initPlugins() {
         if (!initialized) {
+            log.config "Loading plugin descriptors"
 
             // retrieve the list of plugin names to be loaded
             def pluginsList = loadPluginsList()
+            log.config "Found ${pluginsList.size()} plugin(s)"
 
             pluginsList.each { String pluginName ->
                 def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
                 String content = scriptContent(pluginPath)
                 if (content) {
+                    log.config "Loading plugin $pluginName"
+
                     def config = new CompilerConfiguration()
                     config.scriptBaseClass = PluginBaseScript.class.name
 
@@ -75,6 +82,8 @@ class PluginsHandler {
                     def binding = new Binding()
                     // and inject the GAE services
                     GaelykBindingEnhancer.bind(binding)
+                    // and plugin logger
+                    binding.setVariable("log", new GroovyLogger("gaelyk.plugins.${pluginName}", true))
 
                     // evaluate the list of plugins
                     def shell = new GroovyShell(binding, config)
@@ -162,17 +171,18 @@ class PluginsHandler {
         Binding binding = new Binding()
         GaelykBindingEnhancer.bind(binding)
 
-        Closure clone = action.clone()
-        clone.resolveStrategy = Closure.DELEGATE_ONLY
-        clone.delegate = [
+        Closure cloned = action.clone()
+        cloned.resolveStrategy = Closure.DELEGATE_FIRST
+        cloned.delegate = [
                 request: request,
                 response: response,
+                log: action.owner.log,
                 *:binding.getVariables(),
                 *:bindingVariables
         ]
         
-        use (ServletCategory, GaelykCategory) {
-            clone()
+        use (ServletCategory) {
+            cloned()
         }
     }
 }

@@ -64,6 +64,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <li><a href="/tutorial/url-routing#configuration">Configuring URL routing</a></li>
         <li><a href="/tutorial/url-routing#route-definition">Defining URL routes</a></li>
         <li><a href="/tutorial/url-routing#wildcards">Using wildcards</a></li>
+        <li><a href="/tutorial/url-routing#warmup">Warmup requests</a></li>
         <li><a href="/tutorial/url-routing#path-variables">Using path variables</a></li>
         <ul>
             <li><a href="/tutorial/url-routing#path-variable-validation">Validating path variables</a></li>

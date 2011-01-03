@@ -146,6 +146,60 @@ as they may be time consuming to compute when matching a request URI to a route 
 Better prefer several explicit routes than a too complicated single route.
 </blockquote>
 
+<a name="warmup"></a>
+<h2>Warmup requests</h2>
+
+<p>
+Since version 1.4.O of the App Engine SDK, "warmup requests" have been introduced.
+</p>
+
+<p>
+When an application running on a production instance receives too many incoming requests,
+App Engine will spawn a new server instance to serve your users.
+However, the new incoming requests were routed directly to the new instance,
+even if the application wasn't yet fully initialized for serving requests,
+and users would face the infamous "loading request" issue, with long response times,
+as the application needed to be fully initialized to be ready to serve those requests.
+Thanks to "warmup requests", Google App Engine does a best effort at honoring the time an application needs
+to be fully started, before throwing new incoming requests to that new instance.
+</p>
+
+<p>
+Warmup requests are enabled by default, and new traffic should be directed to new application instances
+only when the following artefacts are initialized:
+</p>
+
+<ul>
+    <li>
+        Servlets configured with <code>load-on-startup</code> and their
+        <code>void init(ServletConfig)</code> method was called.
+    </li>
+    <li>
+        Servlet filters have had their <code>void init(FilterConfig)</code> method was called.
+    </li>
+    <li>
+        Servlet context listeners have had their <code>void contextInitialized(ServletContextEvent)</code>
+        method was called.
+    </li>
+</ul>
+
+<blockquote>
+<b>Note: </b> Please have a look at the documentation regarding
+"<a href="http://code.google.com/appengine/docs/java/config/appconfig.html#Warming_Requests">warmup requests</a>".
+Please also note that you can also enable billing and activate an option to reserve 3 warm JVMs ready to serve your requests.
+</blockquote>
+
+<p>
+So to benefit from "warmup requests", the best approach is to follow those standard initialization procedures.
+However, you can also define a special Groovlet handler for those warmup requests through the URL routing mechanism.
+Your Groovlet will be responsible for the initialization phase your application may be needing.
+To define a route for the "warmup requests", you can procede as follows:
+</p>
+
+<pre class="brush:groovy">
+    all "/_ah/warmup", forward: "/myWarmupRequestHandler.groovy"
+</pre>
+
 <a name="path-variables"></a>
 <h2>Using path variables</h2>
 
@@ -408,6 +462,8 @@ will be <code>namespace-acme</code>.
 <b>Note: </b> Make sure to have a look at the
 <a href="/tutorial/app-engine-shortcuts#namespace">namespace support</a> also built-in <b>Gaelyk</b>.
 </blockquote>
+
+
 
 </body>
 </html>

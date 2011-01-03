@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,10 @@ package groovyx.gaelyk.plugins
 
 import org.codehaus.groovy.control.CompilerConfiguration
 import groovyx.gaelyk.GaelykBindingEnhancer
+import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpServletRequest
+import groovyx.gaelyk.GaelykCategory
+import groovy.servlet.ServletCategory
 
 /**
  * Configure the installed plugins.
@@ -37,6 +41,20 @@ class PluginsHandler {
     List beforeActions = []
     List afterActions = []
 
+    Closure scriptContent = { String path ->
+        def file = new File(path)
+        file.exists() ? file.text : ""
+    }
+
+    void reinit() {
+        initialized = false
+        bindingVariables = [:]
+        routes = []
+        categories = []
+        beforeActions = []
+        afterActions = []
+    }
+
     /**
      * Initializes the plugins
      */
@@ -47,8 +65,9 @@ class PluginsHandler {
             def pluginsList = loadPluginsList()
 
             pluginsList.each { String pluginName ->
-                def pluginDescriptorFile = new File("WEB-INF/plugins/${pluginName}.groovy")
-                if (pluginDescriptorFile.exists()) {
+                def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
+                String content = scriptContent(pluginPath)
+                if (content) {
                     def config = new CompilerConfiguration()
                     config.scriptBaseClass = PluginBaseScript.class.name
 
@@ -58,7 +77,8 @@ class PluginsHandler {
                     GaelykBindingEnhancer.bind(binding)
 
                     // evaluate the list of plugins
-                    PluginBaseScript script = (PluginBaseScript) new GroovyShell(binding, config).parse(pluginDescriptorFile)
+                    def shell = new GroovyShell(binding, config)
+                    PluginBaseScript script = (PluginBaseScript) shell.parse(content, "${pluginName}.groovy")
                     script.run()
 
                     // use getters directly,
@@ -82,10 +102,10 @@ class PluginsHandler {
     /**
      * @return the list of plugins
      */
-    protected List loadPluginsList() {
-        def pluginsListFile = new File("WEB-INF/plugins.groovy")
+    synchronized List loadPluginsList() {
+        String pluginsListFileContent = scriptContent("WEB-INF/plugins.groovy")
 
-        if (pluginsListFile.exists()) {
+        if (pluginsListFileContent) {
             def config = new CompilerConfiguration()
             config.scriptBaseClass = PluginsListBaseScript.class.name
 
@@ -95,7 +115,8 @@ class PluginsHandler {
             GaelykBindingEnhancer.bind(binding)
 
             // evaluate the list of plugins
-            PluginsListBaseScript script = (PluginsListBaseScript) new GroovyShell(binding, config).parse(pluginsListFile)
+            def shell = new GroovyShell(binding, config)
+            PluginsListBaseScript script = (PluginsListBaseScript) shell.parse(pluginsListFileContent, "plugins.groovy")
             script.run()
 
             return script.getPlugins()
@@ -111,5 +132,47 @@ class PluginsHandler {
      */
     void enrich(Binding binding) {
         bindingVariables.each { String k, Object v -> binding.setVariable(k, v) }
+    }
+
+    /**
+     * Execute all the "before" actions
+     *
+     * @param request
+     * @param response
+     */
+    void executeBeforeActions(HttpServletRequest request, HttpServletResponse response) {
+        beforeActions.each { Closure action ->
+            cloneDelegateAndExecute action, request, response
+        }
+    }
+
+    /**
+     * Execute all the "after" actions
+     *
+     * @param request
+     * @param response
+     */
+    void executeAfterActions(HttpServletRequest request, HttpServletResponse response) {
+        afterActions.each { Closure action ->
+            cloneDelegateAndExecute action, request, response
+        }
+    }
+
+    private void cloneDelegateAndExecute(Closure action, HttpServletRequest request, HttpServletResponse response) {
+        Binding binding = new Binding()
+        GaelykBindingEnhancer.bind(binding)
+
+        Closure clone = action.clone()
+        clone.resolveStrategy = Closure.DELEGATE_ONLY
+        clone.delegate = [
+                request: request,
+                response: response,
+                *:binding.getVariables(),
+                *:bindingVariables
+        ]
+        
+        use (ServletCategory, GaelykCategory) {
+            clone()
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,9 +65,9 @@ class GaelykServlet extends GroovyServlet {
     @Override
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         use([GaelykCategory, * PluginsHandler.instance.categories]) {
-            PluginsHandler.instance.beforeActions.each { Closure action -> action(request, response) }
+            PluginsHandler.instance.executeBeforeActions(request, response)
             super.service(request, response)
-            PluginsHandler.instance.afterActions.each { Closure action -> action(request, response) }
+            PluginsHandler.instance.executeAfterActions(request, response)
         }
     }
 }

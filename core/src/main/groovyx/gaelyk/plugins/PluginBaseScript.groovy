@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,8 +75,7 @@ abstract class PluginBaseScript extends RoutesBaseScript {
      * @param c the closure action to execute
      */
     void before(Closure c) {
-        beforeAction = c.clone()
-        beforeAction.resolveStrategy = Closure.DELEGATE_FIRST
+        beforeAction = c
     }
 
     /**
@@ -85,7 +84,6 @@ abstract class PluginBaseScript extends RoutesBaseScript {
      * @param c the closure action to execute
      */
     void after(Closure c) {
-        afterAction = c.clone()
-        afterAction.resolveStrategy = Closure.DELEGATE_FIRST
+        afterAction = c
     }
 }

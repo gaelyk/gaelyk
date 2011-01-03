@@ -60,6 +60,36 @@ class PluginsHandlerTest extends GroovyTestCase {
         super.tearDown()
     }
 
+    void testStandardPluginScriptReadingRoutine() {
+        def content = PluginsHandler.instance.scriptContent("src/test/groovyx/gaelyk/plugins/pluginScript.sample")
+        assert content == """\
+            binding {
+                version = '1.2.3'
+            }""".stripIndent()
+    }
+
+    void testEnrichExistingBindingWithPluginBindingDefinition() {
+        PluginsHandler.instance.with {
+            scriptContent = { String path ->
+                if (path == "WEB-INF/plugins.groovy") {
+                    "install myPlugin"
+                } else if (path == "WEB-INF/plugins/myPlugin.groovy") {
+                    """
+                    binding {
+                        version = '1.2.3'
+                    }
+                    """
+                } else ""
+            }
+
+            initPlugins()
+
+            def binding = new Binding(version: '0.5.6')
+            enrich binding
+
+            assert binding.getVariable('version') == '1.2.3'
+        }
+    }
 
     void testNoPlugins() {
         PluginsHandler.instance.with {

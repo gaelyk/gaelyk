@@ -51,7 +51,7 @@ class CachedResponse extends HttpServletResponseWrapper {
         OutputStream output
 
         void write(int i) {
-            output << i
+            output.write(i)
         }
 
         void write(byte[] bytes) {

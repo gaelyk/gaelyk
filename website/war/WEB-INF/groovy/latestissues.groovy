@@ -10,7 +10,7 @@ def result = slurper.parseText(url.text)
 */
 
 // transform JSON into a valid list/map Groovy construct
-def struct = evaluate(url.text.replaceAll(/}/, ']').replaceAll(/\{/, '['))
+def struct = evaluate(url.text.replaceAll(/}/, ']').replaceAll(/\{/, '[').replaceAll(/\\\//, /\/\//))
 
 def sdf = new SDF("yyyy/MM/dd HH:mm:ss Z", Locale.US)
 

@@ -13,7 +13,26 @@ If you want to discuss about <b>Gaelyk</b>, ask questions, suggest new features,
 you can join the <a href="http://groups.google.com/group/gaelyk">Gaelyk Google Group</a>
 </p>
 
-<h3>Latest messages in our discussion group</h3>
+<table style="padding: 5px; background-color: white; border: 1px solid black;" cellspacing="0">
+    <tr>
+        <td>
+            <img src="http://groups.google.com/intl/en/images/logos/groups_logo_sm.gif"
+                height=30 width=151 alt="Google Groupes">
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-left: 5px"> <b>Subscribe to the Gaelyk Google Group</b> </td>
+    </tr>
+    <form action="http://groups.google.com/group/gaelyk/boxsubscribe">
+    <tr>
+        <td style="padding-left: 5px; border-bottom: 0px;"> Email : <input type=text name=email>
+            <input type=submit name="sub" value="Abonner">
+        </td>
+    </tr>
+    </form>
+</table>
+
+<h3>Latest messages in our <a href="http://groups.google.com/group/gaelyk">discussion group</a></h3>
 
 <% include "/latestmessages.groovy" %>
 
@@ -32,11 +51,11 @@ If you wish to contribute to the development of <b>Gaelyk</b>:
 </ul>
 </p>
 
-<h3>Latest activity on our repository</h3>
+<h3>Latest activity on our <a href="https://github.com/glaforge/gaelyk/commits/master">repository</a></h3>
 
 <% include "/latestcommits.groovy" %>
 
-<h3>Open issues in our bug tracker</h3>
+<h3>Open issues in our <a href="https://github.com/glaforge/gaelyk/issues">bug tracker</a></h3>
 
 <% include "/latestissues.groovy" %>
 

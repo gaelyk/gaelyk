@@ -498,10 +498,6 @@ A few examples to illustrate this:
     </tr>
 </table>
 
-<p>
-Additionally, there are two special loggers for the incoming Email servlet, and the Jabber/XPP servlet, with
-<code>gaelyk.email</code> and <code>gaelyk.jabber</code>.
-</p>
 
 <p>
 This naming convention is particularly interesting as the <code>java.util.logging</code> infrastructure
@@ -565,6 +561,16 @@ From a Groovlet or a Template, you can do:
     // when the logger has a complex name (like a package name with dots), prefer the subscript operator:
     logger['com.foo.Bar'].info "logging an info message"
 </pre>
+
+<p>
+Additionally, there are two special loggers for the incoming Email servlet, and the Jabber/XPP servlet, with
+<code>gaelyk.email</code> and <code>gaelyk.jabber</code>,
+and two other loggers for tracing the routes filter and plugins handler, with
+<code>gaelyk.routesfilter</code> and <code>gaelyk.pluginshandler</code>.
+The last two log their messages with the <code>CONFIG</code> level,
+so be sure to adapt the logging level in your logging configuration file
+if you wish to troubleshoot how routes and plugins are handled.   
+</p>
 
 </body>
 </html>

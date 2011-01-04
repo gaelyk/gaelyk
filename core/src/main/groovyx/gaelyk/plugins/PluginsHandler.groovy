@@ -42,10 +42,12 @@ class PluginsHandler {
     List beforeActions = []
     List afterActions = []
 
-    Closure scriptContent = { String path ->
+    final defaultScriptContentLoader = { String path ->
         def file = new File(path)
         file.exists() ? file.text : ""
     }
+
+    Closure scriptContent = defaultScriptContentLoader
 
     GroovyLogger log = new GroovyLogger('gaelyk.pluginshandler')
 
@@ -56,6 +58,7 @@ class PluginsHandler {
         categories = []
         beforeActions = []
         afterActions = []
+        scriptContent = defaultScriptContentLoader
     }
 
     /**

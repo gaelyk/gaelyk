@@ -278,7 +278,7 @@ here's the order of execution of the actions and of the Groovlet or template:
         </ul>
         <li>pluginTwo's after action</li>
     </ul>
-    <li>pluginOne's afteraction</li>
+    <li>pluginOne's after action</li>
 </ul>
 
 <a name="distribute"></a>

@@ -105,6 +105,11 @@ but the other files and directories can't be changed,
 as they are files App Engine or the servlet container expects to find at that specific location.
 </blockquote>
 
+<p>
+The template project comes with initial support for Eclipse project files,
+allowing you to open the project easily within Eclipse.
+</p>
+
 <a name="configuration"></a>
 <h2>Configuration files</h2>
 

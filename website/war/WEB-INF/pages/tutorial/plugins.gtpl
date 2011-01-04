@@ -84,6 +84,8 @@ As hinted above, the content of a plugin would look something like the following
     |
     +-- WEB-INF
         |
+        +-- plugins.groovy                      // the list of plugins descriptors to be installed
+        |
         +-- plugins
         |   |
         |   +-- myPluginDescriptor.groovy       // your plugin descriptor
@@ -130,6 +132,7 @@ The plugin descriptor is where you'll be able to tell the <b>Gaelyk</b> runtime 
     <li>add new variables in the binding of groovlets and templates</li>
     <li>add new routes to the URL routing system</li>
     <li>define new categories to be applied to enrich APIs (GAE, third-party or your own)</li>
+    <li>define before / after request actions</li>
     <li>and do any initialization you may need</li>
 </ul>
 
@@ -153,6 +156,16 @@ binding {
 // add new routes with the usual routing system format
 routes {
     get "/json", forward: "/json.groovy"
+}
+
+before {
+    log.info "Visiting \${request.requestURI}"
+    binding.uri = request.requestURI
+    request.message = "Hello"
+}
+
+after {
+    log.info "Exiting \${request.requestURI}"
 }
 
 // install a category you've developped
@@ -187,6 +200,14 @@ as well as defined a <code>WEB-INF/routes.groovy</code> script, otherwise no plu
 </blockquote>
 
 <p>
+In the <code>before</code> and <code>after</code> blocks,
+you can access the <code>request</code>, <code>response</code>, <code>log</code>, and <code>binding</code> variables.
+The logger name is of the form <code>gaelyk.plugins.myPluginName</code>.
+The <code>binding</code> variables allows you to update the variables
+that are put in the binding of Groovlets and templates.
+</p>
+
+<p>
 The <code>categories</code> method call takes a list of classes
 which are <a href="http://groovy.codehaus.org/Groovy+Categories">Groovy categories</a>.
 It's actually just a <em>varargs</em> method taking as many classes as you want.
@@ -203,11 +224,8 @@ Knowing that Google App Engine can load and unload apps depending on traffic, th
 </blockquote>
 
 <blockquote>
-<b>Remark:</b> Another thing to remember is that as plugins are loaded only once when the first request happen,
-there is no reloading capabilities for the plugin descriptor. Of course, groovlets or templates are reloadable,
-when you're doing changes live while your application is working in development mode.
-But changes to the plugin descriptor won't reload the whole application, so if you're changing the descriptor,
-you will have to restart the container.
+<b>Remark:</b> In development mode, plugin descriptors are reloaded upon each request,
+so it may slow down the requests to your groovlets and templates significantly.
 </blockquote>
 
 <a name="using"></a>
@@ -243,6 +261,25 @@ But hopefully, such conflicts shouldn't happen too often, and this should be res
 as you have full control over the code you're installing through these plugins to make the necessary amendments
 should there be any.
 </p>
+
+<p>
+When you are using two plugins with before / after request actions,
+the order of execution of these actions also depends on the order in which you installed your plugins.
+For example, if you have installed <code>pluginOne</code> first and <code>pluginTwo</code> second,
+here's the order of execution of the actions and of the Groovlet or template:
+</p>
+
+<ul>
+    <li>pluginOne's before action</li>
+    <ul>
+        <li>pluginTwo's before action</li>
+        <ul>
+            <li>execution of the request</li>
+        </ul>
+        <li>pluginTwo's after action</li>
+    </ul>
+    <li>pluginOne's afteraction</li>
+</ul>
 
 <a name="distribute"></a>
 <h2>How to distribute and deploy a plugin</h2>

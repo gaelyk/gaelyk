@@ -23,7 +23,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
-    <li>Updated to GAE SDK 1.4.0</li>
+    <li>Updated to GAE SDK 1.4.0 and Groovy 1.7.6</li>
     <li>
         Channel service added in the binding and added a convenient method for
         <a href="/tutorial/app-engine-shortcuts#channel">sending messages</a>
@@ -32,6 +32,7 @@ But to get you started quickly, you may use a ready-made template project which 
         Ability to specify the "<a href="/tutorial/url-routing#warmup">warmup request</a>"
         handler through a route definition</li>
     <li>Added <code>app.gaelyk.version</code> in the binding</li>
+    <li>Use a servlet context listener for initializing the plugin system</li>
     <li>Updated the task queue enhancements to use the new package (as task queues migrated from labs)</li>
     <li>Introduced a <a href="http://www.gradle.org">Gradle</a> build script for building Gaelyk itself</li>
     <li>Increased the code coverage of the project to over 82%</li>
@@ -44,16 +45,26 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Corrected typos in the tutorials</li>
 </ul>
 
-<h4>Breaking change</h4>
+<h4>Breaking changes</h4>
 
-<p>
-Compared to the previous version of the toolkit, the handling of incoming emails and incoming jabber messages has changed.
-The <code>GaelykIncomingEmailServlet</code> and <code>GaelykXmppServlet</code> are gone.
-It is no longer required to have dedicated servlets for those two purposes,
-instead you can use the URL routing system to indicate the handlers that will take care of the incoming messages.
-If you were relying on those two servlets, please make sure to upgrade,
-and read the updated tutorial on URL routing and incoming email and jabber messages.
-</p>
+<ul>
+    <li>
+        Compared to the previous version of the toolkit, the handling of incoming emails and incoming jabber messages has changed.
+        The <code>GaelykIncomingEmailServlet</code> and <code>GaelykXmppServlet</code> are gone.
+        It is no longer required to have dedicated servlets for those two purposes,
+        instead you must use the URL routing system to indicate the handlers that will take care of the incoming messages.
+        If you were relying on those two servlets, please make sure to upgrade,
+        and read the updated tutorial on
+        URL routing and
+        incoming email and
+        jabber messages.
+    </li>
+    <li>
+        The initialization of the plugin system is not done anymore by the Groovlet and template servlet,
+        but is done by a servlet context listener.
+        So you'll have to update your <code>web.xml</code> file to specify that listener.
+    </li>
+</ul>
 
 <h3>Artifacts</h3>
 <ul>

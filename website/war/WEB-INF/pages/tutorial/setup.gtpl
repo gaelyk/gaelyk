@@ -28,8 +28,8 @@ We'll follow the directory layout proposed by the <b>Gaelyk</b> template project
         |
         +-- appengine-web.xml
         +-- web.xml
-        +-- plugins.groovy // if you use plugins
-        +-- routes.groovy  // if you use the URL routing system
+        +-- plugins.groovy      // if you use plugins
+        +-- routes.groovy       // if you use the URL routing system
         +-- classes
         |
         +-- groovy
@@ -68,7 +68,7 @@ At the root of your project, you'll find:
     </li>
     <li>
         <code>war</code>: This directory will be what's going to be deployed on app engine.
-        It contains your templates, images, JavaScript files, stylesheets, and more.
+        It contains your groovlets, templates, images, JavaScript files, stylesheets, and more.
         It also contains the classical <code>WEB-INF</code> directory from typical Java web applications.
     </li>
 </ul>
@@ -122,12 +122,29 @@ the standard <code>web.xml</code> and App Engine's specific <code>appengine-web.
 <pre class="brush:xml">
     &lt;appengine-web-app xmlns="http://appengine.google.com/ns/1.0"&gt;
         &lt;!-- Your application ID --&gt;
-        &lt;application>myappid&lt;/application&gt;
-        &lt;!-- The current version of your deployed application --&gt;
+        &lt;application&gt;myappid&lt;/application&gt;
+
         &lt;version&gt;1&lt;/version&gt;
 
-        &lt;!-- Exclude Groovlets and templates from the static files --&gt;
-        &lt;!-- to let App Engine know these files are not just mere resources --&gt;
+        &lt;!-- If all your templates and groovlets are encoding in UTF-8 --&gt;
+        &lt;!-- Please specify the settings below, otherwise weird characters may appear in your templates --&gt;
+        &lt;system-properties&gt;
+            &lt;property name="file.encoding" value="UTF-8" /&gt;
+            &lt;property name="groovy.source.encoding" value="UTF-8" /&gt;
+
+            &lt;!-- Define where the logging configuration file should be found --&gt;
+            &lt;property name="java.util.logging.config.file" value="WEB-INF/logging.properties" /&gt;
+        &lt;/system-properties&gt;
+
+        &lt;!-- Uncomment this section if you want your application to be able to receive XMPP messages --&gt;
+        &lt;!-- Similarily, if you want to receive incoming emails --&gt;
+        &lt;!--
+        &lt;inbound-services&gt;
+            &lt;service&gt;xmpp_message&lt;/service&gt;
+            &lt;service&gt;mail&lt;/service&gt;
+        &lt;/inbound-services&gt;
+        --&gt;
+
         &lt;static-files&gt;
             &lt;exclude path="/WEB-INF/**.groovy" /&gt;
             &lt;exclude path="**.gtpl" /&gt;
@@ -144,22 +161,17 @@ We instruct App Engine to not serve these files as mere resource files, like ima
 <blockquote>
     <b>Note: </b> You may decide to use different extensions than <code>.groovy</code> and <code>.gtpl</code>,
     if you prefer to have URLs with extensions which don't <i>leak</i> the underlying technologies being used.
-</blockquote>
-
-<blockquote>
-    <b>Note: </b> In some cases, UTF-8 characters may not always be properly decoded by the template servlet.
-    You may solve this problem by using the following snippet in <code>appengine-web.xml</code>:
-    <pre class="brush:xml">
-        &lt;system-properties&gt;
-            &lt;property name="file.encoding" value="UTF-8"/&gt;
-            &lt;property name="groovy.source.encoding" value="UTF-8"/&gt;
-        &lt;/system-properties&gt;
-    </pre>
+    Or make sure to use the <a href="/tutorial/url-routing">flexible URL routing system</a>.
 </blockquote>
 
 <h3>web.xml</h3>
 <pre class="brush:xml">
     &lt;web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5"&gt;
+        &lt;!-- A servlet context listener to initialize the plugin system --&gt;
+        &lt;listener&gt;
+            &lt;listener-class&gt;groovyx.gaelyk.GaelykServletContextListener&lt;/listener-class&gt;
+        &lt;/listener&gt;
+
         &lt;!-- The Gaelyk Groovlet servlet --&gt;
         &lt;servlet&gt;
             &lt;servlet-name&gt;GroovletServlet&lt;/servlet-name&gt;
@@ -172,6 +184,12 @@ We instruct App Engine to not serve these files as mere resource files, like ima
             &lt;servlet-class&gt;groovyx.gaelyk.GaelykTemplateServlet&lt;/servlet-class&gt;
         &lt;/servlet&gt;
 
+        &lt;!-- The URL routing filter --&gt;
+        &lt;filter&gt;
+            &lt;filter-name&gt;RoutesFilter&lt;/filter-name&gt;
+            &lt;filter-class&gt;groovyx.gaelyk.routes.RoutesFilter&lt;/filter-class&gt;
+        &lt;/filter&gt;
+
         &lt;!-- Specify a mapping between *.groovy URLs and Groovlets --&gt;
         &lt;servlet-mapping&gt;
             &lt;servlet-name&gt;GroovletServlet&lt;/servlet-name&gt;
@@ -183,6 +201,11 @@ We instruct App Engine to not serve these files as mere resource files, like ima
             &lt;servlet-name&gt;TemplateServlet&lt;/servlet-name&gt;
             &lt;url-pattern&gt;*.gtpl&lt;/url-pattern&gt;
         &lt;/servlet-mapping&gt;
+
+        &lt;filter-mapping&gt;
+            &lt;filter-name&gt;RoutesFilter&lt;/filter-name&gt;
+            &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+        &lt;/filter-mapping&gt;
 
         &lt;!-- Define index.gtpl as a welcome file --&gt;
         &lt;welcome-file-list&gt;

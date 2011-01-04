@@ -1,4 +1,8 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <listener>
+        <listener-class>groovyx.gaelyk.GaelykServletContextListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>GroovletServlet</servlet-name>
         <servlet-class>groovyx.gaelyk.GaelykServlet</servlet-class>
@@ -39,7 +43,6 @@
         <url-pattern>*.gtpl</url-pattern>
     </servlet-mapping>
 
-    <!-- Uncomment the following filter mapping if you want to enable URL routing -->
     <filter-mapping>
         <filter-name>RoutesFilter</filter-name>
         <url-pattern>/*</url-pattern>

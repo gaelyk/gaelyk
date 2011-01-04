@@ -39,11 +39,11 @@ class GaelykServlet extends GroovyServlet {
     @Override
     void init(ServletConfig config) {
         super.init(config)
-        PluginsHandler.instance.initPlugins()
     }
 
     /**
      * Injects the default variables and GAE services in the binding of Groovlets
+     * as well as the variables contributed by plugins, and a logger.
      *  
      * @param binding the binding to enhance
      */

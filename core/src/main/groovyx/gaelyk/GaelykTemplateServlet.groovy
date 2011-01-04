@@ -37,11 +37,11 @@ class GaelykTemplateServlet extends TemplateServlet {
     @Override
     void init(ServletConfig config) {
         super.init(config)
-        PluginsHandler.instance.initPlugins()
     }
 
     /**
      * Injects the default variables and GAE services in the binding of templates
+     * as well as the variables contributed by plugins, and a logger.
      *
      * @param binding the binding to enhance
      */

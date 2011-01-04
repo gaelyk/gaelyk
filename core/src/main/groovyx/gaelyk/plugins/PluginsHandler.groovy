@@ -177,8 +177,7 @@ class PluginsHandler {
                 request: request,
                 response: response,
                 log: action.owner.log,
-                *:binding.getVariables(),
-                *:bindingVariables
+                binding: bindingVariables
         ]
         
         use (ServletCategory) {

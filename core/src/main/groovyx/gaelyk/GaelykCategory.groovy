@@ -76,6 +76,9 @@ import com.google.appengine.api.memcache.MemcacheService.SetPolicy
 import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelMessage
 import com.google.appengine.api.taskqueue.RetryOptions
+import javax.mail.internet.MimeMessage
+import javax.servlet.http.HttpServletRequest
+import javax.mail.Session
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -205,14 +208,23 @@ class GaelykCategory {
      * The map can contain the normal properties of the
      * <code>MailService.Message</code> class.
      *
-     * @param
-     *
      * @throws groovy.lang.MissingPropertyException when the key doesn't correspond
      * to a property of the <code>MailService.Message</code> class.
      */
     static void sendToAdmins(MailService mailService, Map m) {
         Message msg = createMessageFromMap(m)
         mailService.sendToAdmins msg 
+    }
+
+    /**
+     * Parses an incoming email message coming from the request into a <code>MimeMessage</code>
+     *
+     * @param request incoming request
+     * @return an instance of <code>MimeMessage</code>
+     */
+    static MimeMessage parseMessage(MailService mailService, HttpServletRequest request) {
+        def session = Session.getDefaultInstance(new Properties(), null)
+        return new MimeMessage(session, request.inputStream)
     }
 
     // ----------------------------------------------------------------

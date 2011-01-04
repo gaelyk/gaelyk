@@ -19,12 +19,14 @@ class RoutesBaseScriptTest extends GroovyTestCase {
             post "/upload",   forward:  "/upload.groovy"
             delete "/delete", forward:  "/delete.groovy"
             all "/",          redirect: "/index.html"
+            email             to:       "/incomingEmail.groovy"
+            jabber            to:       "/incomingJabber.groovy"
         """.stripIndent())
 
         script.run()
 
         def routes = script.routes
-        assert routes.size() == 5
+        assert routes.size() == 7
 
     }
 }

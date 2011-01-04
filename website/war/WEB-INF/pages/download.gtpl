@@ -33,16 +33,27 @@ But to get you started quickly, you may use a ready-made template project which 
         handler through a route definition</li>
     <li>Added <code>app.gaelyk.version</code> in the binding</li>
     <li>Updated the task queue enhancements to use the new package (as task queues migrated from labs)</li>
-    <li>Fixed a bug with <code>ignore</code> URL routes which triggered NPEs after the capabilities routing was added</li>
-    <li>Added initial Eclipse project files in the template project</li>
-    <li>Corrected typos in the tutorials</li>
     <li>Introduced a <a href="http://www.gradle.org">Gradle</a> build script for building Gaelyk itself</li>
-    <li>Increased the code coverage of the project to over 79% of statement coverage</li>
+    <li>Increased the code coverage of the project to over 82%</li>
     <li>
         Added <code>before{}</code> request and <code>after{}</code>
         <a href="/tutorial/plugins#using">request lifecycle hooks to plugins</a>
     </li>
+    <li>Added initial Eclipse project files in the template project</li>
+    <li>Fixed a bug with <code>ignore</code> URL routes which triggered NPEs after the capabilities routing was added</li>
+    <li>Corrected typos in the tutorials</li>
 </ul>
+
+<h4>Breaking change</h4>
+
+<p>
+Compared to the previous version of the toolkit, the handling of incoming emails and incoming jabber messages has changed.
+The <code>GaelykIncomingEmailServlet</code> and <code>GaelykXmppServlet</code> are gone.
+It is no longer required to have dedicated servlets for those two purposes,
+instead you can use the URL routing system to indicate the handlers that will take care of the incoming messages.
+If you were relying on those two servlets, please make sure to upgrade,
+and read the updated tutorial on URL routing and incoming email and jabber messages.
+</p>
 
 <h3>Artifacts</h3>
 <ul>

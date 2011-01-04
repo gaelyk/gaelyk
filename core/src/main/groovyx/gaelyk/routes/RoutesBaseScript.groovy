@@ -24,11 +24,23 @@ abstract class RoutesBaseScript extends Script {
     /** The list of routes available */
     List<Route> routes = []
 
-    def all   (Map m, String route) { handle m, route, HttpMethod.ALL }
-    def get   (Map m, String route) { handle m, route, HttpMethod.GET }
-    def post  (Map m, String route) { handle m, route, HttpMethod.POST }
-    def put   (Map m, String route) { handle m, route, HttpMethod.PUT }
-    def delete(Map m, String route) { handle m, route, HttpMethod.DELETE }
+    def all    (Map m, String route) { handle m, route, HttpMethod.ALL }
+    def get    (Map m, String route) { handle m, route, HttpMethod.GET }
+    def post   (Map m, String route) { handle m, route, HttpMethod.POST }
+    def put    (Map m, String route) { handle m, route, HttpMethod.PUT }
+    def delete (Map m, String route) { handle m, route, HttpMethod.DELETE }
+
+    def email  (Map m) {
+        routes << new Route("/_ah/mail/*", m.to,
+                HttpMethod.POST, RedirectionType.FORWARD,
+                null, null, 0, false, true)
+    }
+
+    def jabber (Map m) {
+        routes << new Route("/_ah/xmpp/message/chat/", m.to,
+                HttpMethod.POST, RedirectionType.FORWARD,
+                null, null, 0, false, false, true)
+    }
 
     /**
      * Handle all routes.

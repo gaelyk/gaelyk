@@ -66,6 +66,8 @@ The capabilities of the routing system are as follow, you can:
     <li>validate the variables according to some boolean expression, or regular expression matching</li>
     <li>use the available GAE services in the script (for instance, creating routes from records from the datastore)</li>
     <li>cache the output of groovlets and templates pointed by that route for a specified period of time</li>
+    <li>specify a handler for incoming email messages</li>
+    <li>specify a handler for incoming jabber messages</li>
 </ul>
 
 <p>
@@ -107,6 +109,32 @@ Each time a request is made, which goes through the route servlet filter, <b>Gae
 recent route definition file exists.
 However, once deployed on the Google App Engine cloud, the routes are set in stone and are not reloaded.
 The sole cost of the routing system is the regular expression mapping to match request URIs against route patterns.
+</blockquote>
+
+<a name="email-and-jabber"></a>
+<h2>Incoming email and jabber messages</h2>
+
+Two special routing rules exist for defining handlers dedicated to receiving incoming email messages and jabber messages.
+
+<pre class="brush:groovy">
+    email  to: "/receiveEmail.groovy"
+    jabber to: "/receiveJabber.groovy"
+</pre>
+
+<blockquote>
+<b>Note: </b> Those two notations are actually equivalent to:
+<pre class="brush:groovy">
+    post "/_ah/mail/*", forward: "/receiveEmail.groovy"
+    post "/_ah/xmpp/message/chat/", forward: "/receiveJabber.groovy"
+</pre>
+Should upcoming App Engine SDK versions change the URLs, you would still be able to define routes for those handlers,
+till a new version of <b>Gaelyk</b> is released with the newer paths.
+</blockquote>
+
+<blockquote>
+<b>Note: </b> Make sure to read the sections on
+<a href="/tutorial/app-engine-shortcuts#incoming-mail">incoming email messages</a> and
+<a href="/tutorial/app-engine-shortcuts#jabber-receiving">incoming jabber messages</a>.
 </blockquote>
 
 <a name="wildcards"></a>

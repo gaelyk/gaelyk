@@ -51,8 +51,14 @@ class Route {
     /* Closure validating the variables match the required regex patterns */
     private Closure validator
 
-    /* Should a uri matching this route just be ignored? */
-    private boolean ignore
+    /** Should a uri matching this route just be ignored? */
+    boolean ignore
+
+    /** If the route is for incoming email */
+    boolean email
+
+    /** If the route is for incoming jabber messages */
+    boolean jabber
 
     /**
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
@@ -60,7 +66,8 @@ class Route {
      */
     Route(String route, /* String or Closure */ destination, HttpMethod method = HttpMethod.ALL,
           RedirectionType redirectionType = RedirectionType.FORWARD, Closure validator = null,
-          Closure namespace = null, int cacheExpiration = 0, boolean ignore = false) {
+          Closure namespace = null, int cacheExpiration = 0, boolean ignore = false,
+          boolean email = false, boolean jabber = false) {
         this.route = route
         this.method = method
         this.redirectionType = redirectionType
@@ -68,6 +75,8 @@ class Route {
         this.cacheExpiration = cacheExpiration
         this.validator = validator
         this.ignore = ignore
+        this.email = email
+        this.jabber = jabber
 
         // extract the path variables from the route
         this.variables = extractParameters(route)

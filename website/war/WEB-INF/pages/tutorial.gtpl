@@ -65,6 +65,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <li><a href="/tutorial/url-routing#route-definition">Defining URL routes</a></li>
         <li><a href="/tutorial/url-routing#wildcards">Using wildcards</a></li>
         <li><a href="/tutorial/url-routing#warmup">Warmup requests</a></li>
+        <li><a href="/tutorial/url-routing#email-and-jabber">Incoming email and jabber messages</a></li>
         <li><a href="/tutorial/url-routing#path-variables">Using path variables</a></li>
         <ul>
             <li><a href="/tutorial/url-routing#path-variable-validation">Validating path variables</a></li>
@@ -77,10 +78,6 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
 
     <li><a href="/tutorial/app-engine-shortcuts">Google App Engine specific shortcuts</a></li>
     <ul>
-        <li><a href="/tutorial/app-engine-shortcuts#email">Email support</a></li>
-        <ul>
-            <li><a href="/tutorial/app-engine-shortcuts#incoming-mail">Incoming email messages</a></li>
-        </ul>
         <li><a href="/tutorial/app-engine-shortcuts#datastore">Improvements to the low-level datastore API</a></li>
         <ul>
             <li><a href="/tutorial/app-engine-shortcuts#entity">Using <code>Entity</code>s as maps or POJOs/POGOs</a></li>
@@ -90,6 +87,10 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
             <li><a href="/tutorial/app-engine-shortcuts#query">Querying</a></li>
         </ul>
         <li><a href="/tutorial/app-engine-shortcuts#task-queue">The task queue API shortcuts</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#email">Email support</a></li>
+        <ul>
+            <li><a href="/tutorial/app-engine-shortcuts#incoming-mail">Incoming email messages</a></li>
+        </ul>
         <li><a href="/tutorial/app-engine-shortcuts#jabber">XMPP/Jabber support</a></li>
         <ul>
             <li><a href="/tutorial/app-engine-shortcuts#jabber-sending">Sending messages</a></li>

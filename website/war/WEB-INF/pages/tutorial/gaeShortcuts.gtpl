@@ -11,122 +11,6 @@ In addition to providing direct access to the App Engine services, <b>Gaelyk</b>
 Let's review some of these improvements.
 </p>
 
-<blockquote>
-<b>Note: </b> These additions are not numerous, but other ones may be added in the future as the need arises.
-</blockquote>
-
-<a name="email"></a>
-<h2>Email support</h2>
-
-<h3>New <code>send()</code> method for the mail service</h3>
-
-<p>
-<b>Gaelyk</b> adds a new <code>send()</code> method to the
-<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/mail/MailService.html">mail service</a>,
-which takes <i>named arguments</i>. That way, you don't have to manually build a new message yourself.
-In your Groovlet, for sending a message, you can do this:
-</p>
-
-<pre class="brush:groovy">
-    mail.send sender: "app-admin-email@gmail.com",
-            to: "recipient@somecompany.com",
-            subject: "Hello",
-            textBody: "Hello, how are you doing? -- MrG",
-            attachment: [data: "Chapter 1, Chapter 2".bytes, fileName: "outline.txt"]
-</pre>
-
-<p>
-Similarily, a <code>sendToAdmins()</code> method was added to, for sending emails to the administrators of the application.
-</p>
-
-<blockquote>
-    <b>Note: </b> There is a <code>from</code> alias for the <code>sender</code> attribute.
-    And instead of a <code>textBody</code> attribute, you can send HTML content with the <code>htmlBody</code> attribute.
-</blockquote>
-
-<blockquote>
-    <b>Note: </b> There are two attachment attributes: <code>attachment</code> and <code>attachments</code>.
-    <ul>
-        <li>
-            <code>attachment</code> is used for when you want to send just one attachment.
-            You can pass a map with a <code>data</code> and a <code>fileName</code> keys.
-            Or you can use an instance of <code>MailMessage.Attachment</code>.
-        </li>
-        <li>
-            <code>attachments</code> lets you define a list of attachments.
-            Again, either the elements of that list are maps of <code>data</code> / <code>fileName</code> pairs,
-            or instances of <code>MailMessage.Attachment</code>.
-        </li>
-    </ul>
-</blockquote>
-
-<a name="incoming-mail"></a>
-<h3>Incoming email messages</h3>
-
-<p>
-Since Google App Engine SDK version 1.2.6 (and <b>Gaelyk</b> 0.3), support for incoming email messages has been added,
-in a similar vein as the incoming XMPP messaging support.
-To enable incoming email support, you first need to update your <code>appengine-web.xml</code> file as follows:
-</p>
-
-<pre class="brush:xml">
-    &lt;inbound-services&gt;
-        &lt;service&gt;mail&lt;/service&gt;
-    &lt;/inbound-services&gt;
-</pre>
-
-<p>
-In your <code>web.xml</code> file, you must add a new servlet and a new servlet mapping:
-</p>
-
-<pre class="brush:xml">
-    ...
-    &lt;servlet>
-        &lt;servlet-name&gt;EmailServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;groovyx.gaelyk.GaelykIncomingEmailServlet&lt;/servlet-class&gt;
-    &lt;/servlet>
-    ...
-    &lt;servlet-mapping>
-        &lt;servlet-name&gt;EmailServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/_ah/mail/*&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-    ...
-    &lt;!-- Only allow the SDK and administrators to have access to the incoming email endpoint --&gt;
-    &lt;security-constraint&gt;
-        &lt;web-resource-collection&gt;
-            &lt;url-pattern&gt;/_ah/mail/*&lt;/url-pattern&gt;
-        &lt;/web-resource-collection&gt;
-        &lt;auth-constraint&gt;
-            &lt;role-name&gt;admin&lt;/role-name&gt;
-        &lt;/auth-constraint&gt;
-    &lt;/security-constraint&gt;
-    ...
-</pre>
-
-<p>
-The <code>GaelykIncomingEmailServlet</code> will delegate the work of processing the incoming message to a script
-situated by defauly in the <code>/WEB-INF/groovy/email.groovy</code> groovlet.
-This groovlet has access to the usual services which are bound into the script's binding.
-But there's an additional object in the binding, a <code>message</code> instance of
-<a href="http://java.sun.com/products/javamail/javadocs/javax/mail/internet/MimeMessage.html"><code>javax.mail.MimeMessage</code></a>.
-Then, from the <code>email.groovy</code> groovlet, you can access the properties of this object:
-</p>
-
-<pre class="brush:groovy">
-    // access the sender of the email
-    message.from
-
-    // get the subject of the message
-    message.subject
-</pre>
-
-<blockquote>
-    <b>Note: </b> The <code>/_ah/mail/*</code> is hard-wired in the Google App Engine SDK.
-    The star pattern corresponds to the recepient of the email.
-    For instance, you may receive an email to <code>recipient@yourappid.appspot.com</code>,
-    and the star will be corresponding to <code>recipient</code>.
-</blockquote>
-
 <a name="datastore"></a>
 <h2>Improvements to the low-level datastore API</h2>
 
@@ -441,6 +325,113 @@ There is also a variant with an overloaded <code>&lt;&lt;</code> operator:
     ]
 </pre>
 
+<a name="email"></a>
+<h2>Email support</h2>
+
+<h3>New <code>send()</code> method for the mail service</h3>
+
+<p>
+<b>Gaelyk</b> adds a new <code>send()</code> method to the
+<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/mail/MailService.html">mail service</a>,
+which takes <i>named arguments</i>. That way, you don't have to manually build a new message yourself.
+In your Groovlet, for sending a message, you can do this:
+</p>
+
+<pre class="brush:groovy">
+    mail.send from: "app-admin-email@gmail.com",
+            to: "recipient@somecompany.com",
+            subject: "Hello",
+            textBody: "Hello, how are you doing? -- MrG",
+            attachment: [data: "Chapter 1, Chapter 2".bytes, fileName: "outline.txt"]
+</pre>
+
+<p>
+Similarily, a <code>sendToAdmins()</code> method was added to, for sending emails to the administrators of the application.
+</p>
+
+<blockquote>
+    <b>Note: </b> There is a <code>sender</code> alias for the <code>from</code> attribute.
+    And instead of a <code>textBody</code> attribute, you can send HTML content with the <code>htmlBody</code> attribute.
+</blockquote>
+
+<blockquote>
+    <b>Note: </b> There are two attachment attributes: <code>attachment</code> and <code>attachments</code>.
+    <ul>
+        <li>
+            <code>attachment</code> is used for when you want to send just one attachment.
+            You can pass a map with a <code>data</code> and a <code>fileName</code> keys.
+            Or you can use an instance of <code>MailMessage.Attachment</code>.
+        </li>
+        <li>
+            <code>attachments</code> lets you define a list of attachments.
+            Again, either the elements of that list are maps of <code>data</code> / <code>fileName</code> pairs,
+            or instances of <code>MailMessage.Attachment</code>.
+        </li>
+    </ul>
+</blockquote>
+
+<a name="incoming-mail"></a>
+<h3>Incoming email messages</h3>
+
+<p>
+Since Google App Engine SDK version 1.2.6 (and <b>Gaelyk</b> 0.3), support for incoming email messages has been added,
+in a similar vein as the incoming XMPP messaging support.
+To enable incoming email support, you first need to update your <code>appengine-web.xml</code> file as follows:
+</p>
+
+<pre class="brush:xml">
+    &lt;inbound-services&gt;
+        &lt;service&gt;mail&lt;/service&gt;
+    &lt;/inbound-services&gt;
+</pre>
+
+<p>
+In your <code>web.xml</code> file, you can eventually add a security constraint on the web handler
+that will take care of treating the incoming emails:
+</p>
+
+<pre class="brush:xml">
+    ...
+    &lt;!-- Only allow the SDK and administrators to have access to the incoming email endpoint --&gt;
+    &lt;security-constraint&gt;
+        &lt;web-resource-collection&gt;
+            &lt;url-pattern&gt;/_ah/mail/*&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+        &lt;auth-constraint&gt;
+            &lt;role-name&gt;admin&lt;/role-name&gt;
+        &lt;/auth-constraint&gt;
+    &lt;/security-constraint&gt;
+    ...
+</pre>
+
+<p>
+You need to define a Groovlet handler for receiving the incoming emails
+with a special <a href="/tutorial/url-routing#email-and-jabber">route definition</a>,
+in your <code>/WEB-INF/routes.groovy</code> configuration file:
+</p>
+
+<pre class="brush:groovy">
+    email to: "/receiveEmail.groovy"
+</pre>
+
+<blockquote>
+<b>Remark: </b> You are obviously free to change the name and path of the Groovlet.
+</blockquote>
+
+<p>
+All the incoming emails will be sent as MIME messages through the request of your Groovlet.
+To parse the MIME message, you'll be able to use the <code>parseMessage(request)</code> method
+on the mail service injected in the binding of your Groovlet, which returns a
+<a href="http://java.sun.com/products/javamail/javadocs/javax/mail/internet/MimeMessage.html"><code>javax.mail.MimeMessage</code></a>
+instance:
+</p>
+
+<pre class="brush:groovy">
+    def msg = mail.parseMessage(request)
+
+    log.info "Subject \${msg.subject}, to \${msg.allRecipients.join(', ')}, from \${msg.from[0]}"
+</pre>
+
 <a name="jabber"></a>
 <h2>XMPP/Jabber support</h2>
 
@@ -460,7 +451,7 @@ This also means your <b>Gaelyk</b> applications can now send and receive instant
 <p>
 <b>Gaelyk</b> provides a few additional methods to take care of sending instant messages, get the presence of users,
 or to send invitations to other users.
-Applications usually have a corresponding Jabber ID named after your application ID, such as <code>gaelyk@appspot.com</code>.
+Applications usually have a corresponding Jabber ID named after your application ID, such as <code>yourappid@appspot.com</code>.
 To be able to send messages to other users, your application will have to invite other users, or be invited to chat.
 So make sure you do so for being able to send messages.
 </p>
@@ -568,14 +559,13 @@ which creates an XML stanza.
 
 <p>
 It is also possible to receive messages from users.
-For that purpose, <b>Gaelyk</b> introduces a new servlet that will take care of being the receiver of those messages,
-which will arrive to your application, as a web request through this new Servlet (<code>GaelykXmppServlet</code>).
+For that purpose, <b>Gaelyk</b> lets you define a Groovlet handler that will be receiving the incoming messages.
 To enable the reception of messages, you'll have to do two things:
 </p>
 
 <ul>
-    <li>add a new configuration fragment in <code>appengine-web.xml</code></li>
-    <li>defing the servlet in the <code>web.xml</code></li>
+    <li>add a new configuration fragment in <code>/WEB-INF/appengine-web.xml</code></li>
+    <li>add a route for the Groovlet handler in <code>/WEB-INF/routes.groovy</code></li>
 </ul>
 
 <p>As a first step, let's configure <code>appengine-web.xml</code> by adding this new element:</p>
@@ -586,54 +576,53 @@ To enable the reception of messages, you'll have to do two things:
     &lt;/inbound-services&gt;
 </pre>
 
-<p>Then configure the new servlet as follows:</p>
+<p>
+Similarily to the incoming email support, you can define security constraints:
+</p>
 
 <pre class="brush:xml">
     ...
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;XmppServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;groovyx.gaelyk.GaelykXmppServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-    ...
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;XmppServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/_ah/xmpp/message/chat/&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
+    &lt;!-- Only allow the SDK and administrators to have access to the incoming jabber endpoint --&gt;
+    &lt;security-constraint&gt;
+        &lt;web-resource-collection&gt;
+            &lt;url-pattern&gt;/_ah/xmpp/message/chat/&lt;/url-pattern&gt;
+        &lt;/web-resource-collection&gt;
+        &lt;auth-constraint&gt;
+            &lt;role-name&gt;admin&lt;/role-name&gt;
+        &lt;/auth-constraint&gt;
+    &lt;/security-constraint&gt;
     ...
 </pre>
 
+<p>Then let's add the route definition in <code>routes.groovy</code>:</p>
+
+<pre class="brush:groovy">
+    jabber to: "/receiveJabber.groovy"
+</pre>
+
 <blockquote>
-<b>Note: </b> The URL pattern of the servlet mapping cannot be changed, as this is a hard-wired URL that the
-Google App Engine will look for in order to send messages to your application.
+<b>Remark: </b> You are obviously free to change the name and path of the Groovlet.
 </blockquote>
 
 <p>
-The XMPP servlet will look for a Groovy script named <code>jabber.groovy</code> in <code>/WEB-INF/groovy</code>
-of your application &mdash; this is also hard-wired, but this time, mandated by <b>Gaelyk</b>.
-This script, similarily to how mere Groovlets work, will handle the incoming messages, through a <code>POST</code>
-to the <code>/_ah/xmpp/message/chat</code> URL.
-As usual, all the common variables are available in your script through the binding.
-But there's also a new variable that you can use: <code>message</code>, an instance of
-<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/Message.html"><code>Message</code></a>
-that you can use as shown below:
+All the incoming Jabber/XMPP messages will be sent through the request of your Groovlet.
+Thanks to the <code>parseMessage(request)</code> method on the <code>xmpp</code> service
+injected in the binding of your Groovlet, you'll be able to access the details of a
+<a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/Message.html"><code>Message</code></a>
+instance, as shown below:
 </p>
 
 <pre class="brush:groovy">
-    // get the body of the message
-    message.body
+    def message = xmpp.parseMessage(request)
 
-    // get the sender Jabber ID
-    message.from
-
-    // get the list of recipients Jabber IDs
-    message.recipients
+    log.info "Received from \${message.from} with body \${message.body}"
 
     // if the message is an XML document instead of a raw string message
     if (message.isXml()) {
-        // get the raw XML
+        // get the raw XML string
         message.stanza
 
-        // get a document parsed with XmlSlurper
+        // or get a document parsed with XmlSlurper
         message.xml
     }
 </pre>

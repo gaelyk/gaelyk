@@ -563,9 +563,7 @@ From a Groovlet or a Template, you can do:
 </pre>
 
 <p>
-Additionally, there are two special loggers for the incoming Email servlet, and the Jabber/XPP servlet, with
-<code>gaelyk.email</code> and <code>gaelyk.jabber</code>,
-and two other loggers for tracing the routes filter and plugins handler, with
+Additionally, there are two other loggers for tracing the routes filter and plugins handler, with
 <code>gaelyk.routesfilter</code> and <code>gaelyk.pluginshandler</code>.
 The last two log their messages with the <code>CONFIG</code> level,
 so be sure to adapt the logging level in your logging configuration file

@@ -70,6 +70,11 @@ class GroovyLogger {
     String getName() { logger.name }
 
     /**
+     * @return the name of the logger
+     */
+    String toString() { "[GroovyLogger $logger.name" }
+
+    /**
      * Log a message
      *
      * @param level the level of logging

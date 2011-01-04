@@ -61,4 +61,9 @@ class LoggingTest extends GroovyTestCase {
             logger.level = oldLevel
         }
     }
+    
+    void testToString() {
+        def log = new GroovyLogger("foobar")
+        assert log.toString() == "[GroovyLogger $log.name"
+    }
 }

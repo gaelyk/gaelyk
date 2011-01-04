@@ -11,8 +11,8 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.7 and beyond and 
 </p>
 
 <p>
-The latest version was tested with Groovy 1.7.5 and Groovy 1.8-beta-2,
-and with the 1.3.8 version of the App Engine SDK.
+The latest version was tested with Groovy 1.7.6 and Groovy 1.8-beta-3,
+and with the 1.4.0 version of the App Engine SDK.
 </p>
 
 <p>
@@ -24,15 +24,23 @@ But to get you started quickly, you may use a ready-made template project which 
 <h3>Changes</h3>
 <ul>
     <li>Updated to GAE SDK 1.4.0</li>
-    <li>Channel service added in the binding</li>
-    <li>Ability to specify the "warmup request" handler through a route definition</li>
+    <li>
+        Channel service added in the binding and added a convenient method for
+        <a href="/tutorial/app-engine-shortcuts#channel">sending messages</a>
+    </li>
+    <li>
+        Ability to specify the "<a href="/tutorial/url-routing#warmup">warmup request</a>"
+        handler through a route definition</li>
     <li>Added <code>app.gaelyk.version</code> in the binding</li>
     <li>Updated the task queue enhancements to use the new package (as task queues migrated from labs)</li>
     <li>Fixed a bug with <code>ignore</code> URL routes which triggered NPEs after the capabilities routing was added</li>
     <li>Fixed typos in the tutorials</li>
     <li>Introduced a <a href="http://www.gradle.org">Gradle</a> build script for building Gaelyk itself</li>
     <li>Increased the code coverage of the project to over 79% of statement coverage</li>
-    <li>Added <code>before{}</code> request and <code>after{}</code> request lifecycle hooks to plugins</li>
+    <li>
+        Added <code>before{}</code> request and <code>after{}</code>
+        <a href="/tutorial/plugins#using">request lifecycle hooks to plugins</a>
+    </li>
 </ul>
 
 <h3>Artifacts</h3>

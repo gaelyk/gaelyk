@@ -159,6 +159,7 @@ We instruct App Engine to not serve these files as mere resource files, like ima
     Or make sure to use the <a href="/tutorial/url-routing">flexible URL routing system</a>.
 </blockquote>
 
+<a name="web-xml"></a>
 <h3>web.xml</h3>
 <pre class="brush:xml">
     &lt;web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5"&gt;

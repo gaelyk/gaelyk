@@ -239,6 +239,25 @@ to retrieve scripts written by a given author, sorted by descending date of crea
     def entities = preparedQuery.asList( withLimit(10) )
 </pre>
 
+<a name="async-datastore"></a>
+<h3>Asynchronous datastore</h3>
+
+<p>
+In addition to the "synchronous" datastore service, the App Engine SDK also provides an
+<a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/AsyncDatastoreService.html">AsynchrnousDatastoreService</a>.
+You can retrieve the asynchronous service with the <code>datastore.async</code> shortcut.
+</p>
+
+<p>
+<b>Gaelyk</b> adds a few methods on entities and keys that leverage the asynchronous service:
+</p>
+
+<ul>
+    <li><code>entity.asyncSave()</code> returns a <code>Future&lt;Key&gt;</code></li>
+    <li><code>entity.asyncDelete()</code> returns a <code>Future&lt;Void&gt;</code></li>
+    <li><code>key.asyncDelete()</code> returns a <code>Future&lt;Void&gt;</code></li>
+</ul>
+
 <a name="task-queue"></a>
 <h2>The task queue API shortcuts</h2>
 

@@ -33,6 +33,7 @@ But to get you started quickly, you may use a ready-made template project which 
         handler through a route definition</li>
     <li>Added <code>app.gaelyk.version</code> in the binding</li>
     <li>Use a servlet context listener for initializing the plugin system</li>
+    <li>Initial support for the <a href="/tutorial/app-engine-shortcuts#async-datastore">asynchronous datastore</a></li>
     <li>Updated the task queue enhancements to use the new package (as task queues migrated from labs)</li>
     <li>Introduced a <a href="http://www.gradle.org">Gradle</a> build script for building Gaelyk itself</li>
     <li>Increased the code coverage of the project to over 82%</li>
@@ -55,14 +56,16 @@ But to get you started quickly, you may use a ready-made template project which 
         instead you must use the URL routing system to indicate the handlers that will take care of the incoming messages.
         If you were relying on those two servlets, please make sure to upgrade,
         and read the updated tutorial on
-        URL routing and
-        incoming email and
-        jabber messages.
+        <a href="/tutorial/url-routing#email-and-jabber">URL routing</a> and
+        <a href="/tutorial/app-engine-shortcuts#incoming-mail">incoming email</a> and
+        <a href="/tutorial/app-engine-shortcuts#jabber-receiving">jabber messages</a>.
     </li>
     <li>
         The initialization of the plugin system is not done anymore by the Groovlet and template servlet,
         but is done by a servlet context listener.
         So you'll have to update your <code>web.xml</code> file to specify that listener.
+        Please have a look at the template project or the documentation on how to
+        <a href="/tutorial/setup#web-xml">setup the new context listener</a>.
     </li>
 </ul>
 

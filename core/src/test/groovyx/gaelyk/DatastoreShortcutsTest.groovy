@@ -6,6 +6,9 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.Transaction
+import com.google.appengine.api.datastore.AsyncDatastoreService
+import com.google.appengine.api.datastore.Key
+import java.util.concurrent.Future
 
 /**
  * @author Guillaume Laforge
@@ -85,5 +88,33 @@ class DatastoreShortcutsTest extends GroovyTestCase {
 
             assert datastore.prepare( new Query('photo') ).countEntities() == 2
         }
+    }
+
+    void testAsynchronous() {
+        def datastore = DatastoreServiceFactory.datastoreService
+
+        use (GaelykCategory) {
+            assert datastore.async instanceof AsyncDatastoreService
+
+            def dog = new Entity('animal')
+            dog.name = "Medor"
+            Future<Key> fkDog = dog.asyncSave()
+
+            def cat = new Entity('animal')
+            cat.name = "Minou"
+            Future<Key> fkCat = cat.asyncSave()
+
+            def (Key kDog, Key kCat) = [fkDog, fkCat]*.get()
+
+            assert datastore.prepare( new Query('animal') ).countEntities() == 2
+
+            Future<Void> deletedDogFuture = dog.asyncDelete()
+            Future<Void> deletedCatFuture = kCat.asyncDelete()
+
+            [deletedDogFuture, deletedCatFuture]*.get()
+
+            assert datastore.prepare( new Query('animal') ).countEntities() == 0
+        }
+
     }
 }

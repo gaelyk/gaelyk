@@ -1,5 +1,5 @@
-def stableDuration = 0.hour
-def hotContentDuration = 0.minutes
+def stableDuration = 1.hour
+def hotContentDuration = 30.minutes
 
 get "/",            forward: "/WEB-INF/pages/index.gtpl",     cache: stableDuration
 

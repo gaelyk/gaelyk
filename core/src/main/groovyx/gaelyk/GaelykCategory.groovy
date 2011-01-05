@@ -294,6 +294,14 @@ class GaelykCategory {
     }
 
     /**
+     * Save this entity in the data store asynchronously.
+     * Usage: <code>entity.asyncSave()</code>
+     */
+    static Future<Key> asyncSave(Entity entity) {
+        DatastoreServiceFactory.asyncDatastoreService.put(entity)
+    }
+
+    /**
      * Delete this entity from the data store.
      * Usage: <code>entity.delete()</code>
      */
@@ -302,11 +310,27 @@ class GaelykCategory {
     }
 
     /**
+     * Delete this entity from the data store.
+     * Usage: <code>entity.asyncDelete()</code>
+     */
+    static Future<Void> asyncDelete(Entity entity) {
+        DatastoreServiceFactory.asyncDatastoreService.delete(entity.key)
+    }
+
+    /**
      * Delete the entity represented by that key, from the data store.
      * Usage: <code>key.delete()</code> 
      */
     static void delete(Key key) {
         DatastoreServiceFactory.datastoreService.delete(key)
+    }
+
+    /**
+     * Delete the entity represented by that key, from the data store.
+     * Usage: <code>key.delete()</code>
+     */
+    static Future<Void> asyncDelete(Key key) {
+        DatastoreServiceFactory.asyncDatastoreService.delete(key)
     }
 
     /**

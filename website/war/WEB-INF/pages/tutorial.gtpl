@@ -81,6 +81,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
             <li><a href="/tutorial/app-engine-shortcuts#save-delete">Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></a></li>
             <li><a href="/tutorial/app-engine-shortcuts#transaction">Added <code>withTransaction()</code> method on the datastore service</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#query">Querying</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#async-datastore">Asynchronous datastore</a></li>
         </ul>
         <li><a href="/tutorial/app-engine-shortcuts#task-queue">The task queue API shortcuts</a></li>
         <li><a href="/tutorial/app-engine-shortcuts#email">Email support</a></li>

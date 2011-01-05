@@ -1,8 +1,4 @@
-<html>
-<head>
-    <title>Flexible URL routing</title>
-</head>
-<body>
+<title>Flexible URL routing</title>
 
 <h1>Flexible URL routing</h1>
 
@@ -490,8 +486,3 @@ will be <code>namespace-acme</code>.
 <b>Note: </b> Make sure to have a look at the
 <a href="/tutorial/app-engine-shortcuts#namespace">namespace support</a> also built-in <b>Gaelyk</b>.
 </blockquote>
-
-
-
-</body>
-</html>

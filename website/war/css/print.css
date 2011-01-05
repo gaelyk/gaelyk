@@ -1,0 +1,19 @@
+body {
+    font-size: 1.1em;
+}
+
+#header {
+    display: none;
+}
+
+#navigation {
+    display: none;
+}
+
+#footer {
+    display: none;
+}
+
+h1 {
+    page-break-before: always;
+}

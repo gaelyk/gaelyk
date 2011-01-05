@@ -1,8 +1,4 @@
-<html>
-<head>
-    <title>Running and deploying Gaelyk applications</title>
-</head>
-<body>
+<title>Running and deploying Gaelyk applications</title>
 
 <h1>Running and deploying Gaelyk applications</h1>
 
@@ -35,6 +31,3 @@ Once you're at the root of your application, simply run the usual deployment com
 <pre>
 appcfg.sh update war
 </pre>
-
-</body>
-</html>

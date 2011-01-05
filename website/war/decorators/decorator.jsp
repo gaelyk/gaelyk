@@ -13,6 +13,8 @@
 
         <link rel="stylesheet" type="text/css" href="/css/main.css"/>
 
+        <link rel="stylesheet" type="text/css" media="print" href="/css/print.css" />
+
     	<link type="text/css" rel="stylesheet" href="/css/shCore.css"/>
     	<link type="text/css" rel="stylesheet" href="/css/shThemeDefault.css"/>
 

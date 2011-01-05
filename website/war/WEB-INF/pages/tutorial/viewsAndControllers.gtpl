@@ -1,8 +1,4 @@
-<html>
-<head>
-    <title>Views and controllers</title>
-</head>
-<body>
+<title>Views and controllers</title>
 
 <h1>Views and controllers</h1>
 
@@ -570,5 +566,3 @@ so be sure to adapt the logging level in your logging configuration file
 if you wish to troubleshoot how routes and plugins are handled.   
 </p>
 
-</body>
-</html>

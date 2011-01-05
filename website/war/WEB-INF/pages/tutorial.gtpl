@@ -1,10 +1,6 @@
-<html>
-<head>
-    <title>Tutorial</title>
-</head>
-<body>
+<title>Tutorial</title>
 
-<h1>Tutorial</h1>
+<h1 style="page-break-before: avoid;">Tutorial</h1>
 
 <p>
 The goal of this tutorial is to quickly get you started with using <b>Gaelyk</b> to  write
@@ -30,7 +26,7 @@ It provides a ready-to-go project with the right configuration files pre-filled 
 You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composing <b>Gaelyk</b>.
 </p>
 
-<h1>Table of Content</h1>
+<h2>Table of Content</h2>
 
 <ul>
     <li><a href="/tutorial/setup">Setting up your project</a></li>
@@ -140,6 +136,3 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <li><a href="/tutorial/run-deploy#deploy">Deploying your application in the cloud</a></li>
     </ul>
 </ul>
-
-</body>
-</html>

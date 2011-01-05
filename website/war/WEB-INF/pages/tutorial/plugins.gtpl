@@ -1,8 +1,4 @@
-<html>
-<head>
-    <title>Simple plugin system</title>
-</head>
-<body>
+<title>Simple plugin system</title>
 
 <h1>Simple plugin system</h1>
 
@@ -290,6 +286,3 @@ Then you can share this zip, and someone who wishes to install it on his applica
 and pickup the various files of that archive and stick them up in the appropriate directories
 in his/her <b>Gaelyk</b> <code>war/</code> folder, and reference that plugin, as explained in the previous section.
 </p>
-
-</body>
-</html>

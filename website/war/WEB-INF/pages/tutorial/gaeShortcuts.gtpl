@@ -1,8 +1,4 @@
-<html>
-<head>
-    <title>Google App Engine specific shortcuts</title>
-</head>
-<body>
+<title>Google App Engine specific shortcuts</title>
 
 <h1>Google App Engine specific shortcuts</h1>
 
@@ -1282,6 +1278,3 @@ but without the need of creating an instance of <code>ChannelMessage</code>:
     channel.createChannel(clientId)
     channel.send clientId, "hello"
 </pre>
-
-</body>
-</html>

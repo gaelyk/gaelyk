@@ -79,6 +79,8 @@ import com.google.appengine.api.taskqueue.RetryOptions
 import javax.mail.internet.MimeMessage
 import javax.servlet.http.HttpServletRequest
 import javax.mail.Session
+import com.google.appengine.api.datastore.AsyncDatastoreService
+import java.util.concurrent.Future
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -287,7 +289,7 @@ class GaelykCategory {
      * Save this entity in the data store.
      * Usage: <code>entity.save()</code>
      */
-    static Object save(Entity entity) {
+    static Key save(Entity entity) {
         DatastoreServiceFactory.datastoreService.put(entity)
     }
 
@@ -313,7 +315,7 @@ class GaelykCategory {
      * The transaction is rollbacked if anything went wrong.
      * You can use this method as follows:
      * <code>
-     * datastoreService.withTransaction { transaction ->
+     * datastore.withTransaction { transaction ->
      *     // do something in that transaction
      * }
      * </code>
@@ -342,6 +344,13 @@ class GaelykCategory {
     static Entity leftShift(Entity entity, Map params) {
         params.each { k, v -> entity[k] = v }
         return entity
+    }
+
+    /**
+     * @return the asynchronous datastore service.
+     */
+    static AsyncDatastoreService getAsync(DatastoreService service) {
+        DatastoreServiceFactory.asyncDatastoreService
     }
 
     // ------------------------------

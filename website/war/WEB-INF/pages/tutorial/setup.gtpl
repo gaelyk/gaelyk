@@ -58,7 +58,7 @@ At the root of your project, you'll find:
         <code>build.groovy</code>: a small Groovy build file using Groovy's AntBuilder to compiled Groovy and Java sources
         contained in the <code>src</code> directory. It's using Groovy's joint compiler.
         To run this build, if you've got additional sources to compile, simply launch the command <code>groovy build</code>
-        &mdash you'll need <a href="http://groovy.codehaus.org/Installing+Groovy">Groovy installed</a> on your machine.
+        &mdash; you'll need <a href="http://groovy.codehaus.org/Installing+Groovy">Groovy installed</a> on your machine.
     </li>
     <li>
         <code>src</code>: If your project needs source files beyond the templates and groovlets,

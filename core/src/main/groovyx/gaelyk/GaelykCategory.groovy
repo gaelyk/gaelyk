@@ -353,7 +353,9 @@ class GaelykCategory {
             transaction.commit()
         } catch (e) {
             // rollback on error
-            transaction.rollback()
+            if (transaction.isActive()) {
+                transaction.rollback()
+            }
             // rethrow the exception
             throw e
         }

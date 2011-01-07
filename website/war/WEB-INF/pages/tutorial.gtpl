@@ -44,7 +44,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         </ul>
         <li><a href="/tutorial/views-and-controllers#templates">Templates</a></li>
         <ul>
-            <li><a href="/tutorial/views-and-controllers#includes">Incldues</a></li>
+            <li><a href="/tutorial/views-and-controllers#includes">Includes</a></li>
             <li><a href="/tutorial/views-and-controllers#redirect-forward">Redirect and forward</a></li>
         </ul>
         <li><a href="/tutorial/views-and-controllers#groovlets">Groovlets</a></li>

@@ -17,6 +17,10 @@
             <td><a href="/tutorial">Learn more</a></td>
         </tr>
         <tr>
+            <td><a href="/community"><img src="/images/icon-group.png" alt="Get involved"></a></td>
+            <td><a href="/community">Get involved</a></td>
+        </tr>
+        <tr>
             <td><a href="/search"><img src="/images/icon-zoom.png" alt="Search"></a></td>
             <td><a href="/search">Search</a></td>
         </tr>
@@ -47,6 +51,121 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
     <li><b>Gaelyk</b> lets you define friendly REST-ful URLs thanks to its <a href="/tutorial/url-routing">URL routing</a> system</li>
     <li><b>Gaelyk</b> provides a simple <a href="/tutorial/plugins">plugin system</a> for improving code reuse and code sharing</li>
 </ul>
+</div>
+
+<h1><b>Gaelyk</b> in the wild</h1>
+
+<p>
+    If you've wondered who's using <b>Gaelyk</b>, here are a few examples of live websites built on top of the toolkit
+    and deployed on <b>Google App Engine</b>.
+</p>
+
+<div id="sightings">
+    <div class="pic-frame">
+        <a href="http://www.icusawme.com/">
+        <img src="/images/sightings/small/icusawme.png" alt="icusawme" ><br/>
+        icusawme social<br/>
+        website
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://www.averone.com.br/en/index.html">
+        <img src="/images/sightings/small/averone.png" alt="Averone" ><br/>
+        Averone, a Brazilian<br/>
+        tech company website
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://i-emote.appspot.com/">
+        <img src="/images/sightings/small/i-emote.png" alt="i-Emote" ><br/>
+        i-emote is a min-blogger<br/>
+        like social web application
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://www.choongching.com/">
+        <img src="/images/sightings/small/choongching.png" alt="Teo Choong Ching" ><br/>
+        Creative work of Teo<br/>
+        Choong Ching
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://iui-js.appspot.com/mobile/demos.html#_about">
+        <img src="/images/sightings/small/iui.png" alt="iUI" ><br/>
+        iUI CSS and JS mobile<br/>
+        framework for iPhone webapps
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://groovyconsole.appspot.com/">
+        <img src="/images/sightings/small/groovyconsole.png" alt="Groovy Web Console" ><br/>
+        Code in Groovy online<br/>
+        with the Groovy Web Console
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://gaelyk.appspot.com">
+        <img src="/images/sightings/small/gaelykweb.png" alt="Gaelyk web site" ><br/>
+        The Gaelyk website itself<br/>
+        is powered by Gaelyk
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://www.zama-paintings.com/">
+        <img src="/images/sightings/small/zamapaintings.png" alt="Zama Paintings" ><br/>
+        Paintings of a French<br/>
+        modern plastician artist
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://devoxx-gaelyk.appspot.com/">
+        <img src="/images/sightings/small/devoxxdemo.png" alt="Devoxx conference schedule" ><br/>
+        Devoxx conference<br/>
+        schedule application
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://meorganizo.es/">
+        <img src="/images/sightings/small/meorganizo.png" alt="meorganizo.es" ><br/>
+        Personal productivity<br/>
+        application
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://rainboyan.appspot.com/">
+        <img src="/images/sightings/small/twitterfront.png" alt="Twitter frontend" ><br/>
+        Custom Twitter<br/>
+        frontend
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://whiterabbit-io.appspot.com/">
+        <img src="/images/sightings/small/whiterabbit.png" alt="White Rabbit" ><br/>
+        Reminder service for those<br/>
+        with difficulties to wake up
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://tools.techstacks.com/">
+        <img src="/images/sightings/small/techstacks.png" alt="Techstacks tools" ><br/>
+        Useful tools for<br/>
+        website owners
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://twitwinner.com/">
+        <img src="/images/sightings/small/twitwinner.png" alt="TwitWinner" ><br/>
+        TwitWinner, comparing<br/>
+        keyword popularity on Twitter
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://www.thriftebook.com/latest">
+        <img src="/images/sightings/small/thriftebook.png" alt="Thriftebook deals" ><br/>
+        Tech eBook deals<br/>
+        of the day
+        </a>
+    </div>
 </div>
 
 <h1>Frequently Asked Question</h1>

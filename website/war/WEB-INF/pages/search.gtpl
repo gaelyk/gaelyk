@@ -159,6 +159,11 @@ a.gsc-trailing-more-results:link {
     border: 1px solid #D33381;
 }
 
+.gsc-cursor-box {
+    border-top: 2px solid #D33381;
+    padding-top: 2px;
+}
+
 .gs-promotion.gs-result a.gs-title:link,
 .gs-promotion.gs-result a.gs-title:visited,
 .gs-promotion.gs-result a.gs-title:hover,

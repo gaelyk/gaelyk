@@ -143,6 +143,9 @@ a:hover {
     border: none;
 }
 
+#sightings {
+}
+
 #google-group-subscribe {
     padding: 5px;
     margin-left: 20px;
@@ -162,4 +165,33 @@ a:hover {
 
 .hide-on-screen {
     display: none;
+}
+
+.pic-frame {
+    text-align: center;
+    display: inline-block;
+    background-color: white;
+	border: 10px solid white;
+	margin: 20px;
+
+	 -moz-border-radius: 4px; /* FF1+ */
+  -webkit-border-radius: 4px; /* Saf3+, Chrome */
+          border-radius: 4px; /* Opera 10.5, IE 9 */
+
+	 -moz-box-shadow: 3px 4px 8px #AAAAAA; /* FF3.5+ */
+  -webkit-box-shadow: 3px 4px 8px #AAAAAA; /* Saf3.0+, Chrome */
+          box-shadow: 3px 4px 8px #AAAAAA; /* Opera 10.5, IE 9.0 */
+
+		     -moz-transform: rotate(-1deg);  /* FF3.5+ */
+		       -o-transform: rotate(-1deg);  /* Opera 10.5 */
+		  -webkit-transform: rotate(-1deg);  /* Saf3.1+, Chrome */
+		             filter:  progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand',
+		                     M11=0.9945218953682733, M12=0.10452846326765346, M21=-0.10452846326765346, M22=0.9945218953682733); /* IE6,IE7 */
+		         -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand',
+		                     M11=0.9945218953682733, M12=0.10452846326765346, M21=-0.10452846326765346, M22=0.9945218953682733)"; /* IE8 */
+		               zoom: 1;
+}
+.pic-frame a {
+    text-decoration: none;
+    color: #721741;
 }

@@ -47,16 +47,16 @@
 
     <body>
         <div id="header">
-            <img src="/images/gaelyk.png" alt="Gaelyk - a lightweight Groovy toolkit for Google App Engine Java">
+            <a href="/" alt="Home"><img src="/images/gaelyk.png" alt="Gaelyk - a lightweight Groovy toolkit for Google App Engine Java"></a>
             <img src="/images/google-app-engine-groovy.png" alt="Groovy on Google App Engine" align="right" hspace="30" vspace="10">
         </div>
 
         <div id="navigation">
             <ul>
-                <li><a href="/">Home</a></li>
                 <li><a href="/tutorial">Tutorial</a></li>
                 <li><a href="/download">Download</a></li>
                 <li><a href="/community">Community</a></li>
+                <li><a href="/search">Search</a></li>
             </ul>
         </div>
 

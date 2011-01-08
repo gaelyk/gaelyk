@@ -2,6 +2,21 @@
 
 <h1 style="page-break-before: avoid;">Tutorial</h1>
 
+<% if (!request.requestURI.contains('print')) { %>
+<div id="sidebox">
+    <table>
+        <tr>
+            <td><a href="/tutorial/print"><img src="/images/icon-printer.png" alt="Printer-friendly"></a></td>
+            <td><a href="/tutorial/print">Single page documentation</a></td>
+        </tr>
+        <tr>
+            <td><a href="/gaelyk.pdf"><img src="/images/icon-pdf.png" alt="Documentation PDF"></a></td>
+            <td><a href="/gaelyk.pdf">PDF documentation</a></td>
+        </tr>
+    </table>
+</div>
+<% } %>
+
 <p>
 The goal of this tutorial is to quickly get you started with using <b>Gaelyk</b> to  write
 and deploy Groovy applications on Google App Engine.

@@ -6,6 +6,24 @@
 
 <h1>About Gaelyk</h1>
 
+<div id="sidebox">
+    <table>
+        <tr>
+            <td><a href="/download"><img src="/images/icon-download.png" alt="Download"></a></td>
+            <td><a href="/download">Download</a></td>
+        </tr>
+        <tr>
+            <td><a href="/tutorial"><img src="/images/icon-learn.png" alt="Learn"></a></td>
+            <td><a href="/tutorial">Learn more</a></td>
+        </tr>
+        <tr>
+            <td><a href="/search"><img src="/images/icon-zoom.png" alt="Search"></a></td>
+            <td><a href="/search">Search</a></td>
+        </tr>
+    </table>
+</div>
+
+<div>
 <p>
 <b>Gaelyk</b> is a lightweight <a href="http://groovy.codehaus.org">Groovy</a> toolkit 
 for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
@@ -29,15 +47,7 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
     <li><b>Gaelyk</b> lets you define friendly REST-ful URLs thanks to its <a href="/tutorial/url-routing">URL routing</a> system</li>
     <li><b>Gaelyk</b> provides a simple <a href="/tutorial/plugins">plugin system</a> for improving code reuse and code sharing</li>
 </ul>
-
-<p>
-You can:
-<ul>
-    <li>download <b>Gaelyk</b> in the <a href="/download">download area</a>,</li>
-    <li>learn how to create <b>Gaelyk</b> applications by reading the extensive <a href="/tutorial">tutorial</a>,</li>
-    <li>and participate in the <a href="/community">community</a>.</li>
-</ul>  
-</p>
+</div>
 
 <h1>Frequently Asked Question</h1>
 

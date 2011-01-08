@@ -6,6 +6,19 @@
 
 <h1>Download</h1>
 
+<div id="sidebox">
+    <table>
+        <tr>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.zip">Template project v0.6</a></td>
+        </tr>
+        <tr>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.jar">Gaelyk JAR v0.6</a></td>
+        </tr>
+    </table>
+</div>
+
 <p>
 You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.7 and beyond and with the latest Google App Engine SDK.
 </p>

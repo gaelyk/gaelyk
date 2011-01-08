@@ -6,6 +6,16 @@
 
 <h1>Community</h1>
 
+<p>
+In this community section, you'll find links to:
+</p>
+<ul>
+    <li>Participate in the <a href="#discuss">discussions</a> of our Google Group</li>
+    <li>Contribute code through GitHub and follow the latest activity in our code <a href="#repository">repository</a></li>
+    <li>File feature requests and bugs in our <a href="#bugtracker">bug tracker</a></li>
+</ul>
+
+<a name="discuss"></a>
 <h2>Discussions</h2>
 
 <p>
@@ -13,7 +23,7 @@ If you want to discuss about <b>Gaelyk</b>, ask questions, suggest new features,
 you can join the <a href="http://groups.google.com/group/gaelyk">Gaelyk Google Group</a>
 </p>
 
-<table style="padding: 5px; background-color: white; border: 1px solid black;" cellspacing="0">
+<table id="google-group-subscribe" style="" cellspacing="0">
     <tr>
         <td>
             <img src="http://groups.google.com/intl/en/images/logos/groups_logo_sm.gif"
@@ -51,10 +61,12 @@ If you wish to contribute to the development of <b>Gaelyk</b>:
 </ul>
 </p>
 
+<a name="repository"></a>
 <h3>Latest activity on our <a href="https://github.com/glaforge/gaelyk/commits/master">repository</a></h3>
 
 <% include "/latestcommits.groovy" %>
 
+<a name="bugtracker"></a>
 <h3>Open issues in our <a href="https://github.com/glaforge/gaelyk/issues">bug tracker</a></h3>
 
 <% include "/latestissues.groovy" %>

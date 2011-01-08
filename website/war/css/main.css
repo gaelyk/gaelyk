@@ -59,7 +59,7 @@ a:hover {
 	background: black url('../images/black-shade.png') repeat-x top;
 	color: white;
 	padding: 5px;
-	height: 73px;
+	height: 63px;
 }
 
 #navigation ul {
@@ -74,11 +74,11 @@ a:hover {
 
 #navigation ul li:hover {
 	color: #D33381;
-	border-bottom: 10px solid;	
+	border-bottom: 5px solid;
 }
 
 #navigation ul li a {
-	font-size: 24pt;
+	font-size: 20pt;
 	font-weight: bold;
 	text-decoration: none;
 }
@@ -93,7 +93,7 @@ a:hover {
 
 #header {
 	background: white url('../images/gray-shade.png') repeat-x bottom;
-	padding: 20px;
+	padding: 10px;
 }
 
 #content {
@@ -109,4 +109,57 @@ a:hover {
 	text-align: center;
 	padding: 20px;
 	height: 100px;
+}
+
+#sidebox {
+    float: right;
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+
+    font-weight: bold;
+    font-size: 1.1em;
+
+    border: 3px solid #D33381;
+
+    -webkit-border-radius: 10px;
+       -moz-border-radius: 10px;
+            border-radius: 10px;
+
+       -moz-box-shadow: 4px 4px 5px #888;
+    -webkit-box-shadow: 4px 4px 5px #888;
+            box-shadow: 4px 4px 5px #888;
+}
+
+#sidebox img {
+    padding-right: 10px;
+}
+
+#sidebox a {
+    text-decoration: none;
+}
+
+#sidebox table tr td {
+    border: none;
+}
+
+#google-group-subscribe {
+    padding: 5px;
+    margin-left: 20px;
+    background-color: white;
+
+    border: 3px solid #D33381;
+
+    -webkit-border-radius: 10px;
+       -moz-border-radius: 10px;
+            border-radius: 10px;
+
+       -moz-box-shadow: 4px 4px 5px #888;
+    -webkit-box-shadow: 4px 4px 5px #888;
+            box-shadow: 4px 4px 5px #888;
+
+}
+
+.hide-on-screen {
+    display: none;
 }

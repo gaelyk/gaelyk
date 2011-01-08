@@ -4,7 +4,7 @@
 </head>
 
 <body>
-<p>
+<p class="hide-on-screen">
     <img src="/images/gaelyk.png" alt="Gaelyk - a lightweight Groovy toolkit for Google App Engine Java">
     <img src="/images/google-app-engine-groovy.png" alt="Groovy on Google App Engine" align="right" hspace="30" vspace="10">
 </p>

@@ -16,4 +16,4 @@ get "/tutorial/run-deploy",             forward: "/WEB-INF/pages/tutorial/runDep
 
 get "/download",    forward: "/WEB-INF/pages/download.gtpl",  cache: hotContentDuration
 get "/community",   forward: "/WEB-INF/pages/community.gtpl", cache: hotContentDuration
-get "/search",      forward: "/WEB-INF/pages/search.gtpl"
+get "/search",      forward: "/WEB-INF/pages/search.gtpl",    cache: stableDuration

@@ -3,7 +3,7 @@
 <h1>Simple plugin system</h1>
 
 <p>
-Since <b>Gaelyk</b> 0.4, a plugin system helps you modularize your applications
+<b>Gaelyk</b> sports a plugin system which helps you modularize your applications
 and enable you to share commonalities between <b>Gaelyk</b> applications.
 </p>
 

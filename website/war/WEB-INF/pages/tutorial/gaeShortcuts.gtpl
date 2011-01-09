@@ -262,7 +262,7 @@ You can retrieve the asynchronous service with the <code>datastore.async</code> 
 <h2>The task queue API shortcuts</h2>
 
 <p>
-In version 1.2.5 of the Google App Engine SDK, Google added an experimental support for task queues.
+Google App Engine SDK provides support for "task queues".
 An application has a default queue, but other queues can be added through the configuration of a
 <code>queue.xml</code> file in <code>/WEB-INF</code>.
 </p>
@@ -389,7 +389,7 @@ Similarily, a <code>sendToAdmins()</code> method was added to, for sending email
 <h3>Incoming email messages</h3>
 
 <p>
-Since Google App Engine SDK version 1.2.6 (and <b>Gaelyk</b> 0.3), support for incoming email messages has been added,
+Your applications can also receive incoming email messages,
 in a similar vein as the incoming XMPP messaging support.
 To enable incoming email support, you first need to update your <code>appengine-web.xml</code> file as follows:
 </p>
@@ -451,8 +451,7 @@ instance:
 <h2>XMPP/Jabber support</h2>
 
 <p>
-Since version 1.2.5 of the Google App Engine SDK, support for instant messaging through XMPP/Jabber support has been added.
-This also means your <b>Gaelyk</b> applications can now send and receive instant messages.
+Your application can send and receive instant messaging through XMPP/Jabber.
 </p>
 
 <blockquote>
@@ -762,10 +761,10 @@ With the blobstore service, you can stream the content of blobs back to the brow
 <p>
 Beyond the ability to serve blobs directly to the response output stream with
 <code>blobstoreService.serve(blobKey, response)</code> from your groovlet,
-since version 1.3.5 of Google App Engine's SDK, there is the possibility of
+there is the possibility of
 <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/blobstore/BlobstoreInputStream.html">obtaining an <code>InputStream</code></a>
 to read the content of the blob.
-<b>Gaelyk</b> 0.4.1 adds three convenient methods on <code>BlobKey</code>
+<b>Gaelyk</b> adds three convenient methods on <code>BlobKey</code>
 to easily deal with a raw input stream or with a reader, leveraging Groovy's own input stream and reader methods.
 The stream and reader are handled properly with regards to cleanly opening and closing those resources
 so that you don't have to take care of that aspect yourself.
@@ -944,14 +943,14 @@ showing the blob details, and outputing the content of the blob (a text file in 
 <h2>Namespace support</h2>
 
 <p>
-Google App Engine SDK 1.3.7 introduced
-<a href="http://code.google.com/appengine/docs/java/multitenancy/multitenancy.html">multitenancy support</a>,
-through the concept of namespace, that you can handle through the
+Google App Engine SDK allows you to create
+"<a href="http://code.google.com/appengine/docs/java/multitenancy/multitenancy.html">multitenant</a>"-aware
+applications, through the concept of namespace, that you can handle through the
 <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/NamespaceManager.html">NamespaceManager</a> class.
 </p>
 
 <p>
-<b>Gaelyk</b> 0.4.4 adds the variable <code>namespace</code> into the binding of your groovlets and templates.
+<b>Gaelyk</b> adds the variable <code>namespace</code> into the binding of your groovlets and templates.
 This <code>namespace</code> variable is simply the <code>NamespaceManager</code> class.
 <b>Gaelyk</b> adds a handy method for automating the pattern of setting a temporary namespace and restoring it to its previous value,
 thanks to the added <code>of()</code> method, taking a namespace name in the form of a string,

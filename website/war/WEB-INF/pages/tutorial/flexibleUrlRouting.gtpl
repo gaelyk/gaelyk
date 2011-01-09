@@ -3,7 +3,7 @@
 <h1>Flexible URL routing</h1>
 
 <p>
-Since <b>Gaelyk</b> 0.3.2, a flexible and powerful URL routing system was introduced:
+<b>Gaelyk</b> provides a flexible and powerful URL routing system:
 you can use a small Groovy Domain-Specific Language for defining routes for nicer and friendlier URLs.
 </p>
 
@@ -172,10 +172,6 @@ Better prefer several explicit routes than a too complicated single route.
 
 <a name="warmup"></a>
 <h2>Warmup requests</h2>
-
-<p>
-Since version 1.4.O of the App Engine SDK, "warmup requests" have been introduced.
-</p>
 
 <p>
 When an application running on a production instance receives too many incoming requests,
@@ -420,8 +416,8 @@ As a fast path to bypass certain URL patterns, you can use the <code>ignore: tru
 <h2>Caching groovlet and template output</h2>
 
 <p>
-Since <b>Gaelyk</b> 0.4.1, support for caching groovlet and template output has been added,
-and can be defined through the URL routing system.
+<b>Gaelyk</b> provides support for caching groovlet and template output,
+and this be defined through the URL routing system.
 This caching capability obviously leverages the Memcache service of Google App Engine.
 In the definition of your routes, you simply have to add a new named parameter: <code>cache</code>,
 indicating the number of seconds, minutes or hours you want the page to be cached.

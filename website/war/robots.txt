@@ -1,1 +1,7 @@
 Sitemap: http://gaelyk.appspot.com/sitemap.xml
+User-agent: *
+Disallow: /tutorial/print
+Disallow: /gaelyk.pdf
+Disallow: /latestcommits.groovy
+Disallow: /latestissues.groovy
+Disallow: /lastmessages.groovy

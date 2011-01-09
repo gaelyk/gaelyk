@@ -69,6 +69,13 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
         </a>
     </div>
     <div class="pic-frame">
+        <a href="http://pleezfollow.me/">
+        <img src="/images/sightings/small/pleezfollowme.png" alt="pleezfollow.me" ><br/>
+        Facilitate building your<br/>
+        friendship network on Twitter
+        </a>
+    </div>
+    <div class="pic-frame">
         <a href="http://www.averone.com.br/en/index.html">
         <img src="/images/sightings/small/averone.png" alt="Averone" ><br/>
         Averone, a Brazilian<br/>
@@ -125,7 +132,8 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
         </a>
     </div>
     <div class="pic-frame">
-        <a href="http://meorganizo.es/">
+        <a href="http://meorganizo.es/
+        ">
         <img src="/images/sightings/small/meorganizo.png" alt="meorganizo.es" ><br/>
         Personal productivity<br/>
         application

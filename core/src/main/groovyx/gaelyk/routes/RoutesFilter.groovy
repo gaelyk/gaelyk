@@ -111,10 +111,6 @@ class RoutesFilter implements Filter {
     void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         // reload the routes in local dev mode in case the routes definition has changed since the last request
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
-            log.config "Development mode: reloading plugin descriptors and routes configuration"
-            // re-read plugins descriptor to reload plugins in development mode
-            PluginsHandler.instance.reinit()
-            PluginsHandler.instance.initPlugins()
             loadRoutes()
         }
 

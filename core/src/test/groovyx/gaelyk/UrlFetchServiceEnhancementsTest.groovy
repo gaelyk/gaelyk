@@ -60,7 +60,7 @@ class UrlFetchServiceEnhancementsTest extends GroovyTestCase {
 
     void testGetGaelykHomePageAndCheckResponseHeaders() {
         use (GaelykCategory) {
-            HTTPResponse response = gaelyk.get(deadline: 30)
+            HTTPResponse response = gaelyk.get(deadline: 30, allowTruncate: true)
 
             assert response.responseCode == 200
 
@@ -71,7 +71,7 @@ class UrlFetchServiceEnhancementsTest extends GroovyTestCase {
 
     void testPostForbiddenToGoogle() {
         use (GaelykCategory) {
-            HTTPResponse response = googleSearch.delete()
+            HTTPResponse response = googleSearch.delete(followRedirects: false)
 
             assert response.statusCode == 405
             assert response.text.contains('The request method <code>DELETE</code> is inappropriate for the URL')

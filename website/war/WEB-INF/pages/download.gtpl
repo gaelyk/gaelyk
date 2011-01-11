@@ -40,7 +40,7 @@ But to get you started quickly, you may use a ready-made template project which 
         Fixed plugins reloading issue in development mode where plugins were reloaded and ran upon each request.
         No reloading happen at all, and plugins are parsed and executed only on startup of the application.
     </li>
-    <li>Statement code coverage increased to 85%</li>
+    <li>Statement code coverage increased to 91%</li>
 </ul>
 
 <h3>Artifacts</h3>

@@ -30,6 +30,7 @@ class QueueTaskTest extends GroovyTestCase {
                     taskName: "dailyNewsletter1",
                     method: 'PUT', params: [date: '20090914'],
                     payload: "some content",
+                    headers: [info: 'some-header-info']
                     retryOptions: [
                             taskRetryLimit: 10,
                             taskAgeLimitSeconds: 100,

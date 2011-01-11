@@ -46,7 +46,8 @@ class MailSupportTest extends GroovyTestCase {
             mail.send from: "glaforge@gmail.com",
                     to: "someone@gmail.com",
                     textBody: "hello you",
-                    subject: "new message"
+                    subject: "new message",
+                    attachment: [fileName: 'report.csv', data: '1234'.bytes]
         }
 
         println logResult

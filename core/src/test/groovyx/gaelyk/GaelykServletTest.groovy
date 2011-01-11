@@ -16,6 +16,9 @@ import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestC
 import com.google.appengine.api.utils.SystemProperty
 import javax.servlet.ServletConfig
 import javax.servlet.ServletContext
+import javax.servlet.RequestDispatcher
+import javax.servlet.ServletResponse
+import javax.servlet.ServletRequest
 
 /**
  * @author Guillaume Laforge
@@ -55,7 +58,11 @@ class GaelykServletTest extends GroovyTestCase {
     void testGet() {
         def tempFile = File.createTempFile("groovlet", ".groovy")
         tempFile.createNewFile()
-        tempFile << "out << 'hello'"
+        tempFile << """
+            log.info 'start'
+            out << 'hello'
+            include 'bye.gtpl'
+        """
 
         def writer = new StringWriter()
         def printWriter = new PrintWriter(writer)
@@ -97,7 +104,16 @@ class GaelykServletTest extends GroovyTestCase {
                         boolean hasMoreElements() { return false }
                         Object nextElement() { return null }
                     }
-                }
+                },
+                getRequestDispatcher: { String p -> [
+                        include: { ServletRequest request, ServletResponse response ->
+                            println "include $p"
+                            response.writer << "bye"
+                        },
+                        forward: { ServletRequest request, ServletResponse response ->
+                            println "forward $p"
+                        }
+                ] as RequestDispatcher }
         ] as HttpServletRequest
 
         def response = [
@@ -112,7 +128,7 @@ class GaelykServletTest extends GroovyTestCase {
             servlet.init(config)
             servlet.service(request, response)
 
-            assert writer.toString() == 'hello'
+            assert writer.toString() == 'hellobye'
 
         } finally {
             tempFile.delete()

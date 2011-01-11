@@ -209,16 +209,11 @@ please have a look at our <a href="/community">community section</a>.
 jQuery.fn.alternate = function() {
     var that = jQuery(this);
     var elems = that.children();
-
     that.empty();
-
-    for(var i = elems.length - 1; i < elems.length; i++) {
-        that.append(elems[i]);
-    }
+    that.append(elems[elems.length - 1]);
     for(var j = 0; j < elems.length - 1; j++) {
         that.append(elems[j]);
     }
-
     jQuery("#sightings div:gt(3)").hide();
     jQuery("#sightings div:lt(4)").fadeIn("fast");
 };

@@ -219,11 +219,6 @@ So your initialization code, adding binding variables, categories and routes, wi
 Knowing that Google App Engine can load and unload apps depending on traffic, this is important to keep in mind as well.
 </blockquote>
 
-<blockquote>
-<b>Remark:</b> In development mode, plugin descriptors are reloaded upon each request,
-so it may slow down the requests to your groovlets and templates significantly.
-</blockquote>
-
 <a name="using"></a>
 <h2>Using a plugin</h2>
 

@@ -9,12 +9,12 @@
 <div id="sidebox">
     <table>
         <tr>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.zip">Template project v0.6</a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.1.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.1.zip">Template project v0.6.1</a></td>
         </tr>
         <tr>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.jar">Gaelyk JAR v0.6</a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.1.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.1.jar">Gaelyk JAR v0.6.1</a></td>
         </tr>
     </table>
 </div>
@@ -31,6 +31,24 @@ and with the 1.4.0 version of the App Engine SDK.
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 0.6.1</h2>
+
+<h3>Changes</h3>
+<ul>
+    <li>
+        Fixed plugins reloading issue in development mode where plugins were reloaded and ran upon each request.
+        No reloading happen at all, and plugins are parsed and executed only on startup of the application.
+    </li>
+    <li>Statement code coverage increased to 85%</li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.1.jar">gaelyk-0.6.1.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.1.zip">gaelyk-template-project-0.6.1.zip</a></li>
+</ul>
+
 
 <h2>Version 0.6</h2>
 

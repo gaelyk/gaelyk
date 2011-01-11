@@ -219,8 +219,8 @@ jQuery.fn.alternate = function() {
         that.append(elems[j]);
     }
 
-    jQuery("#sightings div:gt(3)").fadeOut("fast");
-    jQuery("#sightings div:lt(4)").fadeIn();
+    jQuery("#sightings div:gt(3)").hide();
+    jQuery("#sightings div:lt(4)").fadeIn("fast");
 };
 
 this.random = function() {

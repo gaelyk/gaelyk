@@ -7,6 +7,7 @@ import com.google.appengine.api.images.CompositeTransform
 import com.google.appengine.api.images.Image
 import com.google.appengine.api.images.Composite
 import com.google.appengine.api.blobstore.BlobKey
+import com.google.appengine.api.images.ImagesServiceFactory
 
 /**
  * Tests for the various enhancements to the ImagesService
@@ -72,10 +73,13 @@ class ImagesServiceTest extends GroovyTestCase {
     }
 
     void testIndividualTransformMethods() {
-        byte[] bytes = new File('../graphics/gaelyk-small-favicon.png').bytes
+        def file = new File('../graphics/gaelyk-small-favicon.png')
+        byte[] bytes = file.bytes
 
         use(GaelykCategory) {
             def image = bytes.image
+
+            assert file.image == image
 
             assert image.imFeelingLucky() == image.transform { feeling lucky }
 
@@ -87,6 +91,19 @@ class ImagesServiceTest extends GroovyTestCase {
                 vertical flip
                 rotate 90
             }
+
+            assert image.horizontalFlip().horizontalFlip() == image
+            assert image.verticalFlip().verticalFlip() == image
+        }
+    }
+
+    void testComposites() {
+        def images = ImagesServiceFactory.imagesService
+        def compTransf1 = ImagesServiceFactory.makeCompositeTransform([ImagesServiceFactory.makeHorizontalFlip()])
+        def compTransf2 = ImagesServiceFactory.makeCompositeTransform([ImagesServiceFactory.makeHorizontalFlip()])
+
+        use(GaelykCategory) {
+            compTransf1 << ImagesServiceFactory.makeHorizontalFlip() == compTransf2 >> ImagesServiceFactory.makeHorizontalFlip()
         }
     }
 }

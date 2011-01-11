@@ -23,7 +23,7 @@ If you want to discuss about <b>Gaelyk</b>, ask questions, suggest new features,
 you can join the <a href="http://groups.google.com/group/gaelyk">Gaelyk Google Group</a>
 </p>
 
-<table id="google-group-subscribe" style="" cellspacing="0">
+<table id="google-group-subscribe" class="roundPinkBorder" cellspacing="0">
     <tr>
         <td>
             <img src="http://groups.google.com/intl/en/images/logos/groups_logo_sm.gif"

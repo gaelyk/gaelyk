@@ -6,7 +6,7 @@
 
 <h1>About Gaelyk</h1>
 
-<div id="sidebox">
+<div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
             <td><a href="/download"><img src="/images/icon-download.png" alt="Download"></a></td>
@@ -64,114 +64,98 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
     <div class="pic-frame">
         <a href="http://www.icusawme.com/">
         <img src="/images/sightings/small/icusawme.png" alt="icusawme" ><br/>
-        icusawme social<br/>
-        website
+        icusawme social website
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://pleezfollow.me/">
         <img src="/images/sightings/small/pleezfollowme.png" alt="pleezfollow.me" ><br/>
-        Facilitate building your<br/>
-        friendship network on Twitter
+        Facilitate building your friendship network on Twitter
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://www.averone.com.br/en/index.html">
         <img src="/images/sightings/small/averone.png" alt="Averone" ><br/>
-        Averone, a Brazilian<br/>
-        tech company website
+        Averone, a Brazilian tech company website
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://i-emote.appspot.com/">
         <img src="/images/sightings/small/i-emote.png" alt="i-Emote" ><br/>
-        i-emote is a min-blogger<br/>
-        like social web application
+        i-emote is a min-blogger like social web application
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://www.choongching.com/">
         <img src="/images/sightings/small/choongching.png" alt="Teo Choong Ching" ><br/>
-        Creative work of Teo<br/>
-        Choong Ching
+        Creative work of Teo Choong Ching
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://iui-js.appspot.com/mobile/demos.html#_about">
         <img src="/images/sightings/small/iui.png" alt="iUI" ><br/>
-        iUI CSS and JS mobile<br/>
-        framework for iPhone webapps
+        iUI CSS and JS mobile framework for iPhone webapps
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://groovyconsole.appspot.com/">
         <img src="/images/sightings/small/groovyconsole.png" alt="Groovy Web Console" ><br/>
-        Code in Groovy online<br/>
-        with the Groovy Web Console
+        Code in Groovy online with the Groovy Web Console
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://gaelyk.appspot.com">
         <img src="/images/sightings/small/gaelykweb.png" alt="Gaelyk web site" ><br/>
-        The Gaelyk website itself<br/>
-        is powered by Gaelyk
+        The Gaelyk website itself is powered by Gaelyk
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://www.zama-paintings.com/">
         <img src="/images/sightings/small/zamapaintings.png" alt="Zama Paintings" ><br/>
-        Paintings of a French<br/>
-        modern plastician artist
+        Paintings of a French modern plastician artist
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://www.thriftebook.com/latest">
+        <img src="/images/sightings/small/thriftebook.png" alt="Thriftebook deals" ><br/>
+        Tech eBook deals of the day
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://devoxx-gaelyk.appspot.com/">
         <img src="/images/sightings/small/devoxxdemo.png" alt="Devoxx conference schedule" ><br/>
-        Devoxx conference<br/>
-        schedule application
+        Devoxx conference schedule application
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://meorganizo.es/
         ">
         <img src="/images/sightings/small/meorganizo.png" alt="meorganizo.es" ><br/>
-        Personal productivity<br/>
-        application
+        Personal productivity application
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://rainboyan.appspot.com/">
         <img src="/images/sightings/small/twitterfront.png" alt="Twitter frontend" ><br/>
-        Custom Twitter<br/>
-        frontend
+        Custom Twitter frontend
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://whiterabbit-io.appspot.com/">
         <img src="/images/sightings/small/whiterabbit.png" alt="White Rabbit" ><br/>
-        Reminder service for those<br/>
-        with difficulties to wake up
+        Reminder service for those with difficulties to wake up
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://tools.techstacks.com/">
         <img src="/images/sightings/small/techstacks.png" alt="Techstacks tools" ><br/>
-        Useful tools for<br/>
-        website owners
+        Useful tools for website owners
         </a>
     </div>
     <div class="pic-frame">
         <a href="http://twitwinner.com/">
         <img src="/images/sightings/small/twitwinner.png" alt="TwitWinner" ><br/>
-        TwitWinner, comparing<br/>
-        keyword popularity on Twitter
-        </a>
-    </div>
-    <div class="pic-frame">
-        <a href="http://www.thriftebook.com/latest">
-        <img src="/images/sightings/small/thriftebook.png" alt="Thriftebook deals" ><br/>
-        Tech eBook deals<br/>
-        of the day
+        TwitWinner, comparing keyword popularity on Twitter
         </a>
     </div>
 </div>
@@ -219,6 +203,36 @@ The source code of <b>Gaelyk</b> is hosted by <a href="http://github.com/glaforg
 If you're interested in participating in the project, providing patches, reporting bugs, writing documentation, and more,
 please have a look at our <a href="/community">community section</a>.
 </p>
+
+<script type="text/javascript">
+
+jQuery.fn.alternate = function() {
+    var that = jQuery(this);
+    var elems = that.children();
+
+    that.empty();
+
+    for(var i = elems.length - 1; i < elems.length; i++) {
+        that.append(elems[i]);
+    }
+    for(var j = 0; j < elems.length - 1; j++) {
+        that.append(elems[j]);
+    }
+
+    jQuery("#sightings div:gt(3)").fadeOut("fast");
+    jQuery("#sightings div:lt(4)").fadeIn();
+};
+
+this.random = function() {
+    jQuery("#sightings").alternate();
+};
+
+jQuery(document).ready(function() {
+    random();
+    setInterval(random, 3000);
+});
+
+</script>
 
 </body>
 </html>

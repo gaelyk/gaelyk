@@ -6,7 +6,7 @@
 
 <h1>Download</h1>
 
-<div id="sidebox">
+<div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
             <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.1.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>

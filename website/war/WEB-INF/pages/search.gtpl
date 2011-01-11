@@ -38,10 +38,11 @@ input.gsc-search-button {
     color: white;
     background-color: #D33381;
 
-    border: 2px gray ridge;
-    -moz-box-shadow: 4px 4px 5px #888;
+    border: 3px gray ridge;
+
+       -moz-box-shadow: 4px 4px 5px #888;
     -webkit-box-shadow: 4px 4px 5px #888;
-    box-shadow: 4px 4px 5px #888;
+            box-shadow: 4px 4px 5px #888;
 }
 
 #cse {
@@ -54,14 +55,19 @@ input.gsc-search-button {
 }
 
 input.gsc-input {
-    border: 2px solid #D33381;
+    border: 3px solid #D33381;
+
     width: 400px;
     height: 30px;
     font-size: 1.2em;
 
-    -moz-box-shadow: 4px 4px 5px #888;
+       -moz-box-shadow: 4px 4px 5px #888;
     -webkit-box-shadow: 4px 4px 5px #888;
-    box-shadow: 4px 4px 5px #888;
+            box-shadow: 4px 4px 5px #888;
+
+    -webkit-border-radius: 10px;
+       -moz-border-radius: 10px;
+            border-radius: 10px;
 
 }
 

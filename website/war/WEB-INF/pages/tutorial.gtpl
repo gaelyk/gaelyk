@@ -3,7 +3,7 @@
 <h1 style="page-break-before: avoid;">Tutorial</h1>
 
 <% if (!request.requestURI.contains('print')) { %>
-<div id="sidebox">
+<div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
             <td><a href="/tutorial/print"><img src="/images/icon-printer.png" alt="Printer-friendly"></a></td>

@@ -119,16 +119,6 @@ a:hover {
 
     font-weight: bold;
     font-size: 1.1em;
-
-    border: 3px solid #D33381;
-
-    -webkit-border-radius: 10px;
-       -moz-border-radius: 10px;
-            border-radius: 10px;
-
-       -moz-box-shadow: 4px 4px 5px #888;
-    -webkit-box-shadow: 4px 4px 5px #888;
-            box-shadow: 4px 4px 5px #888;
 }
 
 #sidebox img {
@@ -151,16 +141,6 @@ a:hover {
     margin-left: 20px;
     background-color: white;
 
-    border: 3px solid #D33381;
-
-    -webkit-border-radius: 10px;
-       -moz-border-radius: 10px;
-            border-radius: 10px;
-
-       -moz-box-shadow: 4px 4px 5px #888;
-    -webkit-box-shadow: 4px 4px 5px #888;
-            box-shadow: 4px 4px 5px #888;
-
 }
 
 .hide-on-screen {
@@ -173,6 +153,7 @@ a:hover {
     background-color: white;
 	border: 10px solid white;
 	margin: 20px;
+    width: 220px;
 
 	 -moz-border-radius: 4px; /* FF1+ */
   -webkit-border-radius: 4px; /* Saf3+, Chrome */
@@ -194,4 +175,16 @@ a:hover {
 .pic-frame a {
     text-decoration: none;
     color: #721741;
+}
+
+.roundPinkBorder {
+    border: 3px solid #D33381;
+
+    -webkit-border-radius: 10px;
+       -moz-border-radius: 10px;
+            border-radius: 10px;
+
+       -moz-box-shadow: 4px 4px 5px #888;
+    -webkit-box-shadow: 4px 4px 5px #888;
+            box-shadow: 4px 4px 5px #888;
 }

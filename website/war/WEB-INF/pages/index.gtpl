@@ -122,6 +122,36 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
         </a>
     </div>
     <div class="pic-frame">
+        <a href="http://whiterabbit-io.appspot.com/">
+        <img src="/images/sightings/small/whiterabbit.png" alt="White Rabbit" ><br/>
+        Reminder service for those with difficulties to wake up
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://tools.techstacks.com/">
+        <img src="/images/sightings/small/techstacks.png" alt="Techstacks tools" ><br/>
+        Useful tools for website owners
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://twitwinner.com/">
+        <img src="/images/sightings/small/twitwinner.png" alt="TwitWinner" ><br/>
+        TwitWinner, comparing keyword popularity on Twitter
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://drilujeme.appspot.com/">
+        <img src="/images/sightings/small/drilujeme.png" alt="Drilujeme.cz" ><br/>
+        English vocabulary training site for Czech CS students
+        </a>
+    </div>
+    <div class="pic-frame">
+        <a href="http://www.lavetrinadellarte.it/">
+        <img src="/images/sightings/small/vetrinadellarte.png" alt="La Vetrina dell Arte" ><br/>
+        Italian art galery website
+        </a>
+    </div>
+    <div class="pic-frame">
         <a href="http://devoxx-gaelyk.appspot.com/">
         <img src="/images/sightings/small/devoxxdemo.png" alt="Devoxx conference schedule" ><br/>
         Devoxx conference schedule application
@@ -138,24 +168,6 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
         <a href="http://rainboyan.appspot.com/">
         <img src="/images/sightings/small/twitterfront.png" alt="Twitter frontend" ><br/>
         Custom Twitter frontend
-        </a>
-    </div>
-    <div class="pic-frame">
-        <a href="http://whiterabbit-io.appspot.com/">
-        <img src="/images/sightings/small/whiterabbit.png" alt="White Rabbit" ><br/>
-        Reminder service for those with difficulties to wake up
-        </a>
-    </div>
-    <div class="pic-frame">
-        <a href="http://tools.techstacks.com/">
-        <img src="/images/sightings/small/techstacks.png" alt="Techstacks tools" ><br/>
-        Useful tools for website owners
-        </a>
-    </div>
-    <div class="pic-frame">
-        <a href="http://twitwinner.com/">
-        <img src="/images/sightings/small/twitwinner.png" alt="TwitWinner" ><br/>
-        TwitWinner, comparing keyword popularity on Twitter
         </a>
     </div>
 </div>
@@ -205,7 +217,6 @@ please have a look at our <a href="/community">community section</a>.
 </p>
 
 <script type="text/javascript">
-
 jQuery.fn.alternate = function() {
     var that = jQuery(this);
     var elems = that.children();
@@ -226,7 +237,6 @@ jQuery(document).ready(function() {
     random();
     setInterval(random, 3000);
 });
-
 </script>
 
 </body>

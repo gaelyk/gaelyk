@@ -68,6 +68,12 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
 
 <div id="sightings">
     <div class="pic-frame">
+        <a href="http://www.chatroulettespy.com/">
+        <img src="/images/sightings/small/chatroulettespy.png" alt="chatroulette spy" ><br/>
+        Spy on your anonymous chatroulette chat partners
+        </a>
+    </div>
+    <div class="pic-frame">
         <a href="http://www.icusawme.com/">
         <img src="/images/sightings/small/icusawme.png" alt="icusawme" ><br/>
         icusawme social website

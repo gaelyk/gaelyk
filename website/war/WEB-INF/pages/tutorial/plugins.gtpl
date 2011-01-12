@@ -80,8 +80,8 @@ As hinted above, the content of a plugin would look something like the following
     |
     +-- WEB-INF
         |
-        +-- plugins.groovy                      // the list of plugins descriptors to be installed
-        |
+        +-- plugins.groovy                      // the list of plugins
+        |                                       // descriptors to be installed
         +-- plugins
         |   |
         |   +-- myPluginDescriptor.groovy       // your plugin descriptor
@@ -94,8 +94,8 @@ As hinted above, the content of a plugin would look something like the following
         |    |
         |    +-- someInclude.gtpl               // your includes
         |
-        +-- classes                             // compiled classes like categories
-        |
+        +-- classes                             // compiled classes
+        |                                       // like categories
         +-- lib
             |
             +-- my-additional-dependency.jar    // your JARs

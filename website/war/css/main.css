@@ -16,6 +16,10 @@ li {
 	list-style-type: square;
 }
 
+a img {
+    border: 0;
+}
+
 pre {
 	background-color: #FAFAFA !important;
 	border-left: 5px solid lightgray !important;
@@ -59,16 +63,20 @@ a:hover {
 	background: black url('../images/black-shade.png') repeat-x top;
 	color: white;
 	padding: 5px;
-	height: 63px;
+	height: 45px;
 }
 
 #navigation ul {
 	margin-left: 50px;
 	list-style: none;
+    position: relative;
+    top: -7px;
 }
 
 #navigation ul li {
-	padding: 20px;
+    padding: 10px;
+    padding-top: 0px;
+    padding-bottom: 10px;
 	display: inline;
 }
 
@@ -78,7 +86,7 @@ a:hover {
 }
 
 #navigation ul li a {
-	font-size: 20pt;
+	font-size: 19pt;
 	font-weight: bold;
 	text-decoration: none;
 }
@@ -100,7 +108,7 @@ a:hover {
 	background: #FFE0F6 url('../images/pink-shade.png') repeat-x top;
 	padding: 20px;
 	padding-right: 40px;
-	padding-left: 115px;
+	padding-left: 100px;
 }
 
 #footer {
@@ -152,7 +160,7 @@ a:hover {
     display: inline-block;
     background-color: white;
 	border: 10px solid white;
-	margin: 20px;
+	margin: 10px;
     width: 220px;
 
 	 -moz-border-radius: 4px; /* FF1+ */

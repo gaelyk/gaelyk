@@ -614,6 +614,14 @@ Similarily to the incoming email support, you can define security constraints:
     jabber to: "/receiveJabber.groovy"
 </pre>
 
+<p>
+Alternatively, you can use the longer version:
+</p>
+
+<pre class="brush:groovy">
+    jabber chat, to: "/receiveJabber.groovy"
+</pre>
+
 <blockquote>
 <b>Remark: </b> You are obviously free to change the name and path of the Groovlet.
 </blockquote>
@@ -640,6 +648,81 @@ instance, as shown below:
         message.xml
     }
 </pre>
+
+<a name="jabber-presence"></a>
+<h3>XMPP presence handling</h3>
+
+<p>
+To be notified of users' presence, you should first configure <code>appengine-web.xml</code>
+to specify you want to activate the incoming presence service:
+</p>
+
+<pre class="brush:xml">
+    &lt;inbound-services&gt;
+        &lt;service&gt;xmpp_presence&lt;/service&gt;
+    &lt;/inbound-services&gt;
+</pre>
+
+<p>
+Then, add a special route definition in <code>routes.groovy</code>:
+</p>
+
+<pre class="brush:groovy">
+    jabber presence, to: "/presence.groovy"
+</pre>
+
+<blockquote>
+<b>Remark: </b> You are obviously free to change the name and path of the Groovlet handling the presence requests.
+</blockquote>
+
+<p>
+Now, in your <code>presence.groovy</code> Groovlet, you can call the overriden <code>XMPPService#parsePresence</code> method:
+</p>
+
+<pre class="brush:groovy">
+    // parse the incoming presence from the request
+    def presence = xmpp.parsePresence(request)
+
+    log.info "\${presence.fromJid.id} is \${presence.available ? '' : 'not'} available"
+</pre>
+
+<a name="jabber-subscription"></a>
+<h3>XMPP subscription handling</h3>
+
+<p>
+To be notified of subscriptions, you should first configure <code>appengine-web.xml</code>
+to specify you want to activate the incoming subscription service:
+</p>
+
+<pre class="brush:xml">
+    &lt;inbound-services&gt;
+        &lt;service&gt;xmpp_subscribe&lt;/service&gt;
+    &lt;/inbound-services&gt;
+</pre>
+
+<p>
+Then, add a special route definition in <code>routes.groovy</code>:
+</p>
+
+<pre class="brush:groovy">
+    jabber subscription, to: "/subscription.groovy"
+</pre>
+
+<blockquote>
+<b>Remark: </b> You are obviously free to change the name and path of the Groovlet handling the subscription requests.
+</blockquote>
+
+<p>
+Now, in your <code>subscription.groovy</code> Groovlet, you can call the overriden <code>XMPPService#parseSubscription</code> method:
+</p>
+
+<pre class="brush:groovy">
+    // parse the incoming subscription from the request
+    def subscription = xmpp.parseSubscription(request)
+
+    log.info "Subscription from \${subscription.fromJid.id}: \${subscription.subscriptionType}}"
+</pre>
+
 
 <a name="memcache"></a>
 <h2>Enhancements to the Memcache service</h2>

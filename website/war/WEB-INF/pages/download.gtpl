@@ -9,28 +9,45 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.1.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.1.zip">Template project v0.6.1</a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.5.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.5.zip">Template project v0.6.5</a></td>
         </tr>
         <tr>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.1.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.1.jar">Gaelyk JAR v0.6.1</a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.5.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.5.jar">Gaelyk JAR v0.6.5</a></td>
         </tr>
     </table>
 </div>
 
 <p>
-You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.7 and beyond and with the latest Google App Engine SDK.
+You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and with the latest Google App Engine SDK.
 </p>
 
 <p>
-The latest version was tested with Groovy 1.7.6 and Groovy 1.8-beta-3,
-and with the 1.4.0 version of the App Engine SDK.
+The latest version was tested with Groovy 1.8.0,
+and with the 1.4.3 version of the App Engine SDK.
 </p>
 
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 0.6.5</h2>
+
+<h3>Changes</h3>
+<ul>
+    <li>
+        Added support for XMPP's
+        <a href="/tutorial/app-engine-shortcuts#jabber-presence">presence</a> and
+        <a href="/tutorial/app-engine-shortcuts#jabber-subscription">subscription</a>
+    </li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.5.jar">gaelyk-0.6.5.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.5.zip">gaelyk-template-project-0.6.5.zip</a></li>
+</ul>
 
 <h2>Version 0.6.1</h2>
 

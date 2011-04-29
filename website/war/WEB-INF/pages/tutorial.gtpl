@@ -107,6 +107,8 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <ul>
             <li><a href="/tutorial/app-engine-shortcuts#jabber-sending">Sending messages</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#jabber-receiving">Receiving messages</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#jabber-presence">XMPP presence handling</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#jabber-subscription">XMPP subscription handling</a></li>
         </ul>
         <li><a href="/tutorial/app-engine-shortcuts#memcache">Enhancements to the Memcache service</a></li>
         <ul>

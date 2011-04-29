@@ -81,6 +81,12 @@ import javax.servlet.http.HttpServletRequest
 import javax.mail.Session
 import com.google.appengine.api.datastore.AsyncDatastoreService
 import java.util.concurrent.Future
+import com.google.appengine.api.xmpp.Subscription
+import com.google.appengine.api.xmpp.PresenceBuilder
+import com.google.appengine.api.xmpp.PresenceType
+import com.google.appengine.api.xmpp.SubscriptionBuilder
+import com.google.appengine.api.xmpp.SubscriptionType
+import com.google.appengine.api.xmpp.PresenceShow
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -804,6 +810,102 @@ class GaelykCategory {
      */
     static boolean isSuccessful(SendResponse status) {
         status.statusMap.every { it.value == SendResponse.Status.SUCCESS }
+    }
+
+    /**
+     * Override the GAE SDK XMPPService#parsePresence as it hard-codes the path for the presence handler,
+     * thus preventing from using Gaelyk's routing to point at our own handler.
+     *
+     * @param xmppService the XMPP service
+     * @param request the servlet request
+     * @return a Presence
+     */
+    static Presence parsePresence(XMPPService xmppService, HttpServletRequest request) {
+        // value of the presence, added by the routing logic as request parameter
+        String value = request.getParameter('value')
+
+        Map formData = parseXmppFormData(request)
+
+        new PresenceBuilder()
+            .withFromJid(new JID(formData.from))
+            .withToJid(new JID(formData.to))
+            .withPresenceType(PresenceType."${value.toUpperCase()}")
+            .withPresenceShow(value == 'available' ? PresenceShow.NONE : null)
+            .build()
+    }
+
+    /**
+     * Override the GAE SDK XMPPService#parseSubscription as it hard-codes the path for the subscription handler,
+     * thus preventing from using Gaelyk's routing to point at our own handler.
+     *
+     * @param xmppService the XMPP service
+     * @param request the servlet request
+     * @return a Subscription
+     */
+    static Subscription parseSubscription(XMPPService xmppService, HttpServletRequest request) {
+        // value of the subscription, added by the routing logic as request parameter
+        String value = request.getParameter('value')
+
+        Map formData = parseXmppFormData(request)
+
+        new SubscriptionBuilder()
+            .withFromJid(new JID(formData.from))
+            .withToJid(new JID(formData.to))
+            .withSubscriptionType(SubscriptionType."${value.toUpperCase()}")
+            .build()
+    }
+
+    /**
+     * Parse the form-data from the Jabber requests,
+     * as it contains useful information like presence and subscription details, etc.
+     *
+     * @param text the body of the request
+     * @return a map containing form-data key value pairs
+     */
+    static Map parseXmppFormData(HttpServletRequest request) {
+        /*
+            App Engine encodes the presence, subscription into the body of the post request, in form-data.
+            An example form-data follows:
+
+            --ItS1i0T-5328197
+            Content-Disposition: form-data; name="to"
+
+            you@you.com
+            --ItS1i0T-5328197
+            Content-Disposition: form-data; name="from"
+
+            me@me.com
+            --ItS1i0T-5328197
+            Content-Disposition: form-data; name="available"
+
+            true
+            --ItS1i0T-5328197
+            Content-Disposition: form-data; name="stanza"
+            Content-Type: text/xml
+
+            <presence from="me@me.com" to="you@you.com"><show/><status/></presence>
+            --ItS1i0T-5328197--
+         */
+
+        def body = request.reader.text
+
+        // split the request body lines
+        def lines = body.readLines()
+
+        // split the form-data lines around the boundaries
+        // remove a first surrounding empty lines and closing boundary
+        // trim the last \n characters
+        def parts = body.split(lines[0].trim())[1..-2]*.trim()
+
+        // reads the part keys and values into a Map
+        return parts*.readLines().collectEntries {
+            [
+                    // extract the name from the form-data part
+                    (it[0] =~ /.*name="(.*)".*/)[0][1],
+                    // the last line contains the data associated with the key
+                    it[-1]
+            ]
+        }
     }
 
     // ----------------------------------------------------------------

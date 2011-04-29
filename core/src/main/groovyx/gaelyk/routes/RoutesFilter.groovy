@@ -86,6 +86,11 @@ class RoutesFilter implements Filter {
                 // and inject the Google services
                 def binding = new Binding()
                 GaelykBindingEnhancer.bind(binding)
+
+                // adds two nouns for the XMPP support
+                binding.chat         = 'chat'
+                binding.presence     = 'presence'
+                binding.subscription = 'subscription'
                 
                 // evaluate the route definitions
                 RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(binding, config).parse(routesFile)

@@ -36,10 +36,20 @@ abstract class RoutesBaseScript extends Script {
                 null, null, 0, false, true)
     }
 
-    def jabber (Map m) {
-        routes << new Route("/_ah/xmpp/message/chat/", m.to,
-                HttpMethod.POST, RedirectionType.FORWARD,
-                null, null, 0, false, false, true)
+    def jabber (Map m, String type = "chat") {
+        if (type == "subscription") {
+            routes << new Route("/_ah/xmpp/subscription/@value/", m.to + "?value=@value",
+                    HttpMethod.POST, RedirectionType.FORWARD,
+                    null, null, 0, false, false, true)
+        } else if (type == "presence") {
+            routes << new Route("/_ah/xmpp/presence/@value/", m.to + "?value=@value",
+                    HttpMethod.POST, RedirectionType.FORWARD,
+                    null, null, 0, false, false, true)
+        } else {
+            routes << new Route("/_ah/xmpp/message/chat/", m.to,
+                    HttpMethod.POST, RedirectionType.FORWARD,
+                    null, null, 0, false, false, true)
+        }
     }
 
     /**

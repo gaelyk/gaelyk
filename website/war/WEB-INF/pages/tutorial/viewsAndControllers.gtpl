@@ -143,6 +143,9 @@ by injecting specific elements of the Google App Engine SDK:
         <tt>channel</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/channel/ChannelService.html">Channel service</a>
     </li>
     <li>
+        <tt>files</tt> : the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/FileService.html">File service</a>
+    </li>
+    <li>
         <tt>localMode</tt> : a boolean variable which is <code>true</code> when the application is running in local
         development mode, and <code>false</code> when deployed on Google's cloud.
     </li>

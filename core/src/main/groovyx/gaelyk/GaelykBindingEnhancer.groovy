@@ -31,6 +31,7 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory
 
 import groovyx.gaelyk.logging.LoggerAccessor
 import com.google.appengine.api.channel.ChannelServiceFactory
+import com.google.appengine.api.files.FileServiceFactory
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -99,5 +100,8 @@ class GaelykBindingEnhancer {
 
         // Channel service in SDK 1.4.0 for Comet-style applications
         binding.setVariable("channel", ChannelServiceFactory.channelService)
+
+        // Files service in SDK 1.4.3 for writing to the blobstore programmatically
+        binding.setVariable("files", FileServiceFactory.fileService)
     }
 }

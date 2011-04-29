@@ -21,6 +21,8 @@ import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestC
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.oauth.OAuthService
 import com.google.appengine.api.channel.ChannelService
+import com.google.appengine.tools.development.testing.LocalFileServiceTestConfig
+import com.google.appengine.api.files.FileService
 
 /**
  * Test the binding enhancer binds the GAE services in the binding.
@@ -39,7 +41,8 @@ class BindingEnhancerTest extends GroovyTestCase {
             new LocalUserServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
             new LocalXMPPServiceTestConfig(),
-            new LocalBlobstoreServiceTestConfig()
+            new LocalBlobstoreServiceTestConfig(),
+            new LocalFileServiceTestConfig()
     )
 
     private Binding binding
@@ -97,6 +100,7 @@ class BindingEnhancerTest extends GroovyTestCase {
         assert binding.blobstore    instanceof BlobstoreService
         assert binding.oauth        instanceof OAuthService
         assert binding.channel      instanceof ChannelService
+        assert binding.files        instanceof FileService
     }
 
     void testGaelykVersionPresent() {

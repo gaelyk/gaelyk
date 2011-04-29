@@ -104,6 +104,7 @@ class XmppTest extends GroovyTestCase {
             assert presence.fromJid.id == 'me@me.com'
             assert presence.toJid.id == 'you@you.com'
             assert presence.presenceType == PresenceType.AVAILABLE
+            assert presence.available == true
         }
     }
 

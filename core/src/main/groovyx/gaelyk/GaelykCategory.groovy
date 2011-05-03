@@ -1338,7 +1338,7 @@ class GaelykCategory {
      * @param closure the closure with the output stream as parameter
      * @return the original file, for chaining purpose
      */
-    static AppEngineFile withStream(AppEngineFile file , Map options = [:], Closure closure) {
+    static AppEngineFile withStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
 
@@ -1352,6 +1352,42 @@ class GaelykCategory {
         } else {
             writeChannel.close()
         }
+
+        return file
+    }
+
+    /**
+     * Method creating a reader for the AppEngineFile, reader textual content from it, and closes it when done.
+     *
+     * <pre><code>
+     *  def file = files.createNewBlobFile("text/plain", "hello.txt")
+     *
+     *  // with default options
+     *  file.withReader { reader ->
+     *      log.info reader.text
+     *  }
+     *
+     *  // with specific options:
+     *  file.withReader(encoding: "US-ASCII", locked: true) { reader ->
+     *      log.info reader.text
+     *  }
+     * </code></pre>
+     *
+     * @param file the AppEngineFile to read from
+     * @param options an optional map containing two possible keys:
+     *      encoding (a String, the encoding to be used for the reader -- UTF8 by default),
+     *      locked (a boolean, if you want to acquire a lock on the file -- false by default),
+     * @param closure the closure with the reader as parameter
+     * @return the original file, for chaining purpose
+     */
+    static AppEngineFile withReader(AppEngineFile file, Map options = [:], Closure closure) {
+        boolean locked = options.containsKey("locked") ? options.locked : true
+
+        def readChannel = FileServiceFactory.fileService.openReadChannel(file, locked)
+        def reader = new BufferedReader(Channels.newReader(readChannel, options.encoding ?: "UTF-8"))
+
+        reader.withReader closure
+        readChannel.close()
 
         return file
     }

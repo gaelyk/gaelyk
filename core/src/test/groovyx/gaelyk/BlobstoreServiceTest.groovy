@@ -222,6 +222,23 @@ class BlobstoreServiceTest extends GroovyTestCase {
             key.serve(response, 0..10)
             key.serve(response, 0..10 as ByteRange)
         }
+    }
+
+    void testReadingFromAFile() {
+        def files = FileServiceFactory.fileService
+
+        use(GaelykCategory) {
+            def file = files.createNewBlobFile("text/plain", "todo.txt")
+            file.withWriter { writer ->
+                writer << "Do the washing-up"
+            }
+
+            file.withReader { reader ->
+                assert reader.text == "Do the washing-up"
+            }
+
+            file.delete()
+        }
 
     }
 }

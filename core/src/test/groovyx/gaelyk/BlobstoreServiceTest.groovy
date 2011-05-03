@@ -8,7 +8,6 @@ import com.google.appengine.api.blobstore.ByteRange
 import com.google.appengine.api.files.FinalizationException
 import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig
 import com.google.appengine.api.images.Image.Format
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -175,7 +174,6 @@ class BlobstoreServiceTest extends GroovyTestCase {
             }
 
             def key = file.blobKey
-            println key
 
             assert key.image
 
@@ -205,7 +203,6 @@ class BlobstoreServiceTest extends GroovyTestCase {
             }
 
             def key = file.blobKey
-            println key.keyString
 
             def response = [
                     isCommitted: { -> false },

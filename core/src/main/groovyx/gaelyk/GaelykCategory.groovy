@@ -91,6 +91,7 @@ import com.google.appengine.api.files.AppEngineFile
 import com.google.appengine.api.files.FileService
 import com.google.appengine.api.files.FileServiceFactory
 import java.nio.channels.Channels
+import com.google.appengine.api.taskqueue.DeferredTask
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -641,6 +642,10 @@ class GaelykCategory {
                 if (value instanceof List) {
                     options = options.payload(*(value.collect { it.toString() }))
                 } else if (value instanceof String) {
+                    options = options.payload(value)
+                } else if (value instanceof Closure) {
+                    options = options.payload(value as DeferredTask)
+                } else if (value instanceof DeferredTask) {
                     options = options.payload(value)
                 } else {
                     options = options.payload(value.toString())

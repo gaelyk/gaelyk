@@ -53,7 +53,6 @@ class UrlFetchServiceEnhancementsTest extends GroovyTestCase {
 
             assert response.responseCode == 200
             assert response.text.contains('Gaelyk')
-            assert !response.finalUrl, "Shouldn't be null as no redirects should have occured"
             assert response.headers
         }
     }

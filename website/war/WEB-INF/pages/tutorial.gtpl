@@ -114,13 +114,14 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <ul>
             <li><a href="/tutorial/app-engine-shortcuts#memoize">Closure memoization</a></li>
         </ul>
-        <li><a href="/tutorial/app-engine-shortcuts#blobstore">Enhancements related to the BlobStore</a></li>
+        <li><a href="/tutorial/app-engine-shortcuts#blobstore">Enhancements related to the Blobstore and File services</a></li>
         <ul>
             <li><a href="/tutorial/app-engine-shortcuts#blob-info">Getting blob information</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#serving-blob">Serving blobs</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#reading-blob">Reading the content of a Blob</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#delete-blob">Deleting a blob</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#blobstore-example">Example Blobstore service usage</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#file-service">File service</a></li>
         </ul>
         <li><a href="/tutorial/app-engine-shortcuts#namespace">Namespace support</a></li>
         <li><a href="/tutorial/app-engine-shortcuts#images">Images service enhancements</a></li>

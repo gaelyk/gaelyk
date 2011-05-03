@@ -791,7 +791,7 @@ in a complex algorithm:
 </blockquote>
 
 <a name="blobstore"></a>
-<h2>Enhancements related to the BlobStore</h2>
+<h2>Enhancements related to the Blobstore and File services</h2>
 
 <p>
 <b>Gaelyk</b> provides several enhancements around the usage of the blobstore service.
@@ -1021,6 +1021,107 @@ showing the blob details, and outputing the content of the blob (a text file in 
     Google App Engine will store the blob and forward the blob information to your <code>uploadBlob.groovy</code> groovlet
     that will then redirect to the success page (or failure page in case something goes wrong).
 </p>
+
+<a name="file-service"></a>
+<h3>File service</h3>
+
+<p>
+The File service API provides a convenient solution for accessing the blobstore,
+and particularly for programmatically adding blobs
+without having to go through the blobstore form-based upload facilities.
+<b>Gaelyk</b> adds a <code>files</code> variable in the binding of Groovlets and templates,
+which corresponds to the <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/FileService.html">FileService</a> instance.
+</p>
+
+<h4>Writing text content</h4>
+
+<p>
+Inspired by Groovy's own <code>withWriter{}</code> method, a new method is available on
+<a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/AppEngineFile.html">AppEngineFile</a>
+that can be used as follows, to write text content through a writer:
+</p>
+
+<pre class="brush:groovy">
+    // let's first create a new blob file through the regular FileService method
+    def file = files.createNewBlobFile("text/plain", "hello.txt")
+
+    file.withWriter { writer ->
+        writer << "some content"
+    }
+</pre>
+
+<p>
+You can also specify three options to the <code>withWriter{}</code> method, in the form of named arguments:
+</p>
+
+<ul>
+    <li><b>encoding</b>: a string ("UTF-8" by default) defining the text encoding</li>
+    <li><b>locked</b>: a boolean (true by default) telling if we want an exclusive access to the file</li>
+    <li><b>finalize</b>: a boolean (true by default) to indicate if we want to finalize the file to prevent further appending</li>
+</ul>
+
+<pre class="brush:groovy">
+    file.withWriter(encoding: "US-ASCII", locked: false, finalize: false) { writer ->
+        writer << "some content"
+    }
+</pre>
+
+<h4>Writing binary content</h4>
+
+<p>In a similar fashion, you can write to an output stream your binary content:</p>
+
+<pre class="brush:groovy">
+    // let's first create a new blob file through the regular FileService method
+    def file = files.createNewBlobFile("text/plain", "hello.txt")
+
+    file.withStream { stream ->
+        stream << "Hello World".bytes
+    }
+</pre>
+
+<p>
+You can also specify two options to the <code>withStream{}</code> method, in the form of named arguments:
+</p>
+
+<ul>
+    <li><b>locked</b>: a boolean (true by default) telling if we want an exclusive access to the file</li>
+    <li><b>finalize</b>: a boolean (true by default) to indicate if we want to finalize the file to prevent further appending</li>
+</ul>
+
+<pre class="brush:groovy">
+    file.withStream(locked: false, finalize: false) { writer ->
+        writer << "Hello World".bytes
+    }
+</pre>
+
+<h4>Miscelanous improvements</h4>
+
+<p>
+If you store a file path in the form of a string (for instance for storing its reference in the datastore),
+you need to get back an <code>AppEngineFile</code> from its string representation:
+</p>
+
+<pre class="brush:groovy">
+    def path = someEntity.filePath
+    def file = files.fromPath(path)
+</pre>
+
+<p>
+You can retrieve the blob key associated with your file (for example when you want to access an <code>Image</code> instance:
+</p>
+
+<pre class="brush:groovy">
+    def key = file.blobKey
+    def image = key.image
+</pre>
+
+<p>
+And if you want to delete a file without going through the blobstore service, you can do:
+</p>
+
+<pre class="brush:groovy">
+    file.delete()
+</pre>
 
 <a name="namespace"></a>
 <h2>Namespace support</h2>

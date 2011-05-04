@@ -211,8 +211,24 @@ We instruct App Engine to not serve these files as mere resource files, like ima
 </pre>
 
 <p>
-In <code>web.xml</code>, we define the two Gaelyk servlets for Groovlets and templates,
+In <code>web.xml</code>, we first define a servlet context listener, to initialize the <a href="/tutorial/plugins">plugin system</a>.
+We define the two Gaelyk servlets for Groovlets and templates,
 as well as their respective mappings to URLs ending with <code>.groovy</code> and <code>.gtpl</code>.
+We setup a servlet filter for the <a href="/tutorial/url-routing">URL routing</a> to have nice and friendly URLs.
 We then define a welcome file for <code>index.gtpl</code>, so that URLs looking like a directory search for and template with that default name.
 </p>
 
+<blockquote>
+<b>Note</b>: You can update the filter definition as shown below,
+when you attempt to forward to a route from another Groovlet to keep your request attributes.
+Without the dispatcher directives below the container is issuing a 302 redirect
+which will cause you to lose all of your request attributes.
+<pre class="brush:xml">
+    &lt;filter&gt;
+        &lt;filter-name&gt;RoutesFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;groovyx.gaelyk.routes.RoutesFilter&lt;/filter-class&gt;
+        &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;
+        &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;
+    &lt;/filter&gt;
+</pre>
+</blockquote>

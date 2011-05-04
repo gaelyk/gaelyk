@@ -70,7 +70,7 @@ import com.google.appengine.api.urlfetch.URLFetchService
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory
 import com.google.appengine.api.urlfetch.HTTPRequest
 import com.google.appengine.api.urlfetch.HTTPMethod
-import com.google.appengine.api.urlfetch.FetchOptions
+import com.google.appengine.api.urlfetch.FetchOptions as UrlFetchOptions
 import com.google.appengine.api.urlfetch.HTTPHeader
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy
 import com.google.appengine.api.channel.ChannelService
@@ -92,6 +92,10 @@ import com.google.appengine.api.files.FileService
 import com.google.appengine.api.files.FileServiceFactory
 import java.nio.channels.Channels
 import com.google.appengine.api.taskqueue.DeferredTask
+import com.google.appengine.api.datastore.Query
+import com.google.appengine.api.datastore.PreparedQuery
+import com.google.appengine.api.datastore.KeyFactory
+import com.google.appengine.api.datastore.FetchOptions
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -388,6 +392,181 @@ class GaelykCategory {
      */
     static AsyncDatastoreService getAsync(DatastoreService service) {
         DatastoreServiceFactory.asyncDatastoreService
+    }
+
+    // ------------------------------------
+    // Querying datastore metadata
+    // (contribution from Benjamin Muschko)
+    // ------------------------------------
+
+    static final DEFAULT_FETCH_OPTIONS = FetchOptions.Builder.withDefaults()
+
+    /**
+     * Gets datastore namespaces
+     *
+     * @param service Datastore service
+     * @param options Fetch options
+     * @return Entities
+     */
+    static List<Entity> getNamespaces(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS) {
+        queryMetaData(service, options, Query.NAMESPACE_METADATA_KIND)
+    }
+
+    /**
+     * Gets datastore namespaces. The closure lets you apply additional filters to your query.
+     *
+     * @param service Datastore service
+     * @param options Fetch options
+     * @param closure Closure
+     * @return Entities
+     */
+    static List<Entity> getNamespaces(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS, Closure closure) {
+        queryMetaData(service, options, Query.NAMESPACE_METADATA_KIND, closure)
+    }
+
+    /**
+     * Gets datastore kinds.
+     *
+     * @param service Datastore service
+     * @param options Fetch options
+     * @return Entities
+     */
+    static List<Entity> getKinds(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS) {
+        queryMetaData(service, options, Query.KIND_METADATA_KIND)
+    }
+
+    /**
+     * Gets datastore kinds. The closure lets you apply additional filters to your query.
+     *
+     * @param service Datastore service
+     * @param options Fetch options
+     * @param closure Closure
+     * @return Entities
+     */
+    static List<Entity> getKinds(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS, Closure closure) {
+        queryMetaData(service, options, Query.KIND_METADATA_KIND, closure)
+    }
+
+    /**
+     * Gets all datastore kinds and their properties.
+     *
+     * @param service Datastore service
+     * @param options Fetch options
+     * @return Entities
+     */
+    static List<Entity> getProperties(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS) {
+        queryMetaData(service, options, Query.PROPERTY_METADATA_KIND)
+    }
+
+    /**
+     * Gets all datastore kinds and their properties. The closure lets you apply additional filters to your query.
+     *
+     * @param service Datastore service
+     * @param kind Kind
+     * @param options Fetch options
+     * @param closure Closure
+     * @return Entities
+     */
+    static List<Entity> getProperties(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS, Closure closure) {
+        queryMetaData(service, options, Query.PROPERTY_METADATA_KIND, closure)
+    }
+
+    /**
+     * Gets datastore kind properties.
+     *
+     * @param service Datastore service
+     * @param kind Kind
+     * @param options Fetch options
+     * @return Entities
+     */
+    static List<Entity> getProperties(DatastoreService service, String kind, FetchOptions options = DEFAULT_FETCH_OPTIONS) {
+        Query query = new Query(Query.PROPERTY_METADATA_KIND)
+        query.setAncestor(createKindKey(kind))
+        PreparedQuery preparedQuery = service.prepare(query)
+        preparedQuery.asList(options)
+    }
+
+    /**
+     * Gets datastore kind properties. The closure lets you apply additional filters to your query.
+     *
+     * @param service Datastore service
+     * @param kind Kind
+     * @param options Fetch options
+     * @param closure Closure
+     * @return Entities
+     */
+    static List<Entity> getProperties(DatastoreService service, String kind, FetchOptions options = DEFAULT_FETCH_OPTIONS, Closure closure) {
+        Query query = new Query(Query.PROPERTY_METADATA_KIND)
+        query.setAncestor(createKindKey(kind))
+        closure(query)
+        PreparedQuery preparedQuery = service.prepare(query)
+        preparedQuery.asList(options)
+    }
+
+    /**
+     * Gets datastore kind property.
+     *
+     * @param service Datastore service
+     * @param kind Kind
+     * @param property Property
+     * @return Entity
+     */
+    static Entity getProperty(DatastoreService service, String kind, String property) {
+        Query query = new Query(Query.PROPERTY_METADATA_KIND)
+        query.setAncestor(createPropertyKey(kind, property))
+        PreparedQuery preparedQuery = service.prepare(query)
+        preparedQuery.asSingleEntity()
+    }
+
+    /**
+     * Queries for meta data.
+     *
+     * @param service Datastore service
+     * @param options Fetch options
+     * @param metaDataQuery Query
+     * @return Entities
+     */
+    private static List<Entity> queryMetaData(DatastoreService service, FetchOptions options, String metaDataQuery) {
+        Query query = new Query(metaDataQuery)
+        PreparedQuery preparedQuery = service.prepare(query)
+        preparedQuery.asList(options)
+    }
+
+    /**
+     * Queries for meta data.
+     *
+     * @param service Datastore service
+     * @param options Fetch options
+     * @param metaDataQuery Query
+     * @param closure Closure
+     * @return Entities
+     */
+    private static List<Entity> queryMetaData(DatastoreService service, FetchOptions options, String metaDataQuery, Closure closure) {
+        Query query = new Query(metaDataQuery)
+        closure(query)
+        PreparedQuery preparedQuery = service.prepare(query)
+        preparedQuery.asList(options)
+    }
+
+    /**
+     * Creates kind key
+     *
+     * @param kind Kind
+     * @return Key
+     */
+    private static Key createKindKey(String kind) {
+        KeyFactory.createKey(Query.KIND_METADATA_KIND, kind)
+    }
+
+    /**
+     * Creates property key.
+     *
+     * @param kind Kind
+     * @param property Property
+     * @return Key
+     */
+    private static Key createPropertyKey(String kind, String property) {
+        KeyFactory.createKey(createKindKey(kind), Query.PROPERTY_METADATA_KIND, property)
     }
 
     // ------------------------------
@@ -1758,7 +1937,7 @@ class GaelykCategory {
 
     private static fetch(URL url, HTTPMethod method, Map<String, String> options) {
         URLFetchService urlFetch = URLFetchServiceFactory.URLFetchService
-        def fetchOptions = FetchOptions.Builder.withDefaults()
+        def fetchOptions = UrlFetchOptions.Builder.withDefaults()
 
         // specify the fetch options
         options.each { String key, value ->

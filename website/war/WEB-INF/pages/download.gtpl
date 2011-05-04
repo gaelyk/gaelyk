@@ -44,6 +44,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Added variable <code>files</code> for easy access to the File service in your Groovlet and templates</li>
     <li>Added <a href="/tutorial/app-engine-shortcuts#file-service">support for the File service</a></li>
     <li>Thanks to the new file service, the Gaelyk test suites now properly cover the blobstore related enhancements</li>
+    <li>Added <a href="/tutorial/app-engine-shortcuts#metadata">datastore metadata querying</a> support</li>
 </ul>
 
 <h3>Artifacts</h3>

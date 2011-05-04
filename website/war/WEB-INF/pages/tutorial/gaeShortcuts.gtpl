@@ -258,6 +258,72 @@ You can retrieve the asynchronous service with the <code>datastore.async</code> 
     <li><code>key.asyncDelete()</code> returns a <code>Future&lt;Void&gt;</code></li>
 </ul>
 
+<a name="metadata"></a>
+<h3>Datastore metadata querying</h3>
+
+<p>
+The datastore contains some special entities representing useful
+<a href="http://code.google.com/appengine/docs/java/datastore/metadataqueries.html">metadata</a>,
+like the available kinds, namespaces and properties.
+<b>Gaelyk</b> provides shortcuts to interrogate the datastore for such entity metadata.
+</p>
+
+<h4>Namespace querying</h4>
+
+<pre class="brush:groovy">
+    // retrieve the list of namespaces (as a List&lt;Entity&gt;)
+    def namespaces = datastore.namespaces
+
+    // access the string names of the namespaces
+    def namespaceNames = namespaces.key.name
+
+    // if you want only the first two
+    datastore.getNamespaces(FetchOptions.Builder.withLimit(2))
+
+    // if you want to apply further filtering on the underlying datastore query
+    datastore.getNamespaces(FetchOptions.Builder.withLimit(2)) { Query query ->
+        // apply further filtering on the query parameter
+    }
+</pre>
+
+<h4>Kind querying</h4>
+
+<pre class="brush:groovy">
+    // retrieve the list of entity kinds (as a List&lt;Entity&gt;)
+    def kinds = datastore.kinds
+
+    // get only the string names
+    def kindNames = kinds.key.name
+
+    // get the first kind
+    datastore.getKinds(FetchOptions.Builder.withLimit(10))
+
+    // futher query filtering:
+    datastore.getKinds(FetchOptions.Builder.withLimit(10)) { Query query ->
+        // apply further filtering on the query parameter
+    }
+</pre>
+
+<h4>Properties querying</h4>
+
+<pre class="brush:groovy">
+    // retrieve the list of entity properties (as a List&lt;Entity&gt;)
+    def props = datastore.properties
+
+    // as for namespaces and kinds, you can add further filtering
+    datastore.getProperties(FetchOptions.Builder.withLimit(10)) { Query query ->
+        // apply further filtering on the query parameter
+    }
+
+    // if you want to retrive the list of properties for a given entity kind,
+    // for an entity Person, with two properties name and age:
+    def entityKindProps = datastore.getProperties('Person')
+    // lists of entity names
+    assert entityKindProps.key.parent.name == ['Person', 'Person']
+    // list of entity properties
+    assert entityKindProps.key.name == ['name', 'age']
+</pre>
+
 <a name="task-queue"></a>
 <h2>The task queue API shortcuts</h2>
 

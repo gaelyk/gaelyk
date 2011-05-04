@@ -1074,13 +1074,13 @@ You can also specify three options to the <code>withWriter{}</code> method, in t
     // let's first create a new blob file through the regular FileService method
     def file = files.createNewBlobFile("text/plain", "hello.txt")
 
-    file.withStream { stream ->
+    file.withOutputStream { stream ->
         stream << "Hello World".bytes
     }
 </pre>
 
 <p>
-You can also specify two options to the <code>withStream{}</code> method, in the form of named arguments:
+You can also specify two options to the <code>withOutputStream{}</code> method, in the form of named arguments:
 </p>
 
 <ul>
@@ -1089,8 +1089,63 @@ You can also specify two options to the <code>withStream{}</code> method, in the
 </ul>
 
 <pre class="brush:groovy">
-    file.withStream(locked: false, finalize: false) { writer ->
+    file.withOutputStream(locked: false, finalize: false) { writer ->
         writer << "Hello World".bytes
+    }
+</pre>
+
+<blockquote>
+<b>Note: </b> To finalize a file in the blobstore, App Engine mandates the file needs to be locked.
+That's why by default <code>locked</code> and <code>finalize</code> are set to true by default.
+When you want to later be able to append again to the file, make sure to set <code>finalize</code> to false.
+And if you want to avoid others from concurrently writing to your file, it's better to set <code>locked</code> to false.
+</blockquote>
+
+<h4>Reading binary content</h4>
+
+<p>
+<b>Gaelyk</b> already provides reading capabilities from the blobstore support, as we've already seen,
+but the File service also supports reading from <code>AppEngineFile</code>s.
+To read from an <code>AppEngineFile</code> instance, you can use the <code>withInputStream{}</code> method,
+which takes an optional map of options, and a closure whose argument is a <code>BufferedInputStream</code>:
+</p>
+
+<pre class="brush:groovy">
+    file.withInputStream { BufferedInputStream stream ->
+        // read from the stream
+    }
+</pre>
+
+<p>
+You can also specify an option for locking the file (the file is locked by default):
+</p>
+
+<pre class="brush:groovy">
+    file.withInputStream(locked: false) { BufferedInputStream stream ->
+        // read from the stream
+    }
+</pre>
+
+<h4>Reading text content</h4>
+
+<p>
+Similarily to reading from an input stream, you can also read from a <code>BufferedReader</code>,
+with the <code>withReader{}</code> method:
+</p>
+
+<pre class="brush:groovy">
+    file.withReader { BufferedReader reader ->
+        log.info reader.text
+    }
+</pre>
+
+<p>
+You can also specify an option for locking the file (the file is locked by default):
+</p>
+
+<pre class="brush:groovy">
+    file.withReader(locked: false) { BufferedReader reader ->
+        log.info reader.text
     }
 </pre>
 

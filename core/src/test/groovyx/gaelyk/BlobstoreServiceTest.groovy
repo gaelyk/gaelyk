@@ -110,11 +110,11 @@ class BlobstoreServiceTest extends GroovyTestCase {
         use(GaelykCategory) {
             def file = files.createNewBlobFile("application/octet-stream", "dummy.bin")
 
-            file.withStream(locked: true, finalize: false) { stream ->
+            file.withOutputStream(locked: true, finalize: false) { stream ->
                 stream << "abcdefghij".bytes
             }
 
-            file.withStream { stream ->
+            file.withOutputStream { stream ->
                 stream << "0123456789".bytes
             }
 
@@ -169,7 +169,7 @@ class BlobstoreServiceTest extends GroovyTestCase {
             def img = new File('../graphics/gaelyk-small-favicon.png')
             byte[] bytes = img.bytes
 
-            file.withStream { stream ->
+            file.withOutputStream { stream ->
                 stream << bytes
             }
 
@@ -198,7 +198,7 @@ class BlobstoreServiceTest extends GroovyTestCase {
             def img = new File('../graphics/gaelyk-small-favicon.png')
             byte[] bytes = img.bytes
 
-            file.withStream { stream ->
+            file.withOutputStream { stream ->
                 stream << bytes
             }
 
@@ -239,6 +239,22 @@ class BlobstoreServiceTest extends GroovyTestCase {
 
             file.delete()
         }
+    }
 
+    void testReadingFromAFileWithAnInputStream() {
+        def files = FileServiceFactory.fileService
+
+        use(GaelykCategory) {
+            def file = files.createNewBlobFile("text/plain", "todo.txt")
+            file.withOutputStream { OutputStream stream ->
+                stream << "Do the washing-up".bytes
+            }
+
+            file.withInputStream { BufferedInputStream stream ->
+                assert stream.newReader().text == "Do the washing-up"
+            }
+
+            file.delete()
+        }
     }
 }

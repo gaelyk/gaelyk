@@ -1321,12 +1321,12 @@ class GaelykCategory {
      *  def file = files.createNewBlobFile("text/plain", "hello.txt")
      *
      *  // with default options
-     *  file.withStream { stream ->
+     *  file.withOutputStream { stream ->
      *      stream << "some content".bytes
      *  }
      *
      *  // with specific options:
-     *  file.withStream(locked: true, finalize: false) { writer ->
+     *  file.withOutputStream(locked: true, finalize: false) { writer ->
      *      stream << "some content".bytes
      *  }
      * </code></pre>
@@ -1338,7 +1338,7 @@ class GaelykCategory {
      * @param closure the closure with the output stream as parameter
      * @return the original file, for chaining purpose
      */
-    static AppEngineFile withStream(AppEngineFile file, Map options = [:], Closure closure) {
+    static AppEngineFile withOutputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
 
@@ -1357,10 +1357,10 @@ class GaelykCategory {
     }
 
     /**
-     * Method creating a reader for the AppEngineFile, reader textual content from it, and closes it when done.
+     * Method creating a reader for the AppEngineFile, read textual content from it, and closes it when done.
      *
      * <pre><code>
-     *  def file = files.createNewBlobFile("text/plain", "hello.txt")
+     *  def file = files.fromPath(someStringPath)
      *
      *  // with default options
      *  file.withReader { reader ->
@@ -1387,6 +1387,41 @@ class GaelykCategory {
         def reader = new BufferedReader(Channels.newReader(readChannel, options.encoding ?: "UTF-8"))
 
         reader.withReader closure
+        readChannel.close()
+
+        return file
+    }
+
+    /**
+     * Method creating a buffered input stream for the AppEngineFile, read binary content from it, and closes it when done.
+     *
+     * <pre><code>
+     *  def file = files.fromPath(someStringPath)
+     *
+     *  // with default options
+     *  file.withInputStream { stream ->
+     *      // read from the buffered input stream
+     *  }
+     *
+     *  // with specific options:
+     *  file.withInputStream(locked: true) { stream ->
+     *      // read from the buffered input stream
+     *  }
+     * </code></pre>
+     *
+     * @param file the AppEngineFile to read from
+     * @param options an optional map containing one possible key:
+     *      locked (a boolean, if you want to acquire a lock on the file -- false by default),
+     * @param closure the closure with the input stream as parameter
+     * @return the original file, for chaining purpose
+     */
+    static AppEngineFile withInputStream(AppEngineFile file, Map options = [:], Closure closure) {
+        boolean locked = options.containsKey("locked") ? options.locked : true
+
+        def readChannel = FileServiceFactory.fileService.openReadChannel(file, locked)
+        def stream = new BufferedInputStream(Channels.newInputStream(readChannel))
+
+        stream.withStream closure
         readChannel.close()
 
         return file

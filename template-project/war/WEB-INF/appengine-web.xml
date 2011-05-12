@@ -3,6 +3,9 @@
     
     <version>1</version>
 
+    <!-- Enable concurrent requests by default to serve requests in parallel -->
+    <threadsafe>true</threadsafe>
+
     <!-- If all your templates and groovlets are encoding in UTF-8 -->
     <!-- Please specify the settings below, otherwise weird characters may appear in your templates -->
     <system-properties>

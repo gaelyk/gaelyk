@@ -9,12 +9,12 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.5.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.5.zip">Template project v0.6.5</a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.7.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.7.zip">Template project v0.7</a></td>
         </tr>
         <tr>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.5.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.5.jar">Gaelyk JAR v0.6.5</a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.7.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.7.jar">Gaelyk JAR v0.7</a></td>
         </tr>
     </table>
 </div>
@@ -32,7 +32,7 @@ and with the 1.4.3 version of the App Engine SDK.
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
 
-<h2>Version 0.6.5</h2>
+<h2>Version 0.7</h2>
 
 <h3>Changes</h3>
 <ul>
@@ -51,8 +51,8 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Artifacts</h3>
 <ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.5.jar">gaelyk-0.6.5.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.5.zip">gaelyk-template-project-0.6.5.zip</a></li>
+    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.7.jar">gaelyk-0.7.jar</a></li>
+    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.7.zip">gaelyk-template-project-0.7.zip</a></li>
 </ul>
 
 <h2>Version 0.6.1</h2>

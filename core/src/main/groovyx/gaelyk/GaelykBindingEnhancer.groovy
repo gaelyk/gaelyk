@@ -83,7 +83,7 @@ class GaelykBindingEnhancer {
                         version: SystemProperty.version.get(),
                 ],
                 gaelyk: [
-                        version: '0.6.1'
+                        version: '0.7'
                 ],
                 id: SystemProperty.applicationId.get(),
                 version: SystemProperty.applicationVersion.get()

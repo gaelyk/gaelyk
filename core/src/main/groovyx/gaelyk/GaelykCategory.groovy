@@ -804,7 +804,7 @@ class GaelykCategory {
             } else if (key == 'method') {
                 if (value instanceof TaskOptions.Method) {
                     options = options.method(value)
-                } else if(value in ['GET', 'POST', 'PUT', 'DELETE', 'HEAD']) {
+                } else if(value in ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'PULL']) {
                     options = options.method(TaskOptions.Method.valueOf(value))
                 } else {
                     throw new RuntimeException("Not a valid method: $value")

@@ -36,6 +36,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
+    <li>Groovy upgraded to 1.8.0 and GAE SDK to 1.5.0</li>
     <li>
         Added support for XMPP's
         <a href="/tutorial/app-engine-shortcuts#jabber-presence">presence</a> and

@@ -32,6 +32,8 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory
 import groovyx.gaelyk.logging.LoggerAccessor
 import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.files.FileServiceFactory
+import com.google.appengine.api.backends.BackendServiceFactory
+import com.google.appengine.api.LifecycleManager
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -103,5 +105,9 @@ class GaelykBindingEnhancer {
 
         // Files service in SDK 1.4.3 for writing to the blobstore programmatically
         binding.setVariable("files", FileServiceFactory.fileService)
+
+        // Backend service and Lifecycle manager in SDK 1.5.0
+        binding.setVariable("backends", BackendServiceFactory.backendService)
+        binding.setVariable("lifecycle", LifecycleManager.instance)
     }
 }

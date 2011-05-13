@@ -96,6 +96,8 @@ import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.PreparedQuery
 import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.api.datastore.FetchOptions
+import com.google.appengine.api.LifecycleManager
+import com.google.appengine.api.LifecycleManager.ShutdownHook
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -2080,5 +2082,22 @@ class GaelykCategory {
      */
     static void send(ChannelService channel, String clientId, String message) {
         channel.sendMessage(new ChannelMessage(clientId, message))
+    }
+
+    // ----------------------------------------------------------------
+    // Backend service support
+    // ----------------------------------------------------------------
+
+    /**
+     * Shortcut to use closures as shutdown hooks.
+     * <pre><code>
+     *  lifecycle.shutdownHook = { ...shutdown logic... }
+     * </code></pre>
+     *
+     * @param manager the lifecycle manager
+     * @param c the closure as shutdown hook
+     */
+    static void setShutdownHook(LifecycleManager manager, Closure c) {
+        manager.setShutdownHook(c as ShutdownHook)
     }
 }

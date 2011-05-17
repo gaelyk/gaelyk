@@ -46,7 +46,15 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Added <a href="/tutorial/app-engine-shortcuts#file-service">support for the File service</a></li>
     <li>Thanks to the new file service, the Gaelyk test suites now properly cover the blobstore related enhancements</li>
     <li>Added <a href="/tutorial/app-engine-shortcuts#metadata">datastore metadata querying</a> support</li>
-    <li>Added minimal <a href="/tutorial/app-engine-shortcuts#backend">backend service support</a></li>
+    <li>
+        Added minimal <a href="/tutorial/app-engine-shortcuts#backend">backend service support</a>
+        and injected the <code>lifecycle</code> manager for the backend instance lifecycle handling
+    </li>
+    <li>
+        Use the concurrent request flag in <code>appengine-web.xml</code> to allow concurrent requests
+        to hit your application without needing to have additional instances launched automatically
+        by Google App Engine
+    </li>
 </ul>
 
 <h3>Artifacts</h3>

@@ -110,12 +110,24 @@ The sole cost of the routing system is the regular expression mapping to match r
 <a name="email-and-jabber"></a>
 <h2>Incoming email and jabber messages</h2>
 
+<p>
 Two special routing rules exist for defining handlers dedicated to receiving incoming email messages and jabber messages.
+</p>
 
 <pre class="brush:groovy">
     email  to: "/receiveEmail.groovy"
     jabber to: "/receiveJabber.groovy"
 </pre>
+
+<p>
+    jabber chat, to: "/receiveJabber.groovy" // synonym of jabber to: "..."
+
+    // for Jabber subscriptions
+    jabber subscription, to: "/subs.groovy"
+
+    // for Jabber user presence notifications
+    jabber presence, to: "/presence.groovy"
+</p>
 
 <blockquote>
 <b>Note: </b> Those two notations are actually equivalent to:

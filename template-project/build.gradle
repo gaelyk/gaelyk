@@ -11,8 +11,8 @@ sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
 buildscript {
-	repositories {
-		add(new URLResolver()) {
+    repositories {
+        add(new URLResolver()) {
             name = 'GAE plugin on GitHub'
             addArtifactPattern 'http://cloud.github.com/downloads/bmuschko/gradle-gae-plugin/[module]-[revision].[ext]'
         }
@@ -20,11 +20,11 @@ buildscript {
             name = 'Gaelyk plugin on GitHub'
             addArtifactPattern 'http://cloud.github.com/downloads/bmuschko/gradle-gaelyk-plugin/[module]-[revision].[ext]'
         }
-		mavenCentral()
+        mavenCentral()
     }
 
-	dependencies {
-		classpath 'com.google.appengine:appengine-tools-sdk:1.5.0'
+    dependencies {
+        classpath 'com.google.appengine:appengine-tools-sdk:1.5.0'
         classpath ':gradle-gae-plugin:0.4'
         classpath ':gradle-gaelyk-plugin:0.1'
     }

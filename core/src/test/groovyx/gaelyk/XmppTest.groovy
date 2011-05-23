@@ -71,30 +71,77 @@ class XmppTest extends GroovyTestCase {
         }
     }
 
-    void testPresenceParsing() {
+	void testPresenceParsing() {
+		def xmpp = XMPPServiceFactory.XMPPService
+
+		use (GaelykCategory) {
+			def request = [getReader: { ->
+				new BufferedReader(new StringReader('''\
+            --ItS1i0T-5328197
+            Content-Disposition: form-data; name="to"
+
+            you@you.com
+            --ItS1i0T-5328197
+            Content-Disposition: form-data; name="from"
+
+            me@me.com
+            --ItS1i0T-5328197
+            Content-Disposition: form-data; name="available"
+
+            true
+            --ItS1i0T-5328197
+            Content-Disposition: form-data; name="stanza"
+            Content-Type: text/xml
+
+            <presence from="me@me.com" to="you@you.com"><show/><status/></presence>
+            --ItS1i0T-5328197--'''.stripIndent()
+				))},
+				getParameter: { 'available' }
+			] as HttpServletRequest
+
+			def presence = xmpp.parsePresence(request)
+
+			assert presence.fromJid.id == 'me@me.com'
+			assert presence.toJid.id == 'you@you.com'
+			assert presence.presenceType == PresenceType.AVAILABLE
+			assert presence.available == true
+		}
+	}
+	
+    void testPresenceParsingInProduction() {
         def xmpp = XMPPServiceFactory.XMPPService
 
         use (GaelykCategory) {
             def request = [getReader: { ->
                 new BufferedReader(new StringReader('''\
-                    --ItS1i0T-5328197
-                    Content-Disposition: form-data; name="to"
-
-                    you@you.com
-                    --ItS1i0T-5328197
-                    Content-Disposition: form-data; name="from"
-
-                    me@me.com
-                    --ItS1i0T-5328197
-                    Content-Disposition: form-data; name="available"
-
-                    true
-                    --ItS1i0T-5328197
-                    Content-Disposition: form-data; name="stanza"
-                    Content-Type: text/xml
-
-                    <presence from="me@me.com" to="you@you.com"><show/><status/></presence>
-                    --ItS1i0T-5328197--'''.stripIndent()
+                     ------=_Part_85738709_708711.1306093405673 
+Content-Type: text/plain; charset="UTF-8" 
+Content-Disposition: form-data; name="from" 
+ 
+me@me.com 
+------=_Part_85738709_708711.1306093405673 
+Content-Type: text/plain; charset="UTF-8" 
+Content-Disposition: form-data; name="to" 
+ 
+you@you.com 
+------=_Part_85738709_708711.1306093405673 
+Content-Type: text/plain; charset="UTF-8" 
+Content-Disposition: form-data; name="status" 
+ 
+status message
+------=_Part_85738709_708711.1306093405673 
+Content-Type: text/xml; charset="UTF-8" 
+Content-Disposition: form-data; name="stanza" 
+ 
+<cli:presence from="me@me.com" to="you@you.com" xmlns:cli="jabber:client">
+<cli:priority>24</cli:priority>
+<caps:c node="http://mail.google.com/xmpp/client/caps" ver="1.1" ext="pmuc-v1 sms-v1 camera-v1 video-v1 voice-v1" xmlns:caps="http://jabber.org/protocol/caps"/>
+<cli:status>status message</cli:status>
+<x xmlns="vcard-temp:x:update">
+<photo>e6d327cf4e5b2asdf5aebfc9ade38bd2ff6sdf</photo>
+</x>
+</cli:presence> 
+------=_Part_85738709_708711.1306093405673--'''.stripIndent()
                 ))},
                 getParameter: { 'available' }
             ] as HttpServletRequest
@@ -140,4 +187,39 @@ class XmppTest extends GroovyTestCase {
         }
 
     }
+	
+	void testSubscriptionParsingInProduction() {
+		def xmpp = XMPPServiceFactory.XMPPService
+
+		use (GaelykCategory) {
+			def request = [getReader: { ->
+				new BufferedReader(new StringReader('''\
+                     ------=_Part_85738709_708711.1306093405673 
+					Content-Type: text/plain; charset="UTF-8" 
+					Content-Disposition: form-data; name="from" 
+					 
+					me@me.com 
+					------=_Part_85738709_708711.1306093405673 
+					Content-Type: text/plain; charset="UTF-8" 
+					Content-Disposition: form-data; name="to" 
+					 
+					you@you.com 
+					------=_Part_85738709_708711.1306093405673 
+					Content-Type: text/xml; charset="UTF-8" 
+					Content-Disposition: form-data; name="stanza" 
+
+					<presence from="me@me.com" to="you@you.com" type="subscribed"/>
+					------=_Part_85738709_708711.1306093405673--'''.stripIndent()
+				))},
+				getParameter: { 'subscribed' }
+			] as HttpServletRequest
+
+			def subscription = xmpp.parseSubscription(request)
+
+			assert subscription.fromJid.id == 'me@me.com'
+			assert subscription.toJid.id == 'you@you.com'
+			assert subscription.subscriptionType == SubscriptionType.SUBSCRIBED
+		}
+
+	}
 }

@@ -224,11 +224,11 @@ when you attempt to forward to a route from another Groovlet to keep your reques
 Without the dispatcher directives below the container is issuing a 302 redirect
 which will cause you to lose all of your request attributes.
 <pre class="brush:xml">
-    &lt;filter&gt;
+    &lt;filter-mapping&gt;
         &lt;filter-name&gt;RoutesFilter&lt;/filter-name&gt;
-        &lt;filter-class&gt;groovyx.gaelyk.routes.RoutesFilter&lt;/filter-class&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
         &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;
         &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;
-    &lt;/filter&gt;
+    &lt;/filter-mapping&gt;
 </pre>
 </blockquote>

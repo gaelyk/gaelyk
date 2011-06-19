@@ -11,22 +11,24 @@ sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
 buildscript {
+    gitHub = {
+        def resolver = new URLResolver()
+
+        resolver.with {
+            name = 'GitHub'
+            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+        }
+
+        resolver
+    }
+
     repositories {
-        add(new URLResolver()) {
-            name = 'GAE plugin on GitHub'
-            addArtifactPattern 'http://cloud.github.com/downloads/bmuschko/gradle-gae-plugin/[module]-[revision].[ext]'
-        }
-        add(new URLResolver()) {
-            name = 'Gaelyk plugin on GitHub'
-            addArtifactPattern 'http://cloud.github.com/downloads/bmuschko/gradle-gaelyk-plugin/[module]-[revision].[ext]'
-        }
-        mavenCentral()
+        add gitHub()
     }
 
     dependencies {
-        classpath 'com.google.appengine:appengine-tools-sdk:1.5.0'
-        classpath ':gradle-gae-plugin:0.4'
-        classpath ':gradle-gaelyk-plugin:0.1'
+        classpath 'bmuschko:gradle-gae-plugin:0.5'
+        classpath 'bmuschko:gradle-gaelyk-plugin:0.1'
     }
 }
 
@@ -36,6 +38,19 @@ sourceSets {
             srcDirs = ['src']
         }
     }
+}
+
+repositories {
+    add gitHub()
+    mavenCentral()
+}
+
+dependencies {
+    groovy 'org.codehaus.groovy:groovy-all:1.8.0'
+    def gaeVersion = '1.5.0.1'
+    compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
+            "com.google.appengine:appengine-api-labs:$gaeVersion",
+            'glaforge:gaelyk:0.7'
 }
 
 webAppDirName = file('war')
@@ -54,4 +69,19 @@ ideaProject {
         def gradleSettings = node.appendNode('component', [name: 'GradleSettings'])
         gradleSettings.appendNode('option', [name: 'SDK_HOME', value: gradle.gradleHomeDir])
     }
+}
+
+def webAppLibDirName = 'war/WEB-INF/lib'
+
+task copyRuntimeLibraries(type: Copy) {
+    description = "Copies runtime libraries to $webAppLibDirName"
+
+    into webAppLibDirName
+    from configurations.runtime.files
+}
+
+task initWar {
+    description = 'Initializes WAR'
+
+    copyRuntimeLibraries.execute()
 }

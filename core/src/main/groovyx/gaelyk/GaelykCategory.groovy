@@ -1091,7 +1091,7 @@ class GaelykCategory {
         return parts*.readLines().collectEntries {
             [
                     // extract the name from the form-data part
-                    (it[0] =~ /.*name="(.*)".*/)[0][1],
+                    (it[it.findIndexOf{ l -> l.startsWith("Content-Disposition: form-data")}] =~ /.*name="(.*)".*/)[0][1],
                     // the last line contains the data associated with the key
                     it[-1]
             ]

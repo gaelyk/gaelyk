@@ -62,7 +62,12 @@ class BindingEnhancerTest extends GroovyTestCase {
 
     protected void tearDown() {
         // uninstalling the local environment
-        helper.tearDown()
+        try {
+            helper.tearDown()
+        } catch (Throwable t) {
+            System.err.println("Something bad happened while tearing down the helpers (${t.message})")
+            t.printStackTrace()
+        }
 
         super.tearDown()
     }

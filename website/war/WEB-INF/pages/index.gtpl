@@ -68,6 +68,12 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
 
 <div id="sightings">
     <div class="pic-frame">
+        <a href="http://vanessaeeid.appspot.com/">
+        <img src="/images/sightings/small/vanessaeeid.png" alt="Vanessa Ee Interior Design" ><br/>
+        Vanessa Ee Interior Design
+        </a>
+    </div>
+    <div class="pic-frame">
         <a href="http://www.yesihaveatruck.com/">
         <img src="/images/sightings/small/yesihaveatruck.png" alt="Yes I have a truck" ><br/>
         Need a truck to help you move? Yes I have a truck!
@@ -125,12 +131,6 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
         <a href="http://gaelyk.appspot.com">
         <img src="/images/sightings/small/gaelykweb.png" alt="Gaelyk web site" ><br/>
         The Gaelyk website itself is powered by Gaelyk
-        </a>
-    </div>
-    <div class="pic-frame">
-        <a href="http://www.zama-paintings.com/">
-        <img src="/images/sightings/small/zamapaintings.png" alt="Zama Paintings" ><br/>
-        Paintings of a French modern plastician artist
         </a>
     </div>
     <div class="pic-frame">

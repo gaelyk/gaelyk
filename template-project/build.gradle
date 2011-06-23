@@ -37,6 +37,12 @@ repositories {
     add gitHub()
 }
 
+sourceSets {
+    main {
+        classesDir = file('war/WEB-INF/classes')
+    }
+}
+
 dependencies {
     def gaeVersion = '1.5.0.1'
     groovy 'org.codehaus.groovy:groovy-all:1.8.0'
@@ -71,6 +77,12 @@ ideaProject {
         def gradleSettings = node.appendNode('component', [name: 'GradleSettings'])
         gradleSettings.appendNode('option', [name: 'SDK_HOME', value: gradle.gradleHomeDir])
     }
+}
+
+clean.doLast {
+     sourceSets.each {
+         ant.delete(dir: it.classesDir)
+     }
 }
 
 task copyRuntimeLibraries {

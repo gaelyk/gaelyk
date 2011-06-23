@@ -13,6 +13,7 @@ get "/tutorial/url-routing",            forward: "/WEB-INF/pages/tutorial/flexib
 get "/tutorial/app-engine-shortcuts",   forward: "/WEB-INF/pages/tutorial/gaeShortcuts.gtpl",           cache: stableDuration
 get "/tutorial/plugins",                forward: "/WEB-INF/pages/tutorial/plugins.gtpl",                cache: stableDuration
 get "/tutorial/run-deploy",             forward: "/WEB-INF/pages/tutorial/runDeploy.gtpl",              cache: stableDuration
+get "/tutorial/template-project",       forward: "/WEB-INF/pages/tutorial/templateProject.gtpl",        cache: stableDuration
 
 get "/download",    forward: "/WEB-INF/pages/download.gtpl",  cache: hotContentDuration
 get "/community",   forward: "/WEB-INF/pages/community.gtpl", cache: hotContentDuration

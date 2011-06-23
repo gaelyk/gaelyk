@@ -11,8 +11,18 @@ We'll follow the directory layout proposed by the <b>Gaelyk</b> template project
 
 <pre>
 /
-+-- build.groovy
 +-- src
+|   |
+|   +-- main
+|   |   |
+|   |   +-- groovy
+|   |   +-- java
+|   |
+|   +-- test
+|       |
+|       +-- groovy
+|       +-- java
+|
 +-- war
     |
     +-- index.gtpl
@@ -31,9 +41,13 @@ We'll follow the directory layout proposed by the <b>Gaelyk</b> template project
         |    |
         |    +-- controller.groovy
         |
+        +-- pages
+        |    |
+        |    +-- view.gtpl
+        |
         +-- includes
         |    |
-        |    +-- header.gtpl
+        |    +-- footer.gtpl
         |
         +-- lib
             |
@@ -50,16 +64,11 @@ At the root of your project, you'll find:
 
 <ul>
     <li>
-        <code>build.groovy</code>: a small Groovy build file using Groovy's AntBuilder to compiled Groovy and Java sources
-        contained in the <code>src</code> directory. It's using Groovy's joint compiler.
-        To run this build, if you've got additional sources to compile, simply launch the command <code>groovy build</code>
-        &mdash; you'll need <a href="http://groovy.codehaus.org/Installing+Groovy">Groovy installed</a> on your machine.
-    </li>
-    <li>
         <code>src</code>: If your project needs source files beyond the templates and groovlets,
         you can place both your Java and Groovy sources in that directory.
         Before running the local app engine dev server or before deploying your application to app engine,
-        you should run this script to pre-compile your Groovy and Java classes.
+        you should make sure to pre-compile your Groovy and Java classes so they are available in
+        <code>WEB-INF/classes</code>.
     </li>
     <li>
         <code>war</code>: This directory will be what's going to be deployed on app engine.
@@ -84,6 +93,9 @@ In the <code>WEB-INF</code> directory, you'll find:
     </li>
     <li>
         <code>groovy</code>: In that folder, you'll put your controller and service files written in Groovy in the form of Groovlets.
+    </li>
+    <li>
+        <code>pages</code>: Here you can put all your template views, to which you'll point at from the URL routes configuration.
     </li>
     <li>
         <code>includes</code>: We propose to let you put included templates in that directory.
@@ -232,3 +244,12 @@ which will cause you to lose all of your request attributes.
     &lt;/filter-mapping&gt;
 </pre>
 </blockquote>
+
+<h1>Using the template project</h1>
+
+<p>
+You can use the <a href="/tutorial/template-project">template project</a> offered by <b>Gaelyk</b>.
+It uses <b>Gradle</b> for the build, and for running and deploying applications,
+and <b>Spock</b> for testing your groovlets.
+Please have a look at the <a href="/tutorial/template-project">template project section</a> to know more about it.
+</p>

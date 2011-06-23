@@ -2,6 +2,13 @@
 
 <h1>Running and deploying Gaelyk applications</h1>
 
+<blockquote>
+<b>Note: </b> If you're using the template project as a base for your <b>Gaelyk</b> application,
+you should have a look at the <a href="/tutorial/template-project">section on the template project</a>,
+which explains how you can use Gradle for your build, for running and deploying applications,
+and for testing your groovlets with Spock.
+</blockquote>
+
 <a name="run"></a>
 <h2>Running your application locally</h2>
 

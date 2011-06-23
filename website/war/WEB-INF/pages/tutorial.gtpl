@@ -50,6 +50,12 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <li><a href="/tutorial/setup#configuration">Configuration files</a></li>
     </ul>
 
+    <li><a href="/tutorial/template-project">The template project</a></li>
+    <ul>
+        <li><a href="/tutorial/template-project#build">Gradle build file</a></li>
+        <li><a href="/tutorial/template-project#spock">Testing with Spock</a></li>
+    </ul>
+
     <li><a href="/tutorial/views-and-controllers">Views and controllers</a></li>
     <ul>
         <li><a href="/tutorial/views-and-controllers#variables">Variables available in the binding</a></li>

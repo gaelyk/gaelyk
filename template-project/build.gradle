@@ -71,9 +71,7 @@ gae {
 }
 
 clean.doLast {
-     sourceSets.each {
-         ant.delete(dir: it.classesDir)
-     }
+     delete sourceSets*.classesDir
 }
 
 task copyRuntimeLibraries {

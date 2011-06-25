@@ -1,11 +1,11 @@
-bin/
-build/
-out/
+bin
+build
+out
 *.iml
 *.ipr
 *.iws
-.idea/
+.idea
 .gradle
 .classpath
 .project
-.settings/
+.settings

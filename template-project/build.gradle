@@ -119,6 +119,5 @@ eclipseClasspath {
         xml.asNode().appendNode('classpathentry', [exported: 'true', kind: 'con', path: 'GROOVY_SUPPORT'])
                     .appendNode('attributes')
                     .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/war/WEB-INF/lib'])
-        xml.asNode().appendNode('classpathentry', [kind: 'src', output: 'war/WEB-INF/classes', path: 'war/WEB-INF/groovy'])
     }
 }

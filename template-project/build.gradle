@@ -119,3 +119,7 @@ eclipseClasspath {
                     .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/war/WEB-INF/lib'])
     }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.0-milestone-3'
+}

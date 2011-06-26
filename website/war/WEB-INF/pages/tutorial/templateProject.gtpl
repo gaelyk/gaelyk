@@ -99,6 +99,12 @@ You will find the following Gradle tasks handy:
     <li>
         <tt>gradlew gaelykCreateView&lt;ViewName&gt;</tt>: to create a Groovy template with the specified name
     </li>
+    <li>
+        <tt>gradlew cleanEclipse eclipse</tt>: to generate Eclipse project files
+    </li>
+    <li>
+        <tt>gradlew cleanIdea idea</tt>: to generate IntelliJ project files
+    </li>
 </ul>
 
 <a name="spock"></a>

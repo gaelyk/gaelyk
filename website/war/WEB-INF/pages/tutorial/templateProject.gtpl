@@ -13,9 +13,10 @@ and offers integration with the <a href="http://spockframework.org">Spock</a> te
 </p>
 
 <blockquote>
-<b>Note: </b> If you want to use the Gradle build,
-you'll have to <a href="http://gradle.org/installation.html">install Gradle</a> first.
-The build file was tested and used with version 1.0-milestone-3 of Gradle.
+<b>Note: </b> The template project conveniently provides the
+<a href="http://gradle.org/current/docs/userguide/gradle_wrapper.html">Gradle wrapper</a> to run your code without
+having to install the Gradle runtime. You do not have to provide a Google App Engine SDK in your environment. It will
+automatically be downloaded by the build script.
 </b>
 </blockquote>
 
@@ -28,7 +29,10 @@ The Gradle build file uses the following Gradle plugins:
 
 <ul>
 <li>
-    <b>groovy</b>: for compiling the Groovy sources in the <code>src</code> folder
+    <b>java</b>: for compiling the Java sources in the <code>src/main/java</code> folder
+</li>
+<li>
+    <b>groovy</b>: for compiling the Groovy sources in the <code>src/main/groovy</code> folder
 </li>
 <li>
     <b>eclipse</b>: for creating/updating the proper project files for Eclipse
@@ -49,34 +53,57 @@ The Gradle build file uses the following Gradle plugins:
 You'll find more information on
 the <a href="https://github.com/bmuschko/gradle-gae-plugin">gae plugin</a> and
 <a href="https://github.com/bmuschko/gradle-gaelyk-plugin">gaelyk plugin</a>
-on their respective project pages.
+on their respective project pages. The pages describe all available configuration options and tasks in detail.
 </p>
 
 <h2>In a nutshell</h2>
 
 <p>
-You will find the following gradle tasks handy:
+You will find the following Gradle tasks handy:
 </p>
 
 <ul>
     <li>
-        <tt>gradle tasks</tt>: to list all the possible tasks which are available
+        <tt>gradlew tasks</tt>: to list all the possible tasks which are available
     </li>
     <li>
-        <tt>gradle classes</tt>: to compile your Groovy sources in the <code>src/main/groovy</code> folder
-        and have them placed in <code>WEB-INF/classes</code>
+        <tt>gradlew classes</tt>: to compile your Java/Groovy sources in the folders <code>src/main/java</code> and
+        <code>src/main/groovy</code> and have them placed in <code>WEB-INF/classes</code>
     </li>
     <li>
-        <tt>gradle test</tt>: to compile and run your tests from <code>src/main/test</code>
+        <tt>gradlew test</tt>: to compile and run your tests from <code>src/test/java</code> and <code>src/test/groovy</code>
     </li>
     <li>
-        <tt>gradle gaeRun</tt>: to run your application locally
+        <tt>gradlew gaeRun</tt>: to run your application locally
     </li>
     <li>
-        <tt>gradle gaeStop</tt>: to stop your locally running application
+        <tt>gradlew gaeStop</tt>: to stop your locally running application
     </li>
     <li>
-        <tt>gradle gaeUpload</tt>: to upload your application to production
+        <tt>gradlew gaeUpload</tt>: to upload your application to production
+    </li>
+    <li>
+        <tt>gradlew gaelykInstallPlugin</tt>: to install a plugin provided by the
+        <a href="http://www.gradle.org/gradle_command_line.html">command line property (<code>-P</code>)</a> <code>plugin</code>
+    </li>
+    <li>
+        <tt>gradlew gaelykUninstallPlugin</tt>: to uninstall a plugin provided by the
+        <a href="http://www.gradle.org/gradle_command_line.html">command line property (<code>-P</code>)</a> <code>plugin</code>
+    </li>
+    <li>
+        <tt>gradlew gaelykListInstalledPlugins</tt>: to show the installed plugins
+    </li>
+    <li>
+        <tt>gradlew gaelykCreateController&lt;ControllerName&gt;</tt>: to create a Groovlet with the specified name
+    </li>
+    <li>
+        <tt>gradlew gaelykCreateView&lt;ViewName&gt;</tt>: to create a Groovy template with the specified name
+    </li>
+    <li>
+        <tt>gradlew cleanEclipse eclipse</tt>: to generate Eclipse project files
+    </li>
+    <li>
+        <tt>gradlew cleanIdea idea</tt>: to generate IntelliJ project files
     </li>
 </ul>
 
@@ -132,7 +159,7 @@ class DatastoreServiceSpec extends GaelykUnitSpec {
 </pre>
 
 <p>
-Then, you could run the test by executing the gradle command: <code>gradle test</code>.
+Then, you could run the test by executing the gradle command: <code>gradlew test</code>.
 </p>
 
 <p>

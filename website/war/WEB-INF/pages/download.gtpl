@@ -36,7 +36,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <ul>
     <li>GAE SDK updated to 1.5.1</li>
-    <li>Introduction of a Query DSL for creating SQL-like queries against the datastore</li>
+    <li>Introduction of a <a href="/tutorial/app-engine-shortcuts#query">Query DSL for creating SQL-like queries against the datastore</a></li>
     <li>
         Updated template project with a Gradle buil, the usage of Gradle GAE / Gaelyk plugins,
         and the support of Spock for testing Groovlets

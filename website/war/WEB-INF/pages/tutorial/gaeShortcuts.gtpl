@@ -213,8 +213,8 @@ and within that closure, upon its execution by <b>Gaelyk</b>, your code will be 
 <h3>Querying</h3>
 
 <p>
-<b>Gaelyk</b> currently doesn't provide additional capabilities for querying the datastore
-beyond what is provided by the Google App Engine SDK &mdash; however, the situation may change in future releases.
+With the datastore API, to query the datastore, the usual approach is to create a <code>Query</code>,
+prepare a <code>PreparedQuery</code>, and retrieve the results as a list or iterator.
 Below you will see an example of queries used in the <a href="http://groovyconsole.appspot.com">Groovy Web Console</a>
 to retrieve scripts written by a given author, sorted by descending date of creation:
 </p>
@@ -237,6 +237,152 @@ to retrieve scripts written by a given author, sorted by descending date of crea
 
     // return only the first 10 results
     def entities = preparedQuery.asList( withLimit(10) )
+</pre>
+
+<p>
+Fortunately, <b>Gaelyk</b> provides a query DSL for simplifying the way you can query the datastore.
+Here's what it looks like with the query DSL:
+</p>
+
+<pre class="brush:groovy">
+    def entities = datastore.execute {
+        select all from savedscript
+        sort desc by dateCreated
+        where author == params.author
+        limit 10
+    }
+</pre>
+
+<p>
+Let's have a closer look at the syntax supported by the DSL.
+There are two methods added dynamically to the datastore: <code>query{}</code> and <code>execute{}</code>.
+The former allow you to create a <code>Query</code> that you can use then to prepare a <code>PreparedQuery</code>.
+The latter is going further as it executes the query to return a single entity, a list, a count, etc.
+</p>
+
+<h4>Creating queries</h4>
+
+<p>
+You can create a <code>Query</code> with the <code>datastore.query{}</code> method.
+The closure argument passed to this method supports the verbs <code>select</code>, <code>from</code>, <code>where/and</code> and <code>sort</code>.
+Here are the various options of those verbs:
+</p>
+
+<pre class="brush:groovy">
+    // select the full entity with all its properties
+    select all
+    // return just the keys of the entities matched by the query
+    select keys
+
+    from entityKind
+
+    // specify that entities searched should be child of another entity
+    // represented by its key
+    ancestor entityKey
+
+    where propertyName &lt;  value
+    where propertyName &lt;= value
+    where propertyName == value
+    where propertyName != value
+    where propertyName &gt;= value
+    where propertyName &gt;  value
+    where propertyName in listOfValues
+
+    // you can use "and" instead of "where" to add more where clauses
+
+    // ascending sorting
+    sort asc  by propertyName
+    // descending sorting
+    sort desc by propertyName
+</pre>
+
+<blockquote>
+<b>Notes: </b>
+<ul>
+    <li>
+        The entity kind of the <code>from</code> verb and the property name of the <code>where</code> verb
+        and <code>sort/by</code> verbrs are actually mere strings, but you don't need to quote them.
+    </li>
+    <li>
+        Also, for the <code>where</code> clause, be sure to put the property name on the left-hand-side of the comparison,
+        and the compared value on the right-hand-side of the operator.
+    </li>
+    <li>
+        When you need more than one <code>where</code> clause, you can use <code>and</code>
+        which is a synonym of <code>where</code>.
+    </li>
+    <li>
+        You can omit the <code>select</code> part of the query if you wish:
+        by default, it will be equivalent to <code>select all</code>.
+    </li>
+    <li>
+        It is possible to put all the verbs of the DSL on a single line (thanks to Groovy 1.8 command chains notation),
+        or split across several lines as you see fit for readability or compactness.
+    </li>
+</ul>
+</blockquote>
+
+<h4>Executing queries</h4>
+
+<p>
+You can use the <code>datastore.execute{}</code> call to execute the queries.
+The <code>select</code> verb also provides additional values.
+The <code>from</code> verb allows to specify a class to coerce the results to a POGO.
+In addition, you can specify the <code>FetchOptions</code> with additional verbs like:
+<code>limit</code>, <code>offset</code>, <code>range</code>, <code>chunkSize</code>, <code>fetchSize</code>
+<code>startAt</code>, <code>endAt</code>
+</p>
+
+<pre class="brush:groovy">
+    // select the full entity with all its properties
+    select all
+    // return just the keys of the entities matched by the query
+    select keys
+    // return one single entity if the query really returns one single result
+    select single
+    // return the count of entities matched by the query
+    select count
+
+    // from an entity kind
+    from entityKind
+    // specify the entity kind as well as a type to coerce the results to
+    from entityKind as SomeClass
+
+    // specify that entities searched should be child of another entity
+    // represented by its key
+    ancestor entityKey
+
+    where propertyName &lt;  value
+    where propertyName &lt;= value
+    where propertyName == value
+    where propertyName != value
+    where propertyName &gt;= value
+    where propertyName &gt;  value
+    where propertyName in listOfValues
+
+    // you can use "and" instead of "where" to add more where clauses
+
+    // ascending sorting
+    sort asc  by propertyName
+    // descending sorting
+    sort desc by propertyName
+
+    // limit to only 10 results
+    limit 10
+    // return the results starting from a certain offset
+    offset 100
+    // range combines offset and limit together
+    range 100..109
+
+    // fetch and chunk sizes
+    fetchSize 100
+    chunkSize 100
+
+    // cursor handling
+    startAt cursorVariable
+    startAt cursorWebSafeStringRepresentation
+    endAt cursorVariable
+    endAt cursorWebSafeStringRepresentation
 </pre>
 
 <a name="async-datastore"></a>

@@ -98,6 +98,7 @@ import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.LifecycleManager.ShutdownHook
+import groovyx.gaelyk.query.QueryBuilder
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -394,6 +395,36 @@ class GaelykCategory {
      */
     static AsyncDatastoreService getAsync(DatastoreService service) {
         DatastoreServiceFactory.asyncDatastoreService
+    }
+
+    /**
+     * Create a query to be executed on the datastore data.
+     *
+     * @param c the closure representing the query
+     * @return the query
+     */
+    static Query query(DatastoreService service, Closure c) {
+        Closure cQuery = c.clone()
+        cQuery.resolveStrategy = Closure.DELEGATE_FIRST
+        def builder = new QueryBuilder()
+        cQuery.delegate = builder
+        cQuery()
+        return builder.createQuery()
+    }
+
+    /**
+     * Create and executes a prepared query to retrieve entities from the datastore.
+     *
+     * @param c the closure representing the query to execute
+     * @return the results
+     */
+    static execute(DatastoreService service, Closure c) {
+        Closure cQuery = c.clone()
+        cQuery.resolveStrategy = Closure.DELEGATE_FIRST
+        def builder = new QueryBuilder()
+        cQuery.delegate = builder
+        cQuery()
+        return builder.execute()
     }
 
     // ------------------------------------

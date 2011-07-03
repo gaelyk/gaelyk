@@ -398,7 +398,7 @@ class GaelykCategory {
     }
 
     /**
-     * Create a query to be executed on the datastore data.
+     * Create a query to be later executed on the datastore data.
      *
      * @param c the closure representing the query
      * @return the query

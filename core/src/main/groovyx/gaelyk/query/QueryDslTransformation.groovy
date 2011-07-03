@@ -28,15 +28,27 @@ import com.google.appengine.api.datastore.Query.FilterOperator
 import org.codehaus.groovy.ast.expr.CastExpression
 
 /**
- * 
+ * This AST transformation makes two transformations at the AST level.
+ * First of all, this transformation is applied only with the context of a closure
+ * passed to the <code>datastore.query {}</code> or <code>datastore.execute {}</code> calls.
+ * The two modifcations made on the AST are to transform the <code>where prop op value</code> calls
+ * into a <code>where new WhereClause(prop, op, value)</code> call,
+ * and the <code>from kindName as className</code>
+ * into a <code>from kindName, className</code> call.
  *
  * @author Guillaume Laforge
  *
- * @since 0.8
+ * @since 1.0
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class QueryDslTransformation implements ASTTransformation {
 
+    /**
+     * Visit the AST of the scripts and classes that contain datastore query/execute calls.
+     *
+     * @param nodes a null array since we use a global transformation
+     * @param source the source unit on which we'll apply the transformations
+     */
     void visit(ASTNode[] nodes, SourceUnit source) {
 
         def whereMethodVisitor = new ClassCodeVisitorSupport() {

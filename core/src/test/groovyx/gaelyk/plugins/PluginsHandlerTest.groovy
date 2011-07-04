@@ -15,7 +15,8 @@ import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestC
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import groovy.servlet.ServletCategory
-import groovyx.gaelyk.GaelykCategory
+import com.google.appengine.api.memcache.MemcacheService
+import com.google.appengine.api.datastore.DatastoreService
 
 /**
  * 
@@ -133,7 +134,7 @@ class PluginsHandlerTest extends GroovyTestCase {
 
             initPlugins()
 
-            assert bindingVariables == [version: "1.2.3"]
+            assert bindingVariables.version == "1.2.3"
             assert routes.size() == 2
             assert categories*.name == ['MyCat']
             assert beforeActions.size() == 1
@@ -184,6 +185,40 @@ class PluginsHandlerTest extends GroovyTestCase {
                 assert request.sample.toString() == '1342'
             }
         }
+    }
+
+    void testAccessOriginalBindingVars() {
+        PluginsHandler.instance.with {
+            scriptContent = { String path ->
+                if (path == "WEB-INF/plugins.groovy") {
+                    "install myPlugin"
+                } else if (path == "WEB-INF/plugins/myPlugin.groovy") {
+                    """
+                    binding {
+                        book = "Harry Potter"
+                        memcacheCopy = memcache
+                    }
+
+                    before {
+                        request.fromBindingBlock = binding
+                        request.fromBeforeBlock = datastore
+                    }
+                    """
+                } else ""
+            }
+
+            initPlugins()
+
+            def values = [:]
+            def request = [setAttribute: { String name, obj -> values[name] = obj }] as HttpServletRequest
+            executeBeforeActions(request, [:] as HttpServletResponse)
+
+            assert values.fromBindingBlock.book == "Harry Potter"
+            assert values.fromBindingBlock.memcacheCopy instanceof MemcacheService
+
+            assert values.fromBeforeBlock instanceof DatastoreService
+        }
+
     }
 }
 

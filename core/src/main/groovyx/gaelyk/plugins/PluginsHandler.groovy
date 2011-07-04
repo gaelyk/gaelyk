@@ -19,7 +19,6 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import groovyx.gaelyk.GaelykBindingEnhancer
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
-import groovyx.gaelyk.GaelykCategory
 import groovy.servlet.ServletCategory
 import groovyx.gaelyk.logging.GroovyLogger
 
@@ -88,7 +87,7 @@ class PluginsHandler {
                     // and plugin logger
                     binding.setVariable("log", new GroovyLogger("gaelyk.plugins.${pluginName}", true))
 
-                    // evaluate the list of plugins
+                    // evaluate the plugin descriptor
                     def shell = new GroovyShell(binding, config)
                     PluginBaseScript script = (PluginBaseScript) shell.parse(content, "${pluginName}.groovy")
                     script.run()
@@ -177,6 +176,7 @@ class PluginsHandler {
         Closure cloned = action.clone()
         cloned.resolveStrategy = Closure.DELEGATE_FIRST
         cloned.delegate = [
+                *:bindingVariables,
                 request: request,
                 response: response,
                 log: action.owner.log,

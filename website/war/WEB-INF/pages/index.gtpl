@@ -68,6 +68,12 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
 
 <div id="sightings">
     <div class="pic-frame">
+        <a href="http://www.commenthow.com/">
+        <img src="/images/sightings/small/commenthow.png" alt="" ><br/>
+        CommentHow, a DIY website
+        </a>
+    </div>
+    <div class="pic-frame">
         <a href="http://vanessaeeid.appspot.com/">
         <img src="/images/sightings/small/vanessaeeid.png" alt="Vanessa Ee Interior Design" ><br/>
         Vanessa Ee Interior Design

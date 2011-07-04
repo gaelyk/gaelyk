@@ -6,7 +6,9 @@
 <b>Gaelyk</b> sports a plugin system which helps you modularize your applications
 and enable you to share commonalities between <b>Gaelyk</b> applications.
 </p>
-
+<p>
+This page is about creating new plugins. The list of existing plugins can be found in the <a href="/plugins">Plugins section</a>.
+</p>
 <a name="what"></a>
 <h2>What a plugin can do for you</h2>
 
@@ -274,10 +276,13 @@ here's the order of execution of the actions and of the Groovlet or template:
 
 <a name="distribute"></a>
 <h2>How to distribute and deploy a plugin</h2>
-
 <p>
 If you want to share a plugin you've worked on, you just need to zip everything that constitutes the plugin.
 Then you can share this zip, and someone who wishes to install it on his application will just need to unzip it
 and pickup the various files of that archive and stick them up in the appropriate directories
 in his/her <b>Gaelyk</b> <code>war/</code> folder, and reference that plugin, as explained in the previous section.
+</p>
+<p>
+The best way how to share your plugin is by using <a href="/plugins">the plugin catalogue</a>. Fill <a href="http://www.google.com/url?sa=D&q=http://goo.gl/anr8y">the form</a>
+and wait until the plugin is approved.
 </p>

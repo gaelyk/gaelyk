@@ -55,6 +55,7 @@
             <ul>
                 <li><a href="/tutorial">Tutorial</a></li>
                 <li><a href="/download">Download</a></li>
+                <li><a href="/plugins">Plugins</a></li>
                 <li><a href="/community">Community</a></li>
                 <li><a href="/search">Search</a></li>
             </ul>

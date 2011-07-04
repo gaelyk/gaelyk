@@ -129,7 +129,7 @@ class RoutesFilter implements Filter {
         for (Route route in routes) {
             // first, check that the HTTP methods are compatible
             if (route.method == HttpMethod.ALL || route.method.toString() == method) {
-                def result = route.forUri(requestURI)
+                def result = route.forUri(request)
                 if (result.matches) {
                     if (route.ignore) {
                         // skip out completely

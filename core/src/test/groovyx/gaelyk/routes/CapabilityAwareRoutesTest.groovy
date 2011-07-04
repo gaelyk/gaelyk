@@ -23,6 +23,7 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.api.capabilities.CapabilitiesService
 import com.google.appengine.api.capabilities.Capability
 import com.google.appengine.api.capabilities.CapabilityState
+import static groovyx.gaelyk.TestUtil.request as r
 
 /**
  * @author Guillaume Laforge
@@ -105,12 +106,12 @@ class CapabilityAwareRoutesTest extends GroovyTestCase {
             to "/default.gtpl?var=@bar"
             to("/scheduled.gtpl?var=@bar").on(DATASTORE_WRITE).is(ENABLED)
         })
-        assert route.forUri("/foo/something").destination == "/scheduled.gtpl?var=something"
+        assert route.forUri(r("/foo/something")).destination == "/scheduled.gtpl?var=something"
 
         route = new Route("/foo/@bar", {
             to "/default.gtpl?var=@bar"
             to("/scheduled.gtpl?var=@bar").on(DATASTORE_WRITE).not(ENABLED)
         })
-        assert route.forUri("/foo/baz").destination == "/default.gtpl?var=baz"
+        assert route.forUri(r("/foo/baz")).destination == "/default.gtpl?var=baz"
     }
 }

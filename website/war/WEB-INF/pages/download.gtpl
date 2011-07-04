@@ -32,17 +32,30 @@ and with the 1.5.1 version of the App Engine SDK.
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
 
-<h2>version 0.xxxx</h2>
+<h2>version 1.0</h2>
 
 <ul>
     <li>GAE SDK updated to 1.5.1</li>
-    <li>Introduction of a <a href="/tutorial/app-engine-shortcuts#query">Query DSL for creating SQL-like queries against the datastore</a></li>
     <li>
-        Updated template project with a Gradle buil, the usage of Gradle GAE / Gaelyk plugins,
-        and the support of Spock for testing Groovlets
+        Introduction of a <a href="/tutorial/app-engine-shortcuts#query">Query DSL
+        for creating SQL-like queries against the datastore</a>
+    </li>
+    <li>
+        Updated <a href="/tutorial/template-project">template project</a> with a Gradle build,
+        the usage of Gradle GAE / Gaelyk plugins, and the support of Spock for testing Groovlets
+    </li>
+    <li>Introduction of the <a href="/plugins">plugins page</a> in the Gaelyk website, for referencing known plugins</li>
+    <li>
+        The <a href="/tutorial/url-routing#path-variable-validation">validation closures</a> of the routes
+        in your URL mapping have access to the request,
+        so you can validate a URL depending on what's in your request (attribute, session, etc.)
     </li>
     <li>Added a DSLD file (DSL descriptor) for Eclipse for easing code-completion and navigation</li>
     <li>Problems with the recent XMPP support fixed</li>
+    <li>
+        Fixed inability to access the various services and variables
+        from within binding/before/after blocks in plugin descriptors
+    </li>
 </ul>
 
 <h2>Version 0.7</h2>

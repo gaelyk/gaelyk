@@ -17,6 +17,9 @@ package groovyx.gaelyk.routes
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import javax.servlet.http.HttpServletRequest
+import groovyx.gaelyk.GaelykCategory
+import groovy.servlet.ServletCategory
 
 /**
  * Representation of a route URL mapping.
@@ -114,7 +117,8 @@ class Route {
      * @return a map with a 'matches' boolean key telling whether the route is matched
      * and a variables key containing a map of the variable key and matched value.
      */
-    def forUri(String uri) {
+    def forUri(HttpServletRequest request) {
+        def uri = request.requestURI
         Matcher matcher = regex.matcher(uri)
 
         String finalDestination = destination instanceof String || ignore == true ? 
@@ -131,10 +135,18 @@ class Route {
             // if a closure validator was defined, check all the variables match the regex pattern
             if (validator) {
                 def clonedValidator = this.validator.clone()
-                clonedValidator.resolveStrategy = Closure.DELEGATE_ONLY
-                clonedValidator.delegate = variableMap
 
-                boolean validated = clonedValidator()
+                // adds the request to the variables available for validation
+                def variablesAndRequest = variableMap.clone()
+                variablesAndRequest.request = request
+
+                clonedValidator.delegate = variablesAndRequest
+                clonedValidator.resolveStrategy = Closure.DELEGATE_ONLY
+
+                boolean validated = false
+                use (ServletCategory, GaelykCategory) {
+                    validated = clonedValidator()
+                }
                 if (!validated) {
                     return [matches: false]
                 }

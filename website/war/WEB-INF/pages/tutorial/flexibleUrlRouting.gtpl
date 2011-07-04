@@ -303,6 +303,18 @@ Here in our closure, we used Groovy's regular expression matching support,
 but you can use boolean logic that you want, like <code>year.isNumber()</code>, etc.
 </blockquote>
 
+<p>
+In addition to the path variables, you also have access to the <code>request</code> from within the validation closure.
+For example, if you wanted to check that a particular attribute is present in the request,
+like checking a user is registered to access a message board, you could do:
+</p>
+
+<pre class="brush:groovy">
+    get "/message-board",
+        forward: "/msgBoard.groovy",
+        validate: { request.registered == true }
+</pre>
+
 <a name="capability-routing"></a>
 <h2>Capability-aware routing</h2>
 

@@ -18,3 +18,4 @@ get "/tutorial/template-project",       forward: "/WEB-INF/pages/tutorial/templa
 get "/download",    forward: "/WEB-INF/pages/download.gtpl",  cache: hotContentDuration
 get "/community",   forward: "/WEB-INF/pages/community.gtpl", cache: hotContentDuration
 get "/search",      forward: "/WEB-INF/pages/search.gtpl",    cache: stableDuration
+get "/plugins",     forward: "/WEB-INF/pages/plugins.gtpl",   cache: stableDuration

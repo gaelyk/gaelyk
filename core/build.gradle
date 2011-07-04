@@ -40,6 +40,7 @@ jar {
     manifest {
         attributes 'Implementation-Title': 'Gaelyk', 'Implementation-Version': version
     }
+    metaInf { from 'src/main/META-INF' }
 }
 
 groovydoc {

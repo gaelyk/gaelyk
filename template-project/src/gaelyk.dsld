@@ -1,3 +1,5 @@
+
+
 import java.util.concurrent.Future;
 
 // Things to discuss
@@ -40,17 +42,23 @@ def shortcutFor = { type ->
 	property name: 'params', type: Map, doc: 'map of all form parameters (can be empty)'
 	property name: 'headers', type: Map, doc: 'map of all request header fields'
 	property name: 'log', type: 'groovyx.gaelyk.logging.GroovyLogger', doc: 'a Groovy logger is available for logging messages through java.util.logging'
-	property name: 'logger', type: Map, doc: 'a logger accessor can be used to get access to any logger'
 
 	property name: 'out', type: PrintWriter, doc:'shorthand for response.getWriter() which returns a PrintWriter'
 	property name: 'sout', type: 'javax.servlet.ServletOutputStream', doc: 'shorthand for response.getOutputStream() which returns a ServletOutputStream'
 	property name: 'html', type: 'groovy.xml.MarkupBuilder', doc: 'shorthand for new MarkupBuilder(response.getWriter()) which returns a MarkupBuilder'
 
+	method name: 'forward',         type: 'void',       params: [path: 'java.lang.String'], doc: "forwards to given url, groovlet or template"
+	method name: 'include',         type: 'void',       params: [path: 'java.lang.String'], doc: "includes given template"
+	method name: 'redirect',        type: 'void',       params: [path: 'java.lang.String'], doc: "redirects to given url, groovlet or template"
+}
+
+((sourceFolderOfCurrentType('war/WEB-INF/groovy') & enclosingScript()) | annotatedBy('groovyx.gaelyk.GaelykBindings')).accept {
+	property name: 'logger', type: Map, doc: 'a logger accessor can be used to get access to any logger'
 	property name: 'datastore', type: 'com.google.appengine.api.datastore.DatastoreService', doc: 'the Datastore service'
 	property name: 'memcache', type: 'com.google.appengine.api.memcache.MemcacheService', doc: 'the Memcache service'
 	property name: 'urlFetch', type: 'com.google.appengine.api.urlfetch.URLFetchService', doc: 'the URL Fetch service'
 	property name: 'mail', type: 'com.google.appengine.api.mail.MailService', doc: 'the Mail service'
-
+	
 	property name: 'images', type: 'groovyx.gaelyk.ImagesServiceWrapper', doc: 'the Images service (actually a convenient wrapper class combining both the methods of ImagesService and ImagesServiceFactory and implementing the ImagesService interface)'
 	property name: 'users', type: 'com.google.appengine.api.users.UserService', doc: 'the User service'
 	property name: 'user', type: 'com.google.appengine.api.users.User', doc: 'the currently logged in user (null if no user logged in)'
@@ -66,12 +74,8 @@ def shortcutFor = { type ->
 	property name: 'backends', type: 'com.google.appengine.api.backends.BackendService', doc: 'the Backend service'
 	property name: 'lifecycle', type: 'com.google.appengine.api.LifecycleManager', doc: 'the Lifecycle manager'
 	property name: 'localMode', type: Boolean, doc: 'a boolean variable which is true when the application is running in local development mode, and false when deployed on Google\'s cloud.'
-
+	
 	property name: 'app', type: AppDescriptor, doc: 'map of all form parameters (can be empty)'
-
-	method name: 'forward',         type: 'void',       params: [path: 'java.lang.String'], doc: "forwards to given url, groovlet or template"
-	method name: 'include',         type: 'void',       params: [path: 'java.lang.String'], doc: "includes given template"
-	method name: 'redirect',        type: 'void',       params: [path: 'java.lang.String'], doc: "redirects to given url, groovlet or template"
 }
 
 (sourceFolderOfCurrentFile('war/WEB-INF') & name("routes") & enclosingScript()).accept {
@@ -404,7 +408,7 @@ The transaction is rollbacked if anything went wrong.
 You can use this method as follows:
 <code>
 datastore.withTransaction { transaction ->
-	// do something in that transaction
+    // do something in that transaction
 }
 </code>'''
 
@@ -428,7 +432,7 @@ datastore.withTransaction { transaction ->
 
 	method name: 'getNamespaces',
 			type: 'java.util.List',
-			doc: 'TODO'
+			doc: 'Gets datastore namespaces.'
 
 	property name: 'namespaces',
 			type: 'java.util.List',
@@ -469,12 +473,10 @@ datastore.withTransaction { transaction ->
 
 (enclosingCallName("transform") & inClosure() & enclosingCallDeclaringType('com.google.appengine.api.images.Image')).accept{
 	provider = 'Gaelyk'
-	
 	method name: 'resize',
 		type: 'com.google.appengine.api.images.Image',
 		params: [width: 'int', height: 'int'],
 		doc: 'Resizes the image.'
-	
 	method name: 'crop',
 		type: 'com.google.appengine.api.images.Image',
 		params: [leftX: 'double', topY: 'double', rightY: 'double', bottomY: 'double'],
@@ -514,12 +516,12 @@ shortcutFor('com.google.appengine.api.images.Image').accept {
 			doc: '''Image transform DSL.
 <pre><code>
 bytes.image.transform {
-	resize 100, 100
-	crop 0.1, 0.1, 0.9, 0.9
-	flip horizontal
-	flip vertical
-	rotate 90
-	feeling lucky
+    resize 100, 100
+    crop 0.1, 0.1, 0.9, 0.9
+    flip horizontal
+    flip vertical
+    rotate 90
+    feeling lucky
 }
 </code></pre>'''
 
@@ -745,12 +747,12 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 
  // with default options
  file.withReader { reader ->
-	 log.info reader.text
+     log.info reader.text
  }
 
  // with specific options:
  file.withReader(encoding: "US-ASCII", locked: true) { reader ->
-	 log.info reader.text
+     log.info reader.text
  }
 </code></pre>'''
 
@@ -764,12 +766,12 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 
  // with default options
  file.withReader { reader ->
-	 log.info reader.text
+     log.info reader.text
  }
 
  // with specific options:
  file.withReader(encoding: "US-ASCII", locked: true) { reader ->
-	 log.info reader.text
+     log.info reader.text
  }
 </code></pre>'''
 
@@ -784,12 +786,12 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 
  // with default options
  file.withOutputStream { stream ->
-	 stream << "some content".bytes
+     stream << "some content".bytes
  }
 
  // with specific options:
  file.withOutputStream(locked: true, finalize: false) { writer ->
-	 stream << "some content".bytes
+     stream << "some content".bytes
  }
 </code></pre>'''
 
@@ -803,12 +805,12 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 
  // with default options
  file.withOutputStream { stream ->
-	 stream << "some content".bytes
+     stream << "some content".bytes
  }
 
  // with specific options:
  file.withOutputStream(locked: true, finalize: false) { writer ->
-	 stream << "some content".bytes
+     stream << "some content".bytes
  }
 </code></pre>'''
 
@@ -823,12 +825,12 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 
  // with default options
  file.withInputStream { stream ->
-	 // read from the buffered input stream
+     // read from the buffered input stream
  }
 
  // with specific options:
  file.withInputStream(locked: true) { stream ->
-	 // read from the buffered input stream
+     // read from the buffered input stream
  }
 </code></pre>'''
 			
@@ -842,12 +844,12 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 
  // with default options
  file.withInputStream { stream ->
-	 // read from the buffered input stream
+     // read from the buffered input stream
  }
 
  // with specific options:
  file.withInputStream(locked: true) { stream ->
-	 // read from the buffered input stream
+     // read from the buffered input stream
  }
 </code></pre>'''
 
@@ -862,12 +864,12 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 
  // with default options
  file.withWriter { writer ->
-	 writer << "some content"
+     writer << "some content"
  }
 
  // with specific options:
  file.withWriter(encoding: "US-ASCII", locked: true, finalize: false) { writer ->
-	 writer << "some content
+     writer << "some content
  }
 </code></pre>'''
 
@@ -881,12 +883,12 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 
  // with default options
  file.withWriter { writer ->
-	 writer << "some content"
+     writer << "some content"
  }
 
  // with specific options:
  file.withWriter(encoding: "US-ASCII", locked: true, finalize: false) { writer ->
-	 writer << "some content
+     writer << "some content
  }
 </code></pre>'''
 
@@ -924,7 +926,7 @@ The map can contain the normal properties of the
 			type: 'void',
 			useNamedArgs: true,
 			params: [attachments: Collection, bcc: Collections, cc: Collection, htmlBody: String, replyTo: String, sender: String, textBody: String, to: Collection],
-			doc: '''Additional <code>sendToAdmins()</code> method for sending emails to the application admins.
+			doc: '''Additional <code>sendToAdmins()</code> method for sending emails to the application admins. 
 This method is taking a map as parameter.
 The map can contain the normal properties of the
 <code>MailService.Message</code> class.'''
@@ -1014,7 +1016,7 @@ It also allows the leftShift notation for adding a header to the response
 
  // adds an additional value to an existing header
  // or sets a first value for a non-existant header
- response.headers['a'] << 'b'
+ response.headers['a'] << 'b' 
 </code></pre>'''
 
 	property name: 'headers',
@@ -1032,7 +1034,7 @@ It also allows the leftShift notation for adding a header to the response
  
  // adds an additional value to an existing header
  // or sets a first value for a non-existant header
- response.headers['a'] << 'b'
+ response.headers['a'] << 'b' 
 </code></pre>'''
 
 }
@@ -1244,7 +1246,7 @@ shortcutFor('groovy.lang.IntRange').accept {
 			params: [byteRangeClass: 'java.lang.Class'],
 			doc: '''Converter method for converting an int range to a blobstore <code>ByteRange</code>:
 <pre><code>
-	300..400 as ByteRange
+    300..400 as ByteRange
 </code></pre>
 Note that Groovy already allowed: <code>[300, 400] as ByteRange</code>.'''
 
@@ -1260,7 +1262,7 @@ This mechanism is used by the "Groovy Truth".'''
 }
 
 
-shortcutFor('java.lang.Class').accept {
+(shortcutFor('java.lang.Class')| shortcutFor('com.google.appengine.api.NamespaceManager')).accept {
 	provider = 'Gaelyk'
 	
 	method name: 'of',
@@ -1349,3 +1351,4 @@ shortcutFor('com.google.appengine.api.LifecycleManager').accept {
 </code></pre>'''
 
 }
+

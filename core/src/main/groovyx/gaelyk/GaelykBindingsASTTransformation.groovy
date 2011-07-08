@@ -98,7 +98,7 @@ class GaelykBindingsASTTransformation implements ASTTransformation {
 	
 	private MethodNode makeServiceGetter(Class serviceClass, String accestorName, Class factoryClass, String factoryMethodName){
 		def ast = new AstBuilder().buildFromSpec {
-			method(accestorName, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, serviceClass) {
+			method(accestorName, Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, serviceClass) {
 				parameters {}
 				exceptions {}
 				block {

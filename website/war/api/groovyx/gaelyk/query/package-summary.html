@@ -2,15 +2,15 @@
 <html>
 <head>
 
-<title>groovyx.gaelyk.routes (Gaelyk 1.0)</title>
-<META NAME="keywords" CONTENT="groovyx.gaelyk.routes package">
+<title>groovyx.gaelyk.query (Gaelyk 1.0)</title>
+<META NAME="keywords" CONTENT="groovyx.gaelyk.query package">
 <LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
 <link href="../../../groovy.ico" type="image/x-icon" rel="shortcut icon">
 <link href="../../../groovy.ico" type="image/x-icon" rel="icon">
 <SCRIPT type="text/javascript">
 function windowTitle()
 {
-    parent.document.title="groovyx.gaelyk.routes (Gaelyk 1.0)";
+    parent.document.title="groovyx.gaelyk.query (Gaelyk 1.0)";
 }
 </SCRIPT>
 <NOSCRIPT>
@@ -52,7 +52,7 @@ function windowTitle()
 &nbsp;PREV&nbsp;
 &nbsp;NEXT</font></td>
 <td class="NavBarCell2" bgcolor="white"><font size="-2">
-  <a href="../../../index.html?groovyx/gaelyk/routes/package-summary.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+  <a href="../../../index.html?groovyx/gaelyk/query/package-summary.html" target="_top"><b>FRAMES</b></a>  &nbsp;
 &nbsp;<a href="package-summary.html" target="_top"><b>NO FRAMES</b></a>  &nbsp;
 &nbsp;<script type="text/javascript">
   <!--
@@ -74,7 +74,7 @@ function windowTitle()
 
 <HR>
 <H2>
-Package groovyx.gaelyk.routes
+Package groovyx.gaelyk.query
 </H2>
 
 
@@ -91,29 +91,32 @@ Package groovyx.gaelyk.routes
     </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="CapabilityAwareDestination.html" title="class in groovyx/gaelyk/routes">CapabilityAwareDestination</A></B></TD>
-        <TD>Route destination which is aware of the GAE capabilities and their status.</TD>
+        <TD WIDTH="15%"><B><A HREF="Clause.html" title="class in groovyx/gaelyk/query">Clause</A></B></TD>
+        <TD>Base class for sort and filter clauses.</TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="Route.html" title="class in groovyx/gaelyk/routes">Route</A></B></TD>
-        <TD>Representation of a route URL mapping.</TD>
+        <TD WIDTH="15%"><B><A HREF="QueryBuilder.html" title="class in groovyx/gaelyk/query">QueryBuilder</A></B></TD>
+        <TD>The query build is used to create a datastore <code>Query</code>
+ or execute a <code>PreparedQuery</code>,
+ from the <code>datastore.query {}</code> or <code>datastore.execute {}</code> calls.</TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="RoutesBaseScript.html" title="class in groovyx/gaelyk/routes">RoutesBaseScript</A></B></TD>
-        <TD>Base script class used for evaluating the routes.</TD>
+        <TD WIDTH="15%"><B><A HREF="QueryDslTransformation.html" title="class in groovyx/gaelyk/query">QueryDslTransformation</A></B></TD>
+        <TD>This AST transformation makes two transformations at the AST level.
+ </TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="RoutesFilter.html" title="class in groovyx/gaelyk/routes">RoutesFilter</A></B></TD>
-        <TD><code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
- Gaelyk application. </TD>
+        <TD WIDTH="15%"><B><A HREF="SortClause.html" title="class in groovyx/gaelyk/query">SortClause</A></B></TD>
+        <TD>A sort clause representing an ordering along a certain entity property.
+ </TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="RoutingRule.html" title="class in groovyx/gaelyk/routes">RoutingRule</A></B></TD>
-        <TD>A routing rule represents the forward or redirect part of a rule definition.
+        <TD WIDTH="15%"><B><A HREF="WhereClause.html" title="class in groovyx/gaelyk/query">WhereClause</A></B></TD>
+        <TD>A where clause adds a filtering operation for the query.
  </TD>
         </TR>
 
@@ -133,18 +136,14 @@ Package groovyx.gaelyk.routes
     </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="CapabilityAwareDestination.CapabilityComparisonOperator.html" title="class in groovyx/gaelyk/routes">CapabilityAwareDestination.CapabilityComparisonOperator</A></B></TD>
-        <TD></TD>
-        </TR>
-
-        <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="HttpMethod.html" title="class in groovyx/gaelyk/routes">HttpMethod</A></B></TD>
-        <TD>Enum listing the various HTTP methods, as well as an <code>ALL</code> element matching all possible methods.</TD>
-        </TR>
-
-        <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="RedirectionType.html" title="class in groovyx/gaelyk/routes">RedirectionType</A></B></TD>
-        <TD>Type of redirection for the URL rewriting: either "redirect" or "forward" to a new location.</TD>
+        <TD WIDTH="15%"><B><A HREF="QueryType.html" title="class in groovyx/gaelyk/query">QueryType</A></B></TD>
+        <TD>The various options for the select parameter:
+ <ul>
+     <li>ALL: <code>select all</code> (full entity, default select option when select omitted)</li>
+     <li>KEYS: <code>select keys</code> (return just the keys)</li>
+     <li>SINGLE: <code>select single</code> (return just one entity when the search yields just one)</li>
+     <li>COUNT: <code>select count</code> (return the count of entities for that query)</li>
+ </ul></TD>
         </TR>
 
 </TABLE>
@@ -155,6 +154,25 @@ Package groovyx.gaelyk.routes
 <hr>
     
 
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Exception Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="QuerySyntaxException.html" title="class in groovyx/gaelyk/query">QuerySyntaxException</A></B></TD>
+        <TD>Exception thrown when there is a syntax problem in your datastore queries using the datastore query DSL.</TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
 
 
 

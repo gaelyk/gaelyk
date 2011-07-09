@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<title>groovyx.gaelyk (Gaelyk 0.7)</title>
+<title>groovyx.gaelyk (Gaelyk 1.0)</title>
 <META NAME="keywords" CONTENT="groovyx.gaelyk package">
 <LINK REL ="stylesheet" TYPE="text/css" HREF="../../stylesheet.css" TITLE="Style">
 <link href="../../groovy.ico" type="image/x-icon" rel="shortcut icon">
@@ -10,7 +10,7 @@
 <SCRIPT type="text/javascript">
 function windowTitle()
 {
-    parent.document.title="groovyx.gaelyk (Gaelyk 0.7)";
+    parent.document.title="groovyx.gaelyk (Gaelyk 1.0)";
 }
 </SCRIPT>
 <NOSCRIPT>
@@ -101,6 +101,13 @@ Package groovyx.gaelyk
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="GaelykBindingsTransformation.html" title="class in groovyx/gaelyk">GaelykBindingsTransformation</A></B></TD>
+        <TD>This Groovy AST Transformation is a local transformation which is triggered by the Groovy compiler
+ when developers annotate their classes with the <code>@GaelykBindings</code> annotation.
+ </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
         <TD WIDTH="15%"><B><A HREF="GaelykCategory.html" title="class in groovyx/gaelyk">GaelykCategory</A></B></TD>
         <TD>Category methods decorating the Google App Engine SDK classes
  adding new shortcut methods to simplify the usage of the SDK
@@ -148,6 +155,28 @@ Package groovyx.gaelyk
 
 
 
+
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Annotation Type Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="GaelykBindings.html" title="class in groovyx/gaelyk">GaelykBindings</A></B></TD>
+        <TD>If you annotate your classes with the <code>@GaelykBindings</code> annotation,
+ the compiler will automatically inject the variables and services
+ that are usually injected in your Groovlets and templates.
+ </TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
 
 
 <p>Groovy Documentation</p>

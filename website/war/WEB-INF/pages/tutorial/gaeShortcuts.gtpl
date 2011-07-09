@@ -274,12 +274,15 @@ Here are the various options of those verbs:
     // return just the keys of the entities matched by the query
     select keys
 
+    // specify the entity kind to search into
     from entityKind
 
     // specify that entities searched should be child of another entity
     // represented by its key
     ancestor entityKey
 
+    // add a filter operation
+    // operators allowed are: &lt;, &lt;=, ==, !=, &gt;, &gt;=, in
     where propertyName &lt;  value
     where propertyName &lt;= value
     where propertyName == value

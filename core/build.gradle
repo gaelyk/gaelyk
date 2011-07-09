@@ -5,7 +5,7 @@ targetCompatibility = 1.5
 defaultTasks 'clean', 'build'
 
 // current Gaelyk version
-version = '0.7'
+version = '1.0'
 
 // various directory places and file names
 tmpProj = "../template-project"
@@ -66,10 +66,10 @@ task template << {
     ant.copy file: jar.archivePath, todir: projLib
 
     println "Creating the template project ZIP file"
-    ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX, *.iml, .DS_Store'
+    ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX,*.iml,.DS_Store,bin/**,.gradle/**,build/**,war/WEB-INF/appengine-generated/**'
 }
 
-task dist(dependsOn: [groovydoc, template]) << {
+task dist(dependsOn: [jar, groovydoc, template]) << {
     description = "Updating the Gaelyk JAR of the website"
     println description
 

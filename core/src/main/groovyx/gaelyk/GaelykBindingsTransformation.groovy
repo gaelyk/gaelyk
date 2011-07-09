@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package groovyx.gaelyk
 
 import com.google.appengine.api.LifecycleManager
@@ -41,14 +56,19 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 import java.lang.reflect.Modifier
 
 /**
+ * This Groovy AST Transformation is a local transformation which is triggered by the Groovy compiler
+ * when developers annotate their classes with the <code>@GaelykBindings</code> annotation.
+ * The transformation will inject the various variables and services usually injected in Groovlets and templates.
  *
+ * @author Vladimir Orany
+ * @author Guillaume Laforge
  */
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 class GaelykBindingsTransformation implements ASTTransformation {
 	
 	void visit(ASTNode[] nodes, SourceUnit unit) {
 		if (nodes.length != 2 || !(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
-			println "Internal error: expecting [AnnotationNode, ClassNode] but got: " + Arrays.asList(nodes)
+			println "Internal error: expecting [AnnotationNode, ClassNode] but got: ${Arrays.asList(nodes)}"
 		}
 
 		ClassNode parent = (ClassNode) nodes[1]
@@ -77,7 +97,7 @@ class GaelykBindingsTransformation implements ASTTransformation {
 
 	}
 
-	void addGetterIfNotExists(ClassNode parent, Class serviceClass, String getterName, Class factoryClass, String factoryMethodName) {
+	private void addGetterIfNotExists(ClassNode parent, Class serviceClass, String getterName, Class factoryClass, String factoryMethodName) {
 		if(!parent.getGetterMethod(getterName)) {
 			parent.addMethod makeServiceGetter(serviceClass, getterName, factoryClass, factoryMethodName)
 		}

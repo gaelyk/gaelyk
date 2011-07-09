@@ -48,7 +48,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Introduction of the <a href="/plugins">plugins page</a> in the Gaelyk website, for referencing known plugins</li>
     <li>
         By annotating classes with <code>GaelykBindings</code>, the same
-        <a href="/tutorial/app-engine-shortcuts#gaelykBindings">services and variables are injected in your classes as properties</a>,
+        <a href="/tutorial/views-and-controllers#gaelykBindings">services and variables are injected in your classes as properties</a>,
         as the ones which are injected in Groovlets and templates
     </li>
     <li>

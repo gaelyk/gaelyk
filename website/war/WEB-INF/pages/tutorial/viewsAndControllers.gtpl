@@ -238,7 +238,7 @@ in your classes.
 </blockquote>
 
 <blockquote>
-<b>Note: If your class already has a property of the same name as the variables and services injected
+<b>Note: </b> If your class already has a property of the same name as the variables and services injected
 by this AST transformation, they won't be overriden.
 </blockquote>
 

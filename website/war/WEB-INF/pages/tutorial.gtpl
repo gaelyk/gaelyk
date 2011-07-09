@@ -62,6 +62,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <ul>
             <li><a href="/tutorial/views-and-controllers#eager">Eager variables</a></li>
             <li><a href="/tutorial/views-and-controllers#lazy">Lazy variables</a></li>
+            <li><a href="/tutorial/views-and-controllers#gaelykBindings">Injecting services and variables in your classes</a></li>
         </ul>
         <li><a href="/tutorial/views-and-controllers#templates">Templates</a></li>
         <ul>

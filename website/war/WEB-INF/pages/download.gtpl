@@ -9,12 +9,12 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.7.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.7.zip">Template project v0.7</a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.0.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.0.zip">Template project v1.0</a></td>
         </tr>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-0.7.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-0.7.jar">Gaelyk JAR v0.7</a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.0.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.0.jar">Gaelyk JAR v1.0</a></td>
         </tr>
     </table>
 </div>
@@ -32,8 +32,9 @@ and with the 1.5.1 version of the App Engine SDK.
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
 
-<h2>version 1.0</h2>
+<h2>Version 1.0</h2>
 
+<h3>Changes</h3>
 <ul>
     <li>GAE SDK updated to 1.5.1</li>
     <li>
@@ -46,6 +47,11 @@ But to get you started quickly, you may use a ready-made template project which 
     </li>
     <li>Introduction of the <a href="/plugins">plugins page</a> in the Gaelyk website, for referencing known plugins</li>
     <li>
+        By annotating classes with <code>GaelykBindings</code>, the same
+        <a href="/tutorial/app-engine-shortcuts#gaelykBindings">services and variables are injected in your classes as properties</a>,
+        as the ones which are injected in Groovlets and templates
+    </li>
+    <li>
         The <a href="/tutorial/url-routing#path-variable-validation">validation closures</a> of the routes
         in your URL mapping have access to the request,
         so you can validate a URL depending on what's in your request (attribute, session, etc.)
@@ -57,6 +63,13 @@ But to get you started quickly, you may use a ready-made template project which 
         from within binding/before/after blocks in plugin descriptors
     </li>
 </ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.0.jar">gaelyk-1.0.jar</a></li>
+    <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.0.zip">gaelyk-template-project-1.0.zip</a></li>
+</ul>
+
 
 <h2>Version 0.7</h2>
 
@@ -157,12 +170,6 @@ But to get you started quickly, you may use a ready-made template project which 
     </li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.jar">gaelyk-0.6.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.zip">gaelyk-template-project-0.6.zip</a></li>
-</ul>
-
 <h2>Version 0.5.6</h2>
 
 <h3>Changes</h3>
@@ -177,12 +184,6 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Fixed a small bug with the type coercion of Strings into built-in Datastore types</li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.5.6.jar">gaelyk-0.5.6.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.5.6.zip">gaelyk-template-project-0.5.6.zip</a></li>
-</ul>
-
 <h2>Version 0.5.5</h2>
 
 <h3>Changes</h3>
@@ -190,12 +191,6 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Added a <a href="/tutorial/url-routing#capability-routing">capability-aware URL routing</a> mechanism</li>
     <li>Added a <a href="/tutorial/url-routing#namespace-scoped">namespace-aware URL routing</a> mechanism</li>
     <li>Completely reorganized the documentation, particularly splitting the content over several pages and providing a table of content.</li>
-</ul>
-
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.5.5.jar">gaelyk-0.5.5.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.5.5.zip">gaelyk-template-project-0.5.5.zip</a></li>
 </ul>
 
 <h2>Version 0.5</h2>
@@ -219,12 +214,6 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Upgrade of the website and template project to Groovy 1.7.5</li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.5.jar">gaelyk-0.5.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.5.zip">gaelyk-template-project-0.5.zip</a></li>
-</ul>
-
 <h2>Version 0.4.4</h2>
 
 <h3>Changes</h3>
@@ -246,12 +235,6 @@ But to get you started quickly, you may use a ready-made template project which 
     </li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.4.4.jar">gaelyk-0.4.4.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.4.4.zip">gaelyk-template-project-0.4.4.zip</a></li>
-</ul>
-
 <h2>Version 0.4.3</h2>
 
 <h3>Changes</h3>
@@ -266,24 +249,12 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Updated Groovy to the latest 1.7.4 version</li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.4.3.jar">gaelyk-0.4.3.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.4.3.zip">gaelyk-template-project-0.4.3.zip</a></li>
-</ul>
-
 <h2>Version 0.4.2</h2>
 
 <h3>Changes</h3>
 <ul>
     <li>Bug fixes regarding the encoding issue with the caching system</li>
     <li>New blobstore service related improvements</li>
-</ul>
-
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.4.2.jar">gaelyk-0.4.2.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.4.2.zip">gaelyk-template-project-0.4.2.zip</a></li>
 </ul>
 
 <h2>Version 0.4.1</h2>
@@ -304,23 +275,11 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>A few minor bug fixes</li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.4.1.jar">gaelyk-0.4.1.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.4.1.zip">gaelyk-template-project-0.4.1.zip</a></li>
-</ul>
-
 <h2>Version 0.4</h2>
 
 <h3>Changes</h3>
 <ul>
     <li>Created a <a href="/tutorial/plugins">simple plugin system</a> to futher modularize your applications and share commonalities between projects</li>
-</ul>
-
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.4.jar">gaelyk-0.4.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.4.zip">gaelyk-template-project-0.4.zip</a></li>
 </ul>
 
 <h2>Version 0.3.3</h2>
@@ -332,12 +291,6 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Small internal refactoring on how the binding variables are injected</li>
     <li>Started adding a few more tests for improving the coverage of the project</li>
     <li>Enhance the binding of the routes script, so you can have programmatic routes depending on GAE services (ie. one could store routes in the datastore)</li>
-</ul>
-
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.3.3.jar">gaelyk-0.3.3.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.3.3.zip">gaelyk-template-project-0.3.3.zip</a></li>
 </ul>
 
 <h2>Version 0.3.2</h2>
@@ -354,23 +307,11 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Upgraded the template project to the newly released Groovy 1.7-RC-1</li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.3.2.jar">gaelyk-0.3.2.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.3.2.zip">gaelyk-template-project-0.3.2.zip</a></li>
-</ul>
-
 <h2>Version 0.3.1</h2>
 
 <h3>Changes</h3>
 <ul>
     <li>Fixed issue with using the same xmpp script name as the service variable in the binding</li>
-</ul>
-
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.3.1.jar">gaelyk-0.3.1.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.3.1.zip">gaelyk-template-project-0.3.1.zip</a></li>
 </ul>
 
 <h2>Version 0.3</h2>
@@ -381,12 +322,6 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>New methods for working with the memcache service (subscript notation, and <code>in</code> keyword support).</li>
     <li>Support for incoming email support</li>
     <li>Fixed issue with sending of emails</li>
-</ul>
-
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.3.jar">gaelyk-0.3.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.3.zip">gaelyk-template-project-0.3.zip</a></li>
 </ul>
 
 <h2>Version 0.2</h2>
@@ -409,18 +344,9 @@ But to get you started quickly, you may use a ready-made template project which 
     </li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.2.jar">gaelyk-0.2.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.2.zip">gaelyk-template-project-0.2.zip</a></li>
-</ul>
-
 <h2>Version 0.1</h2>
 
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.1.jar">gaelyk-0.1.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.1.zip">gaelyk-template-project-0.1.zip</a></li>
-</ul>
+<h3>Initial version</h3>
 
 </body>
 </html>

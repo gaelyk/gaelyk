@@ -7,9 +7,10 @@ import java.lang.annotation.Target;
 
 import org.codehaus.groovy.transform.GroovyASTTransformationClass;
 
+/**
+ * 
+ */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-@GroovyASTTransformationClass(classes = [GaelykBindingsASTTransformation])
-@interface GaelykBindings{
-	
-}
+@GroovyASTTransformationClass(classes = [GaelykBindingsTransformation])
+@interface GaelykBindings { }

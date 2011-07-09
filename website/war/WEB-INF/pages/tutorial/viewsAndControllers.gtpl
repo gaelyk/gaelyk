@@ -200,8 +200,47 @@ by injecting specific elements of the Google App Engine SDK:
 <p>
 Thanks to all these variables and services available, you'll be able to access the Google services and Servlet specific artifacts
 with a short and concise syntax to further streamline the code of your application.
-In the next section, we'll dive in the <b>Gaelyk</b> templates and groovlets.
 </p>
+
+<a name="gaelykBindings"></a>
+<h3>Injecting services and variables in your classes</h3>
+
+<p>
+All the variables and services listed in the previous sections are automatically injected into the binding
+of Groovlets and templates, making their access transparent, as if they were implicit or global variables.
+But what about classes? If you want to also inject the services and variables into your classes,
+you can annotate them with the <code>@GaelykBindings</code> annotation.
+</p>
+
+<pre class="brush:groovy">
+    import groovyx.gaelyk.GaelykBindings
+
+    // annotate your class with the transformation
+    @GaelykBindings
+    class WeblogService {
+        def numberOfComments(post) {
+            // the datastore service is available
+            datastore.execute {
+                select count from comments where postId == post.id
+            }
+        }
+    }
+</pre>
+
+<p>
+The annotation instructs the compiler to create properties in your class for each of the services and variables.
+</p>
+
+<blockquote>
+<b>Note: </b> Variables like <code>request</code>, <code>response</code>, <code>session</code>, <code>context</code>,
+<code>params</code>, <code>headers</code>, <code>out</code>, <code>sout</code>, <code>html</code> are not bound
+in your classes.
+</blockquote>
+
+<blockquote>
+<b>Note: If your class already has a property of the same name as the variables and services injected
+by this AST transformation, they won't be overriden.
+</blockquote>
 
 <a name="templates"></a>
 <h2>Templates</h2>

@@ -34,6 +34,7 @@ import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.files.FileServiceFactory
 import com.google.appengine.api.backends.BackendServiceFactory
 import com.google.appengine.api.LifecycleManager
+import com.google.appengine.api.users.User
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -58,44 +59,33 @@ class GaelykBindingEnhancer {
         binding.setVariable("images", ImagesServiceWrapper.instance)
         
         // bind user service and current user
-        UserService userService = UserServiceFactory.userService
-        binding.setVariable("users", userService)
-        binding.setVariable("user", userService.getCurrentUser())
+        binding.setVariable("users", UserServiceFactory.userService)
+        binding.setVariable("user", getCurrentUser())
 
         // New in GAE SDK 1.2.5: task queues
         binding.setVariable("defaultQueue", QueueFactory.defaultQueue)
-        binding.setVariable("queues", new QueueAccessor())
+        binding.setVariable("queues", getQueues())
 
         // New in GAE SDK 1.2.5: XMPP support
         binding.setVariable("xmpp", XMPPServiceFactory.XMPPService)
 
         // Tells whether the application is running in local development mode
         // or is deployed on Google's cloud
-        binding.setVariable("localMode", SystemProperty.environment.value() == SystemProperty.Environment.Value.Development)
+        binding.setVariable("localMode", getLocalMode())
 
         // New in GAE SDK 1.3.0: blobstore support
         binding.setVariable("blobstore", BlobstoreServiceFactory.blobstoreService)
 
         // Since GAE SDK 1.3.3.1: special system properties
-        binding.setVariable("app", [
-                env: [
-                        name: SystemProperty.environment.value(),
-                        version: SystemProperty.version.get(),
-                ],
-                gaelyk: [
-                        version: '1.0'
-                ],
-                id: SystemProperty.applicationId.get(),
-                version: SystemProperty.applicationVersion.get()
-        ])
+        binding.setVariable("app", getApp())
 
         // Add a logger variable to easily access any logger
-        binding.setVariable("logger", new LoggerAccessor())
+        binding.setVariable("logger", getLogger())
 
         binding.setVariable("oauth", OAuthServiceFactory.OAuthService)
 
         // Namespace added in SDK 1.3.7
-        binding.setVariable("namespace", NamespaceManager)
+        binding.setVariable("namespace", getNamespaceManager())
 
         // Capabilities service to know the status of the various GAE services
         binding.setVariable("capabilities", CapabilitiesServiceFactory.capabilitiesService)
@@ -109,5 +99,39 @@ class GaelykBindingEnhancer {
         // Backend service and Lifecycle manager in SDK 1.5.0
         binding.setVariable("backends", BackendServiceFactory.backendService)
         binding.setVariable("lifecycle", LifecycleManager.instance)
+    }
+
+    static User getCurrentUser() {
+        UserServiceFactory.userService?.currentUser
+    }
+
+    static QueueAccessor getQueues() {
+        new QueueAccessor()
+    }
+
+    static Boolean getLocalMode() {
+        SystemProperty.environment.value() == SystemProperty.Environment.Value.Development
+    }
+
+    static Map getApp() {
+        [
+            env: [
+                name: SystemProperty.environment.value(),
+                version: SystemProperty.version.get(),
+            ],
+            gaelyk: [
+                version: '1.0'
+            ],
+            id: SystemProperty.applicationId.get(),
+            version: SystemProperty.applicationVersion.get()
+        ]
+    }
+
+    static LoggerAccessor getLogger() {
+        new LoggerAccessor()
+    }
+
+    static Class getNamespaceManager() {
+        NamespaceManager
     }
 }

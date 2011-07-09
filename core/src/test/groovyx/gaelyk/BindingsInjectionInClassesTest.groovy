@@ -18,7 +18,7 @@ import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.taskqueue.Queue
 
 /**
- * 
+ * @author Vladimir Orany
  * @author Guillaume Laforge
  */
 class BindingsInjectionInClassesTest extends GroovyTestCase {

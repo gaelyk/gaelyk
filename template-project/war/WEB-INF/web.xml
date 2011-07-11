@@ -46,6 +46,9 @@
     <filter-mapping>
         <filter-name>RoutesFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
     <!-- Uncomment the following security constraint if you want to secure your incoming email endpoint -->

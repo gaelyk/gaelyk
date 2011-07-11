@@ -101,6 +101,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
             <li><a href="/tutorial/app-engine-shortcuts#entity">Using <code>Entity</code>s as maps or POJOs/POGOs</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#conversion">Converting beans to entities and back</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#save-delete">Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#delete-get-on-key">Added <code>delete()</code> and <code>get()</code> methods on <code>Key</code></a></li>
             <li><a href="/tutorial/app-engine-shortcuts#transaction">Added <code>withTransaction()</code> method on the datastore service</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#query">Querying</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#async-datastore">Asynchronous datastore</a></li>

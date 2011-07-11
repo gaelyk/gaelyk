@@ -57,6 +57,10 @@ But to get you started quickly, you may use a ready-made template project which 
         so you can validate a URL depending on what's in your request (attribute, session, etc.)
     </li>
     <li>Added a DSLD file (DSL descriptor) for Eclipse for easing code-completion and navigation</li>
+    <li>
+        Added a <a href="/tutorial/app-engine-shortcuts#delete-get-on-key"><code>get()</code> method on <code>Key</code></a>,
+        as well as on lists of keys
+    </li>
     <li>Problems with the recent XMPP support fixed</li>
     <li>
         Fixed inability to access the various services and variables

@@ -90,6 +90,27 @@ class DatastoreShortcutsTest extends GroovyTestCase {
         }
     }
 
+    void testKeysGet() {
+        use (GaelykCategory) {
+            Key k1 = new Entity('articles').with {
+                title = "article one"
+                save()
+            }
+
+            Key k2 = new Entity('articles').with {
+                title = "article two"
+                save()
+            }
+
+            def e = k1.get()
+            assert e.title == "article one"
+
+            def map = [k1, k2].get()
+            assert map[k1].title == "article one"
+            assert map[k2].title == "article two"
+        }
+    }
+
     void testAsynchronous() {
         def datastore = DatastoreServiceFactory.datastoreService
 

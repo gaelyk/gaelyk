@@ -344,6 +344,26 @@ class GaelykCategory {
     }
 
     /**
+     * Fetch the entity associated with that key from the datastore.
+     * Usage: <code>def entity = key.get()</code>
+     *
+     * @returns an entity
+     */
+    static Entity get(Key key) {
+        DatastoreServiceFactory.datastoreService.get(key)
+    }
+
+    /**
+     * Fetch the entities associated with the collection of keys from the datastore.
+     * Usage: <code>def entities = [key1, key2].get()</code>
+     *
+     * @returns a map of key and entity
+     */
+    static Map<Key, Entity> get(Iterable<Key> keys) {
+        DatastoreServiceFactory.datastoreService.get(keys)
+    }
+
+    /**
      * Delete the entity represented by that key, from the data store.
      * Usage: <code>key.delete()</code>
      */

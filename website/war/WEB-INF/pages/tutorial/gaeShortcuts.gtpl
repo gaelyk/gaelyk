@@ -176,7 +176,8 @@ Afterwards, if you need to delete the <code>Entity</code> you're working on, you
     entity.delete()
 </pre>
 
-<h3>Added <code>delete()</code> method on <code>Key</code></h3>
+<a name="delete-get-on-key"></a>
+<h3>Added <code>delete()</code> and <code>get()</code> method on <code>Key</code></h3>
 
 <p>
 Sometimes, you are dealing with keys, rather than dealing with entities directly &mdash;
@@ -186,6 +187,25 @@ If you want to delete an element in the datastore, when you just have the key, y
 
 <pre class="brush:groovy">
     someEntityKey.delete()
+</pre>
+
+<p>
+Given a <code>Key</code>, you can get the associated entity with the <code>get()</code> method:
+</p>
+
+<pre class="brush:groovy">
+    Entity e = someEntityKey.get()
+</pre>
+
+<p>
+And if you have a list of entities, you can get them all at once:
+</p>
+
+<pre class="brush:groovy">
+    def map = [key1, key2].get()
+
+    // and then access the returned entity from the map:
+    map[key1]
 </pre>
 
 <a name="transaction"></a>

@@ -76,7 +76,7 @@ class QueryBuilder {
             for (entity in entities) result << entity.asType(coercedClass)
             return result
         } else {
-            return preparedQuery.asQueryResultIterator(options)
+            return preparedQuery.asList(options)
         }
     }
 

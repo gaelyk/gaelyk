@@ -122,7 +122,6 @@ class RoutesFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest)servletRequest
         HttpServletResponse response = (HttpServletResponse)servletResponse
 
-        def requestURI = request.requestURI
         def method = request.method
 
         boolean foundRoute = false

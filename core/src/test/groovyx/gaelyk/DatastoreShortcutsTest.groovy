@@ -136,6 +136,23 @@ class DatastoreShortcutsTest extends GroovyTestCase {
 
             assert datastore.prepare( new Query('animal') ).countEntities() == 0
         }
+    }
 
+    void testTransparentHandlingOfTextTypeOnEntityies() {
+        use (GaelykCategory) {
+            def key = new Entity('articles').with {
+                shortText = "this is a short text"
+                longText = "Z" * 1000
+                save()
+            }
+
+            def entity = key.get()
+
+            assert entity.shortText instanceof String
+            assert entity.shortText.size() == 20
+
+            assert entity.longText instanceof String
+            assert entity.longText.size() == 1000
+        }
     }
 }

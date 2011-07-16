@@ -10,7 +10,8 @@ class TestUtil {
         [
                 getRequestURI: {-> uri },
                 toString: {-> "mock request" },
-                getAttribute: { String name -> name.toUpperCase() }
+                getAttribute: { String name -> name.toUpperCase() },
+                setAttribute: { String name, val -> }
         ] as HttpServletRequest
     }
 }

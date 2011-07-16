@@ -259,7 +259,7 @@ class GaelykCategory {
      * <code>entity['propertyName']</code>
      */
     static Object getAt(Entity entity, String name) {
-        entity.getProperty(name)
+        transformValueForRetrieval(entity.getProperty(name))
     }
 
     /**
@@ -270,7 +270,13 @@ class GaelykCategory {
      * <code>entity.propertyName</code>
      */
     static Object get(Entity entity, String name) {
-        entity.getProperty(name)
+        transformValueForRetrieval(entity.getProperty(name))
+    }
+
+    // All transformations that need to be done on entity fields
+    // before being accessed by the user
+    private static Object transformValueForRetrieval(Object value) {
+        value instanceof Text ? value.value : value
     }
 
     /**
@@ -281,7 +287,7 @@ class GaelykCategory {
      * <code>entity['propertyName'] = value</code>
      */
     static void setAt(Entity entity, String name, Object value) {
-        entity.setProperty(name, transformeEntityFieldValue(value))
+        entity.setProperty(name, transformValueForStorage(value))
     }
 
     /**
@@ -292,15 +298,21 @@ class GaelykCategory {
      * <code>entity.propertyName = value</code>
      */
     static void set(Entity entity, String name, Object value) {
-        entity.setProperty(name, transformeEntityFieldValue(value))
+        entity.setProperty(name, transformValueForStorage(value))
     }
 
-    // All transformations that needs to be done on entity fields
+    // All transformations that need to be done on entity fields
     // prior to their insertion in the datastore
-    private static Object transformeEntityFieldValue(Object value) {
+    private static Object transformValueForStorage(Object value) {
         // the datastore doesn't allow to store GStringImpl
         // so we need a toString() first
-        value instanceof GString ? value.toString() : value
+        def newValue = value instanceof GString ? value.toString() : value
+        // if we store a string longer than 500 characters
+        // it needs to be wrapped in a Text instance
+        if (newValue instanceof String && newValue.size() > 500) {
+            newValue = new Text(newValue)
+        }
+        return newValue
     }
 
     /**

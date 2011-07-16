@@ -194,28 +194,4 @@ class QueryDslTest extends GroovyTestCase {
         shouldFail(IllegalArgumentException) { execute 'from persons prefetchSize -10' }
         shouldFail(IllegalArgumentException) { execute 'from persons chunkSize -10' }
     }
-
-    void testCursors() {
-        createTestData()
-
-        def datastore = DatastoreServiceFactory.datastoreService
-
-        use (GaelykCategory) {
-            def iter = datastore.execute { from persons }
-
-            iter.next()
-            String startCursor = iter.cursor.toWebSafeString()
-            iter.next()
-            iter.next()
-            String endCursor = iter.cursor.toWebSafeString()
-
-            def results = datastore.execute {
-                from persons
-                startAt startCursor endAt endCursor
-            }
-
-            assert results.next().name == 'Marion'
-            assert results.next().name == 'John'
-        }
-    }
 }

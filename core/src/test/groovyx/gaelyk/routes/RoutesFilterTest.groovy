@@ -109,7 +109,8 @@ class RoutesFilterTest extends GroovyTestCase {
     void testIgnoredRoute() {
         def request = [
                 getRequestURI: { -> "/ignore" },
-                getMethod: { -> "GET" }
+                getMethod: { -> "GET" },
+                setAttribute: { String name, val -> }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse
@@ -127,7 +128,8 @@ class RoutesFilterTest extends GroovyTestCase {
     void testRedirectRoute() {
         def request = [
                 getRequestURI: { -> "/redirect" },
-                getMethod: { -> "GET" }
+                getMethod: { -> "GET" },
+                setAttribute: { String name, val -> }
         ] as HttpServletRequest
 
         def redirected = ""
@@ -155,7 +157,8 @@ class RoutesFilterTest extends GroovyTestCase {
                 getRequestURI: { -> "/acme/home" },
                 getQueryString: { -> "" },
                 getMethod: { -> "GET" },
-                getRequestDispatcher: { String s -> dispatched = s; return dispatcher }
+                getRequestDispatcher: { String s -> dispatched = s; return dispatcher },
+                setAttribute: { String name, val -> }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse
@@ -180,7 +183,8 @@ class RoutesFilterTest extends GroovyTestCase {
                 getRequestURI: { -> "/somewhere" },
                 getQueryString: { -> "" },
                 getMethod: { -> "GET" },
-                getRequestDispatcher: { String s -> dispatched = s; return dispatcher }
+                getRequestDispatcher: { String s -> dispatched = s; return dispatcher },
+                setAttribute: { String name, val -> }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse

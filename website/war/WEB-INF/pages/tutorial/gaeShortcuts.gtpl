@@ -45,6 +45,13 @@ The following example shows how you can access <code>Entity</code>s:
     println entity.age
 </pre>
 
+<blockquote>
+    <b>Note: </b> For string properties, Google App Engine usually distinguishes between strings longer or shorter than 500 characters.
+    Short strings are just mere Java strings, while longer strings (&gt;500 chars) should be wrapped in a <code>Text</code> instance.
+    <b>Gaelyk</b> shields you from taking care of the difference, and instead, when using the two notations above,
+    you just have to deal with mere Java strings, and don't need to use the <code>Text</code> class at all.
+</blockquote>
+
 <p>
 A handy mechanism exists to assign several properties at once, on your entities, using the <code>&lt;&lt;</code> (left shift) operator.
 This is particularly useful when you have properties coming from the request, in the <code>params</code> map variable.

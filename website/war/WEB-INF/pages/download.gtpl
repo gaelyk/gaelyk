@@ -74,6 +74,23 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.0.zip">gaelyk-template-project-1.0.zip</a></li>
 </ul>
 
+<h4>Breaking changes</h4>
+
+<ul>
+    <li>
+        When storing or retrieving a String value into/from an entity attribute,
+        Gaelyk now takes care transparently of dealing with <code>String</code> vs <code>Text</code>:
+        whether the string you want to access or update is longer than 500 characters or not,
+        Gaelyk will treat that as a mere Java string,
+        so you won't have to deal with <code>Text</code> anymore.
+        More concretely, you don't need to do
+        <code>entity.content = new Text("...")</code> for storing a string longer than 500 characters, nor
+        <code>entity.content.value</code> to access a string property longer than 500 characters.
+        Now, in all situations, for string properties, independently of their size,
+        just do <code>entity.content</code> for accessing and setting the value of that property.
+    </li>
+</ul>
+
 
 <h2>Version 0.7</h2>
 

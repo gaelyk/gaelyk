@@ -169,6 +169,8 @@ class Route {
                 result.namespace = ns()
             }
 
+            request.setAttribute("originalURI", uri)
+
             return result
         } else {
             [matches: false]

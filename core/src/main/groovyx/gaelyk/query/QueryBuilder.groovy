@@ -69,7 +69,7 @@ class QueryBuilder {
         }
 
         if (coercedClass) {
-            def entities = preparedQuery.asQueryResultIterator(options)
+            def entities = preparedQuery.asList(options)
             // use "manual" collect{} as in the context of the query{} call
             // the delegation transforms the class into a string expression
             def result = []

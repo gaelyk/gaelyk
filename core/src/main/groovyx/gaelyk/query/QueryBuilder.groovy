@@ -23,6 +23,11 @@ class QueryBuilder {
     @PackageScope Class coercedClass
     @PackageScope List<Clause> clauses = []
     private FetchOptions options = FetchOptions.Builder.withDefaults()
+    private Binding binding
+
+    QueryBuilder(Binding binding) {
+        this.binding = binding
+    }
 
     /**
      * @return a <code>Query</code> object
@@ -85,10 +90,14 @@ class QueryBuilder {
      * @return the all, keys, single or count query type constants or a string representing the property
      */
     def getProperty(String name) {
+        if (binding.variables.containsKey(name))
+            return binding.variables[name]
+
         if (name == 'all')    return QueryType.ALL
         if (name == 'keys')   return QueryType.KEYS
         if (name == 'single') return QueryType.SINGLE
         if (name == 'count')  return QueryType.COUNT
+
         return name
     }
 

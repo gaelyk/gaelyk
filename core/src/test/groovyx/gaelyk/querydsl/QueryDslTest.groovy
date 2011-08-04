@@ -210,4 +210,41 @@ class QueryDslTest extends GroovyTestCase {
         shouldFail(IllegalArgumentException) { execute 'from persons prefetchSize -10' }
         shouldFail(IllegalArgumentException) { execute 'from persons chunkSize -10' }
     }
+
+    void testDynamicVariablesUsage() {
+        TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+        Class<Script> clazz = th.parse """
+                import com.google.appengine.api.datastore.*
+                import groovyx.gaelyk.GaelykCategory
+
+                def datastore = DatastoreServiceFactory.datastoreService
+
+                new Entity('person').with {
+                    name = 'Guillaume'
+                    age = 34
+                    save()
+                }
+                new Entity('person').with {
+                    name = 'Marion'
+                    age = 3
+                    save()
+                }
+
+                datastore.execute {
+                    select all from person
+                    where name == params.name
+                }
+        """
+
+        Script script = clazz.newInstance()
+        script.binding = new Binding([params: [name: 'Guillaume']])
+
+        use(GaelykCategory) {
+            def persons = script.run()
+
+            assert persons.size() == 1
+            assert persons[0].age == 34
+        }
+    }
 }

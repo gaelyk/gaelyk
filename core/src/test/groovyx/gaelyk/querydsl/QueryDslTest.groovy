@@ -218,8 +218,6 @@ class QueryDslTest extends GroovyTestCase {
                 import com.google.appengine.api.datastore.*
                 import groovyx.gaelyk.GaelykCategory
 
-                def datastore = DatastoreServiceFactory.datastoreService
-
                 new Entity('person').with {
                     name = 'Guillaume'
                     age = 34
@@ -238,7 +236,7 @@ class QueryDslTest extends GroovyTestCase {
         """
 
         Script script = clazz.newInstance()
-        script.binding = new Binding([params: [name: 'Guillaume']])
+        script.binding = new Binding([params: [name: 'Guillaume'], datastore: DatastoreServiceFactory.datastoreService])
 
         use(GaelykCategory) {
             def persons = script.run()

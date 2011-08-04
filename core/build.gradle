@@ -31,7 +31,7 @@ sourceSets {
 }
 
 dependencies {
-    groovy fileTree(dir: 'lib', includes: ['groovy-all-1.8.0.jar'])
+    groovy fileTree(dir: 'lib', includes: ['groovy-all-1.8.1.jar'])
     compile fileTree(dir: 'lib', includes: ['*.jar'])
 }
 

@@ -11,7 +11,7 @@ import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
 import groovyx.gaelyk.query.QuerySyntaxException
 import com.google.appengine.api.datastore.DatastoreServiceFactory
-import com.google.appengine.api.datastore.Cursor
+import com.google.appengine.api.datastore.Query
 
 /**
  * 
@@ -243,6 +243,67 @@ class QueryDslTest extends GroovyTestCase {
 
             assert persons.size() == 1
             assert persons[0].age == 34
+        }
+    }
+
+    void testComparisonOnKey() {
+        use(GaelykCategory) {
+            def keys = ['a', 'b', 'c', 'd'].collect { n ->
+                new Entity('player').with {
+                    name = n
+                    save()
+                }
+            }
+
+            new Entity('team').with {
+                name = 'one'
+                players = keys[0, 1]
+                save()
+            }
+
+            new Entity('team').with {
+                name = 'two'
+                players = keys[2, 3]
+                save()
+            }
+
+/*
+            // using the standard querying mechanism, this would work like this
+
+            def datastore = DatastoreServiceFactory.datastoreService
+
+            def query = new Query("team")
+            query.addFilter("players", Query.FilterOperator.EQUAL, keys[2])
+
+            def preparedQuery = datastore.prepare(query)
+            def teamTwo = preparedQuery.asSingleEntity()
+
+            assert teamTwo.name == 'two'
+*/
+
+            TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+            Class<Script> clazz = th.parse """
+                    import com.google.appengine.api.datastore.*
+                    import groovyx.gaelyk.GaelykCategory
+
+                    def datastore = DatastoreServiceFactory.datastoreService
+
+                    def playerB = datastore.execute {
+                        select single from player
+                        where name == 'b'
+                    }
+
+                    datastore.execute {
+                        select single from team
+                        where players == playerB.key
+                    }
+            """
+
+            Script script = clazz.newInstance()
+            def teamOne = script.run()
+
+            assert teamOne.name == 'one'
         }
     }
 }

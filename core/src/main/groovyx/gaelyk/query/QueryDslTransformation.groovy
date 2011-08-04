@@ -26,6 +26,8 @@ import org.codehaus.groovy.ast.expr.PropertyExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import com.google.appengine.api.datastore.Query.FilterOperator
 import org.codehaus.groovy.ast.expr.CastExpression
+import org.codehaus.groovy.ast.expr.BooleanExpression
+import org.codehaus.groovy.ast.expr.NotExpression
 
 /**
  * This AST transformation makes two transformations at the AST level.
@@ -60,29 +62,48 @@ class QueryDslTransformation implements ASTTransformation {
                     (clauseCall.method.value == "where" || clauseCall.method.value == "and") &&
                     clauseCall.arguments instanceof ArgumentListExpression &&
                     clauseCall.arguments.expressions.size() == 1 &&
-                    clauseCall.arguments.expressions[0] instanceof BinaryExpression
+                    clauseCall.arguments.expressions[0].class in [BinaryExpression, NotExpression, VariableExpression]
                 ) {
-                    BinaryExpression binExpr = clauseCall.arguments.expressions[0]
+                    def column, operation, value
 
-                    // filter operator expression
-                    ConstantExpression op = null
-                    switch (binExpr.operation.text) {
-                        case '==': op = new ConstantExpression('EQUAL');                 break
-                        case '!=': op = new ConstantExpression('NOT_EQUAL');             break
-                        case '<':  op = new ConstantExpression('LESS_THAN');             break
-                        case '<=': op = new ConstantExpression('LESS_THAN_OR_EQUAL');    break
-                        case '>':  op = new ConstantExpression('GREATER_THAN');          break
-                        case '>=': op = new ConstantExpression('GREATER_THAN_OR_EQUAL'); break
-                        case 'in': op = new ConstantExpression('IN');                    break
+                    if (clauseCall.arguments.expressions[0] instanceof BinaryExpression) {
+                        BinaryExpression binExpr = clauseCall.arguments.expressions[0]
+
+                        column = binExpr.leftExpression
+                        // filter operator expression
+                        ConstantExpression op = null
+                        switch (binExpr.operation.text) {
+                            case '=': throw new QuerySyntaxException("You must use '==' instead of '=' for equality comparisons");
+                            case '==': op = new ConstantExpression('EQUAL');                 break
+                            case '!=': op = new ConstantExpression('NOT_EQUAL');             break
+                            case '<':  op = new ConstantExpression('LESS_THAN');             break
+                            case '<=': op = new ConstantExpression('LESS_THAN_OR_EQUAL');    break
+                            case '>':  op = new ConstantExpression('GREATER_THAN');          break
+                            case '>=': op = new ConstantExpression('GREATER_THAN_OR_EQUAL'); break
+                            case 'in': op = new ConstantExpression('IN');                    break
+                        }
+                        operation = new PropertyExpression(new ClassExpression(ClassHelper.make(FilterOperator)), op)
+                        value = binExpr.rightExpression
+                    } else if (clauseCall.arguments.expressions[0] instanceof NotExpression) {
+                        // of the form: where !alive
+
+                        column = clauseCall.arguments.expressions[0].expression
+                        operation = new PropertyExpression(new ClassExpression(ClassHelper.make(FilterOperator)), new ConstantExpression('EQUAL'))
+                        value = ConstantExpression.FALSE
+                    } else if (clauseCall.arguments.expressions[0] instanceof VariableExpression) {
+                        // of the form: where alive
+
+                        column = clauseCall.arguments.expressions[0]
+                        operation = new PropertyExpression(new ClassExpression(ClassHelper.make(FilterOperator)), new ConstantExpression('EQUAL'))
+                        value = ConstantExpression.TRUE
                     }
-                    def operation = new PropertyExpression(new ClassExpression(ClassHelper.make(FilterOperator)), op)
 
                     clauseCall.arguments.expressions[0] = new ConstructorCallExpression(
                             ClassHelper.make(WhereClause),
                             new TupleExpression(new NamedArgumentListExpression([
-                                    new MapEntryExpression(new ConstantExpression('column'), binExpr.leftExpression),
+                                    new MapEntryExpression(new ConstantExpression('column'), column),
                                     new MapEntryExpression(new ConstantExpression('operation'), operation),
-                                    new MapEntryExpression(new ConstantExpression('comparedValue'), binExpr.rightExpression)
+                                    new MapEntryExpression(new ConstantExpression('comparedValue'), value)
                             ]))
                     )
                 }

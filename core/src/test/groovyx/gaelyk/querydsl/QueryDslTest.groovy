@@ -101,6 +101,20 @@ class QueryDslTest extends GroovyTestCase {
                             select all ancestor KeyFactory.createKey('persons', 1234)
                         ''') ==
                             "SELECT * WHERE __ancestor__ is ${key}"
+
+        // check for where !alive
+        assert queryFor('''
+                            select all from persons where !alive
+                        ''') ==
+                            'SELECT * FROM persons WHERE alive = false'
+
+        // check for where alive
+        assert queryFor('''
+                            select all from persons where alive
+                        ''') ==
+                            'SELECT * FROM persons WHERE alive = true'
+
+
     }
 
     void testSyntaxErrors() {
@@ -109,6 +123,8 @@ class QueryDslTest extends GroovyTestCase {
         shouldFail(QuerySyntaxException) { queryFor 'from persons sort abc by name' }
         shouldFail(QuerySyntaxException) { queryFor 'from persons where null' }
         shouldFail(QuerySyntaxException) { queryFor 'from persons where 123' }
+
+        shouldFail { queryFor 'from persons where name = "Guillaume"' }
     }
 
 

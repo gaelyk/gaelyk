@@ -25,6 +25,11 @@ class QueryBuilder {
     private FetchOptions options = FetchOptions.Builder.withDefaults()
     private Binding binding
 
+    /**
+     * Create a query builder object.
+     *
+     * @param binding the binding of the script where the query is being built, or null otherwise
+     */
     QueryBuilder(Binding binding) {
         this.binding = binding
     }
@@ -90,7 +95,10 @@ class QueryBuilder {
      * @return the all, keys, single or count query type constants or a string representing the property
      */
     def getProperty(String name) {
-        if (binding.variables.containsKey(name))
+        // if the datastore execute or query calls are made in a script
+        // check if the parameters or variables in the query are coming from the binding
+        // for example: params, header, request, etc.
+        if (binding && binding.variables.containsKey(name))
             return binding.variables[name]
 
         if (name == 'all')    return QueryType.ALL

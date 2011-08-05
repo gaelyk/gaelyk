@@ -438,7 +438,7 @@ class GaelykCategory {
     static Query query(DatastoreService service, Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
-        def builder = new QueryBuilder(c.thisObject.binding)
+        def builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
         cQuery.delegate = builder
         cQuery()
         return builder.createQuery()
@@ -453,7 +453,7 @@ class GaelykCategory {
     static execute(DatastoreService service, Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
-        def builder = new QueryBuilder(c.thisObject.binding)
+        def builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
         cQuery.delegate = builder
         cQuery()
         return builder.execute()

@@ -306,4 +306,33 @@ class QueryDslTest extends GroovyTestCase {
             assert teamOne.name == 'one'
         }
     }
+
+    void testDatastoreExecuteInAClassWithGaelykBinding() {
+        use (GaelykCategory) {
+            new Entity('books').with {
+                title = 'Harry Potter'
+                isbn = '1234567890'
+                save()
+            }
+
+            TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+            Class<Script> clazz = th.parse '''
+                @groovyx.gaelyk.GaelykBindings
+                class ExecuteWithinClassWithBindings {
+                    def exec() {
+                        datastore.execute {
+                            select single from books
+                            where title == 'Harry Potter'
+                        }
+                    }
+                }
+                new ExecuteWithinClassWithBindings().exec()
+            '''
+
+            def resultBook = clazz.newInstance().run()
+            
+            assert resultBook.isbn == '1234567890'
+        }
+    }
 }

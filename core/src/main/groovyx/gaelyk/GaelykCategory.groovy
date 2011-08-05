@@ -430,6 +430,52 @@ class GaelykCategory {
     }
 
     /**
+     * Get an entity from the datastore.
+     *
+     * @param parentKey the parent key
+     * @param kind the kind
+     * @param id the id
+     * @return the entity identified by its parent key, its kind, and id, retrieved from the datastore
+     */
+    static Entity get(DatastoreService service, Key parentKey, String kind, long id) {
+        service.get(KeyFactory.createKey(parentKey, kind, id))
+    }
+
+    /**
+     * Get an entity from the datastore.
+     *
+     * @param parentKey the parent key
+     * @param kind the kind
+     * @param name the name
+     * @return the entity identified by its parent key, its kind, and name, retrieved from the datastore
+     */
+    static Entity get(DatastoreService service, Key parentKey, String kind, String name) {
+        service.get(KeyFactory.createKey(parentKey, kind, name))
+    }
+
+    /**
+     * Get an entity from the datastore.
+     *
+     * @param kind the kind
+     * @param id the id
+     * @return the entity identified by its kind, and id, retrieved from the datastore
+     */
+    static Entity get(DatastoreService service, String kind, long id) {
+        service.get(KeyFactory.createKey(kind, id))
+    }
+
+    /**
+     * Get an entity from the datastore.
+     *
+     * @param kind the kind
+     * @param name the name
+     * @return the entity identified by its kind, and name, retrieved from the datastore
+     */
+    static Entity get(DatastoreService service, String kind, String name) {
+        service.get(KeyFactory.createKey(kind, name))
+    }
+
+    /**
      * Create a query to be later executed on the datastore data.
      *
      * @param c the closure representing the query

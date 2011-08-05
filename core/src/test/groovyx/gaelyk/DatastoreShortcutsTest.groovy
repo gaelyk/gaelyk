@@ -181,4 +181,43 @@ class DatastoreShortcutsTest extends GroovyTestCase {
             assert k4.kind == 'address'
         }
     }
+
+    void testOverloadedGetMethods() {
+        def datastore = DatastoreServiceFactory.datastoreService
+
+        use (GaelykCategory) {
+            def pk = new Entity('person').with {
+                name = 'Guillaume'
+                age = 34
+                save()
+            }
+
+            new Entity('address', 'home', pk).with {
+                street = 'main street'
+                city = 'Paris'
+                save()
+            }
+
+            new Entity('address', 1234, pk).with {
+                street = 'other street'
+                city = 'New York'
+                save()
+            }
+
+            new Entity('animal', 'Felix').with {
+                breed = 'siamese'
+                save()
+            }
+
+            new Entity('animal', 2345).with {
+                breed = 'dog'
+                save()
+            }
+
+            assert datastore.get(pk, 'address', 'home').city == 'Paris'
+            assert datastore.get(pk, 'address', 1234).city == 'New York'
+            assert datastore.get('animal', 'Felix').breed == 'siamese'
+            assert datastore.get('animal', 2345).breed == 'dog'
+        }
+    }
 }

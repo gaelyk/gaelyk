@@ -251,6 +251,25 @@ The <code>withTransaction()</code> method takes a closure as the sole parameter,
 and within that closure, upon its execution by <b>Gaelyk</b>, your code will be in the context of a transaction.
 </p>
 
+<a name="datastore-get"></a>
+<h3>Added <code>get()</code> methods on the datastore service</h3>
+
+<p>
+To retrieve entities from the datastore, you can use the <code>datastore.get(someKey)</code> method,
+and pass it a <code>Key</code> you'd have creted with <code>KeyFactory.createKey(...)</code>:
+this is a bit verbose, and <b>Gaelyk</b> proposes additional <code>get()</code> methods on the datastore service,
+which do the key creation for you:
+</p>
+
+<pre class="brush:groovy">
+    Key pk = ... // some parent key
+    datastore.get(pk, 'address', 'home') // by parent key, kind and name
+    datastore.get(pk, 'address', 1234)   // by parent key, kind and id
+
+    datastore.get('animal', 'Felix')     // by kind and name
+    datastore.get('animal', 2345)        // by kind and id
+</pre>
+
 <a name="query"></a>
 <h3>Querying</h3>
 

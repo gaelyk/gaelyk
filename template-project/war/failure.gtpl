@@ -1,7 +1,7 @@
 <html>
     <body>
-        <h1>Failure</h1>
-        <h2>Impossible to store or access the uploaded blob</h2>
+        <h1>$i18n.failureHeader</h1>
+        <h2>$i18n.failureMessage</h2>
     </body>
 </html>
 

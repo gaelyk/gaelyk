@@ -1,14 +1,13 @@
 <% include '/WEB-INF/includes/header.gtpl' %>
 
-<h1>Welcome</h1>
+<h1>${i18n.welcome</h1>
 
 <p>
-    Congratulations, you've just created your first 
-    <a href="http://gaelyk.appspot.com">Gaelyk</a> application.
+    ${i18n.congrats("<a href='http://gaelyk.appspot.com'>Gaelyk</a>")}
 </p>
 
 <p>
-    Click <a href="datetime.groovy">here</a> to view the current date/time.
+    ${i18n.clickToViewDateTime("<a href='datetime.groovy'>$i18n.here</a>")}
 </p>
 
 <% include '/WEB-INF/includes/footer.gtpl' %>

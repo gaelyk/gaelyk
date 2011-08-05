@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h1>Please upload a text file</h1>
+        <h1>$i18n.uploadHeader</h1>
         <form action="${blobstore.createUploadUrl('/uploadBlob.groovy')}" 
                 method="post" enctype="multipart/form-data">
             <input type="file" name="myTextFile">

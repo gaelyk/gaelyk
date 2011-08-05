@@ -415,6 +415,12 @@ In addition, you can specify the <code>FetchOptions</code> with additional verbs
     endAt cursorWebSafeStringRepresentation
 </pre>
 
+<blockquote>
+<b>Notes: </b> If you use the <code>from addresses as Address</code> clause, specifying a class to coerce the results into,
+if your <code>where</code> and <code>and</code> clauses use properties that are not present in the target class,
+a <code>QuerySyntaxException</code> will be thrown.
+</blockquote>
+
 <a name="async-datastore"></a>
 <h3>Asynchronous datastore</h3>
 

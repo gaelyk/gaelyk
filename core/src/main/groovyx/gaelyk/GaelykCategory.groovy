@@ -774,16 +774,32 @@ class GaelykCategory {
     }
 
     /**
-     * Converter method for converting a pair of numbers (in a list) into a GeoPt instance
+     * Converter method for converting a pair of numbers (in a list) into a GeoPt instance:
      * <pre><code>
      *  [45.32, 54.54f] as GeoPt
      * </code></pre>
+     * Or to convert a list of elements into a Key, avoiding the usage of KeyFactory.createKey():
+     * <pre><code>
+     *  [parentKey, 'address', 333] as Key
+     *  [parentKey, 'address', 'name'] as Key
+     *  ['address', 444] as Key
+     *  ['address', 'name'] as Key
+     * </code></pre>
      */
-    static Object asType(List floatPair, Class geoptClass) {
-        if (geoptClass == GeoPt && floatPair.size() == 2 &&
-            floatPair.every { it instanceof Number })
-                new GeoPt(*floatPair*.floatValue())
-        else DefaultGroovyMethods.asType(floatPair, geoptClass)
+    static Object asType(List list, Class clazz) {
+        if (clazz == GeoPt && list.size() == 2 && list.every { it instanceof Number }) {
+            new GeoPt(*list*.floatValue())
+        } else if (clazz == Key && list.size() == 3 && list[0] instanceof Key && list[1] instanceof String &&
+                (list[2] instanceof Number || list[2] instanceof String)) {
+            // KeyFactory.createKey(Key, String, long)
+            // KeyFactory.createKey(Key, String, String)
+            KeyFactory.createKey(*list)
+        } else if (clazz == Key && list.size() == 2 && list[0] instanceof String &&
+            (list[1] instanceof Number || list[1] instanceof String)) {
+            // KeyFactory.createKey(String, long)
+            // KeyFactory.createKey(String, String)
+            KeyFactory.createKey(*list)
+        } else DefaultGroovyMethods.asType(list, clazz)
     }
 
     /**

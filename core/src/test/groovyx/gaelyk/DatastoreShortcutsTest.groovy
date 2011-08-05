@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Transaction
 import com.google.appengine.api.datastore.AsyncDatastoreService
 import com.google.appengine.api.datastore.Key
 import java.util.concurrent.Future
+import com.google.appengine.api.datastore.KeyFactory
 
 /**
  * @author Guillaume Laforge
@@ -153,6 +154,31 @@ class DatastoreShortcutsTest extends GroovyTestCase {
 
             assert entity.longText instanceof String
             assert entity.longText.size() == 1000
+        }
+    }
+
+    void testKeyCoercion() {
+        def parentKey = KeyFactory.createKey('person', 1234)
+
+        use (GaelykCategory) {
+            Key k1 = [parentKey, 'address', 333] as Key
+            Key k2 = [parentKey, 'address', 'name'] as Key
+            Key k3 = ['address', 444] as Key
+            Key k4 = ['address', 'name'] as Key
+
+            assert k1.id == 333
+            assert k1.parent == parentKey
+            assert k1.kind == 'address'
+
+            assert k2.name == 'name'
+            assert k2.parent == parentKey
+            assert k2.kind == 'address'
+
+            assert k3.id == 444
+            assert k3.kind == 'address'
+
+            assert k4.name == 'name'
+            assert k4.kind == 'address'
         }
     }
 }

@@ -156,6 +156,21 @@ If you're really interested in a fully featured mapper, you should have a look a
 or <a href="http://code.google.com/p/twig-persist/">Twig</a>.
 </blockquote>
 
+<a name="list-to-key-coercion"></a>
+<h3>List to <code>Key</code> conversion</h3>
+
+<p>
+Another coercion mechanism that you can take advantage of, is to use a list to <code>Key</code> conversion,
+instead of using the more verbose <code>KeyFactory.createKey()</code> methods:
+</p>
+
+<pre class="brush:groovy">
+    [parentKey, 'address', 333] as Key
+    [parentKey, 'address', 'name'] as Key
+    ['address', 444] as Key
+    ['address', 'name'] as Key
+</pre>
+
 <a name="save-delete"></a>
 <h3>Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></h3>
 

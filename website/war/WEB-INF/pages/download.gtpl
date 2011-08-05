@@ -24,8 +24,8 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and 
 </p>
 
 <p>
-The latest version was tested with Groovy 1.8.0,
-and with the 1.5.1 version of the App Engine SDK.
+The latest version was tested with Groovy 1.8.1,
+and with the 1.5.2 version of the App Engine SDK.
 </p>
 
 <p>
@@ -61,6 +61,7 @@ But to get you started quickly, you may use a ready-made template project which 
         Added a <a href="/tutorial/app-engine-shortcuts#delete-get-on-key"><code>get()</code> method on <code>Key</code></a>,
         as well as on lists of keys
     </li>
+    <li>Ability to convert <a href="/tutorial/app-engine-shortcuts#list-to-key-coercion">lists to <code>Key</code>s</a></li>
     <li>Problems with the recent XMPP support fixed</li>
     <li>
         Fixed inability to access the various services and variables

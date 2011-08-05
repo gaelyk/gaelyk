@@ -45,6 +45,11 @@ but it is possible to override this setting by specifying a different route DSL 
 </pre>
 </blockquote>
 
+<blockquote>
+<b>Warning: </b> The filter is stopping the chain filter once a route is found.
+So you should ideally put the route filter as the last element of the chain.
+</blockquote>
+
 <a name="route-definition"></a>
 <h2>Defining URL routes</h2>
 

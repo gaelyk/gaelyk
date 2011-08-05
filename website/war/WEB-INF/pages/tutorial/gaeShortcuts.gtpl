@@ -230,6 +230,27 @@ And if you have a list of entities, you can get them all at once:
     map[key1]
 </pre>
 
+<a name="key-string-conversion"></a>
+<h3>Converting <code>Key</code> to an encoded <code>String</code> and vice-versa</h3>
+
+<p>
+When you want to store a <code>Key</code> as a string or pass it as a URL parameter,
+you can use the <code>KeyFactory</code> methods to encode / decode keys and their string representations.
+<b>Gaelyk</b> provides two convenient coercion mechanisms to get the encoded string representation of a key:
+</p>
+
+<pre class="brush:groovy">
+    def key = ['addresses', 1234] as Key
+    def encodedKey = key as String
+</pre>
+
+<p>And to retrieve the key from its encoded string representation:</p>
+
+<pre class="brush:groovy">
+    def encodedKey = params.personKey  // the encoded string representation of the key
+    def key = encodedKey as Key
+</pre>
+
 <a name="transaction"></a>
 <h3>Added <code>withTransaction()</code> method on the datastore service</h3>
 

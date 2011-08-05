@@ -220,4 +220,15 @@ class DatastoreShortcutsTest extends GroovyTestCase {
             assert datastore.get('animal', 2345).breed == 'dog'
         }
     }
+
+    void testKeyStringConversions() {
+        use (GaelykCategory) {
+            def k = ['persons', 'me'] as Key
+
+            assert k as String == KeyFactory.keyToString(k)
+
+            assert ((k as String) as Key) == k
+            assert (("agR0ZXN0cg8LEgdwZXJzb25zIgJtZQw" as Key) as String) == "agR0ZXN0cg8LEgdwZXJzb25zIgJtZQw"
+        }
+    }
 }

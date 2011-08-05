@@ -696,6 +696,7 @@ class GaelykCategory {
      *  "long text" as Text
      *  "foobar" as BlobKey
      *  "foo@gmail.com" as JID
+     *  "agR0ZXN0cg8LEgdwZXJzb25zIgJtZQw" as Key
      * </code></pre>
      */
     static Object asType(String self, Class clazz) {
@@ -717,6 +718,22 @@ class GaelykCategory {
             new Rating(Integer.valueOf(self))
         else if (clazz == JID)
             new JID(self)
+        else if (clazz == Key)
+            KeyFactory.stringToKey(self)
+        else DefaultGroovyMethods.asType(self, clazz)
+    }
+
+    /**
+     * Convert a <code>Key</code> into its encoded <code>String</code> representation,
+     * using the underlying <code>KeyFactory.keyToString()</code> conversion method.
+     *
+     * @param self the key
+     * @param clazz the String class
+     * @return the encoded string representation of the key
+     */
+    static String asType(Key self, Class clazz) {
+        if (clazz == String)
+            KeyFactory.keyToString(self)
         else DefaultGroovyMethods.asType(self, clazz)
     }
 

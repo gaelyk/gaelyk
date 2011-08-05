@@ -62,6 +62,7 @@ But to get you started quickly, you may use a ready-made template project which 
         as well as on lists of keys
     </li>
     <li>Ability to convert <a href="/tutorial/app-engine-shortcuts#list-to-key-coercion">lists to <code>Key</code>s</a></li>
+    <li>Added two encoded <a href="/tutorial/app-engine-shortcuts#key-string-conversion">string and key conversion</a> utilities</li>
     <li><a href="/tutorial/app-engine-shortcuts#datastore-get">Additional <code>datastore.get()</code> methods</a> to retrieve entities by their keys more concisely</li>
     <li>Problems with the recent XMPP support fixed</li>
     <li>

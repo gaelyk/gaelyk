@@ -36,7 +36,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
-    <li>GAE SDK updated to 1.5.1</li>
+    <li>GAE SDK updated to 1.5.2</li>
     <li>
         Introduction of a <a href="/tutorial/app-engine-shortcuts#query">Query DSL
         for creating SQL-like queries against the datastore</a>

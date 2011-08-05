@@ -117,6 +117,12 @@ The template project comes with initial support for Eclipse project files,
 allowing you to open the project easily within Eclipse.
 </p>
 
+<blockquote>
+<b>Warning: </b> If you're using the Eclipse GAE plugin, be careful with the libraries that the plugin automatically adds
+to your <code>WEB-INF/lib</code>. They are not needed for a <b>Gaelyk</b> project, and may cause sometimes some strange
+compilation errors.
+</blockquote>
+
 <a name="configuration"></a>
 <h2>Configuration files</h2>
 

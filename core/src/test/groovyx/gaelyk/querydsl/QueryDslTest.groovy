@@ -335,4 +335,48 @@ class QueryDslTest extends GroovyTestCase {
             assert resultBook.isbn == '1234567890'
         }
     }
+
+    void testCompilationErrorWhenAsClassIsUsedAndWrongProperty() {
+        use (GaelykCategory) {
+            new Entity('addresses').with {
+                street = 'main street'
+                zip = 12345
+                city = 'New York'
+                save()
+            }
+
+            TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+            Class<Script> clazz = th.parse '''
+                datastore.execute {
+                    select single from addresses
+                    where zip == 12345
+                }
+            '''
+
+            def binding = new Binding([datastore: DatastoreServiceFactory.datastoreService])
+
+            def addr = clazz.newInstance(binding).run()
+
+            assert addr.city == 'New York'
+
+            clazz = th.parse '''
+                class Address {
+                    String street
+                    int zip
+                    String city
+                }
+
+                datastore.execute {
+                    select single
+                    from addresses as Address
+                    where nonexistantprop == 'abc'
+                }
+            '''
+
+            shouldFail(QuerySyntaxException) {
+                clazz.newInstance(binding).run()
+            }
+        }
+    }
 }

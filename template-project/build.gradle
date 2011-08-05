@@ -45,8 +45,8 @@ sourceSets {
 }
 
 dependencies {
-    def gaeVersion = '1.5.1'
-    groovy 'org.codehaus.groovy:groovy-all:1.8.0'
+    def gaeVersion = '1.5.2'
+    groovy 'org.codehaus.groovy:groovy-all:1.8.1'
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion",
             'glaforge:gaelyk:1.0'
@@ -121,5 +121,5 @@ eclipseClasspath {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.0-milestone-3'
+    gradleVersion = '1.0-milestone-4'
 }

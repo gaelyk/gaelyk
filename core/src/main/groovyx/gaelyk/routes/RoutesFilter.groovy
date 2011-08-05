@@ -87,7 +87,7 @@ class RoutesFilter implements Filter {
                 def binding = new Binding()
                 GaelykBindingEnhancer.bind(binding)
 
-                // adds two nouns for the XMPP support
+                // adds three nouns for the XMPP support
                 binding.chat         = 'chat'
                 binding.presence     = 'presence'
                 binding.subscription = 'subscription'

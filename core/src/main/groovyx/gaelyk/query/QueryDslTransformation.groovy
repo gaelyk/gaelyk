@@ -5,16 +5,12 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.control.SourceUnit
-import org.codehaus.groovy.ast.CodeVisitorSupport
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.ClassCodeVisitorSupport
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ClosureExpression
-import org.codehaus.groovy.ast.DynamicVariable
-import org.codehaus.groovy.ast.stmt.Statement
-import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.BinaryExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
@@ -26,7 +22,6 @@ import org.codehaus.groovy.ast.expr.PropertyExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import com.google.appengine.api.datastore.Query.FilterOperator
 import org.codehaus.groovy.ast.expr.CastExpression
-import org.codehaus.groovy.ast.expr.BooleanExpression
 import org.codehaus.groovy.ast.expr.NotExpression
 
 /**

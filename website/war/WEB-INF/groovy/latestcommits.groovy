@@ -12,7 +12,6 @@ html.ul {
 	result.commit.each { commit ->
 		li {
 			a href: "https://github.com${commit.url}", commit.message
-			br()
 			def time = commit.'committed-date'.text().replaceAll(/(-|\+)(\d\d):(\d\d)/, '$1$2$3')
 			def prettyTime = new PrettyTime().format(sdf.parse(time))
 			i "committed ${prettyTime}"

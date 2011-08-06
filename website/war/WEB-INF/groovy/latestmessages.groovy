@@ -13,9 +13,7 @@ try {
     html.ul {
         result.channel.item.each { item ->
             li {
-                a href: item.link, item.title
-                br()
-                //br()
+                a href: item.link.text(), item.title.text().trim()
                 def prettyTime = new PrettyTime().format(sdf.parse(item.pubDate.text().replace('UT', 'GMT')))
                 i "posted ${prettyTime}"
                 i "by ${item.author}"

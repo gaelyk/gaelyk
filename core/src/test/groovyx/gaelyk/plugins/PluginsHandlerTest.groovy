@@ -196,12 +196,12 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                     binding {
                         book = "Harry Potter"
-                        memcacheCopy = memcache
+                        memcacheCopy = this.memcache
                     }
 
                     before {
                         request.fromBindingBlock = binding
-                        request.fromBeforeBlock = datastore
+                        request.fromBeforeBlock = this.datastore
                     }
                     """
                 } else ""

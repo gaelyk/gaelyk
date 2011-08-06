@@ -1617,7 +1617,7 @@ or certain services will be down for scheduled maintenance.
 The Google App Engine SDK provides a service, the
 <code><a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/capabilities/CapabilitiesService.html">CapabilitiesService</a></code>,
 to query the current status of the services.
-<b>Gaelyk</b> 0.5 adds support for this service, by injecting it in the binding of your groovlets and templates,
+<b>Gaelyk</b> adds support for this service, by injecting it in the binding of your groovlets and templates,
 and by adding some syntax sugar to simplify its use.
 </p>
 

@@ -1,7 +1,5 @@
 
-// routes for the blobstore service example
-get "/upload",  forward: "/upload.gtpl"
-get "/success", forward: "/success.gtpl"
-get "/failure", forward: "/failure.gtpl"
+get "/", forward: "/WEB-INF/pages/index.gtpl"
+get "/datetime", forward: "/datetime.groovy"
 
 get "/favicon.ico", redirect: "/images/gaelyk-small-favicon.png"

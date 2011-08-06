@@ -5,4 +5,4 @@ request.setAttribute 'datetime', new Date().toString()
 
 log.info "Forwarding to the template"
 
-forward '/datetime.gtpl'
+forward '/WEB-INF/pages/datetime.gtpl'

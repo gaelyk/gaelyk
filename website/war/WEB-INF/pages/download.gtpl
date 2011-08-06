@@ -92,6 +92,11 @@ But to get you started quickly, you may use a ready-made template project which 
         Now, in all situations, for string properties, independently of their size,
         just do <code>entity.content</code> for accessing and setting the value of that property.
     </li>
+    <li>
+        Inside a plugin's <code>binding {}</code> block, if you need to access variables like the datastore, memcache,
+        or any usual such variable that is available in your groovlets and templates, you must prefix those variables with this.
+        Example: <code>binding { cachedContent = this.memcache['myKey'] }</code>
+    </li>
 </ul>
 
 

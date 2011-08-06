@@ -137,13 +137,6 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Statement code coverage increased to 91%</li>
 </ul>
 
-<h3>Artifacts</h3>
-<ul>
-    <li>Gaelyk JAR: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-0.6.1.jar">gaelyk-0.6.1.jar</a></li>
-    <li>Gaelyk template project: <a href="http://cloud.github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.6.1.zip">gaelyk-template-project-0.6.1.zip</a></li>
-</ul>
-
-
 <h2>Version 0.6</h2>
 
 <h3>Changes</h3>

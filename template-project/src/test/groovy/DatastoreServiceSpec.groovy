@@ -20,8 +20,8 @@ class DatastoreServiceSpec extends GaelykUnitSpec {
 
         then: "the persisted data is found in the datastore"
         def person = entities[0]
-        person.firstname == 'Bart'
-        person.lastname == 'Simpson'
+        person.firstname == 'Marco'
+        person.lastname == 'Vermeulen'
     }
 
 }

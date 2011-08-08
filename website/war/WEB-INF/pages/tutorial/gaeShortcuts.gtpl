@@ -277,7 +277,7 @@ and within that closure, upon its execution by <b>Gaelyk</b>, your code will be 
 
 <p>
 To retrieve entities from the datastore, you can use the <code>datastore.get(someKey)</code> method,
-and pass it a <code>Key</code> you'd have creted with <code>KeyFactory.createKey(...)</code>:
+and pass it a <code>Key</code> you'd have created with <code>KeyFactory.createKey(...)</code>:
 this is a bit verbose, and <b>Gaelyk</b> proposes additional <code>get()</code> methods on the datastore service,
 which do the key creation for you:
 </p>
@@ -290,6 +290,30 @@ which do the key creation for you:
     datastore.get('animal', 'Felix')     // by kind and name
     datastore.get('animal', 2345)        // by kind and id
 </pre>
+
+<p>
+This mechanism also works with the asynchronous datastore, as <b>Gaelyk</b> wraps the <code>Future&lt;Entity&gt;</code>
+transparently, so you don't have to call <code>get()</code> on the future:
+</p>
+
+<pre class="brush:groovy">
+    Key pk = ... // some parent key
+    datastore.async.get(pk, 'address', 'home') // by parent key, kind and name
+    datastore.async.get(pk, 'address', 1234)   // by parent key, kind and id
+
+    datastore.async.get('animal', 'Felix')     // by kind and name
+    datastore.async.get('animal', 2345)        // by kind and id
+</pre>
+
+<blockquote>
+<b>Note: </b> When you have a <code>Future&lt;Entity&gt; f</code>,
+when you call <code>f.someProperty</code>, <b>Gaelyk</b> will actually lazily call
+<code>f.get().someProperty</code>, making the usage of the future transparent.
+However, note it longy works for properties, it doesn't work for method call on futures,
+where you will have to call <code>get()</code> first.
+This transparent handling of future properties is working for all <code>Future</code>s,
+not just <code>Future&lt;Entity&gt;</code>.
+</blockquote>
 
 <a name="query"></a>
 <h3>Querying</h3>

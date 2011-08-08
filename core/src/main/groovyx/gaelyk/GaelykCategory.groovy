@@ -476,6 +476,52 @@ class GaelykCategory {
     }
 
     /**
+     * Get an entity from the async datastore.
+     *
+     * @param parentKey the parent key
+     * @param kind the kind
+     * @param id the id
+     * @return the entity future identified by its parent key, its kind, and id, retrieved from the datastore
+     */
+    static Future<Entity> get(AsyncDatastoreService service, Key parentKey, String kind, long id) {
+        service.get(KeyFactory.createKey(parentKey, kind, id))
+    }
+
+    /**
+     * Get an entity from the async datastore.
+     *
+     * @param parentKey the parent key
+     * @param kind the kind
+     * @param name the name
+     * @return the entity future identified by its parent key, its kind, and name, retrieved from the datastore
+     */
+    static Future<Entity> get(AsyncDatastoreService service, Key parentKey, String kind, String name) {
+        service.get(KeyFactory.createKey(parentKey, kind, name))
+    }
+
+    /**
+     * Get an entity from the async datastore.
+     *
+     * @param kind the kind
+     * @param id the id
+     * @return the entity future identified by its kind, and id, retrieved from the datastore
+     */
+    static Future<Entity> get(AsyncDatastoreService service, String kind, long id) {
+        service.get(KeyFactory.createKey(kind, id))
+    }
+
+    /**
+     * Get an entity from the async datastore.
+     *
+     * @param kind the kind
+     * @param name the name
+     * @return the entity future identified by its kind, and name, retrieved from the datastore
+     */
+    static Future<Entity> get(AsyncDatastoreService service, String kind, String name) {
+        service.get(KeyFactory.createKey(kind, name))
+    }
+
+    /**
      * Create a query to be later executed on the datastore data.
      *
      * @param c the closure representing the query
@@ -2241,5 +2287,31 @@ class GaelykCategory {
      */
     static void setShutdownHook(LifecycleManager manager, Closure c) {
         manager.setShutdownHook(c as ShutdownHook)
+    }
+
+    // ----------------------------------------------------------------
+    // Miscelanous methods
+    // ----------------------------------------------------------------
+
+    /**
+     * Make the get access to Future properties transparent without calling get().
+     *
+     * @param future the future
+     * @param name the property
+     * @return the value associated with that property
+     */
+    static Object get(Future future, String name) {
+        transformValueForRetrieval(future.get().getProperty(name))
+    }
+
+    /**
+     * Make the set access to Future properties transparent without calling get().
+     *
+     * @param future the future
+     * @param name the property
+     * @param value the new value for the property
+     */
+    static void set(Future future, String name, Object value) {
+        future.get().setProperty(name, transformValueForStorage(value))
     }
 }

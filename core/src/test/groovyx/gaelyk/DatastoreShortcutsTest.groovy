@@ -183,8 +183,6 @@ class DatastoreShortcutsTest extends GroovyTestCase {
     }
 
     void testOverloadedGetMethods() {
-        def datastore = DatastoreServiceFactory.datastoreService
-
         use (GaelykCategory) {
             def pk = new Entity('person').with {
                 name = 'Guillaume'
@@ -214,10 +212,12 @@ class DatastoreShortcutsTest extends GroovyTestCase {
                 save()
             }
 
-            assert datastore.get(pk, 'address', 'home').city == 'Paris'
-            assert datastore.get(pk, 'address', 1234).city == 'New York'
-            assert datastore.get('animal', 'Felix').breed == 'siamese'
-            assert datastore.get('animal', 2345).breed == 'dog'
+            [DatastoreServiceFactory.datastoreService, DatastoreServiceFactory.datastoreService.async].each { datastore ->
+                assert datastore.get(pk, 'address', 'home').city == 'Paris'
+                assert datastore.get(pk, 'address', 1234).city == 'New York'
+                assert datastore.get('animal', 'Felix').breed == 'siamese'
+                assert datastore.get('animal', 2345).breed == 'dog'
+            }
         }
     }
 

@@ -9,12 +9,12 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.0.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.0.zip">Template project v1.0</a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.1.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.1.zip">Template project v1.1</a></td>
         </tr>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.0.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.0.jar">Gaelyk JAR v1.0</a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.1.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.1.jar">Gaelyk JAR v1.1</a></td>
         </tr>
     </table>
 </div>
@@ -31,6 +31,36 @@ and with the 1.5.2 version of the App Engine SDK.
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 1.1</h2>
+
+<h3>Changes</h3>
+<ul>
+    <li>
+        The <a href="/tutorial/app-engine-shortcuts#datastore-get">new <code>get()</code> methods on the datastore service</a>
+        now also work with the asynchronous datastore.
+    </li>
+    <li>
+        Part of the work with the async datastore <code>get()</code>,
+        whenever you have a <code>Future</code> to deal with,
+        for example when the async datastore returns a <code>Future&lt;Entity&gt;</code>,
+        you can call any property on the <code>Future</code> object,
+        and it will proxy those property access to the underlying object
+        returned by the <code>get()</code> call on the future.
+    </li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.1.jar">gaelyk-1.1.jar</a></li>
+    <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.1.zip">gaelyk-template-project-1.1.zip</a></li>
+</ul>
+
+<h4>Breaking changes</h4>
+
+<ul>
+</ul>
+
 
 <h2>Version 1.0</h2>
 

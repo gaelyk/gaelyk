@@ -48,6 +48,13 @@ But to get you started quickly, you may use a ready-made template project which 
         and it will proxy those property access to the underlying object
         returned by the <code>get()</code> call on the future.
     </li>
+    <li>
+        Additional <a href="/tutorial/app-engine-shortcuts#files-misc">convenience methods for the file service</a>
+    </li>
+    <li>
+        Added an <a href="/tutorial/app-engine-shortcuts#blobstore-each-collect">each and collect method on blobstore</a>
+        to iterate over all the blobs from the blobstore, or to collect some values from all blob infos stored.
+    </li>
 </ul>
 
 <h3>Artifacts</h3>

@@ -1228,6 +1228,24 @@ You can also fetch byte arrays for a given range:
     blob.delete()
 </pre>
 
+<a name="blobstore-each-collect"></a>
+<h3>Iterating over and collecting <code>BlobInfo</code>s</h3>
+
+<p>
+The blobstore service stores blobs that are identified by <code>BlobKeys</code>,
+and whose metadata are represented by <code>BlobInfo</code>.
+If you want to iterate over all the blobs from the blobstore,
+you can use the <code>BlobInfoFactory</code> and its <code>queryBlobInfos()</code> method,
+but <b>Gaelyk</b> simplifies that job with an <code>each{}</code> and a <code>collect{}</code> method
+right from the <code>blobstore</code> service:
+</p>
+
+<pre class="brush:groovy">
+    blobstore.each { BlobInfo info -> out << info.filename }
+
+    def fileNames = blobstore.collect { BlobInfo info -> info.filename }
+</pre>
+
 <a name="blobstore-example"></a>
 <h3>Example Blobstore service usage</h3>
 
@@ -1476,6 +1494,7 @@ You can also specify an option for locking the file (the file is locked by defau
     }
 </pre>
 
+<a name="files-misc"></a>
 <h4>Miscelanous improvements</h4>
 
 <p>
@@ -1486,6 +1505,15 @@ you need to get back an <code>AppEngineFile</code> from its string representatio
 <pre class="brush:groovy">
     def path = someEntity.filePath
     def file = files.fromPath(path)
+</pre>
+
+<p>
+If you have a <code>BlobKey</code>, you can retrieve the associated <code>AppEngineFile</code>:
+</p>
+
+<pre class="brush:groovy">
+    def key = ... // some BlobKey
+    def file = key.file
 </pre>
 
 <p>

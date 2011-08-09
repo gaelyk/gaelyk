@@ -9,6 +9,9 @@ import com.google.appengine.api.files.FinalizationException
 import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig
 import com.google.appengine.api.images.Image.Format
 import javax.servlet.http.HttpServletResponse
+import com.google.appengine.api.blobstore.BlobstoreServicePb.BlobstoreService
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory
+import com.google.appengine.api.blobstore.BlobInfo
 
 /**
  * Blobstore and File services related tests
@@ -257,4 +260,40 @@ class BlobstoreServiceTest extends GroovyTestCase {
             file.delete()
         }
     }
+
+    void testGetFileOnBlobKey() {
+        def files = FileServiceFactory.fileService
+
+        use(GaelykCategory) {
+            def file = files.createNewBlobFile("text/plain", "dummy.txt")
+            file.withOutputStream { OutputStream stream ->
+                stream << "dummy".bytes
+            }
+            def key = file.blobKey
+
+            assert key.file.fullPath == file.fullPath
+            assert key.file.toString() == file.toString()
+        }
+    }
+    
+    void testEachAndCollectOnBlobstore() {
+        def blobstore = BlobstoreServiceFactory.blobstoreService
+        def files = FileServiceFactory.fileService
+
+        use(GaelykCategory) {
+            files.createNewBlobFile("text/plain", "one.txt")  .withOutputStream { it << "one" }
+            files.createNewBlobFile("text/plain", "two.txt")  .withOutputStream { it << "two" }
+            files.createNewBlobFile("text/plain", "three.txt").withOutputStream { it << "three" }
+
+            def fileNames = []
+            blobstore.each { BlobInfo info -> fileNames << info.filename }
+
+            assert fileNames.sort() == ["one.txt", "two.txt", "three.txt"].sort()
+
+            def contentTypes = blobstore.collect { BlobInfo info -> info.contentType }
+
+            assert contentTypes.every { it == "text/plain" }
+        }
+    }
+
 }

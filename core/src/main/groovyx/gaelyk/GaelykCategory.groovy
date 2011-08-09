@@ -99,6 +99,7 @@ import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.LifecycleManager.ShutdownHook
 import groovyx.gaelyk.query.QueryBuilder
+import com.google.appengine.api.blobstore.BlobstoreService
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -1636,6 +1637,35 @@ class GaelykCategory {
         ISF.makeImageFromBlob(selfKey)
     }
 
+    /**
+     * Collect all the BlobInfos of the blobs stored in the blobstore.
+     * <pre><code>
+     *     blobstore.each { BlobInfo info -> ... }
+     * </code></pre>
+     *
+     * @param blobstore the blobstore service
+     * @param c the closure passed to the collect method
+     * @return a List of BlobInfos
+     */
+    static List<BlobInfo> collect(BlobstoreService blobstore, Closure<BlobInfo> c) {
+        new BlobInfoFactory().queryBlobInfos().collect c
+    }
+
+    /**
+     * Iterates over all the BlobInfos of the blobs stored in the blobstore.
+     * <pre><code>
+     *      def filenames = blobstore.collect { BlobInfo info -> info.filename }
+     * </code></pre>
+     *
+     * @param blobstore the blobstore service
+     * @param c the closure passed to the each method
+     * @return an iterator over BlobInfos
+     */
+    static Iterator<BlobInfo> each(BlobstoreService blobstore, Closure<BlobInfo> c) {
+        new BlobInfoFactory().queryBlobInfos().each c
+    }
+
+
     // ----------------------------------------------------------------
     // Category methods dedicated to the FileService
     // ----------------------------------------------------------------
@@ -1836,6 +1866,15 @@ class GaelykCategory {
         FileServiceFactory.fileService.getBlobKey(file)
     }
 
+    /**
+     * Retrieves the <code>AppEngineFile</code> associated with this <code>BlobKey</code>
+     *
+     * @param key the blob key
+     * @return the app engine file
+     */
+    static AppEngineFile getFile(BlobKey key) {
+        FileServiceFactory.fileService.getBlobFile(key)
+    }
 
     // ----------------------------------------------------------------
     // Category methods dedicated to the NamespaceManager

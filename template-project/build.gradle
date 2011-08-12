@@ -40,7 +40,7 @@ repositories {
 
 sourceSets {
     main {
-        classesDir = file('war/WEB-INF/classes')
+        output.classesDir = file('war/WEB-INF/classes')
     }
 }
 
@@ -71,52 +71,57 @@ gae {
 }
 
 clean.doLast {
-     delete sourceSets*.classesDir
+     delete sourceSets*.output.classesDir
 }
 
-task copyRuntimeLibraries {
+task copyRuntimeLibraries(type: Sync){
     def webAppLibDirName = 'war/WEB-INF/lib'
     description = "Copies runtime libraries to $webAppLibDirName."
-
-    copy {
+    copy{
+        from configurations.runtime  
         into webAppLibDirName
-        from configurations.runtime.files
     }
 }
 
-ideaProject {
-    javaVersion = compatibilityVersion
+idea {
+    project {
+        jdkName = compatibilityVersion
 
-    withXml { provider ->
-        def node = provider.asNode()
+        ipr.withXml { provider ->
+            def node = provider.asNode()
 
-        // Set Gradle home
-        def gradleSettings = node.appendNode('component', [name: 'GradleSettings'])
-        gradleSettings.appendNode('option', [name: 'SDK_HOME', value: gradle.gradleHomeDir])
+            // Set Gradle home
+            def gradleSettings = node.appendNode('component', [name: 'GradleSettings'])
+            gradleSettings.appendNode('option', [name: 'SDK_HOME', value: gradle.gradleHomeDir])
+        }
     }
 }
 
-eclipseProject {
-    projectName = 'gaelyk-project'
-
-    whenConfigured { project ->
-        project.natures << 'com.google.appengine.eclipse.core.gaeNature'
-        project.natures << 'com.google.gdt.eclipse.core.webAppNature'
-        project.buildCommands << [name: 'com.google.appengine.eclipse.core.enhancerbuilder']
-        project.buildCommands << [name: 'com.google.appengine.eclipse.core.projectValidator']
-        project.buildCommands << [name: 'com.google.gdt.eclipse.core.webAppProjectValidator']
+eclipse {
+    project {
+        name = 'gaelyk-project'
+        file {
+            whenMerged { project ->
+                project.natures << 'com.google.appengine.eclipse.core.gaeNature'
+                project.natures << 'com.google.gdt.eclipse.core.webAppNature'
+                project.buildCommands << [name: 'com.google.appengine.eclipse.core.enhancerbuilder']
+                project.buildCommands << [name: 'com.google.appengine.eclipse.core.projectValidator']
+                project.buildCommands << [name: 'com.google.gdt.eclipse.core.webAppProjectValidator']
+            }
+        }
     }
-}
-
-eclipseClasspath {
-    withXml { xml ->
-        xml.asNode().classpathentry.find { it.@kind == 'output' && it.@path == 'bin' }.@path = 'war/WEB-INF/classes'
-        xml.asNode().appendNode('classpathentry', [kind: 'con', path: 'com.google.appengine.eclipse.core.GAE_CONTAINER'])
-                    .appendNode('attributes')
-                    .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/war/WEB-INF/lib'])
-        xml.asNode().appendNode('classpathentry', [exported: 'true', kind: 'con', path: 'GROOVY_SUPPORT'])
-                    .appendNode('attributes')
-                    .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/war/WEB-INF/lib'])
+    classpath {
+        file {
+            withXml { xml ->
+                xml.asNode().classpathentry.find { it.@kind == 'output' && it.@path == 'bin' }.@path = 'war/WEB-INF/classes'
+                xml.asNode().appendNode('classpathentry', [kind: 'con', path: 'com.google.appengine.eclipse.core.GAE_CONTAINER'])
+                            .appendNode('attributes')
+                            .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/war/WEB-INF/lib'])
+                xml.asNode().appendNode('classpathentry', [exported: 'true', kind: 'con', path: 'GROOVY_SUPPORT'])
+                            .appendNode('attributes')
+                            .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/war/WEB-INF/lib'])
+            }
+        }
     }
 }
 

@@ -377,6 +377,26 @@ class GaelykCategory {
     }
 
     /**
+     * Fetch the entity associated with that key from the async datastore.
+     * Usage: <code>def entityFuture = key.asyncGet()</code>
+     *
+     * @return an entity future
+     */
+    static Future<Entity> asyncGet(Key key) {
+        DatastoreServiceFactory.asyncDatastoreService.get(key)
+    }
+
+    /**
+     * Fetch the entities associated with the collection of keys from the async datastore.
+     * Usage: <code>def entitiesFuture = [key1, key2].asyncGet()</code>
+     *
+     * @return a map of key and future entity
+     */
+    static Future<Map<Key, Entity>> asyncGet(Iterable<Key> keys) {
+        DatastoreServiceFactory.asyncDatastoreService.get(keys)
+    }
+
+    /**
      * Delete the entity represented by that key, from the data store.
      * Usage: <code>key.delete()</code>
      */

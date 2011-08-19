@@ -23,6 +23,7 @@ import org.codehaus.groovy.ast.expr.ClassExpression
 import com.google.appengine.api.datastore.Query.FilterOperator
 import org.codehaus.groovy.ast.expr.CastExpression
 import org.codehaus.groovy.ast.expr.NotExpression
+import org.codehaus.groovy.syntax.SyntaxException
 
 /**
  * This AST transformation makes two transformations at the AST level.
@@ -68,7 +69,12 @@ class QueryDslTransformation implements ASTTransformation {
                         // filter operator expression
                         ConstantExpression op = null
                         switch (binExpr.operation.text) {
-                            case '=': throw new QuerySyntaxException("You must use '==' instead of '=' for equality comparisons");
+                            case '=':
+                                source.addError(new SyntaxException(
+                                        "You must use '==' instead of '=' for equality comparisons",
+                                        binExpr.operation.getStartLine(),
+                                        binExpr.operation.getStartColumn()))
+                                break
                             case '==': op = new ConstantExpression('EQUAL');                 break
                             case '!=': op = new ConstantExpression('NOT_EQUAL');             break
                             case '<':  op = new ConstantExpression('LESS_THAN');             break

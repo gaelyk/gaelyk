@@ -29,7 +29,7 @@ buildscript {
 
     dependencies {
         classpath 'bmuschko:gradle-gae-plugin:0.5.1'
-        classpath 'bmuschko:gradle-gaelyk-plugin:0.2'
+        classpath 'bmuschko:gradle-gaelyk-plugin:0.1'
     }
 }
 
@@ -54,7 +54,7 @@ dependencies {
     testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', name: 'groovy-all'
     }
-    testCompile 'marcoVermeulen:gaelyk-spock:0.1',
+    testCompile 'marcoVermeulen:gaelyk-spock:0.2',
                 "com.google.appengine:appengine-api-stubs:$gaeVersion",
                 "com.google.appengine:appengine-testing:$gaeVersion",
                 'javax.servlet:servlet-api:2.5',

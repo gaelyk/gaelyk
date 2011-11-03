@@ -8,7 +8,8 @@ defaultTasks 'clean', 'build'
 // current Gaelyk version
 version = '1.1'
 group = 'groovyx.gaelyk'
-appEngineVersion = '1.5.3'
+appEngineVersion = '1.5.5'
+groovyVersion = '1.8.2'
 
 // various directory places and file names
 tmpProj = "../template-project"
@@ -38,8 +39,8 @@ repositories {
 }
 
 dependencies {
-    groovy "org.codehaus.groovy:groovy-all:1.8.1"
-	compile "org.codehaus.groovy:groovy-all:1.8.1" // for maven pom generation
+    groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
+	compile "org.codehaus.groovy:groovy-all:$groovyVersion" // for maven pom generation
 	compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
 	compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
 	compile "javax.servlet:servlet-api:2.5"

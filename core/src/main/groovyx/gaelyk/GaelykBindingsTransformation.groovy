@@ -48,12 +48,21 @@ import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.AnnotationNode
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.MethodNode
-import org.codehaus.groovy.ast.builder.AstBuilder
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 import java.lang.reflect.Modifier
+import org.codehaus.groovy.ast.ClassHelper
+import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.stmt.BlockStatement
+import org.codehaus.groovy.ast.stmt.ReturnStatement
+import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.expr.ClassExpression
+import org.codehaus.groovy.ast.expr.EmptyExpression
+import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.TupleExpression
+import org.codehaus.groovy.ast.expr.ListExpression
 
 /**
  * This Groovy AST Transformation is a local transformation which is triggered by the Groovy compiler
@@ -104,22 +113,21 @@ class GaelykBindingsTransformation implements ASTTransformation {
 	}
 	
 	private MethodNode makeServiceGetter(Class serviceClass, String accessorName, Class factoryClass, String factoryMethodName) {
-		def ast = new AstBuilder().buildFromSpec {
-			method(accessorName, Modifier.PRIVATE | Modifier.STATIC, serviceClass) {
-				parameters {}
-				exceptions {}
-				block {
-					returnStatement {
-						methodCall {
-							classExpression(factoryClass)
-							constant(factoryMethodName)
-							argumentList {}
-						}
-					}
-				}
-				annotations {}
-			}
-		}
-		ast[0]
+        def returnType  = ClassHelper.make(serviceClass).getPlainNodeReference()
+        def factoryType = ClassHelper.make(factoryClass).getPlainNodeReference()
+
+        BlockStatement block = new BlockStatement()
+        block.addStatement(new ReturnStatement(new MethodCallExpression(
+                new ClassExpression(factoryType), factoryMethodName, new TupleExpression()
+        )))
+        
+        new MethodNode(
+                accessorName, 
+                Modifier.PRIVATE | Modifier.STATIC, 
+                returnType, 
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                block
+        )
 	}
 }

@@ -2404,6 +2404,7 @@ class GaelykCategory {
      */
     static Future<Entity> leftShift(Future<Entity> future, Map params) {
         GaelykCategory.leftShift(future.get(), params)
+		return future
     }
 
    /**
@@ -2436,5 +2437,13 @@ class GaelykCategory {
      */
     static Future<Void> asyncDelete(Future<Entity> future) {
         GaelykCategory.asyncDelete(future.get())
+    }
+
+    /**
+     * Convenience method to retrieve the key from a Future Entity
+     * Usage: <code>future.key</code>
+     */
+    static Key getKey(Future<Entity> future) {
+        future.get().key
     }
 }

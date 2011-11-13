@@ -11,6 +11,8 @@
         <link rel="shortcut icon" href="/images/gaelyk-small-favicon.png" type="image/png">
         <link rel="icon" href="/images/gaelyk-small-favicon.png" type="image/png">
 
+        <link href="https://plus.google.com/113675159854671799959/" rel="publisher" />
+
         <link rel="stylesheet" type="text/css" href="/css/main.css"/>
 
         <link rel="stylesheet" type="text/css" media="print" href="/css/print.css" />

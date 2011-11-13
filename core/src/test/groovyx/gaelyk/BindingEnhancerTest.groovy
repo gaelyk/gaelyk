@@ -23,6 +23,8 @@ import com.google.appengine.api.oauth.OAuthService
 import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.tools.development.testing.LocalFileServiceTestConfig
 import com.google.appengine.api.files.FileService
+import com.google.appengine.api.prospectivesearch.ProspectiveSearchService
+import com.google.appengine.tools.development.testing.LocalProspectiveSearchServiceTestConfig
 
 /**
  * Test the binding enhancer binds the GAE services in the binding.
@@ -42,7 +44,8 @@ class BindingEnhancerTest extends GroovyTestCase {
             new LocalTaskQueueTestConfig(),
             new LocalXMPPServiceTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
-            new LocalFileServiceTestConfig()
+            new LocalFileServiceTestConfig(),
+            new LocalProspectiveSearchServiceTestConfig()
     )
 
     private Binding binding
@@ -94,18 +97,19 @@ class BindingEnhancerTest extends GroovyTestCase {
      * Check implementations of the GAE services are available in the binding
      */
     void testGaeServicesPresent() {
-        assert binding.datastore    instanceof DatastoreService
-        assert binding.memcache     instanceof MemcacheService
-        assert binding.urlFetch     instanceof URLFetchService
-        assert binding.mail         instanceof MailService
-        assert binding.images       instanceof ImagesService
-        assert binding.users        instanceof UserService
-        assert binding.defaultQueue instanceof com.google.appengine.api.taskqueue.Queue
-        assert binding.xmpp         instanceof XMPPService
-        assert binding.blobstore    instanceof BlobstoreService
-        assert binding.oauth        instanceof OAuthService
-        assert binding.channel      instanceof ChannelService
-        assert binding.files        instanceof FileService
+        assert binding.datastore         instanceof DatastoreService
+        assert binding.memcache          instanceof MemcacheService
+        assert binding.urlFetch          instanceof URLFetchService
+        assert binding.mail              instanceof MailService
+        assert binding.images            instanceof ImagesService
+        assert binding.users             instanceof UserService
+        assert binding.defaultQueue      instanceof com.google.appengine.api.taskqueue.Queue
+        assert binding.xmpp              instanceof XMPPService
+        assert binding.blobstore         instanceof BlobstoreService
+        assert binding.oauth             instanceof OAuthService
+        assert binding.channel           instanceof ChannelService
+        assert binding.files             instanceof FileService
+        assert binding.prospectiveSearch instanceof ProspectiveSearchService
     }
 
     void testGaelykVersionPresent() {

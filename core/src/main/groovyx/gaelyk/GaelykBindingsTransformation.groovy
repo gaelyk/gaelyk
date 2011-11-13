@@ -48,12 +48,19 @@ import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.AnnotationNode
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.MethodNode
-import org.codehaus.groovy.ast.builder.AstBuilder
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 import java.lang.reflect.Modifier
+import org.codehaus.groovy.ast.ClassHelper
+import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.stmt.BlockStatement
+import org.codehaus.groovy.ast.stmt.ReturnStatement
+import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.expr.ClassExpression
+import org.codehaus.groovy.ast.expr.TupleExpression
+import com.google.appengine.api.prospectivesearch.ProspectiveSearchService
 
 /**
  * This Groovy AST Transformation is a local transformation which is triggered by the Groovy compiler
@@ -73,28 +80,28 @@ class GaelykBindingsTransformation implements ASTTransformation {
 
 		ClassNode parent = (ClassNode) nodes[1]
 
-		addGetterIfNotExists(parent, DatastoreService,     "getDatastore",    DatastoreServiceFactory,    "getDatastoreService")
-		addGetterIfNotExists(parent, MemcacheService,      "getMemcache",     MemcacheServiceFactory,     "getMemcacheService")
-		addGetterIfNotExists(parent, URLFetchService,      "getUrlFetch",     URLFetchServiceFactory,     "getURLFetchService")
-		addGetterIfNotExists(parent, MailService,          "getMail",         MailServiceFactory,         "getMailService")
-		addGetterIfNotExists(parent, ImagesServiceWrapper, "getImages",       ImagesServiceWrapper,       "getInstance")
-		addGetterIfNotExists(parent, UserService,          "getUsers",        UserServiceFactory,         "getUserService")
-		addGetterIfNotExists(parent, Queue,                "getDefaultQueue", QueueFactory,               "getDefaultQueue")
-		addGetterIfNotExists(parent, XMPPService,          "getXmpp",         XMPPServiceFactory,         "getXMPPService")
-		addGetterIfNotExists(parent, BlobstoreService,     "getBlobstore",    BlobstoreServiceFactory,    "getBlobstoreService")
-		addGetterIfNotExists(parent, OAuthService,         "getOauth",        OAuthServiceFactory,        "getOAuthService")
-		addGetterIfNotExists(parent, CapabilitiesService,  "getCapabilities", CapabilitiesServiceFactory, "getCapabilitiesService")
-		addGetterIfNotExists(parent, ChannelService,       "getChannel",      ChannelServiceFactory,      "getChannelService")
-		addGetterIfNotExists(parent, FileService,          "getFiles",        FileServiceFactory,         "getFileService")
-		addGetterIfNotExists(parent, BackendService,       "getBackends",     BackendServiceFactory,      "getBackendService")
-		addGetterIfNotExists(parent, LifecycleManager,     "getLifecycle",    LifecycleManager,           "getInstance")
-		addGetterIfNotExists(parent, User,                 "getUser",         GaelykBindingEnhancer,      "getCurrentUser")
-		addGetterIfNotExists(parent, QueueAccessor,        "getQueues",       GaelykBindingEnhancer,      "getQueues")
-		addGetterIfNotExists(parent, Boolean,              "getLocalMode",    GaelykBindingEnhancer,      "getLocalMode")
-		addGetterIfNotExists(parent, Map,                  "getApp",          GaelykBindingEnhancer,      "getApp")
-		addGetterIfNotExists(parent, LoggerAccessor,       "getLogger",       GaelykBindingEnhancer,      "getLogger")
-		addGetterIfNotExists(parent, Class,                "getNamespace",    GaelykBindingEnhancer,      "getNamespaceManager")
-
+		addGetterIfNotExists(parent, DatastoreService,         "getDatastore",         DatastoreServiceFactory,    "getDatastoreService")
+		addGetterIfNotExists(parent, MemcacheService,          "getMemcache",          MemcacheServiceFactory,     "getMemcacheService")
+		addGetterIfNotExists(parent, URLFetchService,          "getUrlFetch",          URLFetchServiceFactory,     "getURLFetchService")
+		addGetterIfNotExists(parent, MailService,              "getMail",              MailServiceFactory,         "getMailService")
+		addGetterIfNotExists(parent, ImagesServiceWrapper,     "getImages",            ImagesServiceWrapper,       "getInstance")
+		addGetterIfNotExists(parent, UserService,              "getUsers",             UserServiceFactory,         "getUserService")
+		addGetterIfNotExists(parent, Queue,                    "getDefaultQueue",      QueueFactory,               "getDefaultQueue")
+		addGetterIfNotExists(parent, XMPPService,              "getXmpp",              XMPPServiceFactory,         "getXMPPService")
+		addGetterIfNotExists(parent, BlobstoreService,         "getBlobstore",         BlobstoreServiceFactory,    "getBlobstoreService")
+		addGetterIfNotExists(parent, OAuthService,             "getOauth",             OAuthServiceFactory,        "getOAuthService")
+		addGetterIfNotExists(parent, CapabilitiesService,      "getCapabilities",      CapabilitiesServiceFactory, "getCapabilitiesService")
+		addGetterIfNotExists(parent, ChannelService,           "getChannel",           ChannelServiceFactory,      "getChannelService")
+		addGetterIfNotExists(parent, FileService,              "getFiles",             FileServiceFactory,         "getFileService")
+		addGetterIfNotExists(parent, BackendService,           "getBackends",          BackendServiceFactory,      "getBackendService")
+		addGetterIfNotExists(parent, LifecycleManager,         "getLifecycle",         LifecycleManager,           "getInstance")
+		addGetterIfNotExists(parent, ProspectiveSearchService, "getProspectiveSearch", ProspectiveSearchService,   "getProspectiveSearchService")
+		addGetterIfNotExists(parent, User,                     "getUser",              GaelykBindingEnhancer,      "getCurrentUser")
+		addGetterIfNotExists(parent, QueueAccessor,            "getQueues",            GaelykBindingEnhancer,      "getQueues")
+		addGetterIfNotExists(parent, Boolean,                  "getLocalMode",         GaelykBindingEnhancer,      "getLocalMode")
+		addGetterIfNotExists(parent, Map,                      "getApp",               GaelykBindingEnhancer,      "getApp")
+		addGetterIfNotExists(parent, LoggerAccessor,           "getLogger",            GaelykBindingEnhancer,      "getLogger")
+		addGetterIfNotExists(parent, Class,                    "getNamespace",         GaelykBindingEnhancer,      "getNamespaceManager")
 	}
 
 	private void addGetterIfNotExists(ClassNode parent, Class serviceClass, String getterName, Class factoryClass, String factoryMethodName) {
@@ -103,23 +110,22 @@ class GaelykBindingsTransformation implements ASTTransformation {
 		}
 	}
 	
-	private MethodNode makeServiceGetter(Class serviceClass, String accestorName, Class factoryClass, String factoryMethodName) {
-		def ast = new AstBuilder().buildFromSpec {
-			method(accestorName, Modifier.PRIVATE | Modifier.STATIC, serviceClass) {
-				parameters {}
-				exceptions {}
-				block {
-					returnStatement {
-						methodCall {
-							classExpression(factoryClass)
-							constant(factoryMethodName)
-							argumentList {}
-						}
-					}
-				}
-				annotations {}
-			}
-		}
-		ast[0]
+	private MethodNode makeServiceGetter(Class serviceClass, String accessorName, Class factoryClass, String factoryMethodName) {
+        def returnType  = ClassHelper.make(serviceClass).plainNodeReference
+        def factoryType = ClassHelper.make(factoryClass).plainNodeReference
+
+        BlockStatement block = new BlockStatement()
+        block.addStatement(new ReturnStatement(new MethodCallExpression(
+                new ClassExpression(factoryType), factoryMethodName, new TupleExpression()
+        )))
+        
+        new MethodNode(
+                accessorName, 
+                Modifier.PRIVATE | Modifier.STATIC, 
+                returnType, 
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                block
+        )
 	}
 }

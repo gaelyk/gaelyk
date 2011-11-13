@@ -100,6 +100,8 @@ import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.LifecycleManager.ShutdownHook
 import groovyx.gaelyk.query.QueryBuilder
 import com.google.appengine.api.blobstore.BlobstoreService
+import com.google.appengine.api.memcache.AsyncMemcacheService
+import com.google.appengine.api.memcache.MemcacheServiceFactory
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -1472,6 +1474,128 @@ class GaelykCategory {
                 }
             }
         }
+    }
+
+    // Asynchronous memcache service
+
+    /**
+     * From the <code>memcache</code> binding variable, you can access the asynchronous Memcache service:
+     * <pre><code>
+     *      memcache.async
+     * </code></pre>
+     * @return the asynchronous Memcache service
+     */
+    static AsyncMemcacheService getAsync(MemcacheService memcache) {
+        MemcacheServiceFactory.asyncMemcacheService
+    }
+
+    /**
+     * Get an object from the async cache, with a GString key, coerced to a String.
+     *
+     * @param key the GString key
+     * @return the value stored under that key
+     */
+    static Future<? extends Object> get(AsyncMemcacheService memcache, String key) {
+        memcache.get((Object)key)
+    }
+
+    /**
+     * Get an object from the async cache, with a GString key, coerced to a String.
+     *
+     * @param key the GString key
+     * @return the value stored under that key
+     */
+    static Future<? extends Object> get(AsyncMemcacheService memcache, GString key) {
+        memcache.get(key.toString())
+    }
+
+    /**
+     * Get an object from the async cache, identified by its key, using the subscript notation:
+     * <code>def obj = memcache[key]</code>
+     *
+     * @param key the key identifying the object to get from the cache
+     */
+    static Future<? extends Object> getAt(AsyncMemcacheService memcache, Object key) {
+        memcache.get(key)
+    }
+
+    /**
+     * Get an object from the async cache, identified by its key, using the subscript notation:
+     * <code>def obj = memcache[key]</code>
+     *
+     * @param key the key identifying the object to get from the cache
+     */
+    static Future<? extends Object> getAt(AsyncMemcacheService memcache, String key) {
+        //TODO this method should be removed once we only need a getAt() method taking Object key
+        // looks like a bug in current Groovy where the two variants are needed
+        memcache.get(key)
+    }
+
+    /**
+     * Put an object in the async cache under a GString key, coerced to a String.
+     *
+     * @param key a GString key
+     * @param value the value to put in the cache
+     */
+    static Future<Void> set(AsyncMemcacheService memcache, String key, Object value) {
+        memcache.put(key, value)
+    }
+
+    /**
+     * Put an object in the async cache under a GString key, coerced to a String.
+     *
+     * @param key a GString key
+     * @param value the value to put in the cache
+     */
+    static Future<Void> put(AsyncMemcacheService memcache, GString key, Object value) {
+        memcache.put(key.toString(), value)
+    }
+
+    /**
+     * Put an object in the async cache under a GString key, coerced to a String, with an expiration.
+     *
+     * @param key a GString key
+     * @param value the value to put in the cache
+     * @param expiration expiration of the key/value
+     */
+    static Future<Void> put(AsyncMemcacheService memcache, GString key, Object value, Expiration expiration) {
+        memcache.put(key.toString(), value, expiration)
+    }
+
+    /**
+     * Put an object in the async cache under a GString key, coerced to a String, with an expiration and a SetPolicy.
+     *
+     * @param key a GString key
+     * @param value the value to put in the cache
+     * @param expiration expiration of the key/value
+     * @param policy a SetPolicy
+     */
+    static Future<Boolean> put(AsyncMemcacheService memcache, GString key, Object value, Expiration expiration, SetPolicy policy) {
+        memcache.put(key.toString(), value, expiration, policy)
+    }
+
+    /**
+     * Put an object into the cache, identified by its key, using the subscript notation:
+     * <code>memcache[key] = value</code>
+     *
+     * @param key the key identifying the object to put in the cache
+     * @param value the value to put in the cache
+     */
+    static Future<Void> putAt(AsyncMemcacheService memcache, String key, Object value) {
+        //TODO this method should be removed once we only need a putAt() method taking Object key
+        // looks like a bug in current Groovy where the two variants are needed
+        memcache.put(key, value)
+    }
+
+    /**
+     * Put an object into the cache, identified by its key, using the subscript notation:
+     * <code>memcache[key] = value</code>
+     *
+     * @param key the key identifying the object to put in the cache
+     * @param value the value to put in the cache
+     */
+    static Future<Void> putAt(AsyncMemcacheService memcache, Object key, Object value) {
+        memcache.put(key, value)
     }
 
     // ----------------------------------------------------------------

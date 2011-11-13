@@ -35,6 +35,7 @@ import com.google.appengine.api.files.FileServiceFactory
 import com.google.appengine.api.backends.BackendServiceFactory
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.users.User
+import com.google.appengine.api.prospectivesearch.ProspectiveSearchServiceFactory
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -99,6 +100,9 @@ class GaelykBindingEnhancer {
         // Backend service and Lifecycle manager in SDK 1.5.0
         binding.setVariable("backends", BackendServiceFactory.backendService)
         binding.setVariable("lifecycle", LifecycleManager.instance)
+
+        // Prospective search service in SDK 1.5.4
+        binding.setVariable("prospectiveSearch", ProspectiveSearchServiceFactory.prospectiveSearchService)
     }
 
     static User getCurrentUser() {

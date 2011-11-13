@@ -124,6 +124,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         </ul>
         <li><a href="/tutorial/app-engine-shortcuts#memcache">Enhancements to the Memcache service</a></li>
         <ul>
+            <li><a href="/tutorial/app-engine-shortcuts#async-memcache">Asynchronous Memcache service</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#memoize">Closure memoization</a></li>
         </ul>
         <li><a href="/tutorial/app-engine-shortcuts#blobstore">Enhancements related to the Blobstore and File services</a></li>

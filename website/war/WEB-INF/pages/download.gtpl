@@ -50,6 +50,7 @@ But to get you started quickly, you may use a ready-made template project which 
         returned by the <code>get()</code> call on the future.
     </li>
     <li>Added the prospective search service to the binding</li>
+    <li>You can access the <a href="/tutorial/app-engine-shortcuts#async-memcache">asynchronous Memcache</a> service with <code>memcache.async</code></li>
     <li>
         Additional <a href="/tutorial/app-engine-shortcuts#files-misc">convenience methods for the file service</a>
     </li>

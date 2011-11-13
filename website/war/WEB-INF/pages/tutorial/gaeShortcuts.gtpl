@@ -1083,6 +1083,22 @@ may have disappeared between the time you do the <code>if (... in ...)</code> ch
 and the time you actually retrieve the value associated with the key from memcache.
 </blockquote>
 
+<a name="async-memcache"></a>
+<h3>Asynchronous Memcache service</h3>
+
+<p>
+The Memcache service is synchronous, but App Engine also proposes an asynchronous Memcache service
+that you can access by calling the <code>async</code> property on the Memcache service instance:
+</p>
+
+<pre class="brush:groovy">
+    memcache.async.put(key, value)
+</pre>
+
+<blockquote>
+<b>Note: </b> Additionally, the usual property notation and subscript access notation are also available.
+</blockquote>
+
 <a name="memoize"></a>
 <h3>Closure memoization</h3>
 

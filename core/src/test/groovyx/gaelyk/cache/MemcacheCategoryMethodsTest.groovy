@@ -6,6 +6,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory
 import groovyx.gaelyk.GaelykCategory
 import com.google.appengine.api.memcache.Expiration
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy
+import com.google.appengine.api.memcache.AsyncMemcacheService
 
 /**
  * Memcache enhancements tests
@@ -94,6 +95,23 @@ class MemcacheCategoryMethodsTest extends GroovyTestCase {
             assert 'number' in memcache
             assert memcache.number == 1234
         }
+    }
+    
+    void testAsyncCacheAccess() {
+        def memcache = MemcacheServiceFactory.memcacheService
+        
+        use(GaelykCategory) {
+            def async = memcache.async
+            
+            assert async instanceof AsyncMemcacheService
+            
+            async.name = 'Guillaume'
+            async['age'] = 34
 
+            sleep 100
+            
+            assert async.name.get() == 'Guillaume'
+            assert async['age'].get() == 34
+        }
     }
 }

@@ -1,4 +1,5 @@
 apply plugin: 'groovy'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
@@ -6,6 +7,9 @@ defaultTasks 'clean', 'build'
 
 // current Gaelyk version
 version = '1.1'
+group = 'groovyx.gaelyk'
+appEngineVersion = '1.6.0'
+groovyVersion = '1.8.4'
 
 // various directory places and file names
 tmpProj = "../template-project"
@@ -30,9 +34,20 @@ sourceSets {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    groovy fileTree(dir: 'lib', includes: ['groovy-all-1.8.2.jar'])
-    compile fileTree(dir: 'lib', includes: ['*.jar'])
+    groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
+	compile "org.codehaus.groovy:groovy-all:$groovyVersion" // for maven pom generation
+	compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
+	compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
+	compile "javax.servlet:servlet-api:2.5"
+	testCompile "javax.servlet.jsp:jsp-api:2.2"
+	testCompile "junit:junit:4.8.2"
+	testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
+	testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
 }
 
 jar {

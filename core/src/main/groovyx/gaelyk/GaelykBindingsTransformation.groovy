@@ -59,10 +59,7 @@ import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
-import org.codehaus.groovy.ast.expr.EmptyExpression
-import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.TupleExpression
-import org.codehaus.groovy.ast.expr.ListExpression
 
 /**
  * This Groovy AST Transformation is a local transformation which is triggered by the Groovy compiler
@@ -113,8 +110,8 @@ class GaelykBindingsTransformation implements ASTTransformation {
 	}
 	
 	private MethodNode makeServiceGetter(Class serviceClass, String accessorName, Class factoryClass, String factoryMethodName) {
-        def returnType  = ClassHelper.make(serviceClass).getPlainNodeReference()
-        def factoryType = ClassHelper.make(factoryClass).getPlainNodeReference()
+        def returnType  = ClassHelper.make(serviceClass).plainNodeReference
+        def factoryType = ClassHelper.make(factoryClass).plainNodeReference
 
         BlockStatement block = new BlockStatement()
         block.addStatement(new ReturnStatement(new MethodCallExpression(

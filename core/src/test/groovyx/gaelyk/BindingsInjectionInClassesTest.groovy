@@ -16,12 +16,64 @@ import com.google.appengine.api.files.FileService
 import com.google.appengine.api.backends.BackendService
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.taskqueue.Queue
+import com.google.appengine.api.prospectivesearch.ProspectiveSearchService
+import com.google.appengine.tools.development.testing.LocalProspectiveSearchServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalFileServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
+import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalMailServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 
 /**
  * @author Vladimir Orany
  * @author Guillaume Laforge
  */
 class BindingsInjectionInClassesTest extends GroovyTestCase {
+
+    // setup the local environement stub services
+    private LocalServiceTestHelper helper = new LocalServiceTestHelper(
+            new LocalDatastoreServiceTestConfig(),
+            new LocalMemcacheServiceTestConfig(),
+            new LocalURLFetchServiceTestConfig(),
+            new LocalMailServiceTestConfig(),
+            new LocalImagesServiceTestConfig(),
+            new LocalUserServiceTestConfig(),
+            new LocalTaskQueueTestConfig(),
+            new LocalXMPPServiceTestConfig(),
+            new LocalBlobstoreServiceTestConfig(),
+            new LocalFileServiceTestConfig(),
+            new LocalProspectiveSearchServiceTestConfig()
+    )
+
+    private Binding binding
+
+    protected void setUp() {
+        super.setUp()
+
+        // setting up the local environment
+        helper.setUp()
+
+        binding = new Binding()
+        GaelykBindingEnhancer.bind(binding)
+    }
+
+    protected void tearDown() {
+        // uninstalling the local environment
+        try {
+            helper.tearDown()
+        } catch (Throwable t) {
+            System.err.println("Something bad happened while tearing down the helpers (${t.message})")
+            t.printStackTrace()
+        }
+
+        super.tearDown()
+    }
 
     void testInjection() {
         def obj = new GroovyShell().evaluate '''
@@ -33,27 +85,28 @@ class BindingsInjectionInClassesTest extends GroovyTestCase {
 		'''
 
         [
-                datastore		: DatastoreService,
-                memcache		: MemcacheService,
-                urlFetch		: URLFetchService,
-                mail			: MailService,
-                images  		: ImagesServiceWrapper,
-                users			: UserService,
-                user			: User,
-                defaultQueue	: Queue,
-                queues  		: QueueAccessor,
-                xmpp			: XMPPService,
-                localMode		: Boolean,
-                blobstore		: BlobstoreService,
-                app 			: Map,
-                logger  		: LoggerAccessor,
-                oauth			: OAuthService,
-                namespace		: Class,
-                capabilities	: CapabilitiesService,
-                channel 		: ChannelService,
-                files			: FileService,
-                backends		: BackendService,
-                lifecycle		: LifecycleManager
+                datastore		  : DatastoreService,
+                memcache		  : MemcacheService,
+                urlFetch		  : URLFetchService,
+                mail			  : MailService,
+                images  		  : ImagesServiceWrapper,
+                users			  : UserService,
+                user			  : User,
+                defaultQueue	  : Queue,
+                queues  		  : QueueAccessor,
+                xmpp			  : XMPPService,
+                localMode		  : Boolean,
+                blobstore		  : BlobstoreService,
+                app 			  : Map,
+                logger  		  : LoggerAccessor,
+                oauth			  : OAuthService,
+                namespace		  : Class,
+                capabilities	  : CapabilitiesService,
+                channel 		  : ChannelService,
+                files			  : FileService,
+                prospectiveSearch : ProspectiveSearchService,
+                backends		  : BackendService,
+                lifecycle		  : LifecycleManager
 
         ].each { property, clazz ->
             assert obj.metaClass.getMetaProperty(property)?.type == clazz

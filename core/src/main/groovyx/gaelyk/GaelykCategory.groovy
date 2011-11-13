@@ -574,6 +574,16 @@ class GaelykCategory {
         return builder.execute()
     }
 
+    /**
+     * Adds an <code>unindexed</code> property to entities to wrap entities,
+     * so as to set unindexed properties on the entity.
+     *
+     * @return a wrapper for an entity
+     */
+    static UnindexedEntityWrapper getUnindexed(Entity entity) {
+        new UnindexedEntityWrapper(entity)
+    }
+
     // ------------------------------------
     // Querying datastore metadata
     // (contribution from Benjamin Muschko)

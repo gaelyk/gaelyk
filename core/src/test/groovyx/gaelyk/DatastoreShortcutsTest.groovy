@@ -231,4 +231,21 @@ class DatastoreShortcutsTest extends GroovyTestCase {
             assert (("agR0ZXN0cg8LEgdwZXJzb25zIgJtZQw" as Key) as String) == "agR0ZXN0cg8LEgdwZXJzb25zIgJtZQw"
         }
     }
+    
+    void testUnindexedPropertySetter() {
+        use (GaelykCategory) {
+            def bio = "Groovy Project Manager working on Groovy blabla"
+            def address = "Long address here"
+
+            def person = new Entity("Person", "glaforge")
+            person.name = "Guillaume Laforge"
+            person.unindexed.bio = bio
+            person.unindexed['address'] = address
+            person.save()
+            
+            def e = (["Person", "glaforge"] as Key).get()
+            assert e.bio == bio
+            assert e.address == address
+        }
+    }
 }

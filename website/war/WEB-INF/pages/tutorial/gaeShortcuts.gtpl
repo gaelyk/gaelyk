@@ -53,6 +53,23 @@ The following example shows how you can access <code>Entity</code>s:
 </blockquote>
 
 <p>
+Some properties of your entities can be unindexed, meaning that they can't be used for your search criteria.
+This may be the case for long text properties, for example a bio of a person, etc.
+The property notation or subscript notation use normal indexed properties.
+If you want to set unindexed properties, you can use the <code>unindexed</code> shorcut:
+</p>
+
+<pre class="brush:groovy">
+    import com.google.appengine.api.datastore.Entity
+
+    Entity entity = new Entity("person")
+
+    entity.name = "Guillaume Laforge"
+    entity.unindexed.bio = "Groovy Project Manager..."
+    entity.unindexed['address'] = "Very long address..."
+</pre>
+
+<p>
 A handy mechanism exists to assign several properties at once, on your entities, using the <code>&lt;&lt;</code> (left shift) operator.
 This is particularly useful when you have properties coming from the request, in the <code>params</code> map variable.
 You can the do the following to assign all the key/values in the map as properties on your entity:

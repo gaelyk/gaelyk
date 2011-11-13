@@ -41,6 +41,7 @@ But to get you started quickly, you may use a ready-made template project which 
         The <a href="/tutorial/app-engine-shortcuts#datastore-get">new <code>get()</code> methods on the datastore service</a>
         now also work with the asynchronous datastore.
     </li>
+    <li>Added an <code>unindexed</code> property on entities to set unindexed properties</li>
     <li>
         Part of the work with the async datastore <code>get()</code>,
         whenever you have a <code>Future</code> to deal with,

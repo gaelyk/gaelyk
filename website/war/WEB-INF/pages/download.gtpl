@@ -24,8 +24,8 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and 
 </p>
 
 <p>
-The latest version was tested with Groovy 1.8.1,
-and with the 1.5.2 version of the App Engine SDK.
+The latest version was tested with Groovy 1.8.4,
+and with the 1.6.0 version of the App Engine SDK.
 </p>
 
 <p>
@@ -36,6 +36,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
+    <li>Upgraded to Groovy 1.8.4 and App Engine SDK 1.6.0</li>
     <li>
         The <a href="/tutorial/app-engine-shortcuts#datastore-get">new <code>get()</code> methods on the datastore service</a>
         now also work with the asynchronous datastore.
@@ -48,6 +49,7 @@ But to get you started quickly, you may use a ready-made template project which 
         and it will proxy those property access to the underlying object
         returned by the <code>get()</code> call on the future.
     </li>
+    <li>Added the prospective search service to the binding</li>
     <li>
         Additional <a href="/tutorial/app-engine-shortcuts#files-misc">convenience methods for the file service</a>
     </li>

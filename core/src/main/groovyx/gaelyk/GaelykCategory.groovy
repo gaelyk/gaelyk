@@ -2528,7 +2528,7 @@ class GaelykCategory {
      */
     static Future<Entity> leftShift(Future<Entity> future, Map params) {
         GaelykCategory.leftShift(future.get(), params)
-		return future
+        return future
     }
 
    /**

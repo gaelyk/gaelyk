@@ -584,6 +584,79 @@ class GaelykCategory {
         new UnindexedEntityWrapper(entity)
     }
 
+    /**
+     * Gaelyk supports a simplistic object/entity mapping, thanks to type coercion.
+     * You can use this type coercion mechanism to coerce POJOs/POGOs and datastore Entities.
+     * The <code>Future<Entity></code> kind will be the simple name of the POJO/POGO (same approach as Objectify).
+     * So with this mechanism, you can do:
+     *
+     * <pre><code>
+     *  class Person { String name, int age }
+     *
+     *  def e = key.asyncGet()
+     *
+     *  def p = e as Person
+     *
+     *  assert e.name == p.name
+     *  assert e.age == p.age
+     * </code></pre>
+     *
+     * @return an instance of a POJO/POGO to coerce into
+     */
+    static Object asType(Future<Entity> self, Class clazz) {
+        asType(self.get(), clazz)
+    }
+
+    /**
+     * Set the <code>Future<Entity></code> properties with the key / value pairs of the map,
+     * using the leftshift operator as follows:
+     * <code>futureEntity &lt;&lt; params</code>
+     */
+    static Future<Entity> leftShift(Future<Entity> future, Map params) {
+        leftShift(future.get(), params)
+        return future
+    }
+
+   /**
+     * Save this entity future in the data store.
+     * Usage: <code>futureEntity.save()</code>
+     */
+    static Key save(Future<Entity> future) {
+        save(future.get())
+    }
+
+    /**
+     * Save this entity future in the data store asynchronously.
+     * Usage: <code>futureEntity.asyncSave()</code>
+     */
+    static Future<Key> asyncSave(Future<Entity> future) {
+        asyncSave(future.get())
+    }
+
+   /**
+     * Delete this entity from the data store.
+     * Usage: <code>entity.delete()</code>
+     */
+    static void delete(Future<Entity> future) {
+        delete(future.get())
+    }
+
+    /**
+     * Delete this entity from the data store.
+     * Usage: <code>entity.asyncDelete()</code>
+     */
+    static Future<Void> asyncDelete(Future<Entity> future) {
+        asyncDelete(future.get())
+    }
+
+    /**
+     * Convenience method to retrieve the key from a Future Entity
+     * Usage: <code>future.key</code>
+     */
+    static Key getKey(Future<Entity> future) {
+        future.get().key
+    }
+
     // ------------------------------------
     // Querying datastore metadata
     // (contribution from Benjamin Muschko)
@@ -2506,78 +2579,5 @@ class GaelykCategory {
      */
     static void set(Future future, String name, Object value) {
         future.get().setProperty(name, transformValueForStorage(value))
-    }
-
-    /**
-     * Gaelyk supports a simplistic object/entity mapping, thanks to type coercion.
-     * You can use this type coercion mechanism to coerce POJOs/POGOs and datastore Entities.
-     * The <code>Future<Entity></code> kind will be the simple name of the POJO/POGO (same approach as Objectify).
-     * So with this mechanism, you can do:
-     *
-     * <pre><code>
-     *  class Person { String name, int age }
-     *
-     *  def e = key.asyncGet()
-     *
-     *  def p = e as Person
-     *
-     *  assert e.name == p.name
-     *  assert e.age == p.age
-     * </code></pre>
-     *
-     * @return an instance of a POJO/POGO to coerce into
-     */
-    static Object asType(Future<Entity> self, Class clazz) {
-        asType(self.get(), clazz)
-    }
-
-    /**
-     * Set the <code>Future<Entity></code> properties with the key / value pairs of the map,
-     * using the leftshift operator as follows:
-     * <code>futureEntity &lt;&lt; params</code>
-     */
-    static Future<Entity> leftShift(Future<Entity> future, Map params) {
-        leftShift(future.get(), params)
-        return future
-    }
-
-   /**
-     * Save this entity future in the data store.
-     * Usage: <code>futureEntity.save()</code>
-     */
-    static Key save(Future<Entity> future) {
-        save(future.get())
-    }
-
-    /**
-     * Save this entity future in the data store asynchronously.
-     * Usage: <code>futureEntity.asyncSave()</code>
-     */
-    static Future<Key> asyncSave(Future<Entity> future) {
-        asyncSave(future.get())
-    }
-
-   /**
-     * Delete this entity from the data store.
-     * Usage: <code>entity.delete()</code>
-     */
-    static void delete(Future<Entity> future) {
-        delete(future.get())
-    }
-
-    /**
-     * Delete this entity from the data store.
-     * Usage: <code>entity.asyncDelete()</code>
-     */
-    static Future<Void> asyncDelete(Future<Entity> future) {
-        asyncDelete(future.get())
-    }
-
-    /**
-     * Convenience method to retrieve the key from a Future Entity
-     * Usage: <code>future.key</code>
-     */
-    static Key getKey(Future<Entity> future) {
-        future.get().key
     }
 }

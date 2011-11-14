@@ -2528,7 +2528,7 @@ class GaelykCategory {
      * @return an instance of a POJO/POGO to coerce into
      */
     static Object asType(Future<Entity> self, Class clazz) {
-        GaelykCategory.asType(self.get(), clazz)
+        asType(self.get(), clazz)
     }
 
     /**
@@ -2537,7 +2537,7 @@ class GaelykCategory {
      * <code>futureEntity &lt;&lt; params</code>
      */
     static Future<Entity> leftShift(Future<Entity> future, Map params) {
-        GaelykCategory.leftShift(future.get(), params)
+        leftShift(future.get(), params)
         return future
     }
 
@@ -2546,7 +2546,7 @@ class GaelykCategory {
      * Usage: <code>futureEntity.save()</code>
      */
     static Key save(Future<Entity> future) {
-        GaelykCategory.save(future.get())
+        save(future.get())
     }
 
     /**
@@ -2554,7 +2554,7 @@ class GaelykCategory {
      * Usage: <code>futureEntity.asyncSave()</code>
      */
     static Future<Key> asyncSave(Future<Entity> future) {
-        GaelykCategory.asyncSave(future.get())
+        asyncSave(future.get())
     }
 
    /**
@@ -2562,7 +2562,7 @@ class GaelykCategory {
      * Usage: <code>entity.delete()</code>
      */
     static void delete(Future<Entity> future) {
-        GaelykCategory.delete(future.get())
+        delete(future.get())
     }
 
     /**
@@ -2570,7 +2570,7 @@ class GaelykCategory {
      * Usage: <code>entity.asyncDelete()</code>
      */
     static Future<Void> asyncDelete(Future<Entity> future) {
-        GaelykCategory.asyncDelete(future.get())
+        asyncDelete(future.get())
     }
 
     /**

@@ -11,7 +11,6 @@ import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
 import groovyx.gaelyk.query.QuerySyntaxException
 import com.google.appengine.api.datastore.DatastoreServiceFactory
-import com.google.appengine.api.datastore.Query
 
 /**
  * 
@@ -377,6 +376,39 @@ class QueryDslTest extends GroovyTestCase {
             shouldFail(QuerySyntaxException) {
                 clazz.newInstance(binding).run()
             }
+        }
+    }
+
+    void testQueryByKeyIssue() {
+        def datastore = DatastoreServiceFactory.datastoreService
+
+        use (GaelykCategory) {
+            def e1 = new Entity("city", "San Jose")
+            e1.save()
+
+            def k1 = ["city", "San Jose"] as Key
+            def p1 = new Entity("person", "Michael")
+            p1.city = k1
+            p1.save()
+
+            TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+            Class<Script> clazz = th.parse '''
+                import com.google.appengine.api.datastore.Key
+
+                def k1 = ["city", "San Jose"] as Key
+
+                datastore.execute {
+                    from person
+                    where city ==  k1
+                }
+            '''
+
+            def binding = new Binding([datastore: DatastoreServiceFactory.datastoreService])
+
+            def peopleInSanJose = clazz.newInstance(binding).run()
+
+            assert peopleInSanJose.size() == 1
         }
     }
 }

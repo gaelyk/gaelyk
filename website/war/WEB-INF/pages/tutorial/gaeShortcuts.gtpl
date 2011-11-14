@@ -326,7 +326,7 @@ transparently, so you don't have to call <code>get()</code> on the future:
 <b>Note: </b> When you have a <code>Future&lt;Entity&gt; f</code>,
 when you call <code>f.someProperty</code>, <b>Gaelyk</b> will actually lazily call
 <code>f.get().someProperty</code>, making the usage of the future transparent.
-However, note it longy works for properties, it doesn't work for method call on futures,
+However, note it only works for properties, it doesn't work for method call on futures,
 where you will have to call <code>get()</code> first.
 This transparent handling of future properties is working for all <code>Future</code>s,
 not just <code>Future&lt;Entity&gt;</code>.

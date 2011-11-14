@@ -691,7 +691,7 @@ There is also a variant with an overloaded <code>&lt;&lt;</code> operator:
 
 <p>
 <b>Gaelyk</b> adds a new <code>send()</code> method to the
-<a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/mail/MailService.html">mail service</a>,
+<a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/mail/MailService.html">mail service</a>,
 which takes <i>named arguments</i>. That way, you don't have to manually build a new message yourself.
 In your Groovlet, for sending a message, you can do this:
 </p>
@@ -1606,7 +1606,7 @@ The Google App Engine SDK is providing two classes for handling images:
 
 <ul>
     <li>
-        <code><a href="http://code.google.com/intl/fr-FR/appengine/docs/java/javadoc/com/google/appengine/api/images/ImagesServiceFactory.html">ImageServiceFactory</a></code>
+        <code><a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/images/ImagesServiceFactory.html">ImageServiceFactory</a></code>
         is used to retrieve the Images service, to create images (from blobs, byte arrays), and to make transformation operations.
     </li>
     <li>

@@ -102,6 +102,7 @@ import groovyx.gaelyk.query.QueryBuilder
 import com.google.appengine.api.blobstore.BlobstoreService
 import com.google.appengine.api.memcache.AsyncMemcacheService
 import com.google.appengine.api.memcache.MemcacheServiceFactory
+import groovyx.gaelyk.datastore.PogoEntityCoercion
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -909,13 +910,7 @@ class GaelykCategory {
      */
     static Object asType(Object self, Class clazz) {
         if (clazz == Entity) {
-            def e = new Entity(self.class.simpleName)
-            self.properties.each { k, v ->
-                if (!(k in ['class', 'metaClass'])) {
-                    e.setProperty(k, v)
-                }
-            }
-            return e
+            PogoEntityCoercion.convert(self)
         } else if (self.class == Entity) {
             asType((Entity)self, clazz)
         } else if (self.class == String) {
@@ -946,7 +941,8 @@ class GaelykCategory {
      */
     
     static Object asType(Entity self, Class clazz) {
-        return clazz.newInstance(self.properties)
+//        return clazz.newInstance(self.properties)
+        return PogoEntityCoercion.convert(self, clazz)
     }
 
     /**

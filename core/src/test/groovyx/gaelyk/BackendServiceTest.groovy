@@ -8,7 +8,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper
  */
 class BackendServiceTest extends GroovyTestCase {
 
-     // setup the local environement stub services
+     // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper()
 
     protected void setUp() {

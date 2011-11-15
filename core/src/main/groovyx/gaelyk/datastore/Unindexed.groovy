@@ -7,7 +7,8 @@ import static java.lang.annotation.ElementType.METHOD
 import static java.lang.annotation.RetentionPolicy.RUNTIME
 
 /**
- * 
+ * Annotation for properties of a Groovy class that should be set as unindexed in coercion to and from entities.
+ *
  * @author Guillaume Laforge
  */
 

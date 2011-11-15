@@ -3,10 +3,18 @@ package groovyx.gaelyk.datastore
 import com.google.appengine.api.datastore.Entity
 
 /**
+ * Utility class handling the POGO to Entity coercion, and Entity to POGO coercion as well.
  *
  * @author Guillaume Laforge
  */
 class PogoEntityCoercion {
+    /**
+     * Goes through all the properties and finds how they are annotated.
+     * @param p the object to introspect
+     * @return a map whose keys consist of property names
+     * and whose values are maps of ignore/unindexed/key/value keys and
+     * values of closures returning booleans
+     */
     static Map props(Object p) {
         p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) }
                     .collectEntries { String k, v ->
@@ -24,13 +32,25 @@ class PogoEntityCoercion {
             ]]
         }
     }
-    
+
+    /**
+     * Find the key in the properties
+     *
+     * @param props the properties
+     * @return the name of the key or null if none is found
+     */
     static String findKey(Map props) {
         props.findResult { String prop, Map m ->
             if (m.key()) return prop
         }
     }
 
+    /**
+     * Convert an object into an entity
+     *
+     * @param p the object
+     * @return the entity
+     */
     static Entity convert(Object p) {
         Entity entity
         
@@ -57,6 +77,13 @@ class PogoEntityCoercion {
         return entity
     }
 
+    /**
+     * Convert an entity into an object
+     *
+     * @param e the entity
+     * @param clazz the class of the object to return
+     * @return an instance of the class parameter
+     */
     static Object convert(Entity e, Class clazz) {
         def entityProps = e.getProperties()
 

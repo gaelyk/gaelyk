@@ -6,7 +6,8 @@ import static java.lang.annotation.RetentionPolicy.*
 import static java.lang.annotation.ElementType.*
 
 /**
- * 
+ * Annotation for properties of a Groovy class that should be the key used in coercion to and from entities.
+ *
  * @author Guillaume Laforge
  */
 

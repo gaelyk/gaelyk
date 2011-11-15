@@ -7,7 +7,6 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import groovy.transform.Canonical
 
 /**
- * 
  * @author Guillaume Laforge
  */
 class PogoEntityCoercionTest extends GroovyTestCase {

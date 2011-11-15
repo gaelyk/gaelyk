@@ -157,12 +157,43 @@ and you can also convert an <code>Entity</code> to a POJO or POGO.
 </pre>
 
 <blockquote>
-<b>Note: </b> The POJO/POGO class simpleName property is used as the entity kind.
+<b>Note: </b> The POJO/POGO class <code>simpleName</code> property is used as the entity kind.
 So for example, if the <code>Person</code> class was in a package <code>com.foo</code>,
 the entity kind used would be <code>Person</code>, not the fully-qualified name.
 This is the same default strategy that <a href="http://code.google.com/p/objectify-appengine/">Objectify</a>
 is using.
 </blockquote>
+
+<a name="pogo-entity-coercion-annotations"></a>
+
+<p>
+Further customization of the coercion can be achieved by using 3 annotations on your classes:
+</p>
+
+<ul>
+    <li><code>@Key</code> to specify that a particular property or getter method should be used as the key for the entity (should be a String or a long)</li>
+    <li><code>@Unindexed</code> for properties or getter methods that should be set as unindexed (ie. on which no queries can be done)</li>
+    <li><code>@Ignore</code> for properties or getter methods that should be ignored and not persisted</li>
+</ul>
+
+<p>
+Here's an example of a <code>Person</code> bean, whose key is a string login, whose biography should be unindexed,
+and whose full name can be ignored since it's a computed property:
+</p>
+
+<pre class="brush:groovy">
+    import groovyx.gaelyk.datastore.Key
+    import groovyx.gaelyk.datastore.Unindexed
+    import groovyx.gaelyk.datastore.Ignore
+
+    class Person {
+        @Key String login
+        String firstName
+        String lastName
+        @Unindexed String bio
+        @Ignore String getFullName() { "$firstName $lastName" }
+    }
+</pre>
 
 <blockquote>
 <b>Note: </b> In turn, with this feature, you have a lightweight object/entity mapper.

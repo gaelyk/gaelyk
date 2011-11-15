@@ -15,7 +15,7 @@ import com.google.appengine.api.datastore.KeyFactory
  * @author Guillaume Laforge
  */
 class DatastoreShortcutsTest extends GroovyTestCase {
-    // setup the local environement stub services
+    // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig()
     )

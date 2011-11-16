@@ -98,9 +98,9 @@ class UrlFetchServiceEnhancementsTest extends GroovyTestCase {
         }
     }
 
-    void testPostToFormWithPayload() {
+    void _testPostToFormWithPayload() {
         use (GaelykCategory) {
-            HTTPResponse response = formPost.post(payload: 'your_name=Gaelyk&fruit=Apricot')
+            HTTPResponse response = formPost.post(payload: 'your_name=Gaelyk&fruit=Apricot', deadline: 10)
 
             assert response.responseCode == 200
             assert response.text.contains('Gaelyk')
@@ -108,9 +108,9 @@ class UrlFetchServiceEnhancementsTest extends GroovyTestCase {
         }
     }
 
-    void testPostToFormWithParameters() {
+    void _testPostToFormWithParameters() {
         use (GaelykCategory) {
-            HTTPResponse response = formPost.post(params: [your_name: 'Gaelyk', fruit: 'Apricot'])
+            HTTPResponse response = formPost.post(params: [your_name: 'Gaelyk', fruit: 'Apricot'], deadline: 10)
 
             assert response.responseCode == 200
             assert response.text.contains('Gaelyk')

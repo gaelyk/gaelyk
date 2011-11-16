@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<title>groovyx.gaelyk (Gaelyk 1.0)</title>
+<title>groovyx.gaelyk (Gaelyk 1.1)</title>
 <META NAME="keywords" CONTENT="groovyx.gaelyk package">
 <LINK REL ="stylesheet" TYPE="text/css" HREF="../../stylesheet.css" TITLE="Style">
 <link href="../../groovy.ico" type="image/x-icon" rel="shortcut icon">
@@ -10,7 +10,7 @@
 <SCRIPT type="text/javascript">
 function windowTitle()
 {
-    parent.document.title="groovyx.gaelyk (Gaelyk 1.0)";
+    parent.document.title="groovyx.gaelyk (Gaelyk 1.1)";
 }
 </SCRIPT>
 <NOSCRIPT>
@@ -144,6 +144,15 @@ Package groovyx.gaelyk
  </TD>
         </TR>
 
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="UnindexedEntityWrapper.html" title="class in groovyx/gaelyk">UnindexedEntityWrapper</A></B></TD>
+        <TD>Wrapper around an entity, so as to be able to set unindexed properties, with:
+ <pre><code>
+     def person = new Entity("Person")
+     person.unindexed.bio = "..." // or unindexed['bio']
+ </code></pre></TD>
+        </TR>
+
 </TABLE>
 &nbsp;
 <P>
@@ -166,8 +175,7 @@ Package groovyx.gaelyk
         <TD WIDTH="15%"><B><A HREF="GaelykBindings.html" title="class in groovyx/gaelyk">GaelykBindings</A></B></TD>
         <TD>If you annotate your classes with the <code>@GaelykBindings</code> annotation,
  the compiler will automatically inject the variables and services
- that are usually injected in your Groovlets and templates.
- </TD>
+ that are usually injected in your Groovlets and templates.</TD>
         </TR>
 
 </TABLE>

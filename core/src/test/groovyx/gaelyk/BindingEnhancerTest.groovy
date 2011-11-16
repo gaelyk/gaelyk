@@ -33,7 +33,7 @@ import com.google.appengine.tools.development.testing.LocalProspectiveSearchServ
  */
 class BindingEnhancerTest extends GroovyTestCase {
 
-    // setup the local environement stub services
+    // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalMemcacheServiceTestConfig(),
@@ -45,7 +45,7 @@ class BindingEnhancerTest extends GroovyTestCase {
             new LocalXMPPServiceTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
             new LocalFileServiceTestConfig(),
-            new LocalProspectiveSearchServiceTestConfig()
+            //new LocalProspectiveSearchServiceTestConfig()
     )
 
     private Binding binding

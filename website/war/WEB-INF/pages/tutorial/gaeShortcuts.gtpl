@@ -482,7 +482,8 @@ Here are the various options of those verbs:
 <h4>Executing queries</h4>
 
 <p>
-You can use the <code>datastore.execute{}</code> call to execute the queries.
+You can use the <code>datastore.execute{}</code> call to execute the queries,
+or the <code>datastore.iterate{}</code> call if you want to get the results in the form of an iterator.
 The <code>select</code> verb also provides additional values.
 The <code>from</code> verb allows to specify a class to coerce the results to a POGO.
 In addition, you can specify the <code>FetchOptions</code> with additional verbs like:

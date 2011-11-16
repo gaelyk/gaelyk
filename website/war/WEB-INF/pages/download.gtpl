@@ -54,6 +54,11 @@ But to get you started quickly, you may use a ready-made template project which 
         and it will proxy those property access to the underlying object
         returned by the <code>get()</code> call on the future.
     </li>
+    <li>
+        In addition to <code>datastore.query{}</code> and <code>datastore.execute{}</code>,
+        there is now a <code>datastore.iterate{}</code> method that returns an <code>Iterator</code> instead of a list,
+        which is friendlier when your queries return a large number of results.
+    </li>
     <li>Added the prospective search service to the binding</li>
     <li>You can access the <a href="/tutorial/app-engine-shortcuts#async-memcache">asynchronous Memcache</a> service with <code>memcache.async</code></li>
     <li>

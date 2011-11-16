@@ -63,7 +63,7 @@ class QueryBuilder {
     /**
      * @return the result of the execution of a prepared query
      */
-    def execute() {
+    def execute(boolean iterable = false) {
         Query query = createQuery()
 
         PreparedQuery preparedQuery = DatastoreServiceFactory.datastoreService.prepare(query)
@@ -79,15 +79,45 @@ class QueryBuilder {
         }
 
         if (coercedClass) {
-            def entities = preparedQuery.asList(options)
-            // use "manual" collect{} as in the context of the query{} call
-            // the delegation transforms the class into a string expression
-            def result = []
-            for (entity in entities) result << entity.asType(coercedClass)
-            return result
+            if (iterable) {
+                def entitiesIterator = preparedQuery.asIterator(options)
+                
+                return new Iterator() {
+                    boolean hasNext() {
+                        entitiesIterator.hasNext()
+                    }
+
+                    Object next() {
+                        def entity = entitiesIterator.next()
+                        return entity.asType(coercedClass)
+                    }
+
+                    void remove() {
+                        throw new UnsupportedOperationException("Forbidden to call remove() on this Query DSL results iterator")
+                    }
+                }
+            } else {
+                def entities = preparedQuery.asList(options)
+                // use "manual" collect{} as in the context of the query{} call
+                // the delegation transforms the class into a string expression
+                def result = []
+                for (entity in entities) result << entity.asType(coercedClass)
+                
+                return result
+            }
         } else {
-            return preparedQuery.asList(options)
+            if (iterable)
+                return preparedQuery.asIterator(options)
+            else
+                return preparedQuery.asList(options)
         }
+    }
+
+    /**
+     * @return the result of the execution of a prepared query in the form of an iterator
+     */
+    def iterate() {
+        execute(true)
     }
 
     /**

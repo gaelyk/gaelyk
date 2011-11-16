@@ -380,8 +380,6 @@ class QueryDslTest extends GroovyTestCase {
     }
 
     void testQueryByKeyIssue() {
-        def datastore = DatastoreServiceFactory.datastoreService
-
         use (GaelykCategory) {
             def e1 = new Entity("city", "San Jose")
             e1.save()
@@ -409,6 +407,48 @@ class QueryDslTest extends GroovyTestCase {
             def peopleInSanJose = clazz.newInstance(binding).run()
 
             assert peopleInSanJose.size() == 1
+        }
+    }
+
+    void testIteratorResults() {
+        use (GaelykCategory) {
+            TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+            Class<Script> clazz = th.parse '''
+                import com.google.appengine.api.datastore.Entity
+
+                10.times { counter ->
+                    new Entity('mugs').with {
+                        name = "Mug #$counter"
+                        save()
+                    }
+                }
+
+                def r1 = datastore.iterate {
+                    select all from mugs
+                }
+
+                def r2 = datastore.iterate {
+                    select all from mugs as Mug
+                }
+
+                return [r1, r2]
+
+                class Mug { String name }
+            '''
+
+            def binding = new Binding([datastore: DatastoreServiceFactory.datastoreService])
+
+            def (r1, r2) = clazz.newInstance(binding).run()
+
+            assert r1 instanceof Iterator
+            assert r1.size() == 10
+
+            assert r2 instanceof Iterator
+            r2 = r2.toList()
+            def counter = 0
+            assert r2.every { counter++; it.class.simpleName == 'Mug' }
+            assert counter == 10
         }
     }
 }

@@ -567,12 +567,28 @@ class GaelykCategory {
      * @return the results
      */
     static execute(DatastoreService service, Closure c) {
+        QueryBuilder builder = prepareAndLaunchQuery(c)
+        return builder.execute()
+    }
+
+    /**
+     * Create and executes a prepared query to retrieve entities from the datastore in the form of an iterator.
+     *
+     * @param c the closure representing the query to execute
+     * @return the iterator over the results
+     */
+    static iterate(DatastoreService service, Closure c) {
+        QueryBuilder builder = prepareAndLaunchQuery(c)
+        return builder.iterate()
+    }
+
+    private static QueryBuilder prepareAndLaunchQuery(Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
         def builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
         cQuery.delegate = builder
         cQuery()
-        return builder.execute()
+        return builder
     }
 
     /**

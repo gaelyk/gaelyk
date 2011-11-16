@@ -87,7 +87,12 @@ class PogoEntityCoercion {
     static Object convert(Entity e, Class clazz) {
         def entityProps = e.getProperties()
 
-        def o = clazz.newInstance(entityProps)
+        def o = clazz.newInstance()
+        entityProps.each { k, v ->
+            if (o.metaClass.hasProperty(o, k)) {  
+                o[k] = v
+            }
+        }
         
         def classProps = props(o)
 

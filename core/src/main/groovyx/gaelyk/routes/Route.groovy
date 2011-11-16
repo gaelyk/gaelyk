@@ -119,6 +119,19 @@ class Route {
      */
     def forUri(HttpServletRequest request) {
         def uri = request.requestURI
+
+        // disregarding URL parts with appended ;jsessionid=xxx
+        int cutoff = uri.indexOf(';')
+        if (cutoff > -1) {
+            uri = uri.substring(0, cutoff)
+        } else {
+            // disregarding URL parts with parameters ?x=y
+            cutoff = uri.indexOf('?')
+            if (cutoff > -1) {
+                uri = uri.substring(0, cutoff)
+            }
+        }
+
         Matcher matcher = regex.matcher(uri)
 
         String finalDestination = destination instanceof String || ignore == true ? 

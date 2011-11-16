@@ -126,4 +126,13 @@ class RoutesTest extends GroovyTestCase {
         assert route.matches
         assert route.namespace == "acme"
     }
+
+    void testRoutesWithParametersAndJSessionID() {
+        def rt = new Route("/signup-user", "/signupUser.groovy")
+        
+        assert rt.forUri(r("/signup-user")).matches
+        assert rt.forUri(r("/signup-user?login=failed")).matches
+        assert rt.forUri(r("/signup-user;jsessionid=17o5jy7lz9t4t")).matches
+        assert rt.forUri(r("/signup-user;jsessionid=17o5jy7lz9t4t?login=failed")).matches
+    }
 }

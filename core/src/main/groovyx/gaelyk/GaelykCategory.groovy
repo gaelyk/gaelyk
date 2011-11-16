@@ -1564,7 +1564,7 @@ class GaelykCategory {
                 } else {
                     // no previous invocation, so calling the closure and caching the result 
                     result = closure(* args)
-                    memcache.put(key, result, Expiration.byDeltaSeconds(30))
+                    memcache.put(key, result, Expiration.byDeltaSeconds(60))
                     return result
                 }
             }

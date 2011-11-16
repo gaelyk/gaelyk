@@ -191,7 +191,7 @@ and whose full name can be ignored since it's a computed property:
         String firstName
         String lastName
         @Unindexed String bio
-        @Ignore String getFullName() { "$firstName $lastName" }
+        @Ignore String getFullName() { "\$firstName \$lastName" }
     }
 </pre>
 

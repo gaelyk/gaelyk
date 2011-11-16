@@ -34,6 +34,7 @@ sourceSets {
     }
 }
 
+
 repositories {
     mavenCentral()
 }
@@ -93,4 +94,23 @@ task dist(dependsOn: [jar, groovydoc, template]) << {
     }
   
     ant.copy file: jar.archivePath, todir: websiteLib
+}
+
+// custom tasks for creating source/javadoc jars
+task sourcesJar(type: Jar, dependsOn:classes) {
+     baseName = 'gaelyk'
+     classifier = 'sources'
+     from sourceSets.main.allSource
+}
+ 
+task javadocJar(type: Jar, dependsOn:groovydoc) {
+     baseName = 'gaelyk'
+     classifier = 'javadoc'
+     from new File(apiDir)
+}
+ 
+// add javadoc/source jar tasks as artifacts
+artifacts {
+     archives sourcesJar
+     archives javadocJar
 }

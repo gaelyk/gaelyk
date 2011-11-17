@@ -56,8 +56,9 @@ class PogoEntityCoercion {
         
         Map props = props(p)
         String key = findKey(props)
-        if (key) {
-            entity = new Entity(p.class.simpleName, p.getProperty(key))
+        def value = props[key].value()
+        if (key && value) {
+            entity = new Entity(p.class.simpleName, value)
         } else {
             entity = new Entity(p.class.simpleName)
         }

@@ -58,6 +58,9 @@ class PogoEntityCoercionTest extends GroovyTestCase {
             def p2 = e as Person
 
             assert p1 == p2
+
+            def nullKeyConversionTest = new Person(firstName: p1.firstName) as Entity
+            assert p1.firstName == nullKeyConversionTest.firstName
         }
     }
 

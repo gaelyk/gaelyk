@@ -69,7 +69,9 @@ class PogoEntityCoercion {
                     if (props[propName].unindexed()) {
                         entity.setUnindexedProperty(propName, props[propName].value())
                     } else {
-                        entity.setProperty(propName, props[propName].value())
+                        def val = props[propName].value()
+                        if (val instanceof Enum) val = val as String
+                        entity.setProperty(propName, val)
                     }
                 }
             }

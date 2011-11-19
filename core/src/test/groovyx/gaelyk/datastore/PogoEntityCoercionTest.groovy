@@ -105,6 +105,20 @@ class PogoEntityCoercionTest extends GroovyTestCase {
             assert ba2.name == "main account"
         }
     }
+
+    void testEnumProperties() {
+        use (GaelykCategory) {
+            Entity e = new Entity('Match')
+            e.outcome = 'WIN'
+            Match m = e as Match
+
+            assert m.outcome == MatchOutcome.WIN
+
+            Entity e2 = m as Entity
+
+            assert e2.outcome == 'WIN'
+        }
+    }
 }
 
 class P1 {
@@ -132,3 +146,13 @@ class BankAccount {
 class TeddyBear {
     String name
 }
+
+@Canonical
+class Match {
+    MatchOutcome outcome
+}
+
+enum MatchOutcome {
+    WIN, DRAW, LOSE
+}
+

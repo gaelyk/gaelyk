@@ -52,7 +52,7 @@ dependencies {
 }
 
 jar {
-    baseName = 'gaelyk'
+    baseName 'gaelyk'
     manifest {
         attributes 'Implementation-Title': 'Gaelyk', 'Implementation-Version': version
     }
@@ -61,9 +61,9 @@ jar {
 
 groovydoc {
     def title = "Gaelyk ${version}"
-    destinationDir = file(apiDir)
-    windowTitle = title
-    docTitle = title
+    destinationDir file(apiDir)
+    windowTitle title
+    docTitle title
     link 'http://java.sun.com/javaee/5/docs/api/', 'javax.servlet.'
     link 'http://java.sun.com/j2se/1.5.0/docs/api', 'java.,org.xml.,org.xml.'
     link 'http://code.google.com/appengine/docs/java/javadoc/', 'com.google.appengine.'
@@ -71,7 +71,7 @@ groovydoc {
 }
 
 task template << {
-    description = "Packaging the template project"
+    description "Packaging the template project"
     println "Deleting old Gaelyk JARs from the template project"
 
     ant.delete {
@@ -86,7 +86,7 @@ task template << {
 }
 
 task dist(dependsOn: [jar, groovydoc, template]) << {
-    description = "Updating the Gaelyk JAR of the website"
+    description "Updating the Gaelyk JAR of the website"
     println description
 
     ant.delete {
@@ -98,14 +98,14 @@ task dist(dependsOn: [jar, groovydoc, template]) << {
 
 // custom tasks for creating source/javadoc jars
 task sourcesJar(type: Jar, dependsOn:classes) {
-     baseName = 'gaelyk'
-     classifier = 'sources'
+     baseName 'gaelyk'
+     classifier 'sources'
      from sourceSets.main.allSource
 }
  
 task javadocJar(type: Jar, dependsOn:groovydoc) {
-     baseName = 'gaelyk'
-     classifier = 'javadoc'
+     baseName 'gaelyk'
+     classifier 'javadoc'
      from apiDir
 }
  
@@ -116,5 +116,5 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "1.0-milestone-6"
+    gradleVersion "1.0-milestone-6"
 }

@@ -40,7 +40,6 @@ repositories {
 
 dependencies {
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-	compile "org.codehaus.groovy:groovy-all:$groovyVersion" // for maven pom generation
 	compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
 	compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
 	compile "javax.servlet:servlet-api:2.5"
@@ -112,6 +111,12 @@ task javadocJar(type: Jar, dependsOn:groovydoc) {
 artifacts {
      archives sourcesJar
      archives javadocJar
+}
+
+tasks.withType(Upload) { // map the groovy configuration to compile in the pom
+    repositories.withType(MavenResolver) { 
+        pom.scopeMappings.addMapping(1, configurations.groovy, "compile")
+    }
 }
 
 task wrapper(type: Wrapper) {

@@ -61,7 +61,7 @@ jar {
 
 groovydoc {
     def title = "Gaelyk ${version}"
-    destinationDir = new File(apiDir)
+    destinationDir = file(apiDir)
     windowTitle = title
     docTitle = title
     link 'http://java.sun.com/javaee/5/docs/api/', 'javax.servlet.'
@@ -106,7 +106,7 @@ task sourcesJar(type: Jar, dependsOn:classes) {
 task javadocJar(type: Jar, dependsOn:groovydoc) {
      baseName = 'gaelyk'
      classifier = 'javadoc'
-     from new File(apiDir)
+     from apiDir
 }
  
 // add javadoc/source jar tasks as artifacts

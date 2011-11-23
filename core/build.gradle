@@ -68,30 +68,29 @@ groovydoc {
     link 'http://groovy.codehaus.org/gapi/', 'org.codehaus.groovy.,groovy.'
 }
 
-task template << {
-    description "Packaging the template project"
-    println "Deleting old Gaelyk JARs from the template project"
+task template {
+    description = "Packaging the template project"
+    
+    doFirst {
+        println "Deleting old Gaelyk JARs from the template project"
+        ant.delete {
+            fileset dir: projLib, includes: "gaelyk-*.jar"
+        }
 
-    ant.delete {
-        fileset dir: projLib, includes: "gaelyk-*.jar"
+        println "Copying the latest Gaelyk JAR in the template project"
+        ant.copy file: jar.archivePath, todir: projLib
+
+        println "Creating the template project ZIP file"
+        ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX,*.iml,.DS_Store,bin/**,.gradle/**,build/**,war/WEB-INF/appengine-generated/**'
     }
-
-    println "Copying the latest Gaelyk JAR in the template project"
-    ant.copy file: jar.archivePath, todir: projLib
-
-    println "Creating the template project ZIP file"
-    ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX,*.iml,.DS_Store,bin/**,.gradle/**,build/**,war/WEB-INF/appengine-generated/**'
 }
 
-task dist(dependsOn: [jar, groovydoc, template]) << {
-    description "Updating the Gaelyk JAR of the website"
-    println description
-
-    ant.delete {
-        fileset dir: websiteLib, includes: "gaelyk-*.jar"
-    }
+task dist(dependsOn: [jar, groovydoc, template]) {
+    description = "Updating the Gaelyk JAR of the website"
   
-    ant.copy file: jar.archivePath, todir: websiteLib
+    doFirst {
+        ant.copy file: jar.archivePath, todir: websiteLib
+    }
 }
 
 // custom tasks for creating source/javadoc jars

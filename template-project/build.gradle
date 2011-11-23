@@ -70,7 +70,7 @@ gae {
     downloadSdk = true
 }
 
-clean.doLast {
+clean {
      delete sourceSets*.output.classesDir
 }
 

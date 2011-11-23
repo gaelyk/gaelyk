@@ -35,13 +35,11 @@ sourceSets {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-	compile "org.codehaus.groovy:groovy-all:$groovyVersion" // for maven pom generation
 	compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
 	compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
 	compile "javax.servlet:servlet-api:2.5"
@@ -52,7 +50,7 @@ dependencies {
 }
 
 jar {
-    baseName = 'gaelyk'
+    baseName 'gaelyk'
     manifest {
         attributes 'Implementation-Title': 'Gaelyk', 'Implementation-Version': version
     }
@@ -61,56 +59,65 @@ jar {
 
 groovydoc {
     def title = "Gaelyk ${version}"
-    destinationDir = new File(apiDir)
-    windowTitle = title
-    docTitle = title
+    destinationDir file(apiDir)
+    windowTitle title
+    docTitle title
     link 'http://java.sun.com/javaee/5/docs/api/', 'javax.servlet.'
     link 'http://java.sun.com/j2se/1.5.0/docs/api', 'java.,org.xml.,org.xml.'
     link 'http://code.google.com/appengine/docs/java/javadoc/', 'com.google.appengine.'
     link 'http://groovy.codehaus.org/gapi/', 'org.codehaus.groovy.,groovy.'
 }
 
-task template << {
+task template {
     description = "Packaging the template project"
-    println "Deleting old Gaelyk JARs from the template project"
+    
+    doFirst {
+        println "Deleting old Gaelyk JARs from the template project"
+        ant.delete {
+            fileset dir: projLib, includes: "gaelyk-*.jar"
+        }
 
-    ant.delete {
-        fileset dir: projLib, includes: "gaelyk-*.jar"
+        println "Copying the latest Gaelyk JAR in the template project"
+        ant.copy file: jar.archivePath, todir: projLib
+
+        println "Creating the template project ZIP file"
+        ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX,*.iml,.DS_Store,bin/**,.gradle/**,build/**,war/WEB-INF/appengine-generated/**'
     }
-
-    println "Copying the latest Gaelyk JAR in the template project"
-    ant.copy file: jar.archivePath, todir: projLib
-
-    println "Creating the template project ZIP file"
-    ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX,*.iml,.DS_Store,bin/**,.gradle/**,build/**,war/WEB-INF/appengine-generated/**'
 }
 
-task dist(dependsOn: [jar, groovydoc, template]) << {
+task dist(dependsOn: [jar, groovydoc, template]) {
     description = "Updating the Gaelyk JAR of the website"
-    println description
-
-    ant.delete {
-        fileset dir: websiteLib, includes: "gaelyk-*.jar"
-    }
   
-    ant.copy file: jar.archivePath, todir: websiteLib
+    doFirst {
+        ant.copy file: jar.archivePath, todir: websiteLib
+    }
 }
 
 // custom tasks for creating source/javadoc jars
 task sourcesJar(type: Jar, dependsOn:classes) {
-     baseName = 'gaelyk'
-     classifier = 'sources'
+     baseName 'gaelyk'
+     classifier 'sources'
      from sourceSets.main.allSource
 }
  
 task javadocJar(type: Jar, dependsOn:groovydoc) {
-     baseName = 'gaelyk'
-     classifier = 'javadoc'
-     from new File(apiDir)
+     baseName 'gaelyk'
+     classifier 'javadoc'
+     from apiDir
 }
  
 // add javadoc/source jar tasks as artifacts
 artifacts {
      archives sourcesJar
      archives javadocJar
+}
+
+tasks.withType(Upload) { // map the groovy configuration to compile in the pom
+    repositories.withType(MavenResolver) { 
+        pom.scopeMappings.addMapping(1, configurations.groovy, "compile")
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion "1.0-milestone-6"
 }

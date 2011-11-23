@@ -68,6 +68,12 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
 
 <div id="sightings">
     <div class="pic-frame">
+        <a href="http://www.delicieuxdesignercakes.com/">
+        <img src="/images/sightings/small/delicieuxdesignercakes.png" alt="" ><br/>
+        Renza Vermeulen cake designer website
+        </a>
+    </div>
+    <div class="pic-frame">
         <a href="http://www.commenthow.com/">
         <img src="/images/sightings/small/commenthow.png" alt="" ><br/>
         CommentHow, a DIY website

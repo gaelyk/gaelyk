@@ -40,7 +40,7 @@ repositories {
 
 sourceSets {
     main {
-        output.classesDir = file('war/WEB-INF/classes')
+        output.classesDir file('war/WEB-INF/classes')
     }
 }
 
@@ -70,17 +70,15 @@ gae {
     downloadSdk = true
 }
 
-clean.doLast {
+clean {
      delete sourceSets*.output.classesDir
 }
 
 task copyRuntimeLibraries(type: Sync){
     def webAppLibDirName = 'war/WEB-INF/lib'
     description = "Copies runtime libraries to $webAppLibDirName."
-    copy{
-        from configurations.runtime  
-        into webAppLibDirName
-    }
+    from configurations.runtime  
+    into webAppLibDirName
 }
 
 idea {
@@ -99,7 +97,7 @@ idea {
 
 eclipse {
     project {
-        name = 'gaelyk-project'
+        name 'gaelyk-project'
         file {
             whenMerged { project ->
                 project.natures << 'com.google.appengine.eclipse.core.gaeNature'
@@ -126,5 +124,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.0-milestone-4'
+    gradleVersion '1.0-milestone-6'
 }

@@ -32,7 +32,6 @@ class BackendServiceTest extends GroovyTestCase {
             lifecycle.shutdownHook = { shutdown = true }
 
             lifecycle.beginShutdown(0)
-            lifecycle.interruptAllRequests()
 
             assert shutdown
         }

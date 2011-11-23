@@ -77,10 +77,8 @@ clean.doLast {
 task copyRuntimeLibraries(type: Sync){
     def webAppLibDirName = 'war/WEB-INF/lib'
     description = "Copies runtime libraries to $webAppLibDirName."
-    copy{
-        from configurations.runtime  
-        into webAppLibDirName
-    }
+    from configurations.runtime  
+    into webAppLibDirName
 }
 
 idea {

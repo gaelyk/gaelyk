@@ -126,5 +126,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.0-milestone-4'
+    gradleVersion = '1.0-milestone-6'
 }

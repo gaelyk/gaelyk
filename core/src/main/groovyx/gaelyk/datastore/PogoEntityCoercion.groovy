@@ -8,6 +8,12 @@ import com.google.appengine.api.datastore.Entity
  * @author Guillaume Laforge
  */
 class PogoEntityCoercion {
+
+    /**
+     * Cached information about annotations present on POGO classes
+     */
+    private static Map<Class, Map> cachedProps = [:]
+
     /**
      * Goes through all the properties and finds how they are annotated.
      * @param p the object to introspect
@@ -16,21 +22,26 @@ class PogoEntityCoercion {
      * values of closures returning booleans
      */
     static Map props(Object p) {
-        p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) }
+        def clazz = p.class
+
+        if (!cachedProps.containsKey(clazz)) {
+            cachedProps[clazz] = p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) }
                     .collectEntries { String k, v ->
-            def annos
-            try {
-                annos = p.class.getDeclaredField(k).annotations
-            } catch (e) {
-                annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
+                def annos
+                try {
+                    annos = p.class.getDeclaredField(k).annotations
+                } catch (e) {
+                    annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
+                }
+                [(k), [
+                        ignore:    { annos.any { it instanceof Ignore } },
+                        unindexed: { annos.any { it instanceof Unindexed } },
+                        key:       { annos.any { it instanceof Key } }
+                ]]
             }
-            [(k), [
-                    ignore:     { annos.any { it instanceof Ignore } },
-                    unindexed:  { annos.any { it instanceof Unindexed } },
-                    key:        { annos.any { it instanceof Key } },
-                    value:      { v }
-            ]]
         }
+
+        return cachedProps[clazz]
     }
 
     /**
@@ -56,7 +67,7 @@ class PogoEntityCoercion {
         
         Map props = props(p)
         String key = findKey(props)
-        def value = props[key]?.value()
+        def value = key ? p."$key" : null
         if (key && value) {
             entity = new Entity(p.class.simpleName, value)
         } else {
@@ -67,9 +78,9 @@ class PogoEntityCoercion {
             if (propName != key) {
                 if (!props[propName].ignore()) {
                     if (props[propName].unindexed()) {
-                        entity.setUnindexedProperty(propName, props[propName].value())
+                        entity.setUnindexedProperty(propName, p."$propName")
                     } else {
-                        def val = props[propName].value()
+                        def val = p."$propName"
                         if (val instanceof Enum) val = val as String
                         entity.setProperty(propName, val)
                     }

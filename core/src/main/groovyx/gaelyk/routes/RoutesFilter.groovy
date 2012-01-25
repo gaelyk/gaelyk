@@ -142,6 +142,10 @@ class RoutesFilter implements Filter {
                         } else {
                             CacheHandler.serve(route, request, response)
                         }
+                    } else if (route.redirectionType == RedirectionType.REDIRECT301) {
+                        response.setStatus(301)
+                        response.setHeader("Location", result.destination)
+                        response.setHeader("Connection", "close")
                     } else {
                         response.sendRedirect result.destination
                     }

@@ -21,5 +21,5 @@ package groovyx.gaelyk.routes
  * @author Guillaume Laforge
  */
 public enum RedirectionType {
-    REDIRECT, FORWARD
+    REDIRECT, REDIRECT301, FORWARD
 }

@@ -61,9 +61,9 @@ abstract class RoutesBaseScript extends Script {
      * like GAE's /_ah/* special URLs.
      */
     protected handle(Map m, String route, HttpMethod method) {
-        RedirectionType redirectionType = m.forward ? RedirectionType.FORWARD : RedirectionType.REDIRECT
+        RedirectionType redirectionType = m.forward ? RedirectionType.FORWARD : (m.redirect301 ? RedirectionType.REDIRECT301 : RedirectionType.REDIRECT)
 
-        def destination = m.forward ?: m.redirect
+        def destination = m.forward ?: (m.redirect301 ?: m.redirect)
         def validator = m.validate ?: null
         def cacheExpiration = m.cache ?: 0
         def ignore = m.ignore ?: false

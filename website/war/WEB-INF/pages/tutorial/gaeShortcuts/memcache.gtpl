@@ -77,5 +77,5 @@ in a complex algorithm:
 </pre>
 
 <blockquote>
-<b>Note: </b> Invocations are stored in memcache only for up to the 30 seconds request time limit of App Engine.
+<b>Note: </b> Invocations are stored in memcache only for up to the 60 seconds request time limit of App Engine.
 </blockquote>

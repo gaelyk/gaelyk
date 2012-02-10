@@ -9,7 +9,7 @@ defaultTasks 'clean', 'build'
 version = '1.1'
 group = 'groovyx.gaelyk'
 appEngineVersion = '1.6.2.1'
-groovyVersion = '1.8.5'
+groovyVersion = '1.8.6'
 
 // various directory places and file names
 tmpProj = "../template-project"

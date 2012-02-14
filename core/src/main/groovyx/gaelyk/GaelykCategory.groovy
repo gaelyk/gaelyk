@@ -463,6 +463,7 @@ class GaelykCategory {
             // rethrow the exception
             throw e
         }
+        return transaction
     }
 
     /**
@@ -471,13 +472,13 @@ class GaelykCategory {
      * The transaction is rollbacked if anything went wrong.
      * You can use this method as follows:
      * <code>
-     * datastore.async.withTransactionAsyncCommit { transactionFuture ->
+     * datastore.async.withTransactionCommitAsync { transactionFuture ->
      *     // do something in that transaction
      * }
      * </code>
      * @return Future<Void> calling .get() blocks until all oustanding async calls have completed 
      */
-    static Future<Void> withTransactionAsyncCommit(AsyncDatastoreService service, Closure c) {
+    static Future<Void> withTransactionCommitAsync(AsyncDatastoreService service, Closure c) {
         Future<Transaction> transaction = service.beginTransaction()
         try {
             // pass the transaction as single parameter of the closure

@@ -437,6 +437,65 @@ class GaelykCategory {
     }
 
     /**
+     * With this method, transaction handling is done transparently.
+     * The transaction is committed if the closure executed properly.
+     * The transaction is rollbacked if anything went wrong.
+     * You can use this method as follows:
+     * <code>
+     * datastore.async.withTransaction { transactionFuture ->
+     *     // do something in that transaction
+     * }
+     * </code>
+     */
+    static Future<Transaction> withTransaction(AsyncDatastoreService service, Closure c) {
+        Future<Transaction> transaction = service.beginTransaction()
+        try {
+            // pass the transaction as single parameter of the closure
+            c(transaction)
+            // commit the transaction if the closure executed without throwing an exception
+            // blocks on the result of all async calls made since the transaction started
+            transaction.get().commit() 
+        } catch (e) {
+            // rollback on error
+            if (transaction.get().isActive()) {
+                return transaction.get().rollback() 
+            }
+            // rethrow the exception
+            throw e
+        }
+        return transaction
+    }
+
+    /**
+     * With this method, transaction handling is done transparently.
+     * The transaction is asynchronously committed if the closure executed properly.
+     * The transaction is rollbacked if anything went wrong.
+     * You can use this method as follows:
+     * <code>
+     * datastore.async.withTransactionCommitAsync { transactionFuture ->
+     *     // do something in that transaction
+     * }
+     * </code>
+     * @return Future<Void> calling .get() blocks until all oustanding async calls have completed 
+     */
+    static Future<Void> withTransactionCommitAsync(AsyncDatastoreService service, Closure c) {
+        Future<Transaction> transaction = service.beginTransaction()
+        try {
+            // pass the transaction as single parameter of the closure
+            c(transaction)
+            // commit the transaction asynchronously if the closure executed without throwing an exception
+            return transaction.get().commitAsync() 
+        } catch (e) {
+            // rollback on error
+            if (transaction.get().isActive()) {
+                transaction.get().rollback() 
+            }
+            // rethrow the exception
+            throw e
+        }
+    }
+
+    /**
      * Set the <code>Entity</code> properties with the key / value pairs of the map,
      * using the leftshift operator as follows:
      * <code>entity &lt;&lt; params</code>

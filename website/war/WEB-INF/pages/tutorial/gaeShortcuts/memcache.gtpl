@@ -2,9 +2,10 @@
 <h2>Enhancements to the Memcache service</h2>
 
 <p>
-<b>Gaelyk</b> provides a few additional methods to the Memcache service, to get and put values in the cache
-using Groovy's natural subscript notation, as well as for using the <code>in</code> keyword to check when a key
-is present in the cache or not.
+<b>Gaelyk</b> provides a few additional methods to the 
+<a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/memcache/MemcacheService.html">Memcache service</a>, 
+to get and put values in the cache using Groovy's natural subscript notation, 
+as well as for using the <code>in</code> keyword to check when a key is present in the cache or not.
 </p>
 
 <pre class="brush:groovy">

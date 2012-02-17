@@ -62,7 +62,8 @@ class PluginsHandlerTest extends GroovyTestCase {
     }
 
     void testStandardPluginScriptReadingRoutine() {
-        def content = PluginsHandler.instance.scriptContent("src/test/groovyx/gaelyk/plugins/pluginScript.sample")
+
+        def content = PluginsHandler.instance.scriptContent("pluginScript.sample")
         assert content == """\
             binding {
                 version = '1.2.3'
@@ -83,7 +84,6 @@ class PluginsHandlerTest extends GroovyTestCase {
                 } else ""
             }
 			
-			fileExists = { it ===  "WEB-INF/plugins.groovy" || it  == "WEB-INF/plugins/myPlugin.groovy"}
 
             initPlugins()
 
@@ -134,7 +134,6 @@ class PluginsHandlerTest extends GroovyTestCase {
                 } else ""
             }
 
-			fileExists = { it ===  "WEB-INF/plugins.groovy" || it  == "WEB-INF/plugins/myPlugin.groovy"}
 			
             initPlugins()
 
@@ -183,13 +182,6 @@ class PluginsHandlerTest extends GroovyTestCase {
                 }
             }
 			
-			fileExists = { 
-				it ==  "WEB-INF/plugins.groovy" 			|| 
-				it == "WEB-INF/plugins/pluginOne.groovy"	||
-				it == "WEB-INF/plugins/pluginTwo.groovy"	||
-				it == "META-INF/gaelyk-plugins/pluginThree.groovy"
-            }
-
             initPlugins()
 
             assert beforeActions.size() == 3
@@ -224,11 +216,6 @@ class PluginsHandlerTest extends GroovyTestCase {
                 } else ""
             }
 			
-			fileExists = {
-				it ==  "WEB-INF/plugins.groovy" 			||
-				it == "WEB-INF/plugins/myPlugin.groovy"
-			}
-
             initPlugins()
 
             def values = [:]

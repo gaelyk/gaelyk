@@ -42,8 +42,13 @@ class PluginsHandler {
     List afterActions = []
 
     final defaultScriptContentLoader = { String path ->
-        def file = new File(path)
-        file.exists() ? file.text : ""
+		def file = new File(path)
+		if(file.exists()){
+			return file.text
+		}
+		InputStream is = Thread.currentThread().contextClassLoader.getResourceAsStream(path)
+		if(!is) return ""
+		is.text
     }
 
     Closure scriptContent = defaultScriptContentLoader
@@ -73,14 +78,11 @@ class PluginsHandler {
 
             pluginsList.each { String pluginName ->
 				def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
-				if(!fileExists(pluginPath)){
+				String content = scriptContent(pluginPath)
+				if(!content){
 					pluginPath = "META-INF/gaelyk-plugins/${pluginName}.groovy"
+					content = scriptContent(pluginPath)
 				}
-				if(!fileExists(pluginPath)){
-					log.config "Plugin $pluginName doesn't exist"
-					return
-				}
-                String content = scriptContent(pluginPath)
                 if (content) {
                     log.config "Loading plugin $pluginName"
 
@@ -107,7 +109,9 @@ class PluginsHandler {
 
                     if (script.getBeforeAction()) beforeActions.add script.getBeforeAction()
                     if (script.getAfterAction())  afterActions .add script.getAfterAction()
-                }
+                } else {
+					log.config "Plugin $pluginName doesn't exist"
+				}
             }
 
             // reverse the order of the "after" actions so they are executed in reverse order
@@ -116,19 +120,6 @@ class PluginsHandler {
             initialized = true
         }
     }
-	
-	/**
-	 * Checks whether the plugin exists on the classpath.
-	 * @param path	path to the file
-	 * @return <code>true</code> if the file exists
-	 */
-	private boolean fileExists(path){
-		URL url = PluginsHandler.class.getResource(path)
-		if (!url) return false
-		File file = new File(url.toURI())
-		if (!file) return false
-		file.exists()
-	}
 
     /**
      * @return the list of plugins

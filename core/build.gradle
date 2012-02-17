@@ -7,7 +7,7 @@ targetCompatibility = 1.5
 defaultTasks 'clean', 'build'
 
 // current Gaelyk version
-version = '1.1'
+version = '1.2-SNAPSHOT'
 group = 'org.gaelyk'
 appEngineVersion = '1.6.2.1'
 groovyVersion = '1.8.6'
@@ -32,6 +32,9 @@ sourceSets {
         groovy {
             srcDir 'src/test'
         }
+		resources {
+			srcDir 'src/testResources'
+		}
     }
 }
 
@@ -133,9 +136,13 @@ uploadArchives {
 		mavenDeployer {
 			beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
 
-			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+			def auth = {
 			  authentication(userName: sonatypeUsername, password: sonatypePassword)
 			}
+			
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/", auth) 
+			repository(url: "https://oss.sonatype.org/content/repositories/snapshots", auth)
+			
 
 			pom.project {
 			   name 'Gaelyk'

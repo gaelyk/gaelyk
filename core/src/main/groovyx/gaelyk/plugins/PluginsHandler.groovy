@@ -72,7 +72,14 @@ class PluginsHandler {
             log.config "Found ${pluginsList.size()} plugin(s)"
 
             pluginsList.each { String pluginName ->
-                def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
+				def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
+				if(!fileExists(pluginPath)){
+					pluginPath = "META-INF/gaelyk-plugins/${pluginName}.groovy"
+				}
+				if(!fileExists(pluginPath)){
+					log.config "Plugin $pluginName doesn't exist"
+					return
+				}
                 String content = scriptContent(pluginPath)
                 if (content) {
                     log.config "Loading plugin $pluginName"
@@ -109,6 +116,19 @@ class PluginsHandler {
             initialized = true
         }
     }
+	
+	/**
+	 * Checks whether the plugin exists on the classpath.
+	 * @param path	path to the file
+	 * @return <code>true</code> if the file exists
+	 */
+	private boolean fileExists(path){
+		URL url = PluginsHandler.class.getResource(path)
+		if (!url) return false
+		File file = new File(url.toURI())
+		if (!file) return false
+		file.exists()
+	}
 
     /**
      * @return the list of plugins

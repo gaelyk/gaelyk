@@ -1,0 +1,8 @@
+build
+bin
+.classpath
+.project
+.settings
+.gradle
+WEB-INF
+

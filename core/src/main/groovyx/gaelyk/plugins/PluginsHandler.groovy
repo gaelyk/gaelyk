@@ -40,6 +40,7 @@ class PluginsHandler {
     List categories = []
     List beforeActions = []
     List afterActions = []
+	List installed = []
 
     final defaultScriptContentLoader = { String path ->
 		def file = new File(path)
@@ -62,6 +63,7 @@ class PluginsHandler {
         categories = []
         beforeActions = []
         afterActions = []
+		installed = []
         scriptContent = defaultScriptContentLoader
     }
 
@@ -109,6 +111,7 @@ class PluginsHandler {
 
                     if (script.getBeforeAction()) beforeActions.add script.getBeforeAction()
                     if (script.getAfterAction())  afterActions .add script.getAfterAction()
+					installed << pluginName
                 } else {
 					log.config "Plugin $pluginName doesn't exist"
 				}
@@ -146,6 +149,10 @@ class PluginsHandler {
 
         return []
     }
+	
+	public boolean isInstalled(String pluginName){
+		pluginName in installed
+	}
 
     /**
      * Add the variables in the binding, as defined by the plugin descriptors.

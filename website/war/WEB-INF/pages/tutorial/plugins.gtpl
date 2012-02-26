@@ -41,9 +41,71 @@ Possible examples of plugins can:
 
 <a name="anatomy"></a>
 <h2>Anatomy of a Gaelyk plugin</h2>
+<h3 id="binaryplugins">Binary plugins</h3>
+<p>
+Binary plugin is a JAR file added to your <code>WEB-INF/lib</code> folder or more preferable declared as an dependency in your build file e.g. the
+Gradle one shipped with the template project so the build system can handle dependencies for you. Binary plugins can add groovlets, templates
+and even static content (with the help of <a href="https://github.com/musketyr/gaelyk-resources-plugin">the resources plugin</a>) to your Gaelyk application
+without cluttering it with many additional files. Binary plugins are installed automatically, there is no other action needed to start using them.
+They can be removed easily as well. You just delete the JAR file from the <code>WEB-INF/lib</code> folder or remove the dependency from your build file.
+</p>
 
 <p>
-A plugin is actually just some content you'll drop in your <code>war/</code> folder, at the root of your <b>Gaelyk</b> application!
+To let Gaelyk application to recognize your binary plugin, you'll have to create a plugin descriptor which 
+will allow you to define new binding variables, new routes, new categories, and any initialization code your plugin may need on application startup.
+This plugin descriptor should be placed in <code>META-INF/gaelyk-plugins/</code> folder inside your JAR and will be a normal groovy script.
+From this script, you can even access the Google App Engine services, which are available in the binding of the script --
+hence available somehow as pseudo global variables inside your scripts.
+</p>
+
+<h4 id="binaryhierarchy">Hierarchy</h4>
+
+<p>
+As hinted above, the content of binary plugin would look something like the following hierarchy:
+</p>
+
+<pre>
+
+WEB-INF/lib
+|
++-- my-plugin.jar                               // the JAR file
+    |
+    |
+    +-- META-INF/gaelyk-plugins
+        |
+        +-- myPlugin.groovy                     // plugin descriptor
+        |                                       
+        +-- groovy                              // your groovlets
+        |    |
+        |    +-- myGroovlet.groovy
+        |
+        +-- resources                           // your static resources (requires resources plugin)   
+        |   |
+        |   +-- main.css
+        |
+        +-- templates                           // your templates
+             |
+             +-- someInclude.gtpl
+
+</pre>
+
+<p>
+Groovlets and templates URIs are prefixed  <code>/gaelyk-plugins/pluginName/</code> in the runtime asuming <code>pluginName</code> is name of your
+plugin derived from the name of your plugin descriptor. If you refer groovlets and templates in the <code>routes</code> method of 
+the plugin descriptor you don't specify the prefix. Static resources need to be prefixed <code>/gpr/pluginName/</code>.
+</p>
+
+<p>
+We'll look at the plugin descriptor in a moment, but otherwise, all the content you have in your plugin
+is actually following the same usual web application conventions in terms of structure,
+and the ones usually used by <b>Gaelyk</b> applications (ie. includes, groovlets, etc).
+The bare minimum to have a plugin in your application is to have a plugin descriptor,
+like <code>/META-INF/gaelky-plugins/myPlugin.groovy</code> in this example.
+</p>
+
+<h3>Exploded plugins</h3>
+<p>
+Exploded plugin is actually just some content you'll drop in your <code>war/</code> folder, at the root of your <b>Gaelyk</b> application!
 This is why you can add all kind of static content, as well as groovlets and templates, or additional JARs in <code>WEB-INF/lib</code>.
 Furthermore, plugins don't even need to be external plugins that you install in your applications,
 but you can just customize your application by using the conventions and capabilities offered by the plugin system.
@@ -52,22 +114,15 @@ Then, you really just need to have <code>/WEB-INF/plugins.groovy</code> referenc
 </p>
 
 <p>
-In addition to that, you'll have to create a plugin descriptor will allow you to define new binding variables,
-new routes, new categories, and any initialization code your plugin may need on application startup.
-This plugin descriptor should be placed in <code>WEB-INF/plugins</code> and will be a normal groovy script.
-From this script, you can even access the Google App Engine services, which are available in the binding of the script --
-hence available somehow as pseudo global variables inside your scripts.
-</p>
-
-<p>
+To let Gaelyk application to recognize your exploded plugin, you'll have to create a plugin descriptor in <code>WEB-INF/plugins</code>.
 Also, this plugin descriptor script should be referenced in the <code>plugins.groovy</code> script in <code>WEB-INF/</code>
 </p>
 
 <a name="hierarchy"></a>
-<h3>Hierarchy</h3>
+<h4>Hierarchy</h4>
 
 <p>
-As hinted above, the content of a plugin would look something like the following hierarchy:
+The content of exploded plugin would look something like the following hierarchy:
 </p>
 
 <pre>
@@ -105,10 +160,7 @@ As hinted above, the content of a plugin would look something like the following
 </pre>
 
 <p>
-We'll look at the plugin descriptor in a moment, but otherwise, all the content you have in your plugin
-is actually following the same usual web application conventions in terms of structure,
-and the ones usually used by <b>Gaelyk</b> applications (ie. includes, groovlets, etc).
-The bare minimum to have a plugin in your application is to have a plugin descriptor,
+The bare minimum to have an exploded plugin in your application is to have a plugin descriptor,
 like <code>/WEB-INF/plugins/myPluginDescriptor.groovy</code> in this example,
 that is referenced in <code>/WEB-INF/plugins.groovy</code>.
 </p>
@@ -120,7 +172,7 @@ Then afterwards, package it, share it, and install it in your applications.
 </p>
 
 <a name="descriptor"></a>
-<h3>The plugin descriptor</h3>
+<h2>The plugin descriptor</h2>
 
 <p>
 The plugin descriptor is where you'll be able to tell the <b>Gaelyk</b> runtime to:
@@ -223,12 +275,12 @@ Knowing that Google App Engine can load and unload apps depending on traffic, th
 
 <a name="using"></a>
 <h2>Using a plugin</h2>
-
+<p>This section applies <em>only on exploded plugins</em>. Binary plugins are installed automatically.</p>
 <p>
 If you recall, we mentioned the <code>plugins.groovy</code> script.
 This is a new script since <b>Gaelyk</b> 0.4, that lives alongside the <code>routes.groovy</code> script
 (if you have one) in <code>/WEB-INF</code>.
-If you don't have a <code>plugins.groovy</code> script, obviously, no plugin will be installed &mdash;
+If you don't have a <code>plugins.groovy</code> script, obviously, no exploded plugin will be installed &mdash;
 or at least none of the initialization and configuration done in the various plugin descriptors will ever get run.
 </p>
 
@@ -277,12 +329,16 @@ here's the order of execution of the actions and of the Groovlet or template:
 <a name="distribute"></a>
 <h2>How to distribute and deploy a plugin</h2>
 <p>
-If you want to share a plugin you've worked on, you just need to zip everything that constitutes the plugin.
+The best way to distribute your binary plugin is through the <a href="http://search.maven.org/">Maven Central repository</a>. You can use 
+<a href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype OSS repository</a> to get your plugins there.
+</p>
+<p>
+If you want to share an explodeded plugin you've worked on, you just need to zip everything that constitutes the plugin.
 Then you can share this zip, and someone who wishes to install it on his application will just need to unzip it
 and pickup the various files of that archive and stick them up in the appropriate directories
 in his/her <b>Gaelyk</b> <code>war/</code> folder, and reference that plugin, as explained in the previous section.
 </p>
 <p>
-The best way how to share your plugin is by using <a href="/plugins">the plugin catalogue</a>. Fill <a href="http://www.google.com/url?sa=D&q=http://goo.gl/anr8y">the form</a>
+The best way how to share your exploded plugin is by using <a href="/plugins">the plugin catalogue</a>. Fill <a href="http://www.google.com/url?sa=D&q=http://goo.gl/anr8y">the form</a>
 and wait until the plugin is approved.
 </p>

@@ -15,13 +15,19 @@
  */
 package groovyx.gaelyk
 
+import java.net.URLConnection;
+
+import groovy.servlet.AbstractHttpServlet;
 import groovy.servlet.GroovyServlet
 import groovy.servlet.ServletBinding
+import groovy.util.ResourceException;
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import javax.servlet.ServletConfig
+
+import groovyx.gaelyk.plugins.PluginResourceSupport;
 import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.logging.GroovyLogger
 
@@ -70,4 +76,18 @@ class GaelykServlet extends GroovyServlet {
             PluginsHandler.instance.executeAfterActions(request, response)
         }
     }
+	
+	/**
+	 * This methods adds plugin awareness to the default {@link AbstractHttpServlet#getResourceConnection(String)} method.
+	 * @param name resource to be found
+	 */
+	@Override
+	URLConnection getResourceConnection(String name)
+			throws ResourceException {
+		try {
+			return super.getResourceConnection(name)
+		} catch (ResourceException re){
+			return PluginResourceSupport.getResourceConnection("groovy",name)
+		}
+	}
 }

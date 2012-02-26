@@ -15,6 +15,9 @@
  */
 package groovyx.gaelyk.plugins
 
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
 import org.codehaus.groovy.control.CompilerConfiguration
 import groovyx.gaelyk.GaelykBindingEnhancer
 import javax.servlet.http.HttpServletResponse
@@ -75,7 +78,8 @@ class PluginsHandler {
             log.config "Loading plugin descriptors"
 
             // retrieve the list of plugin names to be loaded
-            def pluginsList = loadPluginsList()
+            def pluginsList = loadPluginsList() as Set
+			pluginsList.addAll(collectBinaryPlugins())
             log.config "Found ${pluginsList.size()} plugin(s)"
 
             pluginsList.each { String pluginName ->
@@ -149,6 +153,30 @@ class PluginsHandler {
 
         return []
     }
+	
+	/**
+	 * Collect names of binary plugins installed.
+	 * @return set of collected binary plugins names
+	 */
+	synchronized Set collectBinaryPlugins(){
+	    def ret = [] as Set
+	    File libDir = new File('WEB-INF/lib')
+	    if(libDir.exists()){
+	        libDir.eachFile {
+	            JarFile jarFile = new JarFile(it.absolutePath)
+	            JarEntry gaelykPluginsDir = jarFile.getJarEntry('META-INF/gaelyk-plugins')
+	            if(gaelykPluginsDir){
+	                jarFile.entries().each{
+	                    def match = it.name =~ "META-INF/gaelyk-plugins/([a-zA-Z0-9_]+)\\.groovy"
+	                    if(match){
+	                        ret << match[0][1]
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    ret
+	}
 	
 	public boolean isInstalled(String pluginName){
 		pluginName in installed

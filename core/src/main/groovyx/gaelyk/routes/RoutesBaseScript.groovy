@@ -68,8 +68,9 @@ abstract class RoutesBaseScript extends Script {
         def cacheExpiration = m.cache ?: 0
         def ignore = m.ignore ?: false
         def ns = m.namespace ?: null
+		def routePlugin = m.plugin ?: plugin
 
-        routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false, plugin)
+        routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false, routePlugin)
     }
 	
 	/**

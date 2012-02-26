@@ -74,7 +74,7 @@ groovydoc {
 
 task template {
     description = "Packaging the template project"
-    
+
     doFirst {
         println "Deleting old Gaelyk JARs from the template project"
         ant.delete {
@@ -91,7 +91,7 @@ task template {
 
 task dist(dependsOn: [jar, groovydoc, template]) {
     description = "Updating the Gaelyk JAR of the website"
-  
+
     doFirst {
         ant.copy file: jar.archivePath, todir: websiteLib
     }
@@ -103,13 +103,13 @@ task sourcesJar(type: Jar, dependsOn:classes) {
      classifier 'sources'
      from sourceSets.main.allSource
 }
- 
+
 task javadocJar(type: Jar, dependsOn:groovydoc) {
      baseName 'gaelyk'
      classifier 'javadoc'
      from apiDir
 }
- 
+
 // add javadoc/source jar tasks as artifacts
 artifacts {
 	 archives jar
@@ -118,7 +118,7 @@ artifacts {
 }
 
 tasks.withType(Upload) { // map the groovy configuration to compile in the pom
-    repositories.withType(MavenResolver) { 
+    repositories.withType(MavenResolver) {
         pom.scopeMappings.addMapping(1, configurations.groovy, "compile")
     }
 }
@@ -139,10 +139,10 @@ uploadArchives {
 			def auth = {
 			  authentication(userName: sonatypeUsername, password: sonatypePassword)
 			}
-			
-			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/", auth) 
-			repository(url: "https://oss.sonatype.org/content/repositories/snapshots", auth)
-			
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/", auth)
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots", auth)
+
 
 			pom.project {
 			   name 'Gaelyk'
@@ -209,3 +209,4 @@ uploadArchives {
 		}
 	}
 }
+

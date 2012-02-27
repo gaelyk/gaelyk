@@ -62,7 +62,8 @@ class PluginsHandlerTest extends GroovyTestCase {
     }
 
     void testStandardPluginScriptReadingRoutine() {
-        def content = PluginsHandler.instance.scriptContent("src/test/groovyx/gaelyk/plugins/pluginScript.sample")
+
+        def content = PluginsHandler.instance.scriptContent("pluginScript.sample")
         assert content == """\
             binding {
                 version = '1.2.3'
@@ -82,6 +83,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 } else ""
             }
+			
 
             initPlugins()
 
@@ -132,6 +134,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                 } else ""
             }
 
+			
             initPlugins()
 
             assert bindingVariables.version == "1.2.3"
@@ -159,6 +162,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                     install pluginOne
                     install pluginTwo
+                    install pluginThree
                     """
                 } else if (path == "WEB-INF/plugins/pluginOne.groovy") {
                     """
@@ -170,19 +174,24 @@ class PluginsHandlerTest extends GroovyTestCase {
                     before { request.sample << '3' }
                     after  { request.sample << '4' }
                     """
+                } else if (path == "META-INF/gaelyk-plugins/pluginThree.groovy") {
+                    """
+                    before { request.sample << '5' }
+                    after  { request.sample << '6' }
+                    """
                 }
             }
-
+			
             initPlugins()
 
-            assert beforeActions.size() == 2
-            assert afterActions.size()  == 2
+            assert beforeActions.size() == 3
+            assert afterActions.size()  == 3
 
             executeBeforeActions request, response
             executeAfterActions  request, response
 
             use(ServletCategory) {
-                assert request.sample.toString() == '1342'
+                assert request.sample.toString() == '135642'
             }
         }
     }
@@ -206,7 +215,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 } else ""
             }
-
+			
             initPlugins()
 
             def values = [:]

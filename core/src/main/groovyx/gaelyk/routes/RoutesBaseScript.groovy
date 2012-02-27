@@ -33,22 +33,22 @@ abstract class RoutesBaseScript extends Script {
     def email  (Map m) {
         routes << new Route("/_ah/mail/*", m.to,
                 HttpMethod.POST, RedirectionType.FORWARD,
-                null, null, 0, false, true)
+                null, null, 0, false, true, false, plugin)
     }
 
     def jabber (Map m, String type = "chat") {
         if (type == "subscription") {
             routes << new Route("/_ah/xmpp/subscription/@value/", m.to + "?value=@value",
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true)
+                    null, null, 0, false, false, true, plugin)
         } else if (type == "presence") {
             routes << new Route("/_ah/xmpp/presence/@value/", m.to + "?value=@value",
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true)
+                    null, null, 0, false, false, true, plugin)
         } else {
             routes << new Route("/_ah/xmpp/message/chat/", m.to,
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true)
+                    null, null, 0, false, false, true, plugin)
         }
     }
 
@@ -68,7 +68,16 @@ abstract class RoutesBaseScript extends Script {
         def cacheExpiration = m.cache ?: 0
         def ignore = m.ignore ?: false
         def ns = m.namespace ?: null
+		def routePlugin = m.plugin ?: plugin
 
-        routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore)
+        routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false, routePlugin)
     }
+	
+	/**
+	 * Returns the name of current plugin or empty String if none.
+	 * @return the name of current plugin or empty String if none
+	 */
+	protected getPlugin(){
+		""
+	}
 }

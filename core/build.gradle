@@ -1,13 +1,14 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 defaultTasks 'clean', 'build'
 
 // current Gaelyk version
-version = '1.1'
-group = 'groovyx.gaelyk'
+version = '1.2-SNAPSHOT'
+group = 'org.gaelyk'
 appEngineVersion = '1.6.2.1'
 groovyVersion = '1.8.6'
 
@@ -31,6 +32,9 @@ sourceSets {
         groovy {
             srcDir 'src/test'
         }
+		resources {
+			srcDir 'src/testResources'
+		}
     }
 }
 
@@ -70,7 +74,7 @@ groovydoc {
 
 task template {
     description = "Packaging the template project"
-    
+
     doFirst {
         println "Deleting old Gaelyk JARs from the template project"
         ant.delete {
@@ -87,7 +91,7 @@ task template {
 
 task dist(dependsOn: [jar, groovydoc, template]) {
     description = "Updating the Gaelyk JAR of the website"
-  
+
     doFirst {
         ant.copy file: jar.archivePath, todir: websiteLib
     }
@@ -99,21 +103,22 @@ task sourcesJar(type: Jar, dependsOn:classes) {
      classifier 'sources'
      from sourceSets.main.allSource
 }
- 
+
 task javadocJar(type: Jar, dependsOn:groovydoc) {
      baseName 'gaelyk'
      classifier 'javadoc'
      from apiDir
 }
- 
+
 // add javadoc/source jar tasks as artifacts
 artifacts {
+	 archives jar
      archives sourcesJar
      archives javadocJar
 }
 
 tasks.withType(Upload) { // map the groovy configuration to compile in the pom
-    repositories.withType(MavenResolver) { 
+    repositories.withType(MavenResolver) {
         pom.scopeMappings.addMapping(1, configurations.groovy, "compile")
     }
 }
@@ -121,3 +126,87 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
 task wrapper(type: Wrapper) {
     gradleVersion "1.0-milestone-6"
 }
+
+signing {
+	sign configurations.archives
+}
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+
+			def auth = {
+			  authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/", auth)
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots", auth)
+
+
+			pom.project {
+			   name 'Gaelyk'
+			   packaging 'jar'
+			   description 'Gaelyk is a lightweight toolkit for developing applications in Groovy for the Google App Engine environment.'
+			   url 'http://www.gaelyk.org'
+
+			   scm {
+				   url 'scm:git://github.com/glaforge/gaelyk.git'
+				   connection 'scm:git://github.com/glaforge/gaelyk.git'
+				   developerConnection 'scm:git://github.com/glaforge/gaelyk.git'
+			   }
+
+			   licenses {
+				   license {
+					   name 'The Apache Software License, Version 2.0'
+					   url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					   distribution 'repo'
+				   }
+			   }
+
+			   developers {
+				   developer {
+					   id 'glaforge'
+					   name 'Guillaume Laforge'
+				   }
+				   developer {
+					   id 'vladimirorany'
+					   name 'Vladimir Orany'
+				   }
+				   developer {
+					   id 'bmuschko'
+					   name 'Benjamin Muschko'
+				   }
+				   developer {
+					   id 'alkemist'
+					   name 'Luke Daley'
+				   }
+				   developer {
+					   id 'lguzzon'
+					   name 'Luca Guzzon'
+				   }
+				   developer {
+					   id 'fabito'
+					   name 'Fábio Franco Uechi'
+				   }
+			   }
+		   }
+
+		   //mess with the generated pom to set the 'packaging' tag
+		   pom.withXml { XmlProvider xmlProvider ->
+			   def xml = xmlProvider.asString()
+			   def pomXml = new XmlParser().parse(new ByteArrayInputStream(xml.toString().bytes))
+
+			   pomXml.version[0] + { packaging('jar') }
+
+			   def newXml = new StringWriter()
+			   def printer = new XmlNodePrinter(new PrintWriter(newXml))
+			   printer.preserveWhitespace = true
+			   printer.print(pomXml)
+			   xml.setLength(0)
+			   xml.append(newXml.toString())
+		   }
+		}
+	}
+}
+

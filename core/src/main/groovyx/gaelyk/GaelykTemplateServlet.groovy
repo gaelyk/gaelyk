@@ -17,8 +17,12 @@ package groovyx.gaelyk
 
 import groovy.servlet.ServletBinding
 import groovy.servlet.TemplateServlet
+import groovy.text.Template;
+
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+
+import groovyx.gaelyk.plugins.PluginResourceSupport;
 import groovyx.gaelyk.plugins.PluginsHandler
 import javax.servlet.ServletConfig
 import groovyx.gaelyk.logging.GroovyLogger
@@ -64,8 +68,59 @@ class GaelykTemplateServlet extends TemplateServlet {
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         use([GaelykCategory, * PluginsHandler.instance.categories]) {
             PluginsHandler.instance.executeBeforeActions(request, response)
-            super.service(request, response)
+            doService(request, response)
             PluginsHandler.instance.executeAfterActions(request, response)
         }
     }
+	
+	/**
+	 * Reworked {@link #service(HttpServletRequest, HttpServletResponse)} method.
+	 * The original one relies on the implementation from the superclass
+	 * so it cannot be used directly
+	 * @param request http request
+	 * @param response http response
+	 */
+	private void doService(HttpServletRequest request, HttpServletResponse response){
+
+		//
+		// Get the template source file handle.
+		//
+		Template template;
+		String name;
+		String uri = getScriptUri(request);
+
+		File file = super.getScriptUriAsFile(request);
+		if (file != null && file.exists()) {
+			name = file.getName();
+			if (!file.canRead()) {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Can not read \"" + name + "\"!");
+				return; // throw new IOException(file.getAbsolutePath());
+			}
+			template = getTemplate(file);
+		} else if(PluginResourceSupport.isPluginPath(uri)){
+			try {
+				template = getTemplate(PluginResourceSupport.getPluginFileURL("templates", uri))
+			} catch (Exception e){
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				return; // throw new IOException(file.getAbsolutePath());
+			}
+		} else {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return; // throw new IOException(file.getAbsolutePath());
+		}
+
+		ServletBinding binding = new ServletBinding(request, response, servletContext);
+		setVariables(binding);
+
+		response.setContentType(CONTENT_TYPE_TEXT_HTML + "; charset=" + encoding);
+		response.setStatus(HttpServletResponse.SC_OK);
+
+
+		Writer out = (Writer) binding.getVariable("out");
+		if (out == null) {
+			out = response.getWriter();
+		}
+
+		template.make(binding.getVariables()).writeTo(out);
+	}
 }

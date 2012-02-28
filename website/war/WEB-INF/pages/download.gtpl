@@ -24,13 +24,35 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and 
 </p>
 
 <p>
-The latest version was tested with Groovy 1.8.4,
-and with the 1.6.0 version of the App Engine SDK.
+The latest version was tested with Groovy 1.8.6,
+and with the 1.6.2.1 version of the App Engine SDK.
 </p>
 
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 1.2</h2>
+
+<h3>Chances</h3>
+<ul>
+    <li>Upgraded to Groovy 1.8.6 and App Engine SDK 1.6.2.1</li>
+    <li>
+        <b>Gaelyk</b> will be available on Maven Central from now on,
+        in the <code>org.gaelyk</code> group with the <code>gaelyk</code> artifact
+    </li>
+    <li>Introduction of <a href="/tutorial/plugins#binaryplugins">binary plugins</a></li>
+    <li>You can use <code>redirect301</code> for permanent redirects in routes</li>
+    <li>New <code>withTransaction{}</code> and <code>withTransactionAsyncCommit{}</code> methods for the async datastore</li>
+    <li>Improve POGO coercion's performance</li>
+    <li>Allow using enum values as POGO properties for coercion</li>
+</ul>
+
+<h3>Artifacts</h3>
+<ul>
+    <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar">gaelyk-1.2.jar</a></li>
+    <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.2.zip">gaelyk-template-project-1.2.zip</a></li>
+</ul>
 
 <h2>Version 1.1</h2>
 
@@ -75,8 +97,6 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.1.jar">gaelyk-1.1.jar</a></li>
     <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.1.zip">gaelyk-template-project-1.1.zip</a></li>
 </ul>
-
-<h4>Breaking changes</h4>
 
 <ul>
 </ul>

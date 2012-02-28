@@ -177,6 +177,10 @@ uploadArchives {
 					   id 'bmuschko'
 					   name 'Benjamin Muschko'
 				   }
+                   developer {
+                       id 'codeconsole'
+                       name 'Scott Murphy'
+                   }
 				   developer {
 					   id 'alkemist'
 					   name 'Luke Daley'

@@ -1,17 +1,7 @@
-
-
-import java.util.concurrent.Future;
-
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.PropertyNode;
-
-// Things to discuss
-// # are there any ways how to promote dsls to templates like gtpl?
-// # are there any ways to check operators like left shift?
-// # is there any way to handle generics like Key<Entity>?
-// # how to handle closure parameters?
 
 class EnvDescriptor {
 	String name
@@ -31,6 +21,8 @@ class AppDescriptor {
 }
 
 contribute(annotatedBy('groovyx.gaelyk.datastore.Entity')) {
+	provider 'Gaelyk Entity'
+	
 	method name: 'delete', type: 'void', doc: "Removes this object from the datastore"
 	method name: 'save', type: 'void', doc: "Saves this object from the datastore"
 	
@@ -56,6 +48,39 @@ contribute(annotatedBy('groovyx.gaelyk.datastore.Entity')) {
 	method isStatic: true, name: 'iterate', type: 'java.util.Iterator<' + currentType.name + '>', doc: "Iterates over all objects of current type in the database"
 	method isStatic: true, name: 'iterate', type: 'java.util.Iterator<' + currentType.name + '>', params: [query: Closure], doc: "Iterates over all objects of current type in the database which satify given query"
 }
+
+def queryDslSupport = {
+	delegatesTo type: 'groovyx.gaelyk.query.QueryBuilder'
+	// method name: 'where', type: 'groovyx.gaelyk.query.QueryBuilder', doc: "The where clause"
+}
+
+(
+	((
+		(
+			enclosingCallName("find") |
+			enclosingCallName("findAll") |
+			enclosingCallName("count") |
+			enclosingCallName("iterate")
+		) 
+		& enclosingCallDeclaringType(
+			annotatedBy(
+				'groovyx.gaelyk.datastore.Entity'
+			)
+		) 
+	)
+	|
+	(
+		(
+			enclosingCallName("execute") |
+			enclosingCallName("query") |
+			enclosingCallName("iterate")
+		)
+		& enclosingCallDeclaringType(
+			'com.google.appengine.api.datastore.DatastoreService'
+		)
+	))
+	& inClosure()
+).accept queryDslSupport
 
 def shortcutFor = { type ->
 	bind(clazz: currentType(type)) & enclosingScript(sourceFolderOfCurrentType('war/WEB-INF/groovy'))
@@ -499,8 +524,6 @@ datastore.withTransaction { transaction ->
 			doc: 'Gets datastore kinds. The closure lets you apply additional filters to your query.'
 
 }
-
-
 
 
 (enclosingCallName("transform") & inClosure() & enclosingCallDeclaringType('com.google.appengine.api.images.Image')).accept{

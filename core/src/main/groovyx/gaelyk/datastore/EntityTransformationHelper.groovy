@@ -37,12 +37,9 @@ class EntityTransformationHelper {
 		GaelykCategory.delete(GaelykCategory.asType(pogo, Entity))
 	}
 	
-	static boolean exists(Object pogo){
-		if(!pogo.get$key()){
-			return false;
-		}
+	static boolean exists(Class<?> pogoClass, Object key){
 		try {
-			get(pogo.getClass(), pogo.get$key())
+			get(pogoClass, key)
 			return true;
 		} catch (EntityNotFoundException e){
 			return false;

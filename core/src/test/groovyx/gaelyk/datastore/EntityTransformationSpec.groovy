@@ -44,14 +44,14 @@ class EntityTransformationSpec extends Specification {
 		key
 		key.kind == 'MyPogo'
 		key.get()
-		obj.exists()
 		obj.getClass().getMethod('get', Object).invoke(null, key.id)
 		obj.getClass().getMethod('count').invoke(null) == 1
+		obj.getClass().getMethod('exists', Object).invoke(null, key.id)
 		obj.id == key.id
 		
 		when:
 		obj.delete()
-		!obj.exists()
+		!obj.getClass().getMethod('exists', Object).invoke(null, key.id)
 		obj.getClass().getMethod('count').invoke(null) == 0
 		key.get()
 		

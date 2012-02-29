@@ -45,7 +45,7 @@ class EntityTransformation implements ASTTransformation {
 		handleKey(parent, source)
 		parent.addMethod(addDelegatedMethod('save', ClassHelper.make(Key).plainNodeReference))
 		parent.addMethod(addDelegatedMethod('delete'))
-		parent.addMethod(addDelegatedMethod('exists', ClassHelper.boolean_TYPE))
+		parent.addMethod(addStaticDelegatedMethod(parent, 'exists', [key: Object], ClassHelper.boolean_TYPE))
 		parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: Object], parent))
 		parent.addMethod(addStaticDelegatedMethod(parent, "find", [key: Closure], parent))
 		parent.addMethod(addStaticDelegatedMethod(parent, "count", [:], ClassHelper.int_TYPE))

@@ -44,9 +44,12 @@ contribute(annotatedBy('groovyx.gaelyk.datastore.Entity')) {
 	method isStatic: true, name: 'count', type: int, params: [query: Closure], doc: "Counts all objects of current type in the database which satify given query"
 	method isStatic: true, name: 'findAll', type: 'java.util.List<' + currentType.name + '>', doc: "Find all objects of current type in the database"
 	method isStatic: true, name: 'findAll', type: 'java.util.List<' + currentType.name + '>', params: [query: Closure], doc: "Find all objects of current type in the database which satify given query"
+	method isStatic: true, name: 'findAll', type: 'java.util.List<' + currentType.name + '>', params: [query: 'groovyx.gaelyk.query.QueryBuilder'], doc: "Find all objects of current type in the database which satify given query"
 	method isStatic: true, name: 'find', type: currentType, params: [query: Closure], doc: "Find single object of current type in the database which satifies given query"
+	method isStatic: true, name: 'find', type: currentType, params: [query: 'groovyx.gaelyk.query.QueryBuilder'], doc: "Find single object of current type in the database which satifies given query"
 	method isStatic: true, name: 'iterate', type: 'java.util.Iterator<' + currentType.name + '>', doc: "Iterates over all objects of current type in the database"
 	method isStatic: true, name: 'iterate', type: 'java.util.Iterator<' + currentType.name + '>', params: [query: Closure], doc: "Iterates over all objects of current type in the database which satify given query"
+	method isStatic: true, name: 'iterate', type: 'java.util.Iterator<' + currentType.name + '>', params: [query: 'groovyx.gaelyk.query.QueryBuilder'], doc: "Iterates over all objects of current type in the database which satify given query"
 }
 
 def queryDslSupport = {

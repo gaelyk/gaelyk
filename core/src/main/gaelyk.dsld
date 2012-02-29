@@ -343,7 +343,11 @@ def totalPhotos = countEntities('photos')
 			type: 'java.util.Set',
 			params: [uri: 'java.lang.String'],
 			doc: 'Clear the cached content for a given URI.'
-
+			
+			
+	property name: 'async',
+			type: 'com.google.appengine.api.memcache.AsyncMemcacheService',
+			doc: 'Asynchronous memcache service'
 }
 
 
@@ -522,6 +526,21 @@ datastore.withTransaction { transaction ->
 			type: 'java.util.List',
 			params: [arg1: 'groovy.lang.Closure'],
 			doc: 'Gets datastore kinds. The closure lets you apply additional filters to your query.'
+			
+			
+	method name: 'execute',
+			params: [query: 'groovy.lang.Closure'],
+			doc: 'Executes query in the datastore.'
+			
+	method name: 'iterate',
+			type: 'java.lang.Iterator',
+			params: [query: 'groovy.lang.Closure'],
+			doc: 'Executes query in the datastore and returs the results as Iterator.'
+			
+	method name: 'query',
+			type: 'com.google.appengine.api.datastore.Query',
+			params: [query: 'groovy.lang.Closure'],
+			doc: 'Assembles the query for the datastore.'
 
 }
 

@@ -66,10 +66,20 @@ class EntityTransformationHelper {
 		datastore.execute(c).select(QueryType.COUNT).from(pogoClass.simpleName, pogoClass).execute()
 	}
 	
+	static int count(Class<?> pogoClass, QueryBuilder builder){
+		if(builder == null) throw new IllegalArgumentException("Query builder cannot be null!")
+		builder.select(QueryType.COUNT).from(pogoClass.simpleName, pogoClass).execute()
+	}
+	
 	static <P> P find(Class<P> pogoClass, Closure c = {}){
 		QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
 		HelperDatastore datastore = new HelperDatastore(builder: builder)
 		datastore.execute(c).select(QueryType.SINGLE).from(pogoClass.simpleName, pogoClass).execute()
+	}
+	
+	static <P> P find(Class<P> pogoClass, QueryBuilder builder){
+		if(builder == null) throw new IllegalArgumentException("Query builder cannot be null!")
+		builder.select(QueryType.SINGLE).from(pogoClass.simpleName, pogoClass).execute()
 	}
 	
 	static <P> List<P> findAll(Class<P> pogoClass, Closure c = {}){
@@ -78,10 +88,21 @@ class EntityTransformationHelper {
 		datastore.execute(c).select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).execute()
 	}
 	
+	static <P> List<P> findAll(Class<P> pogoClass, QueryBuilder builder){
+		if(builder == null) throw new IllegalArgumentException("Query builder cannot be null!")
+		builder.select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).execute()
+	}
+
 	static <P> Iterator<P> iterate(Class<P> pogoClass, Closure c = {}){
 		QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
 		HelperDatastore datastore = new HelperDatastore(builder: builder)
 		datastore.execute(c).select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).iterate()
+	}
+	
+	
+	static <P> Iterator<P> iterate(Class<P> pogoClass, QueryBuilder builder){
+		if(builder == null) throw new IllegalArgumentException("Query builder cannot be null!")
+		builder.select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).iterate()
 	}
 	
 }

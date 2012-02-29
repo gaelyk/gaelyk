@@ -1,6 +1,8 @@
 package groovyx.gaelyk.datastore
 
 
+import groovyx.gaelyk.query.QueryBuilder;
+
 import java.lang.reflect.Modifier;
 
 import org.codehaus.groovy.ast.ASTNode
@@ -50,16 +52,19 @@ class EntityTransformation implements ASTTransformation {
 		parent.addMethod(addStaticDelegatedMethod(parent, "find", [key: Closure], parent))
 		parent.addMethod(addStaticDelegatedMethod(parent, "count", [:], ClassHelper.int_TYPE))
 		parent.addMethod(addStaticDelegatedMethod(parent, "count", [query: Closure], ClassHelper.int_TYPE))
+		parent.addMethod(addStaticDelegatedMethod(parent, "count", [query: QueryBuilder], ClassHelper.int_TYPE))
 		
 		ClassNode pogoListNode = ClassHelper.makeWithoutCaching(List).plainNodeReference
 		pogoListNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
 		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [:], pogoListNode))
 		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: Closure], pogoListNode))
+		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: QueryBuilder], pogoListNode))
 		
 		ClassNode pogoIteratorNode = ClassHelper.makeWithoutCaching(Iterator).plainNodeReference
 		pogoIteratorNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
 		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [:], pogoIteratorNode))
 		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: Closure], pogoIteratorNode))
+		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: QueryBuilder], pogoIteratorNode))
 	}
 	
 	private handleKey(ClassNode parent, SourceUnit source){

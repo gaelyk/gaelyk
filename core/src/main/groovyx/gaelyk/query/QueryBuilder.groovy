@@ -26,6 +26,11 @@ class QueryBuilder {
     private FetchOptions options = FetchOptions.Builder.withDefaults()
     private Binding binding
 
+	
+	static QueryBuilder builder(){
+		new QueryBuilder(null)
+	}
+	
     /**
      * Create a query builder object.
      *

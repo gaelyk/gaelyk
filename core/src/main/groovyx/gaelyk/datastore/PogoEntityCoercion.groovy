@@ -23,7 +23,10 @@ class PogoEntityCoercion {
      */
     static Map props(Object p) {
         def clazz = p.class
-
+		boolean defaultIndexed = true;
+		if(clazz.isAnnotationPresent(groovyx.gaelyk.datastore.Entity.class)){
+			defaultIndexed = ! clazz.getAnnotation(groovyx.gaelyk.datastore.Entity).unindexed()
+		}
         if (!cachedProps.containsKey(clazz)) {
             cachedProps[clazz] = p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) }
                     .collectEntries { String k, v ->
@@ -35,7 +38,7 @@ class PogoEntityCoercion {
                 }
                 [(k), [
                         ignore:    { annos.any { it instanceof Ignore } },
-                        unindexed: { annos.any { it instanceof Unindexed } },
+                        unindexed: { defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed } },
                         key:       { annos.any { it instanceof Key } }
                 ]]
             }
@@ -77,10 +80,13 @@ class PogoEntityCoercion {
         props.each { String propName, Map m ->
             if (propName != key) {
                 if (!props[propName].ignore()) {
-                    if (props[propName].unindexed()) {
+					def val = p."$propName"
+					if(!val){
+						entity.removeProperty(propName)
+					} else if (props[propName].unindexed()) {
                         entity.setUnindexedProperty(propName, p."$propName")
                     } else {
-                        def val = p."$propName"
+                        
                         if (val instanceof Enum) val = val as String
                         entity.setProperty(propName, val)
                     }

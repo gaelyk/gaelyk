@@ -1,11 +1,14 @@
 package groovyx.gaelyk.query
 
+import groovyx.gaelyk.datastore.Entity;
+
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.transform.GroovyASTTransformation
 import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassCodeVisitorSupport
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.expr.VariableExpression
@@ -135,15 +138,7 @@ class QueryDslTransformation implements ASTTransformation {
 
         def queryMethodVisitor = new ClassCodeVisitorSupport() {
             void visitMethodCallExpression(MethodCallExpression call) {
-                if (
-                    // 'datastore' variable
-                    call.objectExpression instanceof VariableExpression && call.objectExpression.variable == 'datastore' &&
-                    // 'query' or 'execute' or 'iterate' method
-                    call.method instanceof ConstantExpression && 
-                            (call.method.value == 'query' || call.method.value == 'execute' || call.method.value == 'iterate') &&
-                    // closure single argument
-                    call.arguments.expressions.size() == 1 && call.arguments.expressions[0] instanceof ClosureExpression
-                ) {
+                if (isOnDatastore(call) || isOnPogo(call)) {
                     ClosureExpression closureExpr = call.arguments.expressions[0]
                     whereMethodVisitor.visitClosureExpression(closureExpr)
                 } else {
@@ -152,6 +147,25 @@ class QueryDslTransformation implements ASTTransformation {
             }
 
             protected SourceUnit getSourceUnit() { source }
+			
+			protected boolean isOnDatastore(MethodCallExpression call){
+				// 'datastore' variable
+				call.objectExpression instanceof VariableExpression && call.objectExpression.variable == 'datastore' &&
+				// 'query' or 'execute' or 'iterate' method
+				call.method instanceof ConstantExpression &&
+						(call.method.value == 'query' || call.method.value == 'execute' || call.method.value == 'iterate') &&
+				// closure single argument
+				call.arguments.expressions.size() == 1 && call.arguments.expressions[0] instanceof ClosureExpression
+			}
+			
+			protected boolean isOnPogo(MethodCallExpression call){
+				// 'datastore' variable
+				call.objectExpression instanceof ClassExpression && call.objectExpression.type.getAnnotations(ClassHelper.make(Entity).plainNodeReference)  &&
+				// 'query' or 'execute' or 'iterate' method
+				call.method instanceof ConstantExpression && (call.method.value == 'find' || call.method.value == 'findAll' || call.method.value == 'count' || call.method.value == 'iterate') &&
+				// closure single argument
+				call.arguments.expressions.size() == 1 && call.arguments.expressions[0] instanceof ClosureExpression
+			}
         }
 
         source.AST.classes.each { ClassNode cn ->

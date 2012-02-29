@@ -1,5 +1,6 @@
 package groovyx.gaelyk.query
 
+import groovy.transform.PackageScope
 import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.PreparedQuery
 import com.google.appengine.api.datastore.DatastoreServiceFactory

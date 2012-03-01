@@ -297,10 +297,11 @@ class GaelykCategory {
      * <code>entity['propertyName'] = value</code>
      */
     static void setAt(Entity entity, String name, Object value) {
-		if(!value){
-			entity.removeProperty(name)
-			return
-		}
+// TODO: deside the correct behaviour
+//		if(!value){
+//			entity.removeProperty(name)
+//			return
+//		}
         entity.setProperty(name, transformValueForStorage(value))
     }
 
@@ -312,10 +313,11 @@ class GaelykCategory {
      * <code>entity.propertyName = value</code>
      */
     static void set(Entity entity, String name, Object value) {
-		if(!value){
-			entity.removeProperty(name)
-			return
-		}
+// TODO: deside the correct behaviour
+//		if(!value){
+//			entity.removeProperty(name)
+//			return
+//		}
         entity.setProperty(name, transformValueForStorage(value))
     }
 

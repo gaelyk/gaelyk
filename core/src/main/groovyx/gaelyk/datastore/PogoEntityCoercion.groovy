@@ -81,10 +81,12 @@ class PogoEntityCoercion {
             if (propName != key) {
                 if (!props[propName].ignore()) {
 					def val = p."$propName"
-					if(!val){
-						entity.removeProperty(propName)
-					} else if (props[propName].unindexed()) {
-                        entity.setUnindexedProperty(propName, p."$propName")
+					if (props[propName].unindexed()) {
+						if(!val){
+							entity.removeProperty(propName)
+						} else {
+							entity.setUnindexedProperty(propName, p."$propName")
+						}
                     } else {
                         
                         if (val instanceof Enum) val = val as String

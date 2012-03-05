@@ -45,30 +45,38 @@ class EntityTransformation implements ASTTransformation {
 		AnnotationNode anno = (AnnotationNode) nodes[0]
 		ClassNode parent = (ClassNode) nodes[1]
 		handleKey(parent, source)
-		parent.addMethod(addDelegatedMethod('save', ClassHelper.make(Key).plainNodeReference))
+		parent.addMethod(addDelegatedMethod('save', ClassHelper.makeWithoutCaching(Key).plainNodeReference))
 		parent.addMethod(addDelegatedMethod('delete'))
 		parent.addMethod(addStaticDelegatedMethod(parent, 'exists', [key: Object], ClassHelper.boolean_TYPE))
-		parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: Object], parent))
-		parent.addMethod(addStaticDelegatedMethod(parent, "find", [key: Closure], parent))
+		parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: Object], parent.plainNodeReference))
+		parent.addMethod(addStaticDelegatedMethod(parent, "find", [key: Closure], parent.plainNodeReference))
 		parent.addMethod(addStaticDelegatedMethod(parent, "count", [:], ClassHelper.int_TYPE))
 		parent.addMethod(addStaticDelegatedMethod(parent, "count", [query: Closure], ClassHelper.int_TYPE))
 		parent.addMethod(addStaticDelegatedMethod(parent, "count", [query: QueryBuilder], ClassHelper.int_TYPE))
 		
-		ClassNode pogoListNode = ClassHelper.makeWithoutCaching(List).plainNodeReference
-		pogoListNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
-		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [:], pogoListNode))
-		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: Closure], pogoListNode))
-		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: QueryBuilder], pogoListNode))
+		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [:], getPogoListNode(parent)))
+		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: Closure], getPogoListNode(parent)))
+		parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: QueryBuilder], getPogoListNode(parent)))
 		
+		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [:], getPogoInteratorNode(parent)))
+		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: Closure], getPogoInteratorNode(parent)))
+		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: QueryBuilder], getPogoInteratorNode(parent)))
+	}
+
+	private ClassNode getPogoInteratorNode(ClassNode parent) {
 		ClassNode pogoIteratorNode = ClassHelper.makeWithoutCaching(Iterator).plainNodeReference
 		pogoIteratorNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
-		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [:], pogoIteratorNode))
-		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: Closure], pogoIteratorNode))
-		parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: QueryBuilder], pogoIteratorNode))
+		return pogoIteratorNode
+	}
+
+	private ClassNode getPogoListNode(ClassNode parent) {
+		ClassNode pogoListNode = ClassHelper.makeWithoutCaching(List).plainNodeReference
+		pogoListNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
+		return pogoListNode
 	}
 	
 	private handleKey(ClassNode parent, SourceUnit source){
-		ClassNode keyAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Key)
+		ClassNode keyAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Key)
 		
 		PropertyNode existingKeyProperty = parent.properties.find { PropertyNode field ->
 			field.annotations.any{ AnnotationNode anno ->
@@ -108,7 +116,7 @@ class EntityTransformation implements ASTTransformation {
 	}
 	
 	private MethodNode addDelegatedMethod(String name, ClassNode returnType = ClassHelper.DYNAMIC_TYPE) {
-		def helper = ClassHelper.make(EntityTransformationHelper).plainNodeReference
+		def helper = ClassHelper.makeWithoutCaching(EntityTransformationHelper).plainNodeReference
 
 		BlockStatement block = new BlockStatement()
 		block.addStatement(new ReturnStatement(new MethodCallExpression(
@@ -126,7 +134,7 @@ class EntityTransformation implements ASTTransformation {
 	}
 	
 	private MethodNode addStaticDelegatedMethod(ClassNode parent, String name, Map<String, Class> parameters, ClassNode returnType = ClassHelper.DYNAMIC_TYPE) {
-		def helper = ClassHelper.make(EntityTransformationHelper).plainNodeReference
+		def helper = ClassHelper.makeWithoutCaching(EntityTransformationHelper).plainNodeReference
 
 		BlockStatement block = new BlockStatement()
 		block.addStatement(new ReturnStatement(new MethodCallExpression(

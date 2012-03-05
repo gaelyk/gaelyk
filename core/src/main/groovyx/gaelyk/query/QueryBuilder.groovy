@@ -1,6 +1,9 @@
 package groovyx.gaelyk.query
 
 import groovy.transform.PackageScope
+import groovyx.gaelyk.GaelykCategory;
+
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.PreparedQuery
 import com.google.appengine.api.datastore.DatastoreServiceFactory
@@ -78,7 +81,11 @@ class QueryBuilder {
             return preparedQuery.countEntities(options)
         } else if (queryType == QueryType.SINGLE) {
             if (coercedClass) {
-                return preparedQuery.asSingleEntity()?.asType(coercedClass)
+				Entity en = preparedQuery.asSingleEntity()
+				if(en == null){
+					return null
+				}
+                return GaelykCategory.asType(en, coercedClass)
             } else {
                 return preparedQuery.asSingleEntity()
             }
@@ -107,7 +114,7 @@ class QueryBuilder {
                 // use "manual" collect{} as in the context of the query{} call
                 // the delegation transforms the class into a string expression
                 def result = []
-                for (entity in entities) result << entity.asType(coercedClass)
+                for (entity in entities) result << GaelykCategory.asType(entity, coercedClass)
                 
                 return result
             }

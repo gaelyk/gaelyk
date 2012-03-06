@@ -44,6 +44,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Introduction of <a href="/tutorial/plugins#binaryplugins">binary plugins</a></li>
     <li>You can use <code>redirect301</code> for permanent redirects in routes</li>
     <li>New <code>withTransaction{}</code> and <code>withTransactionAsyncCommit{}</code> methods for the async datastore</li>
+    <li>Memcache get()/put() failures are silently ignored to avoid painful exceptions when Memcache service is misbehaving</li>
     <li>Improve POGO coercion's performance</li>
     <li>Allow using enum values as POGO properties for coercion</li>
 </ul>

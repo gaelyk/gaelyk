@@ -114,6 +114,7 @@ import com.google.apphosting.api.ApiProxy
  * from within Groovy servlets and templates.
  *
  * @author Guillaume Laforge
+ * @author Scott Murphy
  */
 class GaelykCategory extends GaelykCategoryBase {
 

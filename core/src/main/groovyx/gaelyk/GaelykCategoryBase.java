@@ -28,6 +28,7 @@ import com.google.apphosting.api.DeadlineExceededException;
  * from within Groovy servlets and templates.
  *
  * @author Guillaume Laforge
+ * @author Scott Murphy
  */
 public class GaelykCategoryBase {
 

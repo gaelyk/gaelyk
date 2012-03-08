@@ -78,8 +78,8 @@ class EntityTransformation implements ASTTransformation {
 	private handleKey(ClassNode parent, SourceUnit source){
 		ClassNode keyAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Key)
 		
-		PropertyNode existingKeyProperty = parent.properties.find { PropertyNode field ->
-			field.annotations.any{ AnnotationNode anno ->
+		PropertyNode existingKeyProperty = parent.properties.find { PropertyNode prop ->
+			prop.field.annotations.any{ AnnotationNode anno ->
 				anno.classNode == keyAnnoClassNode
 			}
 		}

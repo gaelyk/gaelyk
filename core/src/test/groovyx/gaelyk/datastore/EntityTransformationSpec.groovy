@@ -163,6 +163,20 @@ class EntityTransformationSpec extends Specification {
 		obj
 	}
 	
+	def "Test key"(){
+		def obj = newShell().evaluate '''
+			@groovyx.gaelyk.datastore.Entity
+			class MyPogo {
+				@groovyx.gaelyk.datastore.Key String name
+				@groovyx.gaelyk.datastore.Indexed String test
+			}
+			
+			new MyPogo(name: "name", test: "foo")'''
+
+		expect:
+		!obj.hasProperty('id')
+	}
+	
 	
 	private GroovyShell newShell(){
 		CompilerConfiguration cc = new CompilerConfiguration()

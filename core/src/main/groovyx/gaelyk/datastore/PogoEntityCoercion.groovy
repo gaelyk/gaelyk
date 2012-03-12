@@ -28,7 +28,7 @@ class PogoEntityCoercion {
 			defaultIndexed = ! clazz.getAnnotation(groovyx.gaelyk.datastore.Entity).unindexed()
 		}
         if (!cachedProps.containsKey(clazz)) {
-            cachedProps[clazz] = p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) }
+            cachedProps[clazz] = p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) && !k.startsWith('$')}
                     .collectEntries { String k, v ->
                 def annos
                 try {

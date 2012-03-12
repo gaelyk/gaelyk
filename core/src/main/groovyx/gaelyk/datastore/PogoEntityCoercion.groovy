@@ -37,7 +37,7 @@ class PogoEntityCoercion {
 					try {
 						annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
 					} catch (NoSuchMethodException nsme){
-						return [(k): [ignore: true]]
+						return [(k), [ignore: {true}, unindexed: {false}, key: {false}]]
 					}
                 }
                 [(k), [

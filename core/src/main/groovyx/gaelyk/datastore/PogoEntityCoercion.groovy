@@ -28,13 +28,17 @@ class PogoEntityCoercion {
 			defaultIndexed = ! clazz.getAnnotation(groovyx.gaelyk.datastore.Entity).unindexed()
 		}
         if (!cachedProps.containsKey(clazz)) {
-            cachedProps[clazz] = p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) && !k.startsWith('$')}
+            cachedProps[clazz] = p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) && !(k.startsWith('$') || k.startsWith('_')) }
                     .collectEntries { String k, v ->
                 def annos
                 try {
                     annos = p.class.getDeclaredField(k).annotations
                 } catch (e) {
-                    annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
+					try {
+						annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
+					} catch (NoSuchMethodException nsme){
+						return [(k): [ignore: true]]
+					}
                 }
                 [(k), [
                         ignore:    { annos.any { it instanceof Ignore } },

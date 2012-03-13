@@ -9,12 +9,12 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.1.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.1.zip">Template project v1.1</a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.2.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.2.zip">Template project v1.2</a></td>
         </tr>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.1.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.1.jar">Gaelyk JAR v1.1</a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar">Gaelyk JAR v1.2</a></td>
         </tr>
     </table>
 </div>

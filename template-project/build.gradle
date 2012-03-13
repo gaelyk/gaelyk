@@ -28,7 +28,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'bmuschko:gradle-gae-plugin:0.5.3'
+        classpath 'bmuschko:gradle-gae-plugin:0.5.4'
         classpath 'bmuschko:gradle-gaelyk-plugin:0.3'
     }
 }
@@ -45,8 +45,8 @@ sourceSets {
 }
 
 dependencies {
-    def gaeVersion = '1.6.0'
-    groovy 'org.codehaus.groovy:groovy-all:1.8.4'
+    def gaeVersion = '1.6.3.1'
+    groovy 'org.codehaus.groovy:groovy-all:1.8.6'
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion",
             'glaforge:gaelyk:1.1'
@@ -70,14 +70,16 @@ gae {
     downloadSdk = true
 }
 
+gaeExplodeWar.dependsOn gaelykPrecompileGroovlet
+
 clean {
      delete sourceSets*.output.classesDir
 }
 
-task copyRuntimeLibraries(type: Sync){
+task copyRuntimeLibraries(type: Sync) {
     def webAppLibDirName = 'war/WEB-INF/lib'
     description = "Copies runtime libraries to $webAppLibDirName."
-    from configurations.runtime  
+    from configurations.runtime
     into webAppLibDirName
 }
 
@@ -124,5 +126,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion '1.0-milestone-6'
+    gradleVersion '1.0-milestone-8a'
 }

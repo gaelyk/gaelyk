@@ -32,9 +32,9 @@ sourceSets {
         groovy {
             srcDir 'src/test'
         }
-		resources {
-			srcDir 'src/testResources'
-		}
+        resources {
+            srcDir 'src/testResources'
+        }
     }
 }
 
@@ -44,13 +44,13 @@ repositories {
 
 dependencies {
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-	compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
-	compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
-	compile "javax.servlet:servlet-api:2.5"
-	testCompile "javax.servlet.jsp:jsp-api:2.2"
-	testCompile "junit:junit:4.8.2"
-	testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
-	testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
+    compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
+    compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
+    compile "javax.servlet:servlet-api:2.5"
+    testCompile "javax.servlet.jsp:jsp-api:2.2"
+    testCompile "junit:junit:4.8.2"
+    testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
+    testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
 }
 
 jar {
@@ -112,9 +112,9 @@ task javadocJar(type: Jar, dependsOn:groovydoc) {
 
 // add javadoc/source jar tasks as artifacts
 artifacts {
-	 archives jar
-     archives sourcesJar
-     archives javadocJar
+    archives jar
+    archives sourcesJar
+    archives javadocJar
 }
 
 tasks.withType(Upload) { // map the groovy configuration to compile in the pom
@@ -128,7 +128,7 @@ task wrapper(type: Wrapper) {
 }
 
 signing {
-	sign configurations.archives
+    sign configurations.archives
 }
 
 if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')) {

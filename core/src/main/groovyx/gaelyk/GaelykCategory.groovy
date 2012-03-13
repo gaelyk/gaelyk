@@ -1967,10 +1967,16 @@ class GaelykCategory extends GaelykCategoryBase {
      *          retries - the number of times to retry upon failure.
      *          onRetry - a closure that is called upon each retry attempt.
      *              Takes 2 parameters: 1. causing exception 2. # retries
-     *              Closure must return true in order to continue.
+     *              Closure must return true in order to continue otherwise
+     *              no more retries will be attempted and onFail will be
+     *              returned.  If no onFail is specified, null will be
+     *              returned as the URL.
      *          onFail - a closure that is called if serving url could not
      *              be retrieved successfully.
      *              Takes 1 parameter: causing exception
+     *              Note: if you don't pass an onFail closure, the
+     *              underlying exception will propagate out otherwise
+     *              the result of onFail will be returned as the URL.
      * @return a URL that can serve the image dynamically.
      */
     static String getServingUrl(BlobKey blobKey, Map options) {
@@ -1989,14 +1995,13 @@ class GaelykCategory extends GaelykCategoryBase {
             }
             if (retries-- == 0) {
                 if (options.onFail) {
-                    options.onFail(ex)
-                    return null
+                    return options.onFail(ex)
                 }
                 throw ex
             } else {
                 if (options.onRetry) {
                     if (!options.onRetry(ex, options.retry - (retries + 1)))
-                        return null
+                        return options.onFail? options.onFail(ex) : null
                 }
             }
         }

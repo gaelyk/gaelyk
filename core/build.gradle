@@ -1,6 +1,6 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
-apply plugin: 'signing'
+apply plugin: 'eclipse'
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
@@ -44,13 +44,16 @@ repositories {
 
 dependencies {
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-    compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
-    compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
-    compile "javax.servlet:servlet-api:2.5"
-    testCompile "javax.servlet.jsp:jsp-api:2.2"
-    testCompile "junit:junit:4.8.2"
-    testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
-    testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
+	compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
+	compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
+	compile "javax.servlet:servlet-api:2.5"
+	testCompile "javax.servlet.jsp:jsp-api:2.2"
+	testCompile "junit:junit:4.8.2"
+	testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
+	testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
+	testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
+		exclude group: 'org.codehaus.groovy', name: 'groovy-all'
+	}
 }
 
 jar {
@@ -127,91 +130,89 @@ task wrapper(type: Wrapper) {
     gradleVersion "1.0-milestone-6"
 }
 
-signing {
-    sign configurations.archives
-}
+if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
+	apply plugin: 'signing'
+	signing {
+			sign configurations.archives
+	}
 
-if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')) {
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+	uploadArchives {
+		repositories {
+			mavenDeployer {
+				beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+	
+				def auth = {
+				  authentication(userName: sonatypeUsername, password: sonatypePassword)
+				}
+	
+				repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/", auth)
+				snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots", auth)
+	
+	
+				pom.project {
+				   name 'Gaelyk'
+				   packaging 'jar'
+				   description 'Gaelyk is a lightweight toolkit for developing applications in Groovy for the Google App Engine environment.'
+				   url 'http://www.gaelyk.org'
+	
+				   scm {
+					   url 'scm:git://github.com/glaforge/gaelyk.git'
+					   connection 'scm:git://github.com/glaforge/gaelyk.git'
+					   developerConnection 'scm:git://github.com/glaforge/gaelyk.git'
+				   }
+	
+				   licenses {
+					   license {
+						   name 'The Apache Software License, Version 2.0'
+						   url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+						   distribution 'repo'
+					   }
+				   }
+	
+				   developers {
+					   developer {
+						   id 'glaforge'
+						   name 'Guillaume Laforge'
+					   }
+					   developer {
+						   id 'vladimirorany'
+						   name 'Vladimir Orany'
+					   }
+					   developer {
+						   id 'bmuschko'
+						   name 'Benjamin Muschko'
+					   }
+					   developer {
+						   id 'alkemist'
+						   name 'Luke Daley'
+					   }
+					   developer {
+						   id 'lguzzon'
+						   name 'Luca Guzzon'
+					   }
+					   developer {
+						   id 'fabito'
+						   name 'Fábio Franco Uechi'
+					   }
+				   }
+			   }
+	
+			   //mess with the generated pom to set the 'packaging' tag
+			   pom.withXml { XmlProvider xmlProvider ->
+				   def xml = xmlProvider.asString()
+				   def pomXml = new XmlParser().parse(new ByteArrayInputStream(xml.toString().bytes))
+	
+				   pomXml.version[0] + { packaging('jar') }
+	
+				   def newXml = new StringWriter()
+				   def printer = new XmlNodePrinter(new PrintWriter(newXml))
+				   printer.preserveWhitespace = true
+				   printer.print(pomXml)
+				   xml.setLength(0)
+				   xml.append(newXml.toString())
+			   }
+			}
+		}
+	}
 
-                def auth = {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
-                }
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/", auth)
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots", auth)
-
-
-                pom.project {
-                    name 'Gaelyk'
-                    packaging 'jar'
-                    description 'Gaelyk is a lightweight toolkit for developing applications in Groovy for the Google App Engine environment.'
-                    url 'http://www.gaelyk.org'
-
-                    scm {
-                        url 'scm:git://github.com/glaforge/gaelyk.git'
-                        connection 'scm:git://github.com/glaforge/gaelyk.git'
-                        developerConnection 'scm:git://github.com/glaforge/gaelyk.git'
-                    }
-
-                    licenses {
-                        license {
-                            name 'The Apache Software License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution 'repo'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id 'glaforge'
-                            name 'Guillaume Laforge'
-                        }
-                        developer {
-                            id 'vladimirorany'
-                            name 'Vladimir Orany'
-                        }
-                        developer {
-                            id 'bmuschko'
-                            name 'Benjamin Muschko'
-                        }
-                        developer {
-                            id 'codeconsole'
-                            name 'Scott Murphy'
-                        }
-                        developer {
-                            id 'alkemist'
-                            name 'Luke Daley'
-                        }
-                        developer {
-                            id 'lguzzon'
-                            name 'Luca Guzzon'
-                        }
-                        developer {
-                            id 'fabito'
-                            name 'Fábio Franco Uechi'
-                        }
-                    }
-                }
-
-                //mess with the generated pom to set the 'packaging' tag
-                pom.withXml { XmlProvider xmlProvider ->
-                    def xml = xmlProvider.asString()
-                    def pomXml = new XmlParser().parse(new ByteArrayInputStream(xml.toString().bytes))
-
-                    pomXml.version[0] + { packaging('jar') }
-
-                    def newXml = new StringWriter()
-                    def printer = new XmlNodePrinter(new PrintWriter(newXml))
-                    printer.preserveWhitespace = true
-                    printer.print(pomXml)
-                    xml.setLength(0)
-                    xml.append(newXml.toString())
-                }
-            }
-        }
-    }
 }

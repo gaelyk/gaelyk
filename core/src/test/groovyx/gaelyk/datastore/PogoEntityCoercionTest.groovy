@@ -42,6 +42,11 @@ class PogoEntityCoercionTest extends GroovyTestCase {
         assert props.s3.key()
 
         assert PogoEntityCoercion.findKey(props) == 's3'
+		
+		def p2 = new P2()
+		def props2 = PogoEntityCoercion.props(p2)
+        assert props.s1.unindexed()
+        assert !props.s2.unindexed()
     }
 
     void testObjectToEntityConversion() {
@@ -125,6 +130,12 @@ class P1 {
     @Unindexed String s1
     @Ignore String s2
     @Key String s3
+}
+
+@groovyx.gaelyk.datastore.Entity(unindexed=false)
+class P2 {
+	String s1
+	@Indexed s2
 }
 
 @Canonical

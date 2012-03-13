@@ -91,6 +91,11 @@ you would just replace <code>redirect</code> with <code>forward</code> as follow
     get "/about", forward: "/blog/2008/10/20/welcome-to-my-blog"
 </pre>
 
+<blockquote>
+<b>Note: </b> In addition to <code>redirect</code> and <code>forward</code>,
+you can also do a <code>redirect301</code>, which is a permanent redirect.
+</blockquote>
+
 <p>
 If you have different routes for different HTTP methods, you can use the <code>get</code>, <code>post</code>,
 <code>put</code> and <code>delete</code> methods.

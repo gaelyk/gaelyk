@@ -104,14 +104,19 @@ import com.google.appengine.api.memcache.AsyncMemcacheService
 import com.google.appengine.api.memcache.MemcacheServiceFactory
 import groovyx.gaelyk.datastore.PogoEntityCoercion
 
+import com.google.appengine.api.memcache.MemcacheServiceException
+import com.google.apphosting.api.DeadlineExceededException
+import com.google.apphosting.api.ApiProxy
+
 /**
  * Category methods decorating the Google App Engine SDK classes
  * adding new shortcut methods to simplify the usage of the SDK
  * from within Groovy servlets and templates.
  *
  * @author Guillaume Laforge
+ * @author Scott Murphy
  */
-class GaelykCategory {
+class GaelykCategory extends GaelykCategoryBase {
 
     // ----------------------------------------------------------------
     // New methods related to the Servlet API,
@@ -1490,7 +1495,7 @@ class GaelykCategory {
      * @return the value stored under that key
      */
     static Object get(MemcacheService memcache, String key) {
-        memcache.get((Object)key)
+        get(memcache, (Object)key)
     }
 
     /**
@@ -1500,7 +1505,7 @@ class GaelykCategory {
      * @return the value stored under that key
      */
     static Object get(MemcacheService memcache, GString key) {
-        memcache.get(key.toString())
+        get(memcache, (Object)key.toString())
     }
 
     /**
@@ -1510,7 +1515,7 @@ class GaelykCategory {
      * @param key the key identifying the object to get from the cache
      */
     static Object getAt(MemcacheService memcache, Object key) {
-        memcache.get(key)
+        get(memcache, key)
     }
 
     /**
@@ -1522,7 +1527,7 @@ class GaelykCategory {
     static Object getAt(MemcacheService memcache, String key) {
         //TODO this method should be removed once we only need a getAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
-        memcache.get(key)
+        get(memcache, (Object)key)
     }
 
     /**
@@ -1532,7 +1537,7 @@ class GaelykCategory {
      * @param value the value to put in the cache
      */
     static void set(MemcacheService memcache, String key, Object value) {
-        memcache.put(key, value)
+        put(memcache, (Object)key, value, null, SetPolicy.SET_ALWAYS)
     }
 
     /**
@@ -1542,7 +1547,7 @@ class GaelykCategory {
      * @param value the value to put in the cache
      */
     static void put(MemcacheService memcache, GString key, Object value) {
-        memcache.put(key.toString(), value)
+        put(memcache, (Object)key.toString(), value, null, SetPolicy.SET_ALWAYS)
     }
 
     /**
@@ -1553,7 +1558,7 @@ class GaelykCategory {
      * @param expiration expiration of the key/value
      */
     static void put(MemcacheService memcache, GString key, Object value, Expiration expiration) {
-        memcache.put(key.toString(), value, expiration)
+        put(memcache, (Object)key.toString(), value, expiration, SetPolicy.SET_ALWAYS)
     }
 
     /**
@@ -1565,7 +1570,7 @@ class GaelykCategory {
      * @param policy a SetPolicy 
      */
     static void put(MemcacheService memcache, GString key, Object value, Expiration expiration, SetPolicy policy) {
-        memcache.put(key.toString(), value, expiration, policy)
+        put(memcache, (Object)key.toString(), value, expiration, policy)
     }
 
     /**
@@ -1578,7 +1583,7 @@ class GaelykCategory {
     static void putAt(MemcacheService memcache, String key, Object value) {
         //TODO this method should be removed once we only need a putAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
-        memcache.put(key, value)
+        put(memcache, (Object)key, value, null, SetPolicy.SET_ALWAYS)
     }
 
     /**
@@ -1589,7 +1594,7 @@ class GaelykCategory {
      * @param value the value to put in the cache
      */
     static void putAt(MemcacheService memcache, Object key, Object value) {
-        memcache.put(key, value)
+        put(memcache, key, value, null, SetPolicy.SET_ALWAYS)
     }
 
     /**
@@ -1597,7 +1602,12 @@ class GaelykCategory {
      * <code>key in memcache</code>
      */
     static boolean isCase(MemcacheService memcache, Object key) {
-        memcache.contains(key)
+        try {
+            return memcache.contains(key)
+        } catch (MemcacheServiceException mse) {
+        } catch (DeadlineExceededException dee) {
+        } catch (ApiProxy.CancelledException ce) { }
+        false
     }
 
     /**
@@ -1639,7 +1649,7 @@ class GaelykCategory {
                 } else {
                     // no previous invocation, so calling the closure and caching the result 
                     result = closure(* args)
-                    memcache.put(key, result, Expiration.byDeltaSeconds(60))
+                    put(memcache, key, result, Expiration.byDeltaSeconds(60), SetPolicy.SET_ALWAYS)
                     return result
                 }
             }

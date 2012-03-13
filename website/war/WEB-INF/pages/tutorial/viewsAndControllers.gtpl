@@ -155,6 +155,10 @@ by injecting specific elements of the Google App Engine SDK:
         <tt>prospectiveSearch</tt> : the <a href="http://code.google.com/appengine/docs/java/prospectivesearch/overview.html">Prospective search service</a>
     </li>
     <li>
+        <tt>logService</tt> : the <a
+            href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/log/LogService.html">Log service</a>
+    </li>
+    <li>
         <tt>localMode</tt> : a boolean variable which is <code>true</code> when the application is running in local
         development mode, and <code>false</code> when deployed on Google's cloud.
     </li>

@@ -9,7 +9,7 @@ defaultTasks 'clean', 'build'
 // current Gaelyk version
 version = '1.2-SNAPSHOT'
 group = 'org.gaelyk'
-appEngineVersion = '1.6.2.1'
+appEngineVersion = '1.6.3.1'
 groovyVersion = '1.8.6'
 
 // various directory places and file names
@@ -32,9 +32,9 @@ sourceSets {
         groovy {
             srcDir 'src/test'
         }
-		resources {
-			srcDir 'src/testResources'
-		}
+        resources {
+            srcDir 'src/testResources'
+        }
     }
 }
 
@@ -115,9 +115,9 @@ task javadocJar(type: Jar, dependsOn:groovydoc) {
 
 // add javadoc/source jar tasks as artifacts
 artifacts {
-	 archives jar
-     archives sourcesJar
-     archives javadocJar
+    archives jar
+    archives sourcesJar
+    archives javadocJar
 }
 
 tasks.withType(Upload) { // map the groovy configuration to compile in the pom
@@ -129,7 +129,6 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
 task wrapper(type: Wrapper) {
     gradleVersion "1.0-milestone-6"
 }
-
 
 if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
 	apply plugin: 'signing'
@@ -215,4 +214,5 @@ if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
 			}
 		}
 	}
+
 }

@@ -29,6 +29,7 @@ import groovyx.gaelyk.logging.GroovyLogger
  * Configure the installed plugins.
  * 
  * @author Guillaume Laforge
+ * @author Vladimir Orany
  */
 @Singleton(lazy = true)
 class PluginsHandler {
@@ -43,16 +44,16 @@ class PluginsHandler {
     List categories = []
     List beforeActions = []
     List afterActions = []
-	List installed = []
+    List installed = []
 
     final defaultScriptContentLoader = { String path ->
-		def file = new File(path)
-		if(file.exists()){
-			return file.text
-		}
-		InputStream is = Thread.currentThread().contextClassLoader.getResourceAsStream(path)
-		if(!is) return ""
-		is.text
+        def file = new File(path)
+        if(file.exists()){
+            return file.text
+        }
+        InputStream is = Thread.currentThread().contextClassLoader.getResourceAsStream(path)
+        if(!is) return ""
+        is.text
     }
 
     Closure scriptContent = defaultScriptContentLoader
@@ -66,7 +67,7 @@ class PluginsHandler {
         categories = []
         beforeActions = []
         afterActions = []
-		installed = []
+        installed = []
         scriptContent = defaultScriptContentLoader
     }
 
@@ -79,16 +80,16 @@ class PluginsHandler {
 
             // retrieve the list of plugin names to be loaded
             def pluginsList = loadPluginsList() as Set
-			pluginsList.addAll(collectBinaryPlugins())
+            pluginsList.addAll(collectBinaryPlugins())
             log.config "Found ${pluginsList.size()} plugin(s)"
 
             pluginsList.each { String pluginName ->
-				def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
-				String content = scriptContent(pluginPath)
-				if(!content){
-					pluginPath = "META-INF/gaelyk-plugins/${pluginName}.groovy"
-					content = scriptContent(pluginPath)
-				}
+                def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
+                String content = scriptContent(pluginPath)
+                if(!content){
+                    pluginPath = "META-INF/gaelyk-plugins/${pluginName}.groovy"
+                    content = scriptContent(pluginPath)
+                }
                 if (content) {
                     log.config "Loading plugin $pluginName"
 
@@ -115,10 +116,11 @@ class PluginsHandler {
 
                     if (script.getBeforeAction()) beforeActions.add script.getBeforeAction()
                     if (script.getAfterAction())  afterActions .add script.getAfterAction()
-					installed << pluginName
+
+                    installed << pluginName
                 } else {
-					log.config "Plugin $pluginName doesn't exist"
-				}
+                    log.config "Plugin $pluginName doesn't exist"
+                }
             }
 
             // reverse the order of the "after" actions so they are executed in reverse order
@@ -153,34 +155,34 @@ class PluginsHandler {
 
         return []
     }
-	
-	/**
-	 * Collect names of binary plugins installed.
-	 * @return set of collected binary plugins names
-	 */
-	synchronized Set collectBinaryPlugins(){
-	    def ret = [] as Set
-	    File libDir = new File('WEB-INF/lib')
-	    if(libDir.exists()){
-	        libDir.eachFile {
-	            JarFile jarFile = new JarFile(it.absolutePath)
-	            JarEntry gaelykPluginsDir = jarFile.getJarEntry('META-INF/gaelyk-plugins')
-	            if(gaelykPluginsDir){
-	                jarFile.entries().each{
-	                    def match = it.name =~ "META-INF/gaelyk-plugins/([a-zA-Z0-9_]+)\\.groovy"
-	                    if(match){
-	                        ret << match[0][1]
-	                    }
-	                }
-	            }
-	        }
-	    }
-	    ret
-	}
-	
-	public boolean isInstalled(String pluginName){
-		pluginName in installed
-	}
+
+    /**
+     * Collect names of binary plugins installed.
+     * @return set of collected binary plugins names
+     */
+    synchronized Set collectBinaryPlugins(){
+        def ret = [] as Set
+        File libDir = new File('WEB-INF/lib')
+        if(libDir.exists()){
+            libDir.eachFile {
+                JarFile jarFile = new JarFile(it.absolutePath)
+                JarEntry gaelykPluginsDir = jarFile.getJarEntry('META-INF/gaelyk-plugins')
+                if(gaelykPluginsDir){
+                    jarFile.entries().each{
+                        def match = it.name =~ "META-INF/gaelyk-plugins/([a-zA-Z0-9_]+)\\.groovy"
+                        if(match){
+                            ret << match[0][1]
+                        }
+                    }
+                }
+            }
+        }
+        ret
+    }
+
+    public boolean isInstalled(String pluginName){
+        pluginName in installed
+    }
 
     /**
      * Add the variables in the binding, as defined by the plugin descriptors.

@@ -107,6 +107,9 @@ import groovyx.gaelyk.datastore.PogoEntityCoercion
 import com.google.appengine.api.memcache.MemcacheServiceException
 import com.google.apphosting.api.DeadlineExceededException
 import com.google.apphosting.api.ApiProxy
+import com.google.appengine.api.images.ImagesService
+import com.google.appengine.api.images.ImagesServiceFactory
+import com.google.appengine.api.images.ImagesServiceFailureException
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -1959,6 +1962,65 @@ class GaelykCategory extends GaelykCategoryBase {
      */
     static Image getImage(BlobKey selfKey) {
         ISF.makeImageFromBlob(selfKey)
+    }
+
+    /**
+     * Obtains a URL that can serve the image stored as a blob dynamically.
+     *
+     * Note: getServingUrl can be time consuming so this should only be
+     * done once per blobkey and the result should be stored for future use.
+     *
+     * <pre><code>
+     * image.url = blobKey.getServingUrl(retry: 2, onRetry: { ex, i ->
+     *    // do something... log exception? Thread.sleep(1000*i) ?
+     *    true // must return true in order to continue next retry
+     * }, onFail: { ex -> // do something
+     * })
+     * </code></pre>
+     *
+     * @param selfKey the key
+     * @param a Map of options
+     *          retries - the number of times to retry upon failure.
+     *          onRetry - a closure that is called upon each retry attempt.
+     *              Takes 2 parameters: 1. causing exception 2. # retries
+     *              Closure must return true in order to continue otherwise
+     *              no more retries will be attempted and onFail will be
+     *              returned.  If no onFail is specified, null will be
+     *              returned as the URL.
+     *          onFail - a closure that is called if serving url could not
+     *              be retrieved successfully.
+     *              Takes 1 parameter: causing exception
+     *              Note: if you don't pass an onFail closure, the
+     *              underlying exception will propagate out otherwise
+     *              the result of onFail will be returned as the URL.
+     * @return a URL that can serve the image dynamically.
+     */
+    static String getServingUrl(BlobKey blobKey, Map options) {
+        ImagesService images = ImagesServiceFactory.getImagesService()
+        int retries = options.retry?:0
+        while (true) {
+            Exception ex = null
+            try {
+                return images.getServingUrl(blobKey)
+            } catch (ApiProxy.ApiDeadlineExceededException adee) {
+                ex = adee
+            } catch (IllegalArgumentException iae) {
+                ex = iae
+            } catch (ImagesServiceFailureException isfe) {
+                ex = isfe
+            }
+            if (retries-- == 0) {
+                if (options.onFail) {
+                    return options.onFail(ex)
+                }
+                throw ex
+            } else {
+                if (options.onRetry) {
+                    if (!options.onRetry(ex, options.retry - (retries + 1)))
+                        return options.onFail? options.onFail(ex) : null
+                }
+            }
+        }
     }
 
     /**

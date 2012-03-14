@@ -23,10 +23,10 @@ class PogoEntityCoercion {
      */
     static Map props(Object p) {
         def clazz = p.class
-		boolean defaultIndexed = true;
-		if(clazz.isAnnotationPresent(groovyx.gaelyk.datastore.Entity.class)){
-			defaultIndexed = ! clazz.getAnnotation(groovyx.gaelyk.datastore.Entity).unindexed()
-		}
+        boolean defaultIndexed = true;
+        if(clazz.isAnnotationPresent(groovyx.gaelyk.datastore.Entity.class)){
+            defaultIndexed = ! clazz.getAnnotation(groovyx.gaelyk.datastore.Entity).unindexed()
+        }
         if (!cachedProps.containsKey(clazz)) {
             cachedProps[clazz] = p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) && !(k.startsWith('$') || k.startsWith('_')) }
                     .collectEntries { String k, v ->
@@ -34,11 +34,11 @@ class PogoEntityCoercion {
                 try {
                     annos = p.class.getDeclaredField(k).annotations
                 } catch (e) {
-					try {
-						annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
-					} catch (NoSuchMethodException nsme){
-						return [(k), [ignore: {true}, unindexed: {false}, key: {false}]]
-					}
+                    try {
+                        annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
+                    } catch (NoSuchMethodException nsme){
+                        return [(k), [ignore: {true}, unindexed: {false}, key: {false}]]
+                    }
                 }
                 [(k), [
                         ignore:    { annos.any { it instanceof Ignore } },
@@ -84,14 +84,14 @@ class PogoEntityCoercion {
         props.each { String propName, Map m ->
             if (propName != key) {
                 if (!props[propName].ignore()) {
-					def val = p."$propName"
-					if (props[propName].unindexed()) {
-						// TODO: deside the correct behaviour
-//						if(!val){
-//							entity.removeProperty(propName)
-//						} else {
-							entity.setUnindexedProperty(propName, p."$propName")
-//						}
+                    def val = p."$propName"
+                    if (props[propName].unindexed()) {
+                        // TODO: decide the correct behaviour
+//                      if(!val){
+//                          entity.removeProperty(propName)
+//                      } else {
+                        entity.setUnindexedProperty(propName, p."$propName")
+//                  }
                     } else {
                         
                         if (val instanceof Enum) val = val as String

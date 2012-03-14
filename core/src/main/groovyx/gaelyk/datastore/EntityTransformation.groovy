@@ -52,12 +52,12 @@ class EntityTransformation implements ASTTransformation {
         parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: Closure], getPogoListNode(parent)))
         parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: QueryBuilder], getPogoListNode(parent)))
 
-        parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [:], getPogoInteratorNode(parent)))
-        parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: Closure], getPogoInteratorNode(parent)))
-        parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: QueryBuilder], getPogoInteratorNode(parent)))
+        parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [:], getPogoIteratorNode(parent)))
+        parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: Closure], getPogoIteratorNode(parent)))
+        parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: QueryBuilder], getPogoIteratorNode(parent)))
     }
 
-    private ClassNode getPogoInteratorNode(ClassNode parent) {
+    private ClassNode getPogoIteratorNode(ClassNode parent) {
         ClassNode pogoIteratorNode = ClassHelper.makeWithoutCaching(Iterator).plainNodeReference
         pogoIteratorNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
         return pogoIteratorNode

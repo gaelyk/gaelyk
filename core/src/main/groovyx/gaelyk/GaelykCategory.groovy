@@ -268,7 +268,10 @@ class GaelykCategory extends GaelykCategoryBase {
      * <code>entity['propertyName']</code>
      */
     static Object getAt(Entity entity, String name) {
-        transformValueForRetrieval(entity.getProperty(name))
+		if(!entity.hasProperty(name)){
+			return null;
+		}
+		transformValueForRetrieval(entity.getProperty(name))			
     }
 
     /**
@@ -279,6 +282,9 @@ class GaelykCategory extends GaelykCategoryBase {
      * <code>entity.propertyName</code>
      */
     static Object get(Entity entity, String name) {
+		if(!entity.hasProperty(name)){
+			return null;
+		}
         transformValueForRetrieval(entity.getProperty(name))
     }
 
@@ -296,6 +302,11 @@ class GaelykCategory extends GaelykCategoryBase {
      * <code>entity['propertyName'] = value</code>
      */
     static void setAt(Entity entity, String name, Object value) {
+// TODO: deside the correct behaviour
+//		if(!value){
+//			entity.removeProperty(name)
+//			return
+//		}
         entity.setProperty(name, transformValueForStorage(value))
     }
 
@@ -307,6 +318,11 @@ class GaelykCategory extends GaelykCategoryBase {
      * <code>entity.propertyName = value</code>
      */
     static void set(Entity entity, String name, Object value) {
+// TODO: deside the correct behaviour
+//		if(!value){
+//			entity.removeProperty(name)
+//			return
+//		}
         entity.setProperty(name, transformValueForStorage(value))
     }
 

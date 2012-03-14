@@ -88,12 +88,12 @@ abstract class PluginBaseScript extends RoutesBaseScript {
     void after(Closure c) {
         afterAction = c
     }
-	
-	/**
-	* Returns the name of the script.
-	* @return the name of the script
-	*/
-	protected getPlugin(){
-		getClass().simpleName
-	}
+
+    /**
+     * Returns the name of the script.
+     * @return the name of the script
+     */
+    protected getPlugin(){
+        getClass().simpleName
+    }
 }

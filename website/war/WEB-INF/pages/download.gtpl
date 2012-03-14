@@ -34,7 +34,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h2>Version 1.2</h2>
 
-<h3>Chances</h3>
+<h3>Changes</h3>
 <ul>
     <li>Upgraded to Groovy 1.8.6 and App Engine SDK 1.6.2.1</li>
     <li>

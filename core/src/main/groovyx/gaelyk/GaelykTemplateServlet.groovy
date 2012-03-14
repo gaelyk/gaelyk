@@ -72,55 +72,55 @@ class GaelykTemplateServlet extends TemplateServlet {
             PluginsHandler.instance.executeAfterActions(request, response)
         }
     }
-	
-	/**
-	 * Reworked {@link #service(HttpServletRequest, HttpServletResponse)} method.
-	 * The original one relies on the implementation from the superclass
-	 * so it cannot be used directly
-	 * @param request http request
-	 * @param response http response
-	 */
-	private void doService(HttpServletRequest request, HttpServletResponse response){
 
-		//
-		// Get the template source file handle.
-		//
-		Template template;
-		String name;
-		String uri = getScriptUri(request);
+    /**
+     * Reworked {@link #service(HttpServletRequest, HttpServletResponse)} method.
+     * The original one relies on the implementation from the superclass
+     * so it cannot be used directly
+     * @param request http request
+     * @param response http response
+     */
+    private void doService(HttpServletRequest request, HttpServletResponse response){
 
-		File file = super.getScriptUriAsFile(request);
-		if (file != null && file.exists()) {
-			name = file.getName();
-			if (!file.canRead()) {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Can not read \"" + name + "\"!");
-				return; // throw new IOException(file.getAbsolutePath());
-			}
-			template = getTemplate(file);
-		} else if(PluginResourceSupport.isPluginPath(uri)){
-			try {
-				template = getTemplate(PluginResourceSupport.getPluginFileURL("templates", uri))
-			} catch (Exception e){
-				response.sendError(HttpServletResponse.SC_NOT_FOUND);
-				return; // throw new IOException(file.getAbsolutePath());
-			}
-		} else {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			return; // throw new IOException(file.getAbsolutePath());
-		}
+        //
+        // Get the template source file handle.
+        //
+        Template template
+        String name
+        String uri = getScriptUri(request)
 
-		ServletBinding binding = new ServletBinding(request, response, servletContext);
-		setVariables(binding);
+        File file = super.getScriptUriAsFile(request)
+        if (file != null && file.exists()) {
+            name = file.getName()
+            if (!file.canRead()) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Can not read \"" + name + "\"!")
+                return // throw new IOException(file.getAbsolutePath());
+            }
+            template = getTemplate(file)
+        } else if(PluginResourceSupport.isPluginPath(uri)) {
+            try {
+                template = getTemplate(PluginResourceSupport.getPluginFileURL("templates", uri))
+            } catch (Exception e){
+                response.sendError(HttpServletResponse.SC_NOT_FOUND)
+                return // throw new IOException(file.getAbsolutePath())
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND)
+            return // throw new IOException(file.getAbsolutePath())
+        }
 
-		response.setContentType(CONTENT_TYPE_TEXT_HTML + "; charset=" + encoding);
-		response.setStatus(HttpServletResponse.SC_OK);
+        ServletBinding binding = new ServletBinding(request, response, servletContext)
+        setVariables(binding)
+
+        response.setContentType(CONTENT_TYPE_TEXT_HTML + "; charset=" + encoding)
+        response.setStatus(HttpServletResponse.SC_OK)
 
 
-		Writer out = (Writer) binding.getVariable("out");
-		if (out == null) {
-			out = response.getWriter();
-		}
+        Writer out = (Writer) binding.getVariable("out")
+        if (out == null) {
+            out = response.getWriter()
+        }
 
-		template.make(binding.getVariables()).writeTo(out);
-	}
+        template.make(binding.getVariables()).writeTo(out)
+    }
 }

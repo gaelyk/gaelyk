@@ -158,25 +158,51 @@ is using.
 <a name="pogo-entity-coercion-annotations"></a>
 
 <p>
-Further customization of the coercion can be achieved by using 3 annotations on your classes:
+Further customization of the coercion can be achieved by using annotations on your classes:
 </p>
 
 <ul>
+    <li><code>@Entity</code> to add CRUD methods to the POGO class and also to set all fields unindexed by default.</br>
+    Following methods are added to the POGO instances:
+        <ul>
+            <li><code>save()</code> to save the object to the datastore</li>
+            <li><code>delete()</code> to remove the object from the datastore</li>
+        </ul>
+    Following static methods are added to the POGO class:
+        <ul>
+            <li><code>get(nameOrId)</code> to retrieve the object from the datastore by its name or id</li>
+            <li><code>exists(nameOrId)</code> to determine whether the object with given id or name exists in the datastore</li>
+            <li><code>count()</code> to count all the object of given POGO class stored in the datastore</li>
+            <li><code>count{...query...}</code> to count the objects which satisfies given <a href="query">query</a></li>
+            <li><code>find{...query...}</code> to find single object which satisfies given <a href="query">query</a></li>
+            <li><code>findAll()</code> to find all the object of given POGO class stored in the datastore</li>
+            <li><code>findAll{...query...}</code> to find the objects which satisfies given <a href="query">query</a></li>
+            <li><code>iterate()</code> to iterate over all the object of given POGO class stored in the datastore</li>
+            <li><code>iterate{...query...}</code> to iterate over the objects which satisfies given <a href="query">query</a></li>            
+        </ul>
+    If there is no property annotated with <code>@Key</code> annotation it also adds <code>@Key long id</code> property to the POGO class.<br/>
+    You can set default behavior from unindexed to indexed setting <code>unidexed</code> property of the annotations to <code>false</code>.
+      
+    </li>
     <li><code>@Key</code> to specify that a particular property or getter method should be used as the key for the entity (should be a String or a long)</li>
+    <li><code>@Indexed</code> for properties or getter methods that should be indexed (ie. can be used in queries)</li>
     <li><code>@Unindexed</code> for properties or getter methods that should be set as unindexed (ie. on which no queries can be done)</li>
     <li><code>@Ignore</code> for properties or getter methods that should be ignored and not persisted</li>
 </ul>
 
 <p>
-Here's an example of a <code>Person</code> bean, whose key is a string login, whose biography should be unindexed,
+Here's an example of a <code>Person</code> bean using <code>@Entity</code> annotation, 
+whose key is a string login, whose biography should be unindexed,
 and whose full name can be ignored since it's a computed property:
 </p>
 
 <pre class="brush:groovy">
+    import groovyx.gaelyk.datastore.Entity
     import groovyx.gaelyk.datastore.Key
     import groovyx.gaelyk.datastore.Unindexed
     import groovyx.gaelyk.datastore.Ignore
-
+    
+    @Entity(unindexed=false)
     class Person {
         @Key String login
         String firstName
@@ -184,6 +210,30 @@ and whose full name can be ignored since it's a computed property:
         @Unindexed String bio
         @Ignore String getFullName() { "\$firstName \$lastName" }
     }
+ </pre>
+ 
+<p>
+Thanks to <code>@Entity</code> annotation, 
+you get basic CRUD operations for free:
+</p>
+ 
+ <pre class="brush:groovy">   
+    assert Person.count()   == 0
+    
+    def glaforge = new Person(
+        login:      'glaforge', 
+        firstName:  'Guillaume', 
+        lastName:   'Laforge',
+        bio:        'Groovy Project Manager'
+    ).save()
+    
+    assert Person.count()   == 1
+    assert glaforge         == Person.get('glaforge')
+    assert Person.exists('glaforge')
+    assert Person.findAll { where firstName == 'Guillaume' } == 1
+    
+    glaforge.delete()
+    assert Person.count()   == 0
 </pre>
 
 <blockquote>

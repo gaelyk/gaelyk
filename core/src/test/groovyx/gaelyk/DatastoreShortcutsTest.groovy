@@ -248,4 +248,15 @@ class DatastoreShortcutsTest extends GroovyTestCase {
             assert e.address == address
         }
     }
+
+    void testLongTextConversionWithUnindexedProperty() {
+        use (GaelykCategory) {
+            def person = new Entity("Person", "glaforge")
+            person.name = "Guillaume Laforge"
+            person.unindexed.bio = "super long text " * 100
+            person.save()
+
+            assert person.bio instanceof String
+        }
+    }
 }

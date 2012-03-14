@@ -111,6 +111,8 @@ import com.google.appengine.api.images.ImagesService
 import com.google.appengine.api.images.ImagesServiceFactory
 import com.google.appengine.api.images.ImagesServiceFailureException
 
+import groovy.transform.PackageScope
+
 /**
  * Category methods decorating the Google App Engine SDK classes
  * adding new shortcut methods to simplify the usage of the SDK
@@ -271,10 +273,10 @@ class GaelykCategory extends GaelykCategoryBase {
      * <code>entity['propertyName']</code>
      */
     static Object getAt(Entity entity, String name) {
-		if(!entity.hasProperty(name)){
-			return null;
-		}
-		transformValueForRetrieval(entity.getProperty(name))			
+        if(!entity.hasProperty(name)){
+            return null;
+        }
+        transformValueForRetrieval(entity.getProperty(name))
     }
 
     /**
@@ -285,15 +287,16 @@ class GaelykCategory extends GaelykCategoryBase {
      * <code>entity.propertyName</code>
      */
     static Object get(Entity entity, String name) {
-		if(!entity.hasProperty(name)){
-			return null;
-		}
+        if(!entity.hasProperty(name)){
+            return null;
+        }
         transformValueForRetrieval(entity.getProperty(name))
     }
 
     // All transformations that need to be done on entity fields
     // before being accessed by the user
-    private static Object transformValueForRetrieval(Object value) {
+    @PackageScope
+    static Object transformValueForRetrieval(Object value) {
         value instanceof Text ? value.value : value
     }
 
@@ -306,10 +309,10 @@ class GaelykCategory extends GaelykCategoryBase {
      */
     static void setAt(Entity entity, String name, Object value) {
 // TODO: deside the correct behaviour
-//		if(!value){
-//			entity.removeProperty(name)
-//			return
-//		}
+//      if(!value){
+//          entity.removeProperty(name)
+//          return
+//      }
         entity.setProperty(name, transformValueForStorage(value))
     }
 
@@ -322,16 +325,17 @@ class GaelykCategory extends GaelykCategoryBase {
      */
     static void set(Entity entity, String name, Object value) {
 // TODO: deside the correct behaviour
-//		if(!value){
-//			entity.removeProperty(name)
-//			return
-//		}
+//      if(!value){
+//          entity.removeProperty(name)
+//          return
+//      }
         entity.setProperty(name, transformValueForStorage(value))
     }
 
     // All transformations that need to be done on entity fields
     // prior to their insertion in the datastore
-    private static Object transformValueForStorage(Object value) {
+    @PackageScope
+    static Object transformValueForStorage(Object value) {
         // the datastore doesn't allow to store GStringImpl
         // so we need a toString() first
         def newValue = value instanceof GString ? value.toString() : value

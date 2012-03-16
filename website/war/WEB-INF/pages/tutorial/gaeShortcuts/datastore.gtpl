@@ -229,7 +229,6 @@ you get basic CRUD operations for free:
     
     assert Person.count()   == 1
     assert glaforge         == Person.get('glaforge')
-    assert Person.exists('glaforge')
     assert Person.findAll { where firstName == 'Guillaume' } == 1
     
     glaforge.delete()

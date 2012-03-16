@@ -46,6 +46,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>New <code>withTransaction{}</code> and <code>withTransactionAsyncCommit{}</code> methods for the async datastore</li>
     <li>Memcache get()/put() failures are silently ignored to avoid painful exceptions when Memcache service is misbehaving</li>
     <li>Improve POGO coercion's performance</li>
+    <li>Generated CRUD operations for POGO annotated with <code>@Entity</code></li>
     <li>Allow using enum values as POGO properties for coercion</li>
 </ul>
 

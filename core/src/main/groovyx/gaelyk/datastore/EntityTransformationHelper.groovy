@@ -35,21 +35,24 @@ class EntityTransformationHelper {
         GaelykCategory.delete(GaelykCategory.asType(pogo, Entity))
     }
 
-    static boolean exists(Class<?> pogoClass, Object key) {
+    static <P> P get(Class<P> pogoClass, long key) {
         try {
-            get(pogoClass, key)
-            return true;
+           return GaelykCategory.asType(GaelykCategory.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
         } catch (EntityNotFoundException e) {
-            return false;
+           return null;
         }
     }
 
-    static <P> P get(Class<P> pogoClass, long key) {
-        GaelykCategory.asType(GaelykCategory.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
-    }
-
     static <P> P get(Class<P> pogoClass, String key) {
-        GaelykCategory.asType(GaelykCategory.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
+        try {
+           return GaelykCategory.asType(GaelykCategory.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
+        } catch (EntityNotFoundException e) {
+           return null;
+        }
+    }
+    
+    static <P> void delete(Class<P> pogoClass, key) {
+        GaelykCategory.delete(KeyFactory.createKey(pogoClass.simpleName, key))
     }
 
     static int count(Class<?> pogoClass) {

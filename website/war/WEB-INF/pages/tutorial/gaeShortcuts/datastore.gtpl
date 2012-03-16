@@ -170,8 +170,8 @@ Further customization of the coercion can be achieved by using annotations on yo
         </ul>
     Following static methods are added to the POGO class:
         <ul>
-            <li><code>get(nameOrId)</code> to retrieve the object from the datastore by its name or id</li>
-            <li><code>exists(nameOrId)</code> to determine whether the object with given id or name exists in the datastore</li>
+            <li><code>get(nameOrId)</code> to retrieve the object from the datastore by its name or id or return <code>null</code> if entity not found</li>
+            <li><code>delete(nameOrId)</code> to remove the object represented by its name or id from the datastore </li>
             <li><code>count()</code> to count all the object of given POGO class stored in the datastore</li>
             <li><code>count{...query...}</code> to count the objects which satisfies given <a href="query">query</a></li>
             <li><code>find{...query...}</code> to find single object which satisfies given <a href="query">query</a></li>

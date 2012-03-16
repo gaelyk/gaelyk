@@ -46,12 +46,10 @@ class EntityTransformationSpec extends Specification {
 		key.get()
 		obj.getClass().getMethod('get', Object).invoke(null, key.id)
 		obj.getClass().getMethod('count').invoke(null) == 1
-		obj.getClass().getMethod('exists', Object).invoke(null, key.id)
 		obj.id == key.id
 		
 		when:
 		obj.delete()
-		!obj.getClass().getMethod('exists', Object).invoke(null, key.id)
 		obj.getClass().getMethod('count').invoke(null) == 0
 		key.get()
 		
@@ -75,6 +73,27 @@ class EntityTransformationSpec extends Specification {
 		]
 		
 	}
+    
+        def "Delete by key works"(){
+            def obj = newShell().evaluate '''
+                    @groovyx.gaelyk.datastore.Entity
+                    class MyPogo {}
+                    
+                    new MyPogo()
+            '''
+            when:
+            Key key = obj.save()
+            
+            
+            then:
+            obj.count() == 1
+            
+            when:
+            obj.getClass().getMethod('delete', Object).invoke(null, key.id)
+            
+            then:
+            obj.count() == 0
+        }
 	
 	def "Test find all with closure"(){
 		def obj = newShell().evaluate '''

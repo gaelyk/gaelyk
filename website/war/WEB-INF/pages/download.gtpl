@@ -48,6 +48,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Improve POGO coercion's performance</li>
     <li>Generated CRUD operations for POGO annotated with <code>@Entity</code></li>
     <li>Allow using enum values as POGO properties for coercion</li>
+    <li>Changed Maven/Gradle group id from <code>groovyx.gaelyk</code> to <code>org.gaelyk</code></li>
 </ul>
 
 <h3>Artifacts</h3>

@@ -121,8 +121,6 @@ class GaelykServlet extends GroovyServlet {
         // Get the script path from the request - include aware (GROOVY-815)
         String scriptUri = getScriptUri(request)
 
-        final String precompiledClassName = getPrecompiledClassName(request.servletPath)
-
         // Run the script
         try {
             if(GaelykBindingEnhancer.localMode){
@@ -130,14 +128,14 @@ class GaelykServlet extends GroovyServlet {
                     runGroovlet(scriptUri, binding)
                 } catch(ResourceException re){
                     try {
-                        runPrecompiled(precompiledClassName, binding)
+                        runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
                     } catch(ClassNotFoundException e){
                         throw re
                     }
                 }
             } else {
                 try {
-                    runPrecompiled(precompiledClassName, binding)
+                    runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
                 } catch(ClassNotFoundException e){
                     runGroovlet(scriptUri, binding)
                 }

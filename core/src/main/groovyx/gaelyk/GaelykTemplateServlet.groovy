@@ -16,15 +16,18 @@
 package groovyx.gaelyk
 
 import groovy.servlet.ServletBinding
+import groovy.servlet.ServletCategory
 import groovy.servlet.TemplateServlet
-import groovy.text.Template;
+import groovy.text.Template
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-import groovyx.gaelyk.plugins.PluginResourceSupport;
+import groovyx.gaelyk.plugins.PluginResourceSupport
 import groovyx.gaelyk.plugins.PluginsHandler
 import javax.servlet.ServletConfig
+import javax.servlet.ServletResponse
+
 import groovyx.gaelyk.logging.GroovyLogger
 
 /**
@@ -37,6 +40,8 @@ import groovyx.gaelyk.logging.GroovyLogger
  * @see groovy.servlet.TemplateServlet
  */
 class GaelykTemplateServlet extends TemplateServlet {
+
+    private static final String PRECOMPILED_TEMPLATE_PREFIX = '$gtpl$'
 
     @Override
     void init(ServletConfig config) {
@@ -66,7 +71,11 @@ class GaelykTemplateServlet extends TemplateServlet {
      */
     @Override
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        use([GaelykCategory, * PluginsHandler.instance.categories]) {
+        use([
+            ServletCategory,
+            GaelykCategory,
+            * PluginsHandler.instance.categories
+        ]) {
             PluginsHandler.instance.executeBeforeActions(request, response)
             doService(request, response)
             PluginsHandler.instance.executeAfterActions(request, response)
@@ -81,46 +90,96 @@ class GaelykTemplateServlet extends TemplateServlet {
      * @param response http response
      */
     private void doService(HttpServletRequest request, HttpServletResponse response){
-
-        //
-        // Get the template source file handle.
-        //
-        Template template
-        String name
-        String uri = getScriptUri(request)
-
-        File file = super.getScriptUriAsFile(request)
-        if (file != null && file.exists()) {
-            name = file.getName()
-            if (!file.canRead()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Can not read \"" + name + "\"!")
-                return // throw new IOException(file.getAbsolutePath());
-            }
-            template = getTemplate(file)
-        } else if(PluginResourceSupport.isPluginPath(uri)) {
-            try {
-                template = getTemplate(PluginResourceSupport.getPluginFileURL("templates", uri))
-            } catch (Exception e){
-                response.sendError(HttpServletResponse.SC_NOT_FOUND)
-                return // throw new IOException(file.getAbsolutePath())
-            }
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND)
-            return // throw new IOException(file.getAbsolutePath())
-        }
-
+        response.setContentType(CONTENT_TYPE_TEXT_HTML + "; charset=" + encoding)
         ServletBinding binding = new ServletBinding(request, response, servletContext)
         setVariables(binding)
+        if(GaelykBindingEnhancer.localMode){
+            try {
+                try {
+                    runTemplate(request, response, binding)
+                } catch(FileNotFoundException e){
+                    runPrecompiled(getPrecompiledClassName(request.servletPath), binding, response)
+                } catch(IllegalAccessException e){
+                    runPrecompiled(getPrecompiledClassName(request.servletPath), binding, response)
+                }
+            } catch(ClassNotFoundException te){
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+            }
+        } else {
+            try {
+                try {
+                    runPrecompiled(getPrecompiledClassName(request.servletPath), binding, response)
+                } catch(ClassNotFoundException e){
+                    runTemplate(request, response, binding)
+                }
+            } catch(FileNotFoundException te){
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+            } catch(IllegalAccessException te){
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+            }
+        }
+    }
 
-        response.setContentType(CONTENT_TYPE_TEXT_HTML + "; charset=" + encoding)
+    private runTemplate(HttpServletRequest request, HttpServletResponse response, ServletBinding binding) {
+        Template template = tryFindTemplate(request)
         response.setStatus(HttpServletResponse.SC_OK)
-
-
         Writer out = (Writer) binding.getVariable("out")
         if (out == null) {
             out = response.getWriter()
         }
-
         template.make(binding.getVariables()).writeTo(out)
+    }
+
+    private Template tryFindTemplate(HttpServletRequest request) {
+        String uri = getScriptUri(request)
+        File file = super.getScriptUriAsFile(request)
+        if (file != null && file.exists()) {
+            String name = file.getName()
+            if (!file.canRead()) {
+                throw new IllegalAccessException("Can not read \"" + name + "\"!")
+            }
+            return getTemplate(file)
+        }
+        if(PluginResourceSupport.isPluginPath(uri)) {
+            try {
+                return getTemplate(PluginResourceSupport.getPluginFileURL("templates", uri))
+            } catch (Exception e){
+
+                throw new FileNotFoundException()
+            }
+        }
+        throw new FileNotFoundException()
+    }
+
+    /**
+     * @return name of the precompiled script class
+     */
+    static String getPrecompiledClassName(servletPath){
+        def match = servletPath =~ "/((.+?/)*)(.+)\\.gtpl"
+        if(!match){
+            return null
+        }
+        String ret = ''
+        if(match[0][1]){
+            ret += match[0][1].replace('/', '.')
+        }
+        ret += PRECOMPILED_TEMPLATE_PREFIX
+        ret += match[0][3]
+        ret
+    }
+
+    private runPrecompiled(String precompiledClassName, ServletBinding binding, HttpServletResponse response) {
+        try {
+            Class precompiledClass = Class.forName(precompiledClassName)
+            Script precompiled = precompiledClass.newInstance([binding]as Object[])
+            precompiled.run()
+            response.setStatus(HttpServletResponse.SC_OK)
+        } catch(e){
+            if(e instanceof ClassNotFoundException){
+                throw e
+            }
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
+            e.printStackTrace(binding.out)
+        }
     }
 }

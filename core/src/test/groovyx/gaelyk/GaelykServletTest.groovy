@@ -68,7 +68,12 @@ class GaelykServletTest extends GroovyTestCase {
         def printWriter = new PrintWriter(writer)
 
         def ctxt = [
-                log: { String msg -> println "log $msg" },
+                log: { String msg, Exception e = null -> 
+                    println "log $msg"
+                    if(e){
+                        e.printStackTrace()
+                    }
+                 },
                 getRealPath: { String p ->
                     println "getRealPath($p)"
                     if (p.contains('index'))
@@ -133,5 +138,12 @@ class GaelykServletTest extends GroovyTestCase {
         } finally {
             tempFile.delete()
         }
+    }
+    
+    
+    void testGetPrecompiledClassName(){
+        assert GaelykServlet.getPrecompiledClassName('/index.groovy') == 'index'
+        assert GaelykServlet.getPrecompiledClassName('/api/index.groovy') == 'api.index'
+        assert GaelykServlet.getPrecompiledClassName('/api/test/index.groovy') == 'api.test.index'
     }
 }

@@ -144,8 +144,8 @@ class GaelykTemplateServletTest extends GroovyTestCase {
     }
     
     void testGetPrecompiledClassName(){
-        assert GaelykTemplateServlet.getPrecompiledClassName('/index.gtpl') == '$gtpl$index'
-        assert GaelykTemplateServlet.getPrecompiledClassName('/api/index.gtpl') == 'api.$gtpl$index'
-        assert GaelykTemplateServlet.getPrecompiledClassName('/api/test/index.gtpl') == 'api.test.$gtpl$index'
+        assert GaelykTemplateServlet.getPrecompiledClassName([getAttribute: {}, getServletPath: {'/index.gtpl'}] as HttpServletRequest) == '$gtpl$index'
+        assert GaelykTemplateServlet.getPrecompiledClassName([getAttribute: {}, getServletPath: {'/api/index.gtpl'}] as HttpServletRequest) == 'api.$gtpl$index'
+        assert GaelykTemplateServlet.getPrecompiledClassName([getAttribute: {}, getServletPath: {'/api/test/index.gtpl'}] as HttpServletRequest) == 'api.test.$gtpl$index'
     }
 }

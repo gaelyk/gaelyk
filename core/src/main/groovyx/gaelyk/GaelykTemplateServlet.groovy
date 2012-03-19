@@ -43,8 +43,39 @@ class GaelykTemplateServlet extends TemplateServlet {
 
     private static final String PRECOMPILED_TEMPLATE_PREFIX = '$gtpl$'
 
+    private Closure serviceClosure = {}
+
     @Override
     void init(ServletConfig config) {
+        if(config.getInitParameter('preferPrecompiled') == 'true' || !GaelykBindingEnhancer.localMode){
+            serviceClosure = { HttpServletRequest request, HttpServletResponse response, ServletBinding binding ->
+                try {
+                    try {
+                        runPrecompiled(getPrecompiledClassName(request), binding, response)
+                    } catch(ClassNotFoundException e){
+                        runTemplate(request, response, binding)
+                    }
+                } catch(FileNotFoundException te){
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+                } catch(IllegalAccessException te){
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+                }
+            }
+        } else {
+            serviceClosure = { HttpServletRequest request, HttpServletResponse response, ServletBinding binding ->
+                try {
+                    try {
+                        runTemplate(request, response, binding)
+                    } catch(FileNotFoundException e){
+                        runPrecompiled(getPrecompiledClassName(request), binding, response)
+                    } catch(IllegalAccessException e){
+                        runPrecompiled(getPrecompiledClassName(request), binding, response)
+                    }
+                } catch(ClassNotFoundException te){
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+                }
+            }
+        }
         super.init(config)
     }
 
@@ -93,31 +124,7 @@ class GaelykTemplateServlet extends TemplateServlet {
         response.setContentType(CONTENT_TYPE_TEXT_HTML + "; charset=" + encoding)
         ServletBinding binding = new ServletBinding(request, response, servletContext)
         setVariables(binding)
-        if(GaelykBindingEnhancer.localMode){
-            try {
-                try {
-                    runTemplate(request, response, binding)
-                } catch(FileNotFoundException e){
-                    runPrecompiled(getPrecompiledClassName(request.servletPath), binding, response)
-                } catch(IllegalAccessException e){
-                    runPrecompiled(getPrecompiledClassName(request.servletPath), binding, response)
-                }
-            } catch(ClassNotFoundException te){
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND)
-            }
-        } else {
-            try {
-                try {
-                    runPrecompiled(getPrecompiledClassName(request.servletPath), binding, response)
-                } catch(ClassNotFoundException e){
-                    runTemplate(request, response, binding)
-                }
-            } catch(FileNotFoundException te){
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND)
-            } catch(IllegalAccessException te){
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN)
-            }
-        }
+        serviceClosure(request, response, binding)
     }
 
     private runTemplate(HttpServletRequest request, HttpServletResponse response, ServletBinding binding) {
@@ -154,7 +161,10 @@ class GaelykTemplateServlet extends TemplateServlet {
     /**
      * @return name of the precompiled script class
      */
-    static String getPrecompiledClassName(servletPath){
+    static String getPrecompiledClassName(HttpServletRequest request){
+        String incServletPath = (String) request.getAttribute(INC_SERVLET_PATH)
+        String servletPath = incServletPath ?: request.servletPath
+        
         def match = servletPath =~ "/((.+?/)*)(.+)\\.gtpl"
         if(!match){
             return null

@@ -171,11 +171,15 @@ class GaelykTemplateServlet extends TemplateServlet {
         }
         String ret = ''
         if(match[0][1]){
-            ret += match[0][1].replace('/', '.')
+            ret += packageToDir(match[0][1])
         }
         ret += PRECOMPILED_TEMPLATE_PREFIX
         ret += match[0][3]
         ret
+    }
+    
+    static String packageToDir(String pkg){
+        return pkg.replaceAll(/[^a-zA-Z0-9\.]/, '_').replace('/', '.').toLowerCase()
     }
 
     private runPrecompiled(String precompiledClassName, ServletBinding binding, HttpServletResponse response) {

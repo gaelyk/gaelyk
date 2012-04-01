@@ -52,7 +52,7 @@ dependencies {
     testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
     testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
     testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
-        exclude group: 'org.codehaus.groovy', name: 'groovy-all'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }
 
@@ -219,3 +219,4 @@ if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
         }
     }
 }
+

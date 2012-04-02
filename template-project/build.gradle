@@ -49,7 +49,7 @@ dependencies {
     groovy 'org.codehaus.groovy:groovy-all:1.8.6'
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion",
-            'glaforge:gaelyk:1.1'
+            'org.gaelyk:gaelyk:1.1'
 
     testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', name: 'groovy-all'

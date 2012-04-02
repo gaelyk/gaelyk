@@ -266,13 +266,12 @@ class BlobstoreServiceTest extends GroovyTestCase {
 
         use(GaelykCategory) {
             def file = files.createNewBlobFile("text/plain", "dummy.txt")
-            file.withOutputStream { OutputStream stream ->
+            file.withOutputStream(finalize: true) { OutputStream stream ->
                 stream << "dummy".bytes
             }
             def key = file.blobKey
 
-            assert key.file.fullPath == file.fullPath
-            assert key.file.toString() == file.toString()
+            key.file.withReader { Reader reader -> assert reader.text == "dummy" }
         }
     }
     

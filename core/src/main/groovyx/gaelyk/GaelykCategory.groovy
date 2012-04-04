@@ -105,7 +105,6 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory
 import groovyx.gaelyk.datastore.PogoEntityCoercion
 
 import com.google.appengine.api.memcache.MemcacheServiceException
-import com.google.apphosting.api.DeadlineExceededException
 import com.google.apphosting.api.ApiProxy
 import com.google.appengine.api.images.ImagesService
 import com.google.appengine.api.images.ImagesServiceFactory
@@ -1611,9 +1610,7 @@ class GaelykCategory extends GaelykCategoryBase {
     static boolean isCase(MemcacheService memcache, Object key) {
         try {
             return memcache.contains(key)
-        } catch (MemcacheServiceException mse) {
-        } catch (DeadlineExceededException dee) {
-        } catch (ApiProxy.CancelledException ce) { }
+        } catch (MemcacheServiceException mse) { }
         false
     }
 

@@ -19,8 +19,6 @@ package groovyx.gaelyk;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceException;
-import com.google.apphosting.api.ApiProxy;
-import com.google.apphosting.api.DeadlineExceededException;
 
 /**
  * Base Category methods decorating the Google App Engine SDK classes
@@ -41,9 +39,7 @@ public class GaelykCategoryBase {
     static Object get(MemcacheService memcache, Object key) {
         try {
             return memcache.get(key);
-        } catch (MemcacheServiceException mse) {
-        } catch (DeadlineExceededException dee) {
-        } catch (ApiProxy.CancelledException ce) { }
+        } catch (MemcacheServiceException mse) {}
         return null;
     }
 
@@ -58,9 +54,7 @@ public class GaelykCategoryBase {
      static void put(MemcacheService memcache, Object key, Object value, Expiration expiration, MemcacheService.SetPolicy policy) {
          try {
              memcache.put(key, value, expiration, policy);
-         } catch (MemcacheServiceException mse) {
-         } catch (DeadlineExceededException dee) {
-         } catch (ApiProxy.CancelledException ce) { }
+         } catch (MemcacheServiceException mse) {}
      }
 
 }

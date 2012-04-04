@@ -159,7 +159,7 @@ class GaelykServlet extends GroovyServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
             }
-			throw e // Let propogate out the filter chain and container handle the exception. 
+            throw e // Let propogate out the filter chain and container handle the exception. 
         }
     }
 

@@ -57,7 +57,7 @@ dependencies {
             'org.gaelyk:gaelyk:1.2-SNAPSHOT'
 
     testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
-        exclude group: 'org.codehaus.groovy', name: 'groovy-all'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile 'marcoVermeulen:gaelyk-spock:0.2',
                 "com.google.appengine:appengine-api-stubs:$gaeVersion",
@@ -136,5 +136,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion '1.0-milestone-8a'
+    gradleVersion '1.0-milestone-9'
 }

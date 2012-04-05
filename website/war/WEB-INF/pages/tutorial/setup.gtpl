@@ -12,50 +12,48 @@ We'll follow the directory layout proposed by the <b>Gaelyk</b> template project
 <pre>
 /
 +-- src
-|   |
-|   +-- main
-|   |   |
-|   |   +-- groovy
-|   |   +-- java
-|   |
-|   +-- test
-|       |
-|       +-- groovy
-|       +-- java
-|
-+-- war
     |
-    +-- index.gtpl
-    +-- css
-    +-- images
-    +-- js
-    +-- WEB-INF
-        |
-        +-- appengine-web.xml
-        +-- web.xml
-        +-- plugins.groovy      // if you use plugins
-        +-- routes.groovy       // if you use the URL routing system
-        +-- classes
+    +-- main
+    |   |
+    |   +-- groovy
+    |   +-- java
+    |   +-- webapp
+    |       |
+    |       +-- index.gtpl
+    |       +-- css
+    |       +-- images
+    |       +-- js
+    |       +-- WEB-INF
+    |           |
+    |           +-- appengine-web.xml
+    |           +-- web.xml
+    |           +-- plugins.groovy      // if you use plugins
+    |           +-- routes.groovy       // if you use the URL routing system
+    |           +-- classes
+    |           |
+    |           +-- groovy
+    |           |    |
+    |           |    +-- controller.groovy
+    |           |
+    |           +-- pages
+    |           |    |
+    |           |    +-- view.gtpl
+    |           |
+    |           +-- includes
+    |           |    |
+    |           |    +-- footer.gtpl
+    |           |
+    |           +-- lib
+    |               |
+    |               +-- appengine-api-1.0-sdk-x.y.z.jar
+    |               +-- appengine-api-labs-x.y.z.jar
+    |               +-- gaelyk-x.y.z.jar
+    |               +-- groovy-all-x.y.z.jar
+    |
+    +-- test
         |
         +-- groovy
-        |    |
-        |    +-- controller.groovy
-        |
-        +-- pages
-        |    |
-        |    +-- view.gtpl
-        |
-        +-- includes
-        |    |
-        |    +-- footer.gtpl
-        |
-        +-- lib
-            |
-            +-- appengine-api-1.0-sdk-x.y.z.jar
-            +-- appengine-api-labs-x.y.z.jar
-            +-- gaelyk-x.y.z.jar
-            +-- groovy-all-x.y.z.jar
-
+        +-- java
 </pre>
 
 <p>

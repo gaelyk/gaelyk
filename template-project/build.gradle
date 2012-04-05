@@ -42,12 +42,6 @@ repositories {
     mavenLocal() // allow resolution of gaelyk snapshots via 'gradlew install' on core
 }
 
-sourceSets {
-    main {
-        output.classesDir file('war/WEB-INF/classes')
-    }
-}
-
 dependencies {
     def gaeVersion = '1.6.4'
     groovy 'org.codehaus.groovy:groovy-all:1.8.6'
@@ -68,10 +62,7 @@ dependencies {
     gaeSdk "com.google.appengine:appengine-java-sdk:$gaeVersion"
 }
 
-webAppDirName = file('war')
-
 gae {
-    warDir = file('war')
     downloadSdk = true
 }
 
@@ -83,7 +74,7 @@ clean {
 }
 
 task copyRuntimeLibraries(type: Sync) {
-    def webAppLibDirName = 'war/WEB-INF/lib'
+    def webAppLibDirName = 'src/main/webapp/WEB-INF/lib'
     description = "Copies runtime libraries to $webAppLibDirName."
     from configurations.runtime
     into webAppLibDirName
@@ -123,13 +114,13 @@ eclipse {
     classpath {
         file {
             withXml { xml ->
-                xml.asNode().classpathentry.find { it.@kind == 'output' && it.@path == 'bin' }.@path = 'war/WEB-INF/classes'
+                xml.asNode().classpathentry.find { it.@kind == 'output' && it.@path == 'bin' }.@path = 'src/main/webapp/WEB-INF/classes'
                 xml.asNode().appendNode('classpathentry', [kind: 'con', path: 'com.google.appengine.eclipse.core.GAE_CONTAINER'])
                             .appendNode('attributes')
-                            .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/war/WEB-INF/lib'])
+                            .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/src/main/webapp/WEB-INF/lib'])
                 xml.asNode().appendNode('classpathentry', [exported: 'true', kind: 'con', path: 'GROOVY_SUPPORT'])
                             .appendNode('attributes')
-                            .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/war/WEB-INF/lib'])
+                            .appendNode('attribute', [name: 'org.eclipse.jst.component.nondependency', value: '/src/main/webapp/WEB-INF/lib'])
             }
         }
     }

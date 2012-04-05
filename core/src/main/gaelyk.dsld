@@ -89,10 +89,10 @@ def queryDslSupport = {
 ).accept queryDslSupport
 
 def shortcutFor = { type ->
-    bind(clazz: currentType(type)) & enclosingScript(sourceFolderOfCurrentType('war/WEB-INF/groovy'))
+    bind(clazz: currentType(type)) & enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy'))
 }
 
-(sourceFolderOfCurrentType('war/WEB-INF/groovy') & enclosingScript()).accept {
+(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy') & enclosingScript()).accept {
     provider = 'Gaelyk Groovlet'
     property name: 'datastore',
             type: 'com.google.appengine.api.datastore.DatastoreService'
@@ -115,7 +115,7 @@ def shortcutFor = { type ->
     method name: 'redirect',        type: 'void',       params: [path: 'java.lang.String'], doc: "redirects to given url, groovlet or template"
 }
 
-((sourceFolderOfCurrentType('war/WEB-INF/groovy') & enclosingScript()) | annotatedBy('groovyx.gaelyk.GaelykBindings')).accept {
+((sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy') & enclosingScript()) | annotatedBy('groovyx.gaelyk.GaelykBindings')).accept {
     property name: 'logger', type: Map, doc: 'a logger accessor can be used to get access to any logger', isStatic: true
     property name: 'datastore', type: 'com.google.appengine.api.datastore.DatastoreService', doc: 'the Datastore service', isStatic: true
     property name: 'memcache', type: 'com.google.appengine.api.memcache.MemcacheService', doc: 'the Memcache service', isStatic: true
@@ -141,7 +141,7 @@ def shortcutFor = { type ->
     property name: 'app', type: AppDescriptor, doc: 'map of all form parameters (can be empty)', isStatic: true
 }
 
-(sourceFolderOfCurrentFile('war/WEB-INF') & name("routes") & enclosingScript()).accept {
+(sourceFolderOfCurrentFile('src/main/webapp/WEB-INF') & name("routes") & enclosingScript()).accept {
     provider = 'Gaelyk'
     method name: 'all',
             useNamedArgs: true,

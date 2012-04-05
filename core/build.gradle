@@ -15,7 +15,7 @@ groovyVersion = '1.8.6'
 // various directory places and file names
 tmpProj = "../template-project"
 zipName = "${buildDir}/gaelyk-template-project-${version}.zip"
-projLib = "${tmpProj}/war/WEB-INF/lib"
+projLib = "${tmpProj}/src/main/webapp/WEB-INF/lib"
 
 website = "../website"
 apiDir = "${website}/war/api"

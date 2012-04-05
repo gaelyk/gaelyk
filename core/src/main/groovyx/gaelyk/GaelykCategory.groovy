@@ -105,7 +105,6 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory
 import groovyx.gaelyk.datastore.PogoEntityCoercion
 
 import com.google.appengine.api.memcache.MemcacheServiceException
-import com.google.apphosting.api.DeadlineExceededException
 import com.google.apphosting.api.ApiProxy
 import com.google.appengine.api.images.ImagesService
 import com.google.appengine.api.images.ImagesServiceFactory
@@ -179,7 +178,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @return a query string
      */
     static String toQueryString(Map self) {
-        self.collect { k, v -> "${URLEncoder.encode(k.toString())}=${URLEncoder.encode(v.toString())}" }.join('&')
+        self.collect { k, v -> "${URLEncoder.encode(k.toString(), 'UTF-8')}=${URLEncoder.encode(v.toString(), 'UTF-8')}" }.join('&')
     }
 
     // ----------------------------------------------------------------
@@ -1611,9 +1610,7 @@ class GaelykCategory extends GaelykCategoryBase {
     static boolean isCase(MemcacheService memcache, Object key) {
         try {
             return memcache.contains(key)
-        } catch (MemcacheServiceException mse) {
-        } catch (DeadlineExceededException dee) {
-        } catch (ApiProxy.CancelledException ce) { }
+        } catch (MemcacheServiceException mse) { }
         false
     }
 
@@ -2589,7 +2586,7 @@ class GaelykCategory extends GaelykCategoryBase {
 
         // add params
         if (options.params) {
-            def encodedParams = options.params.collect { k, v -> "${URLEncoder.encode(k)}=${URLEncoder.encode(v)}" }.join('&')
+            def encodedParams = options.params.collect { k, v -> "${URLEncoder.encode(k, 'UTF-8')}=${URLEncoder.encode(v, 'UTF-8')}" }.join('&')
             // if it's a POST method, encode the params as an URL encoded payload
             if (method == HTTPMethod.POST) {
                 if (!options.headers) { options.headers = [:] }

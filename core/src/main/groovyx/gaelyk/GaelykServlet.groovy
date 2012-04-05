@@ -159,16 +159,7 @@ class GaelykServlet extends GroovyServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
             }
-
-            /*
-             * Other internal error. Perhaps syntax?!
-             */
-            servletContext.log("An error occurred processing the request", e)
-            pw.print(e.getMessage())
-            e.printStackTrace(pw)
-            servletContext.log(pw.toString())
-            getLog(request).warning(pw.toString())
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString())
+            throw e // Let propogate out the filter chain and container handle the exception. 
         }
     }
 

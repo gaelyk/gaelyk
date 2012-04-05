@@ -127,7 +127,7 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion "1.0-milestone-6"
+    gradleVersion "1.0-milestone-9"
 }
 
 if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){

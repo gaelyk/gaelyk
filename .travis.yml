@@ -1,5 +1,5 @@
 language: groovy
-script: 'gradle --stacktrace --debug -q -b core/build.gradle check'
+script: 'gradle --stacktrace --info -q -b core/build.gradle check'
 notifications:
   email:
     recipients:

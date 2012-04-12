@@ -1,6 +1,3 @@
-// If you are running the template project off of a Gaelyk snapshot, make sure you install the Gaelyk snapshot to your
-// local repository first.  e.g. run ./gradlew install in the core directory.
-
 import org.apache.ivy.plugins.resolver.URLResolver
 
 apply plugin: 'java'
@@ -39,7 +36,6 @@ buildscript {
 repositories {
     mavenCentral()
     add gitHub()
-    mavenLocal() // allow resolution of gaelyk snapshots via 'gradlew install' on core
 }
 
 dependencies {
@@ -48,12 +44,12 @@ dependencies {
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion",
             'org.codehaus.groovy:groovy-all:1.8.6',
-            'org.gaelyk:gaelyk:1.2-SNAPSHOT'
+            'glaforge:gaelyk:1.2-SNAPSHOT'
 
-    testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
+    testCompile 'org.spockframework:spock-core:0.6-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'marcoVermeulen:gaelyk-spock:0.2',
+    testCompile 'codeconsole:gaelyk-spock:0.3-SNAPSHOT',
                 "com.google.appengine:appengine-api-stubs:$gaeVersion",
                 "com.google.appengine:appengine-testing:$gaeVersion",
                 'javax.servlet:servlet-api:2.5',

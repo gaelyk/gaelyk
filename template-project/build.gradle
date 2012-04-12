@@ -49,7 +49,7 @@ dependencies {
     testCompile 'org.spockframework:spock-core:0.6-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'marcoVermeulen:gaelyk-spock:0.3',
+    testCompile 'codeconsole:gaelyk-spock:0.3-SNAPSHOT',
                 "com.google.appengine:appengine-api-stubs:$gaeVersion",
                 "com.google.appengine:appengine-testing:$gaeVersion",
                 'javax.servlet:servlet-api:2.5',

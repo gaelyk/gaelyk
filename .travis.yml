@@ -1,3 +1,6 @@
 language: groovy
 script: 'gradle -b core/build.gradle check'
-
+notifications:
+  email:
+    recipients:
+      - gaelyk@googlegroups.com

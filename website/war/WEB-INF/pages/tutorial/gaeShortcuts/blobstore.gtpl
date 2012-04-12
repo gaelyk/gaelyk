@@ -1,4 +1,3 @@
-
 <a name="blobstore"></a>
 <h2>Enhancements related to the Blobstore and File services</h2>
 
@@ -325,7 +324,7 @@ You can also specify two options to the <code>withOutputStream{}</code> method, 
 <b>Note: </b> To finalize a file in the blobstore, App Engine mandates the file needs to be locked.
 That's why by default <code>locked</code> and <code>finalize</code> are set to true by default.
 When you want to later be able to append again to the file, make sure to set <code>finalize</code> to false.
-And if you want to avoid others from concurrently writing to your file, it's better to set <code>locked</code> to false.
+And if you want to avoid others from concurrently writing to your file, it's better to set <code>locked</code> to true.
 </blockquote>
 
 <h4>Reading binary content</h4>

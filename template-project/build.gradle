@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    def gaeVersion = '1.6.4'
+    def gaeVersion = '1.6.4.1'
     groovy 'org.codehaus.groovy:groovy-all:1.8.6'
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion",

@@ -11,8 +11,7 @@ def compatibilityVersion = 1.5
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
-buildscript {
-    gitHub = {
+def gitHub() {
         def resolver = new URLResolver()
 
         resolver.with {
@@ -21,8 +20,9 @@ buildscript {
         }
 
         resolver
-    }
+}
 
+buildscript {
     repositories {
         add gitHub()
     }
@@ -49,7 +49,7 @@ dependencies {
     testCompile 'org.spockframework:spock-core:0.6-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'codeconsole:gaelyk-spock:0.3-SNAPSHOT',
+    testCompile 'marcoVermeulen:gaelyk-spock:0.3',
                 "com.google.appengine:appengine-api-stubs:$gaeVersion",
                 "com.google.appengine:appengine-testing:$gaeVersion",
                 'javax.servlet:servlet-api:2.5',
@@ -125,3 +125,4 @@ eclipse {
 task wrapper(type: Wrapper) {
     gradleVersion '1.0-milestone-9'
 }
+

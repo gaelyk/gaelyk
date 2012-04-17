@@ -19,7 +19,6 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.servlet.http.HttpServletRequest
 import groovyx.gaelyk.GaelykCategory
-import groovyx.gaelyk.plugins.PluginResourceSupport;
 import groovy.servlet.ServletCategory
 
 /**
@@ -64,9 +63,6 @@ class Route {
     /** If the route is for incoming jabber messages */
     boolean jabber
 	
-	/** Name of the plugin defining this route if any */
-	String plugin
-
     /**
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
      * and a closure for validating the variables against regular expression patterns.
@@ -74,7 +70,7 @@ class Route {
     Route(String route, /* String or Closure */ destination, HttpMethod method = HttpMethod.ALL,
           RedirectionType redirectionType = RedirectionType.FORWARD, Closure validator = null,
           Closure namespace = null, int cacheExpiration = 0, boolean ignore = false,
-          boolean email = false, boolean jabber = false, String plugin = '') {
+          boolean email = false, boolean jabber = false) {
         this.route = route
         this.method = method
         this.redirectionType = redirectionType
@@ -84,7 +80,6 @@ class Route {
         this.ignore = ignore
         this.email = email
         this.jabber = jabber
-        this.plugin = plugin
 
         // extract the path variables from the route
         this.variables = extractParameters(route)
@@ -142,10 +137,6 @@ class Route {
 
         String finalDestination = destination instanceof String || ignore == true ? 
             destination : destination.finalDestination
-		
-		if(plugin && finalDestination.startsWith("/")){
-			finalDestination = PluginResourceSupport.PLUGIN_RESOURCES_PREFIX + plugin + finalDestination
-		}
 
         if (matcher.matches()) {
             def variableMap = variables ?

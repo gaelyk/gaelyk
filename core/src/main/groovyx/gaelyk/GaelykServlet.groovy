@@ -17,14 +17,11 @@ package groovyx.gaelyk
 
 import java.io.IOException
 
-import groovy.lang.Closure
-import groovy.servlet.AbstractHttpServlet
 import groovy.servlet.GroovyServlet
 import groovy.servlet.ServletBinding
 import groovy.servlet.ServletCategory
 import groovy.util.GroovyScriptEngine
 import groovy.util.ResourceException
-import groovy.util.ScriptException
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -32,11 +29,8 @@ import javax.servlet.http.HttpServletResponse
 import javax.servlet.ServletConfig
 import javax.servlet.ServletRequest
 
-import org.codehaus.groovy.runtime.GroovyCategorySupport
 
-import com.google.appengine.api.utils.SystemProperty
 
-import groovyx.gaelyk.plugins.PluginResourceSupport
 import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.logging.GroovyLogger
 

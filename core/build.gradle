@@ -54,6 +54,8 @@ dependencies {
     testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
+    
+    testCompile fileTree(dir: 'testLibs', include: ['gaelyk-resources-0.1.1-SNAPSHOT.jar'])
 }
 
 jar {

@@ -15,10 +15,12 @@
  */
 package groovyx.gaelyk.plugins
 
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
 
 import org.codehaus.groovy.control.CompilerConfiguration
+
+import groovyx.gaelyk.ExpirationTimeCategory;
 import groovyx.gaelyk.GaelykBindingEnhancer
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
@@ -74,54 +76,72 @@ class PluginsHandler {
     /**
      * Initializes the plugins
      */
-    synchronized void initPlugins() {
+    synchronized void initPlugins(ignoreBinary = false) {
         if (!initialized) {
             log.config "Loading plugin descriptors"
 
-            // retrieve the list of plugin names to be loaded
-            def pluginsList = loadPluginsList() as Set
-            pluginsList.addAll(collectBinaryPlugins())
-            log.config "Found ${pluginsList.size()} plugin(s)"
+            Iterable<PluginBaseScript> loader = ignoreBinary ? [] : ServiceLoader.load(PluginBaseScript)
 
-            pluginsList.each { String pluginName ->
+            Iterable<PluginBaseScript> loadedPlugins = loadPluginsList().collect { String pluginName ->
                 def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
                 String content = scriptContent(pluginPath)
-                if(!content){
-                    pluginPath = "META-INF/gaelyk-plugins/${pluginName}.groovy"
-                    content = scriptContent(pluginPath)
-                }
                 if (content) {
                     log.config "Loading plugin $pluginName"
 
                     def config = new CompilerConfiguration()
                     config.scriptBaseClass = PluginBaseScript.class.name
 
-                    // creates a binding for the plugin descriptor file
-                    def binding = new Binding()
-                    // and inject the GAE services
-                    GaelykBindingEnhancer.bind(binding)
-                    // and plugin logger
-                    binding.setVariable("log", new GroovyLogger("gaelyk.plugins.${pluginName}", true))
-
                     // evaluate the plugin descriptor
-                    def shell = new GroovyShell(binding, config)
-                    PluginBaseScript script = (PluginBaseScript) shell.parse(content, "${pluginName}.groovy")
-                    script.run()
-
-                    // use getters directly,
-                    // otherwise property access returns variables from the binding of the scripts
-                    bindingVariables.putAll script.getBindingVariables()
-                    routes.addAll script.getRoutes()
-                    categories.addAll script.getCategories()
-
-                    if (script.getBeforeAction()) beforeActions.add script.getBeforeAction()
-                    if (script.getAfterAction())  afterActions .add script.getAfterAction()
-
-                    installed << pluginName
+                    def shell = new GroovyShell(config)
+                    return (PluginBaseScript) shell.parse(content, "${pluginName}.groovy")
                 } else {
                     log.config "Plugin $pluginName doesn't exist"
+                    return null
                 }
+            }.grep()
+
+            Closure init = { PluginBaseScript pluginScript ->
+                String pluginName = pluginScript.getClass().getSimpleName()
+                log.config "Initializing plugin $pluginName"
+                // creates a binding for the plugin descriptor file
+                def binding = new Binding()
+                // and inject the GAE services
+                GaelykBindingEnhancer.bind(binding)
+                // and plugin logger
+                binding.setVariable("log", new GroovyLogger("gaelyk.plugins.${pluginName}", true))
+
+                pluginScript.binding = binding
+                
+                use(ExpirationTimeCategory) {
+                    pluginScript.run()
+                }
+                
+                // use getters directly,
+                // otherwise property access returns variables from the binding of the scripts
+                bindingVariables.putAll pluginScript.getBindingVariables()
+                routes.addAll pluginScript.getRoutes()
+                categories.addAll pluginScript.getCategories()
+
+                if (pluginScript.getBeforeAction()) beforeActions.add pluginScript.getBeforeAction()
+                if (pluginScript.getAfterAction())  afterActions .add pluginScript.getAfterAction()
+
+                log.config "Plugin $pluginName initialized!"
+                installed << pluginName
             }
+            try {
+                for(PluginBaseScript plugin in loader){
+                    init plugin
+                }                
+            } catch(java.util.ServiceConfigurationError e){
+                log.config e.message
+            }
+            
+            for(PluginBaseScript plugin in loadedPlugins){
+                init plugin
+            }
+
+            log.config "Found ${installed.size()} plugin(s)"
+
 
             // reverse the order of the "after" actions so they are executed in reverse order
             if (afterActions) afterActions = afterActions.reverse()
@@ -152,32 +172,7 @@ class PluginsHandler {
 
             return script.getPlugins()
         }
-
         return []
-    }
-
-    /**
-     * Collect names of binary plugins installed.
-     * @return set of collected binary plugins names
-     */
-    synchronized Set collectBinaryPlugins(){
-        def ret = [] as Set
-        File libDir = new File('WEB-INF/lib')
-        if(libDir.exists()){
-            libDir.eachFile {
-                JarFile jarFile = new JarFile(it.absolutePath)
-                JarEntry gaelykPluginsDir = jarFile.getJarEntry('META-INF/gaelyk-plugins')
-                if(gaelykPluginsDir){
-                    jarFile.entries().each{
-                        def match = it.name =~ "META-INF/gaelyk-plugins/([a-zA-Z0-9_]+)\\.groovy"
-                        if(match){
-                            ret << match[0][1]
-                        }
-                    }
-                }
-            }
-        }
-        ret
     }
 
     public boolean isInstalled(String pluginName){
@@ -224,15 +219,13 @@ class PluginsHandler {
         Closure cloned = action.clone()
         cloned.resolveStrategy = Closure.DELEGATE_FIRST
         cloned.delegate = [
-                *:bindingVariables,
-                request: request,
-                response: response,
-                log: action.owner.log,
-                binding: bindingVariables
-        ]
-        
-        use (ServletCategory) {
-            cloned()
-        }
+                    *:bindingVariables,
+                    request: request,
+                    response: response,
+                    log: action.owner.log,
+                    binding: bindingVariables
+                ]
+
+        use (ServletCategory) { cloned() }
     }
 }

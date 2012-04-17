@@ -100,13 +100,12 @@ class RoutesFilter implements Filter {
                 }
                 routes = script.routes
 
-                // add the routes defined by the plugins
-                routes.addAll PluginsHandler.instance.routes
-
                 // update the last modified flag
                 lastRoutesFileModification = lastModified
             }
         }
+        // add the routes defined by the plugins
+        routes.addAll PluginsHandler.instance.routes
     }
 
     /**

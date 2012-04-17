@@ -85,7 +85,7 @@ class PluginsHandlerTest extends GroovyTestCase {
             }
 			
 
-            initPlugins()
+            initPlugins(true)
 
             def binding = new Binding(version: '0.5.6')
             enrich binding
@@ -97,7 +97,7 @@ class PluginsHandlerTest extends GroovyTestCase {
     void testNoPlugins() {
         PluginsHandler.instance.with {
             scriptContent = { String path -> "" }
-            initPlugins()
+            initPlugins(true)
 
             assert !bindingVariables
             assert !routes
@@ -135,7 +135,7 @@ class PluginsHandlerTest extends GroovyTestCase {
             }
 
 			
-            initPlugins()
+            initPlugins(true)
 
             assert bindingVariables.version == "1.2.3"
             assert routes.size() == 2
@@ -174,7 +174,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                     before { request.sample << '3' }
                     after  { request.sample << '4' }
                     """
-                } else if (path == "META-INF/gaelyk-plugins/pluginThree.groovy") {
+                } else if (path == "WEB-INF/plugins/pluginThree.groovy") {
                     """
                     before { request.sample << '5' }
                     after  { request.sample << '6' }
@@ -182,7 +182,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                 }
             }
 			
-            initPlugins()
+            initPlugins(true)
 
             assert beforeActions.size() == 3
             assert afterActions.size()  == 3
@@ -216,7 +216,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                 } else ""
             }
 			
-            initPlugins()
+            initPlugins(true)
 
             def values = [:]
             def request = [setAttribute: { String name, obj -> values[name] = obj }] as HttpServletRequest
@@ -228,6 +228,12 @@ class PluginsHandlerTest extends GroovyTestCase {
             assert values.fromBeforeBlock instanceof DatastoreService
         }
 
+    }
+    
+    void testServiceLoader(){
+        ServiceLoader<PluginBaseScript> loader = ServiceLoader.load(PluginBaseScript)
+        assert loader.inject(0) { acc, val -> ++acc } == 1
+        
     }
 }
 

@@ -53,55 +53,92 @@ They can be removed easily as well. You just delete the JAR file from the <code>
 <p>
 To let Gaelyk application to recognize your binary plugin, you'll have to create a plugin descriptor which 
 will allow you to define new binding variables, new routes, new categories, and any initialization code your plugin may need on application startup.
-This plugin descriptor should be placed in <code>META-INF/gaelyk-plugins/</code> folder inside your JAR and will be a normal groovy script.
-From this script, you can even access the Google App Engine services, which are available in the binding of the script --
-hence available somehow as pseudo global variables inside your scripts.
+This plugin descriptor must extend <code>groovyx.gaelyk.plugins.PluginBaseScript</code> manually. 
+Place your plugin descriptor's code inside the method <code>run</code>.
+</p>
+
+<p>
+Binary plugins are resolved using <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html">Java's ServiceLoader</a> so you also
+need to place binary name of your plugin descriptor e.g. <code>com.example.plugin.ExamplePlugin</code> in <code>META-INF/services/groovyx.gaelyk.plugins.PluginBaseScript</code> file inside your JAR.
+If you are not using templates you can just place your groovlets into your Groovy source folder to let the compiler compile them. 
+Otherwise you will need <a href="https://github.com/bmuschko/gradle-gaelyk-plugin">Gradle Gaelyk Plugin v.0.3.1 and higher</a> to help you package the plugin. As long as your structure follow Gaelyk convetions
+you only need to call <code>jar</code> task of the plugin. You may also need to enable the <code>jar</code> task placing <code>jar.endabled=true</code> into your build file.
 </p>
 
 <h4 id="binaryhierarchy">Hierarchy</h4>
-
+<blockquote>
+<b>Note:</b>Don't forget to declare packages for Groovlets otherwise they will be placed in wrong destination folders!
+</blockquote>
 <p>
-As hinted above, the content of binary plugin would look something like the following hierarchy:
+Using standard Gradle layout, your plugin project should look like:
 </p>
 
 <pre>
 
-WEB-INF/lib
-|
-+-- my-plugin.jar                               // the JAR file
-    |
-    |
-    +-- META-INF/gaelyk-plugins
-        |
-        +-- myPlugin.groovy                     // plugin descriptor
-        |                                       
-        +-- groovy                              // your groovlets
-        |    |
-        |    +-- myGroovlet.groovy
-        |
-        +-- resources                           // your static resources (requires resources plugin)   
-        |   |
-        |   +-- main.css
-        |
-        +-- templates                           // your templates
-             |
-             +-- someInclude.gtpl
+src/main                                                // Gradle main sources set
+ |
+ +-- groovy                                             // groovy source folder
+ |    |
+ |    +-- com/example/plugin                            // plugin package
+ |         |
+ |         +-- myGroovletInSrc.groovy                   // groovlet placed in source folder
+ |         | 
+ |         +-- ExamplePlugin.groovy                     // plugin descriptor
+ |
+ +-- resources                                          // resources folder
+ |    |
+ |    +-- META-INF/services                             // services folder used by ServiceLoader
+ |    |    |
+ |    |    +-- groovyx.gaelyk.plugins.PluginBaseScript  // service implementation descriptor with
+ |    |                                                 // single line com.example.plugin.ExamplePlugin
+ |    |
+ |    +-- resources                                     // your static resources (requires resources plugin)  
+ |         |
+ |         +-- main.css
+ |
+ +-- webapp                                             // web application folder
+     |
+     +-- com/example/plugin                             // package-like folder to prevent name clash
+     |    |
+     |    +-- myTemlate.gtpl                            // your Groovy template
+     |
+     +-- WEB-INF/groovy                                 // your regular groovlets
+          |
+          +-- com/example/plugin                        // use packages to prevent name clash
+               |
+               +-- myRegularGroovlet.groovy             // your groovlet
 
 </pre>
 
 <p>
-Groovlets and templates URIs are prefixed  <code>/gaelyk-plugins/pluginName/</code> in the runtime asuming <code>pluginName</code> is name of your
-plugin derived from the name of your plugin descriptor. If you refer groovlets and templates in the <code>routes</code> method of 
-the plugin descriptor you don't specify the prefix. Static resources need to be prefixed <code>/gpr/pluginName/</code>.
+The same project packaged will look like:
 </p>
 
-<p>
-We'll look at the plugin descriptor in a moment, but otherwise, all the content you have in your plugin
-is actually following the same usual web application conventions in terms of structure,
-and the ones usually used by <b>Gaelyk</b> applications (ie. includes, groovlets, etc).
-The bare minimum to have a plugin in your application is to have a plugin descriptor,
-like <code>/META-INF/gaelky-plugins/myPlugin.groovy</code> in this example.
-</p>
+<pre>
+
+plugin.jar                                              // JAR file
+ |
+ +-- com/example/plugin                                 // your plugin package
+ |    |
+ |    +-- myGroovletInSrc.class                         // compiled groovlet
+ |    |
+ |    +-- myRegularGroovlet.class                       // compiled groovlet
+ |    |
+ |    +-- \$gtpl\$myTemplate.class                        // template compiled with \$gtpl\$prefix
+ |    | 
+ |    +-- ExamplePlugin.class                           // compiled plugin descriptor
+ |
+ +-- META-INF/services                                  // services folder used by ServiceLoader
+ |    |
+ |    +-- groovyx.gaelyk.plugins.PluginBaseScript       // service implementation descriptor with
+ |                                                      // single line com.example.plugin.ExamplePlugin
+ |
+ +-- resources                                          // your bundled static resources 
+      |
+      +-- main.css
+
+
+</pre>
 
 <h3>Exploded plugins</h3>
 <p>

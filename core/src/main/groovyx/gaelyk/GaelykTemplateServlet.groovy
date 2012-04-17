@@ -23,10 +23,8 @@ import groovy.text.Template
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-import groovyx.gaelyk.plugins.PluginResourceSupport
 import groovyx.gaelyk.plugins.PluginsHandler
 import javax.servlet.ServletConfig
-import javax.servlet.ServletResponse
 
 import groovyx.gaelyk.logging.GroovyLogger
 
@@ -146,14 +144,6 @@ class GaelykTemplateServlet extends TemplateServlet {
                 throw new IllegalAccessException("Can not read \"" + name + "\"!")
             }
             return getTemplate(file)
-        }
-        if(PluginResourceSupport.isPluginPath(uri)) {
-            try {
-                return getTemplate(PluginResourceSupport.getPluginFileURL("templates", uri))
-            } catch (Exception e){
-
-                throw new FileNotFoundException()
-            }
         }
         throw new FileNotFoundException()
     }

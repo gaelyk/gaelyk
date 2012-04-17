@@ -378,6 +378,16 @@ For a redirect, you can do:
     &lt;% redirect 'index.gtpl' %&gt;
 </pre>
 
+<a name="templatePrecompilation"></a>
+<h3>Precompilation</h3>
+
+<p>
+Since version 1.2 you can precompile your templates using <a href="https://github.com/bmuschko/gradle-gaelyk-plugin">Gradle Gaelyk Plugin</a>.
+If you are facing issues with precompiled templates in production you can set <code>preferPrecompiled</code> init parameter of the
+<a href="http://gaelyk.appspot.com/api/groovyx/gaelyk/GaelykTemplateServlet.html">Gaelyk Template Servlet</a> to <code>true</code>.
+Precompiled templates will be served as in production if available.
+</p>
+
 <a name="groovlets"></a>
 <h2>Groovlets</h2>
 

@@ -54,7 +54,6 @@ class GaelykServlet extends GroovyServlet {
     @Override
     void init(ServletConfig config) {
         super.init(config)
-
         // Set up the scripting engine
         gse = createGroovyScriptEngine()
     }
@@ -165,19 +164,6 @@ class GaelykServlet extends GroovyServlet {
         Class precompiledClass = Class.forName(precompiledClassName)
         Script precompiled = precompiledClass.newInstance([binding]as Object[])
         precompiled.run()
-    }
-
-    /**
-     * This methods adds plugin awareness to the default {@link AbstractHttpServlet#getResourceConnection(String)} method.
-     * @param name resource to be found
-     */
-    @Override
-    URLConnection getResourceConnection(String name) throws ResourceException {
-        try {
-            return super.getResourceConnection(name)
-        } catch (ResourceException re){
-            return PluginResourceSupport.getResourceConnection("groovy",name)
-        }
     }
 
     /**

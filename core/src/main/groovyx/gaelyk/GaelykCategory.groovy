@@ -98,6 +98,8 @@ import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.LifecycleManager.ShutdownHook
+import com.google.appengine.api.ThreadManager;
+
 import groovyx.gaelyk.query.QueryBuilder
 import com.google.appengine.api.blobstore.BlobstoreService
 import com.google.appengine.api.memcache.AsyncMemcacheService
@@ -109,6 +111,9 @@ import com.google.apphosting.api.ApiProxy
 import com.google.appengine.api.images.ImagesService
 import com.google.appengine.api.images.ImagesServiceFactory
 import com.google.appengine.api.images.ImagesServiceFailureException
+
+import com.google.appengine.api.backends.BackendService
+import com.google.appengine.api.ThreadManager
 
 import groovy.transform.PackageScope
 
@@ -2739,5 +2744,16 @@ class GaelykCategory extends GaelykCategoryBase {
      */
     static void set(Future future, String name, Object value) {
         future.get().setProperty(name, transformValueForStorage(value))
+    }
+    
+    /**
+    * Runs code in the background thread.
+    *
+    * @param the code supposed to run in background thread
+    */
+    static Thread run(BackendService backends, Runnable code){
+        Thread thread = ThreadManager.createBackgroundThread(code);
+        thread.start()
+        thread
     }
 }

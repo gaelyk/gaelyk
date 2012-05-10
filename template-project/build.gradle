@@ -11,7 +11,7 @@ def compatibilityVersion = 1.5
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
-def gitHub() {
+def gitHub = {
         def resolver = new URLResolver()
 
         resolver.with {
@@ -24,7 +24,13 @@ def gitHub() {
 
 buildscript {
     repositories {
-        add gitHub()
+        
+        def resolver = new URLResolver()
+        resolver.with {
+            name = 'GitHub'
+            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+        }
+        add resolver
     }
 
     dependencies {
@@ -35,21 +41,28 @@ buildscript {
 
 repositories {
     mavenCentral()
-    add gitHub()
+    mavenRepo name: 'sonatype-snapshots', url: 'https://oss.sonatype.org/content/repositories/snapshots'
+    
+    def resolver = new URLResolver()
+    resolver.with {
+        name = 'GitHub'
+        addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+    }
+    add resolver
 }
 
 dependencies {
-    def gaeVersion = '1.6.4.1'
+    def gaeVersion = '1.6.5'
     groovy 'org.codehaus.groovy:groovy-all:1.8.6'
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion",
-            'org.codehaus.groovy:groovy-all:1.8.6',
-            'glaforge:gaelyk:1.2-SNAPSHOT'
+            'org.codehaus.groovy:groovy-all:1.8.6'
+    compile 'org.gaelyk:gaelyk:1.2-SNAPSHOT'
 
     testCompile 'org.spockframework:spock-core:0.6-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'marcoVermeulen:gaelyk-spock:0.3',
+    testCompile 'org.gaelyk:gaelyk-spock:0.3',
                 "com.google.appengine:appengine-api-stubs:$gaeVersion",
                 "com.google.appengine:appengine-testing:$gaeVersion",
                 'javax.servlet:servlet-api:2.5',

@@ -24,7 +24,7 @@ def gitHub = {
 
 buildscript {
     repositories {
-        
+
         def resolver = new URLResolver()
         resolver.with {
             name = 'GitHub'
@@ -42,7 +42,7 @@ buildscript {
 repositories {
     mavenCentral()
     mavenRepo name: 'sonatype-snapshots', url: 'https://oss.sonatype.org/content/repositories/snapshots'
-    
+
     def resolver = new URLResolver()
     resolver.with {
         name = 'GitHub'
@@ -73,6 +73,7 @@ dependencies {
 
 gae {
     downloadSdk = true
+    warDir = file('src/main/webapp/')
 }
 
 gaeExplodeWar.dependsOn gaelykPrecompileGroovlet

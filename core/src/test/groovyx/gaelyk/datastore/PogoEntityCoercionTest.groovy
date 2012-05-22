@@ -12,7 +12,7 @@ import groovy.transform.Canonical
 class PogoEntityCoercionTest extends GroovyTestCase {
     // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-            new LocalDatastoreServiceTestConfig()
+            new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100)
     )
 
     protected void setUp() {
@@ -32,14 +32,22 @@ class PogoEntityCoercionTest extends GroovyTestCase {
         assert props.s1.unindexed()
         assert !props.s1.ignore()
         assert !props.s1.key()
+        assert !props.s1.version()
 
         assert !props.s2.unindexed()
         assert props.s2.ignore()
         assert !props.s2.key()
+        assert !props.s2.version()
 
         assert !props.s3.unindexed()
         assert !props.s3.ignore()
         assert props.s3.key()
+        assert !props.s3.version()
+        
+        assert !props.s4.unindexed()
+        assert !props.s4.ignore()
+        assert !props.s4.key()
+        assert props.s4.version()
 
         assert PogoEntityCoercion.findKey(props) == 's3'
 		
@@ -62,6 +70,8 @@ class PogoEntityCoercionTest extends GroovyTestCase {
 
             def p2 = e as Person
 
+            p1.version = p2.version
+            
             assert p1 == p2
 
             def nullKeyConversionTest = new Person(firstName: p1.firstName) as Entity
@@ -85,6 +95,7 @@ class PogoEntityCoercionTest extends GroovyTestCase {
             assert p.lastName == 'Laforge'
             assert p.fullName == 'Guillaume Laforge'
             assert p.login == 'glaforge'
+            assert p.version
             
             def e2 = p as Entity
             
@@ -130,6 +141,7 @@ class P1 {
     @Unindexed String s1
     @Ignore String s2
     @Key String s3
+    @Version long s4
 }
 
 @groovyx.gaelyk.datastore.Entity(unindexed=false)
@@ -144,7 +156,8 @@ class Person {
     String firstName
     String lastName
     @Unindexed String bio
-    @Ignore String getFullName() { "$firstName $lastName" } 
+    @Ignore String getFullName() { "$firstName $lastName" }
+    @Version long version
 }
 
 @Canonical

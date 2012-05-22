@@ -1,6 +1,10 @@
 package groovyx.gaelyk.datastore
 
+import groovyx.gaelyk.GaelykCategory;
+
+import com.google.appengine.api.datastore.Entities;
 import com.google.appengine.api.datastore.Entity
+import com.google.appengine.api.datastore.EntityNotFoundException;
 
 /**
  * Utility class handling the POGO to Entity coercion, and Entity to POGO coercion as well.
@@ -43,7 +47,8 @@ class PogoEntityCoercion {
                 [(k), [
                         ignore:    { annos.any { it instanceof Ignore } },
                         unindexed: { defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed } },
-                        key:       { annos.any { it instanceof Key } }
+                        key:       { annos.any { it instanceof Key } },
+                        version:   { annos.any { it instanceof Version } }
                 ]]
             }
         }
@@ -60,6 +65,18 @@ class PogoEntityCoercion {
     static String findKey(Map props) {
         props.findResult { String prop, Map m ->
             if (m.key()) return prop
+        }
+    }
+    
+    /**
+    * Find the key in the properties
+    *
+    * @param props the properties
+    * @return the name of the key or null if none is found
+    */
+    static String findVersion(Map props) {
+        props.findResult { String prop, Map m ->
+            if (m.version()) return prop
         }
     }
 
@@ -83,7 +100,7 @@ class PogoEntityCoercion {
         
         props.each { String propName, Map m ->
             if (propName != key) {
-                if (!props[propName].ignore()) {
+                if (!props[propName].ignore() && !props[propName].version()) {
                     def val = p."$propName"
                     if (props[propName].unindexed()) {
                         // TODO: decide the correct behaviour
@@ -127,6 +144,18 @@ class PogoEntityCoercion {
 
         if (key) {
             o."$key" = e.key.name ?: e.key.id
+        }
+        
+        String version = findVersion(classProps)
+        
+        if (version) {
+            try {
+                if(e.key)  {
+                   o."$version" = Entities.getVersionProperty(GaelykCategory.get(Entities.createEntityGroupKey(e.key)))   
+                }                             
+            } catch (EntityNotFoundException ex){
+                o."$version" = 0
+            }
         }
         
         return o

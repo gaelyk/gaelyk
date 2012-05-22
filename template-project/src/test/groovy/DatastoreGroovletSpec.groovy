@@ -2,15 +2,11 @@ import groovyx.gaelyk.spock.*
 import com.google.appengine.api.datastore.*
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*
 
-class DatastoreServiceSpec extends GaelykUnitSpec {
-
-    def setup() {
-        groovlet 'dataStoreGroovlet.groovy'
-    }
+class DatastoreGroovletSpec extends ConventionalGaelykUnitSpec {
 
     def "the datastore is used from within the groovlet"() {
         given: "the initialised groovlet is invoked and data is persisted"
-        dataStoreGroovlet.get()
+        groovletInstance.get()
 
         when: "the datastore is queried for data"
         def query = new Query("person")
@@ -25,3 +21,4 @@ class DatastoreServiceSpec extends GaelykUnitSpec {
     }
 
 }
+

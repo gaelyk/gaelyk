@@ -9,7 +9,7 @@ defaultTasks 'clean', 'build'
 // current Gaelyk version
 version = '1.2-SNAPSHOT'
 group = 'org.gaelyk'
-appEngineVersion = '1.6.5'
+appEngineVersion = '1.6.6'
 groovyVersion = '1.8.6'
 
 // various directory places and file names

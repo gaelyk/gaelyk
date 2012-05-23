@@ -1,9 +1,12 @@
 package groovyx.gaelyk.query
 
+import java.util.Map.Entry;
+
 import groovy.transform.PackageScope
 import groovyx.gaelyk.GaelykCategory;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PropertyProjection;
 import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.PreparedQuery
 import com.google.appengine.api.datastore.DatastoreServiceFactory
@@ -28,6 +31,7 @@ class QueryBuilder {
     @PackageScope List<Clause> clauses = []
     private FetchOptions options = FetchOptions.Builder.withDefaults()
     private Binding binding
+    private Map<String, Class<?>> projections = [:]
 
 	
 	static QueryBuilder builder(){
@@ -56,6 +60,12 @@ class QueryBuilder {
 
         if (ancestor)
             query.setAncestor(ancestor)
+            
+        if(projections){
+            for(Entry<String, Class> entry in projections){
+                query.addProjection(new PropertyProjection(entry.key, entry.value))
+            }
+        }
 
         for (clause in clauses) {
             if (clause instanceof WhereClause) {
@@ -170,12 +180,46 @@ class QueryBuilder {
         queryType = qt
         return this
     }
+    
+    
+    /**
+     * Select particular entity properties of entities matching that query.
+     * Possible syntax:
+     * <pre><code>
+     *  select name: String, age: Integer
+     * </code></pre>
+     *
+     * @param projs projections used in this query builder
+     * @return the query builder for chaining calls
+     */
+    QueryBuilder select(Map<String, Object> projs) {
+        projections.putAll(projs)
+        return this
+    }
+    
+    /**
+    * Select particular entity properties of entities matching that query.
+    * Possible syntax:
+    * <pre><code>
+    *  select name: String, age: Integer
+    * </code></pre>
+    *
+    * @param projs projections used in this query builder
+    * @return the query builder for chaining calls
+    */
+   QueryBuilder select(String... projs) {
+       for(String proj in projs){
+           projections.put(proj, null)
+       }
+       return this
+   }
+    
 
     /**
      * @throws QuerySyntaxException if a wrong parameter is passed to the select clause.
      */
     void select(Object qt) {
-        throw new QuerySyntaxException("Use 'all', 'keys', 'single' or 'count' for your select clause instead of ${qt}.")
+        throw new QuerySyntaxException("Use 'all', 'keys', 'single', 'count' or 'prop1: Type1, prop2: Type2, ...' for your select clause instead of ${qt}.")
     }
 
     /**

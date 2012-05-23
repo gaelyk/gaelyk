@@ -15,6 +15,8 @@
  */
 package groovyx.gaelyk.routes
 
+import java.util.regex.Matcher;
+
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletResponse
@@ -23,6 +25,7 @@ import javax.servlet.FilterConfig
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+import groovy.servlet.AbstractHttpServlet;
 import groovyx.gaelyk.GaelykBindingEnhancer
 import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.ExpirationTimeCategory
@@ -30,6 +33,7 @@ import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
 import groovyx.gaelyk.GaelykCategory
 
+import com.google.appengine.api.search.query.QueryParser.orOp_return;
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.NamespaceManager
 
@@ -49,6 +53,8 @@ import org.codehaus.groovy.control.CompilerConfiguration
  * @author Guillaume Laforge
  */
 class RoutesFilter implements Filter {
+    
+    static final String ORIGINAL_URI = 'originalURI'
 
     /**
      * Location of the routes file definition
@@ -120,6 +126,8 @@ class RoutesFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest)servletRequest
         HttpServletResponse response = (HttpServletResponse)servletResponse
+        
+        request.setAttribute(ORIGINAL_URI, getScriptUri(request))
 
         def method = request.method
 
@@ -160,4 +168,32 @@ class RoutesFilter implements Filter {
     }
 
     void destroy() { }
+    
+    /**
+    * Returns the include-aware uri of the script or template file.
+    *
+    * @param request the http request to analyze
+    * @return the include-aware uri either parsed from request attributes or
+    *         hints provided by the servlet container
+    */
+   protected String getScriptUri(HttpServletRequest request) {
+       String uri = null;
+       String info = null;
+
+       uri = request.getAttribute(AbstractHttpServlet.INC_SERVLET_PATH);
+       if (uri != null) {
+           info = request.getAttribute(AbstractHttpServlet.INC_PATH_INFO);
+           if (info != null) {
+               uri += info;
+           }
+           return uri;
+       }
+
+       uri = request.getServletPath();
+       info = request.getPathInfo();
+       if (info != null) {
+           uri += info;
+       }
+       return uri
+   }
 }

@@ -91,7 +91,11 @@ class RoutesFilterTest extends GroovyTestCase {
     void testNoRouteFound() {
         def request = [
                 getRequestURI: { -> "/nowhere" },
-                getMethod: { -> "GET" }
+                getMethod: { -> "GET" },
+                setAttribute: { String name, val -> },
+                getAttribute: { String name -> },
+                getServletPath: { -> '' },
+                getPathInfo: { -> '/nowhere' },
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse
@@ -110,7 +114,10 @@ class RoutesFilterTest extends GroovyTestCase {
         def request = [
                 getRequestURI: { -> "/ignore" },
                 getMethod: { -> "GET" },
-                setAttribute: { String name, val -> }
+                setAttribute: { String name, val -> },
+                getAttribute: { String name -> },
+                getServletPath: { -> '' },
+                getPathInfo: { -> '/ignore' }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse
@@ -129,7 +136,10 @@ class RoutesFilterTest extends GroovyTestCase {
         def request = [
                 getRequestURI: { -> "/redirect" },
                 getMethod: { -> "GET" },
-                setAttribute: { String name, val -> }
+                setAttribute: { String name, val -> },
+                getAttribute: { String name -> },
+                getServletPath: { -> '' },
+                getPathInfo: { -> '/redirect' }
         ] as HttpServletRequest
 
         def redirected = ""
@@ -158,7 +168,10 @@ class RoutesFilterTest extends GroovyTestCase {
                 getQueryString: { -> "" },
                 getMethod: { -> "GET" },
                 getRequestDispatcher: { String s -> dispatched = s; return dispatcher },
-                setAttribute: { String name, val -> }
+                setAttribute: { String name, val -> },
+                getAttribute: { String name -> },
+                getServletPath: { -> '' },
+                getPathInfo: { -> '/somewhere' }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse
@@ -179,12 +192,17 @@ class RoutesFilterTest extends GroovyTestCase {
                 forward: { ServletRequest req, ServletResponse resp -> forwarded = true }
         ] as RequestDispatcher
 
+        def attributes = [:]
+    
         def request = [
                 getRequestURI: { -> "/somewhere" },
                 getQueryString: { -> "" },
                 getMethod: { -> "GET" },
                 getRequestDispatcher: { String s -> dispatched = s; return dispatcher },
-                setAttribute: { String name, val -> }
+                setAttribute: { String name, val -> attributes[name] = val },
+                getAttribute: { String name -> attributes[name] },
+                getServletPath: { -> '' },
+                getPathInfo: { -> '/somewhere' }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse
@@ -195,6 +213,7 @@ class RoutesFilterTest extends GroovyTestCase {
 
         assert forwarded
         assert dispatched == "/somewhere.groovy"
+        assert attributes[RoutesFilter.ORIGINAL_URI] == "/somewhere"
     }
 
 }

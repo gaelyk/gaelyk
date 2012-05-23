@@ -91,6 +91,8 @@ you would just replace <code>redirect</code> with <code>forward</code> as follow
     get "/about", forward: "/blog/2008/10/20/welcome-to-my-blog"
 </pre>
 
+<p>Original URI which was accessed such as <code>/about</code> can be found using <code>request.originalURI</code> attribute</p>
+
 <blockquote>
 <b>Note: </b> In addition to <code>redirect</code> and <code>forward</code>,
 you can also do a <code>redirect301</code>, which is a permanent redirect.

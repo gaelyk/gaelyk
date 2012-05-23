@@ -15,6 +15,8 @@
  */
 package groovyx.gaelyk
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.google.appengine.api.NamespaceManager
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
@@ -107,6 +109,23 @@ class GaelykBindingEnhancer {
 
         // Log service in SDK 1.6
         binding.setVariable("logService", LogServiceFactory.logService)
+        
+        // Geo headers
+        if(binding.hasVariable('request')) {
+            def req = binding.getVariable('request')
+            if(req instanceof HttpServletRequest){
+                def latlong = req.getHeader('X-AppEngine-CityLatLong')?.split(',').collect { String s -> s.toBigDecimal() } ?: [0,0]
+                binding.setVariable("geo", [
+                            country: req.getHeader('X-AppEngine-Country'),
+                            region:  req.getHeader('X-AppEngine-Region'),
+                            city:    req.getHeader('X-AppEngine-City'),
+                            latitude: latlong[0],
+                            longitude: latlong[1],
+                        ])
+
+            }
+            
+        }
     }
 
     static User getCurrentUser() {

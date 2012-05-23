@@ -1,5 +1,7 @@
 package groovyx.gaelyk
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.google.appengine.api.datastore.DatastoreService
 import com.google.appengine.api.memcache.MemcacheService
 import com.google.appengine.api.urlfetch.URLFetchService
@@ -62,7 +64,10 @@ class BindingEnhancerTest extends GroovyTestCase {
         // sets the environment to "Development"
         SystemProperty.environment.set("Development")
 
+        def headers = [ 'X-AppEngine-Country': 'CZ', 'X-AppEngine-Region': 'pr', 'X-AppEngine-City': 'prague', 'X-AppEngine-CityLatLong': '50.087811,14.420460']
+        
         binding = new Binding()
+        binding.request = [getHeader: { String name -> headers[name]}] as HttpServletRequest
         GaelykBindingEnhancer.bind(binding)
     }
 
@@ -95,6 +100,19 @@ class BindingEnhancerTest extends GroovyTestCase {
             assert binding.variables.containsKey(it)
         }
     }
+    
+    /**
+    * Check the geo variable
+    */
+   void testGeo() {
+       def geo = binding.geo
+       
+       assert geo.country == 'CZ'
+       assert geo.region == 'pr'
+       assert geo.city == 'prague'
+       assert geo.latitude == 50.087811
+       assert geo.longitude == 14.420460
+   }
 
     /**
      * Check implementations of the GAE services are available in the binding

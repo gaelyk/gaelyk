@@ -37,6 +37,7 @@ import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.users.User
 import com.google.appengine.api.prospectivesearch.ProspectiveSearchServiceFactory
 import com.google.appengine.api.log.LogServiceFactory
+import com.google.appengine.api.search.SearchServiceFactory
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -107,6 +108,9 @@ class GaelykBindingEnhancer {
 
         // Log service in SDK 1.6
         binding.setVariable("logService", LogServiceFactory.logService)
+
+        // Search service in SDK 1.6.6
+        binding.setVariable("search", SearchServiceFactory.searchService)
     }
 
     static User getCurrentUser() {

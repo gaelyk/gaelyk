@@ -63,6 +63,8 @@ import org.codehaus.groovy.ast.expr.TupleExpression
 import com.google.appengine.api.prospectivesearch.ProspectiveSearchService
 import com.google.appengine.api.log.LogService
 import com.google.appengine.api.log.LogServiceFactory
+import com.google.appengine.api.search.SearchService
+import com.google.appengine.api.search.SearchServiceFactory
 
 /**
  * This Groovy AST Transformation is a local transformation which is triggered by the Groovy compiler
@@ -105,6 +107,7 @@ class GaelykBindingsTransformation implements ASTTransformation {
         addGetterIfNotExists(parent, LoggerAccessor,           "getLogger",            GaelykBindingEnhancer,      "getLogger")
         addGetterIfNotExists(parent, Class,                    "getNamespace",         GaelykBindingEnhancer,      "getNamespaceManager")
         addGetterIfNotExists(parent, LogService,               "getLogService",        LogServiceFactory,          "getLogService")
+        addGetterIfNotExists(parent, SearchService,            "getSearchService",     SearchServiceFactory,       "getSearchService")
     }
 
     private void addGetterIfNotExists(ClassNode parent, Class serviceClass, String getterName, Class factoryClass, String factoryMethodName) {

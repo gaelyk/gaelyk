@@ -27,6 +27,8 @@ import com.google.appengine.api.prospectivesearch.ProspectiveSearchService
 import com.google.appengine.tools.development.testing.LocalProspectiveSearchServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalLogServiceTestConfig
 import com.google.appengine.api.log.LogService
+import com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig
+import com.google.appengine.api.search.SearchService
 
 /**
  * Test the binding enhancer binds the GAE services in the binding.
@@ -47,7 +49,8 @@ class BindingEnhancerTest extends GroovyTestCase {
             new LocalXMPPServiceTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
             new LocalFileServiceTestConfig(),
-            new LocalLogServiceTestConfig()
+            new LocalLogServiceTestConfig(),
+            new LocalSearchServiceTestConfig()
             //new LocalProspectiveSearchServiceTestConfig()
     )
 
@@ -114,6 +117,7 @@ class BindingEnhancerTest extends GroovyTestCase {
         assert binding.files             instanceof FileService
         assert binding.prospectiveSearch instanceof ProspectiveSearchService
         assert binding.logService        instanceof LogService
+        assert binding.search            instanceof SearchService
     }
 
     void testGaelykVersionPresent() {

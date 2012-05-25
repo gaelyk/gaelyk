@@ -74,46 +74,46 @@ import com.google.appengine.api.log.LogServiceFactory
  */
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 class GaelykBindingsTransformation implements ASTTransformation {
-	
-	void visit(ASTNode[] nodes, SourceUnit unit) {
-		if (nodes.length != 2 || !(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
-			println "Internal error: expecting [AnnotationNode, ClassNode] but got: ${Arrays.asList(nodes)}"
-		}
 
-		ClassNode parent = (ClassNode) nodes[1]
+    void visit(ASTNode[] nodes, SourceUnit unit) {
+        if (nodes.length != 2 || !(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
+            println "Internal error: expecting [AnnotationNode, ClassNode] but got: ${Arrays.asList(nodes)}"
+        }
 
-		addGetterIfNotExists(parent, DatastoreService,         "getDatastore",         DatastoreServiceFactory,    "getDatastoreService")
-		addGetterIfNotExists(parent, MemcacheService,          "getMemcache",          MemcacheServiceFactory,     "getMemcacheService")
-		addGetterIfNotExists(parent, URLFetchService,          "getUrlFetch",          URLFetchServiceFactory,     "getURLFetchService")
-		addGetterIfNotExists(parent, MailService,              "getMail",              MailServiceFactory,         "getMailService")
-		addGetterIfNotExists(parent, ImagesServiceWrapper,     "getImages",            ImagesServiceWrapper,       "getInstance")
-		addGetterIfNotExists(parent, UserService,              "getUsers",             UserServiceFactory,         "getUserService")
-		addGetterIfNotExists(parent, Queue,                    "getDefaultQueue",      QueueFactory,               "getDefaultQueue")
-		addGetterIfNotExists(parent, XMPPService,              "getXmpp",              XMPPServiceFactory,         "getXMPPService")
-		addGetterIfNotExists(parent, BlobstoreService,         "getBlobstore",         BlobstoreServiceFactory,    "getBlobstoreService")
-		addGetterIfNotExists(parent, OAuthService,             "getOauth",             OAuthServiceFactory,        "getOAuthService")
-		addGetterIfNotExists(parent, CapabilitiesService,      "getCapabilities",      CapabilitiesServiceFactory, "getCapabilitiesService")
-		addGetterIfNotExists(parent, ChannelService,           "getChannel",           ChannelServiceFactory,      "getChannelService")
-		addGetterIfNotExists(parent, FileService,              "getFiles",             FileServiceFactory,         "getFileService")
-		addGetterIfNotExists(parent, BackendService,           "getBackends",          BackendServiceFactory,      "getBackendService")
-		addGetterIfNotExists(parent, LifecycleManager,         "getLifecycle",         LifecycleManager,           "getInstance")
-		addGetterIfNotExists(parent, ProspectiveSearchService, "getProspectiveSearch", ProspectiveSearchService,   "getProspectiveSearchService")
-		addGetterIfNotExists(parent, User,                     "getUser",              GaelykBindingEnhancer,      "getCurrentUser")
-		addGetterIfNotExists(parent, QueueAccessor,            "getQueues",            GaelykBindingEnhancer,      "getQueues")
-		addGetterIfNotExists(parent, Boolean,                  "getLocalMode",         GaelykBindingEnhancer,      "getLocalMode")
-		addGetterIfNotExists(parent, Map,                      "getApp",               GaelykBindingEnhancer,      "getApp")
-		addGetterIfNotExists(parent, LoggerAccessor,           "getLogger",            GaelykBindingEnhancer,      "getLogger")
-		addGetterIfNotExists(parent, Class,                    "getNamespace",         GaelykBindingEnhancer,      "getNamespaceManager")
-		addGetterIfNotExists(parent, LogService,               "getLogService",        LogServiceFactory,          "getLogService")
-	}
+        ClassNode parent = (ClassNode) nodes[1]
 
-	private void addGetterIfNotExists(ClassNode parent, Class serviceClass, String getterName, Class factoryClass, String factoryMethodName) {
-		if(!parent.getGetterMethod(getterName)) {
-			parent.addMethod makeServiceGetter(serviceClass, getterName, factoryClass, factoryMethodName)
-		}
-	}
-	
-	private MethodNode makeServiceGetter(Class serviceClass, String accessorName, Class factoryClass, String factoryMethodName) {
+        addGetterIfNotExists(parent, DatastoreService,         "getDatastore",         DatastoreServiceFactory,    "getDatastoreService")
+        addGetterIfNotExists(parent, MemcacheService,          "getMemcache",          MemcacheServiceFactory,     "getMemcacheService")
+        addGetterIfNotExists(parent, URLFetchService,          "getUrlFetch",          URLFetchServiceFactory,     "getURLFetchService")
+        addGetterIfNotExists(parent, MailService,              "getMail",              MailServiceFactory,         "getMailService")
+        addGetterIfNotExists(parent, ImagesServiceWrapper,     "getImages",            ImagesServiceWrapper,       "getInstance")
+        addGetterIfNotExists(parent, UserService,              "getUsers",             UserServiceFactory,         "getUserService")
+        addGetterIfNotExists(parent, Queue,                    "getDefaultQueue",      QueueFactory,               "getDefaultQueue")
+        addGetterIfNotExists(parent, XMPPService,              "getXmpp",              XMPPServiceFactory,         "getXMPPService")
+        addGetterIfNotExists(parent, BlobstoreService,         "getBlobstore",         BlobstoreServiceFactory,    "getBlobstoreService")
+        addGetterIfNotExists(parent, OAuthService,             "getOauth",             OAuthServiceFactory,        "getOAuthService")
+        addGetterIfNotExists(parent, CapabilitiesService,      "getCapabilities",      CapabilitiesServiceFactory, "getCapabilitiesService")
+        addGetterIfNotExists(parent, ChannelService,           "getChannel",           ChannelServiceFactory,      "getChannelService")
+        addGetterIfNotExists(parent, FileService,              "getFiles",             FileServiceFactory,         "getFileService")
+        addGetterIfNotExists(parent, BackendService,           "getBackends",          BackendServiceFactory,      "getBackendService")
+        addGetterIfNotExists(parent, LifecycleManager,         "getLifecycle",         LifecycleManager,           "getInstance")
+        addGetterIfNotExists(parent, ProspectiveSearchService, "getProspectiveSearch", ProspectiveSearchService,   "getProspectiveSearchService")
+        addGetterIfNotExists(parent, User,                     "getUser",              GaelykBindingEnhancer,      "getCurrentUser")
+        addGetterIfNotExists(parent, QueueAccessor,            "getQueues",            GaelykBindingEnhancer,      "getQueues")
+        addGetterIfNotExists(parent, Boolean,                  "getLocalMode",         GaelykBindingEnhancer,      "getLocalMode")
+        addGetterIfNotExists(parent, Map,                      "getApp",               GaelykBindingEnhancer,      "getApp")
+        addGetterIfNotExists(parent, LoggerAccessor,           "getLogger",            GaelykBindingEnhancer,      "getLogger")
+        addGetterIfNotExists(parent, Class,                    "getNamespace",         GaelykBindingEnhancer,      "getNamespaceManager")
+        addGetterIfNotExists(parent, LogService,               "getLogService",        LogServiceFactory,          "getLogService")
+    }
+
+    private void addGetterIfNotExists(ClassNode parent, Class serviceClass, String getterName, Class factoryClass, String factoryMethodName) {
+        if(!parent.getGetterMethod(getterName)) {
+            parent.addMethod makeServiceGetter(serviceClass, getterName, factoryClass, factoryMethodName)
+        }
+    }
+
+    private MethodNode makeServiceGetter(Class serviceClass, String accessorName, Class factoryClass, String factoryMethodName) {
         def returnType  = ClassHelper.make(serviceClass).plainNodeReference
         def factoryType = ClassHelper.make(factoryClass).plainNodeReference
 
@@ -130,5 +130,5 @@ class GaelykBindingsTransformation implements ASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 block
         )
-	}
+    }
 }

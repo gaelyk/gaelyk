@@ -116,6 +116,8 @@ import com.google.appengine.api.backends.BackendService
 import com.google.appengine.api.ThreadManager
 
 import groovy.transform.PackageScope
+import com.google.appengine.api.search.SearchService
+import com.google.appengine.api.search.SearchServiceFactory
 
 /**
  * Category methods decorating the Google App Engine SDK classes
@@ -2718,6 +2720,24 @@ class GaelykCategory extends GaelykCategoryBase {
      */
     static void setShutdownHook(LifecycleManager manager, Closure c) {
         manager.setShutdownHook(c as ShutdownHook)
+    }
+
+    // ----------------------------------------------------------------
+    // Search service support
+    // ----------------------------------------------------------------
+
+    /**
+     * Get a search service instance restricted to a given namespace.
+     * <pre><code>
+     *     search['namespaceName']
+     * </code></pre>
+     *
+     * @param search the search service
+     * @param namespace the namespace name
+     * @return a search service over a specific namespace
+     */
+    static SearchService getAt(SearchService search, String namespace) {
+        SearchServiceFactory.getSearchService(namespace)
     }
 
     // ----------------------------------------------------------------

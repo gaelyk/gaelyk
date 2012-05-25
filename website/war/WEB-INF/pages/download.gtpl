@@ -25,7 +25,7 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and 
 
 <p>
 The latest version was tested with Groovy 1.8.6,
-and with the 1.6.2.1 version of the App Engine SDK.
+and with the 1.6.6 version of the App Engine SDK.
 </p>
 
 <p>
@@ -36,7 +36,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
-    <li>Upgraded to Groovy 1.8.6 and App Engine SDK 1.6.2.1</li>
+    <li>Upgraded to Groovy 1.8.6 and App Engine SDK 1.6.6</li>
     <li>
         <b>Gaelyk</b> will be available on Maven Central from now on,
         in the <code>org.gaelyk</code> group with the <code>gaelyk</code> artifact
@@ -49,6 +49,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Generated CRUD operations for POGO annotated with <code>@Entity</code></li>
     <li>Allow using enum values as POGO properties for coercion</li>
     <li>Changed Maven/Gradle group id from <code>groovyx.gaelyk</code> to <code>org.gaelyk</code></li>
+    <li>Added the <a href="/tutorial/plugins#search">search service</a> to the binding</li>
 </ul>
 
 <h3>Artifacts</h3>

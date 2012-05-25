@@ -31,3 +31,5 @@ Let's review some of these improvements.
 
 <% include "/WEB-INF/pages/tutorial/gaeShortcuts/backend.gtpl" %>
 
+<% include "/WEB-INF/pages/tutorial/gaeShortcuts/search.gtpl" %>
+

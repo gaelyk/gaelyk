@@ -9,6 +9,8 @@ import com.google.appengine.api.datastore.Entity
 import groovyx.gaelyk.GaelykCategory
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
+import com.google.appengine.api.datastore.RawValue;
+
 import groovyx.gaelyk.query.QuerySyntaxException
 import com.google.appengine.api.datastore.DatastoreServiceFactory
 
@@ -407,6 +409,78 @@ class QueryDslTest extends GroovyTestCase {
             def peopleInSanJose = clazz.newInstance(binding).run()
 
             assert peopleInSanJose.size() == 1
+        }
+    }
+    
+    void testProjectionQueryWithMap() {
+        use (GaelykCategory) {
+            def e1 = new Entity("city", "San Jose")
+            e1.prop1 = 'Name'
+            e1.prop2 = 35
+            e1.prop3 = true
+            e1.save()
+
+            TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+            Class<Script> clazz = th.parse '''
+                import com.google.appengine.api.datastore.Key
+
+                datastore.execute {
+                    select prop1: String, prop2: Long from city
+                }
+            '''
+
+            def binding = new Binding([datastore: DatastoreServiceFactory.datastoreService])
+
+            def ret = clazz.newInstance(binding).run()
+
+            assert ret.size() == 1
+            
+            Entity re = ret[0]
+            
+            assert re.hasProperty('prop1')
+            assert re.hasProperty('prop2')
+            assert !re.hasProperty('prop3')
+            
+            assert re.getProperty('prop1') instanceof String
+            assert re.getProperty('prop2') instanceof Long
+            assert re.getProperty('prop3') == null
+        }
+    }
+    
+    void testProjectionQueryWithList() {
+        use (GaelykCategory) {
+            def e1 = new Entity("city", "San Jose")
+            e1.prop1 = 'Name'
+            e1.prop2 = 35
+            e1.prop3 = true
+            e1.save()
+
+            TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+            Class<Script> clazz = th.parse '''
+                import com.google.appengine.api.datastore.Key
+
+                datastore.execute {
+                    select prop1, prop2 from city
+                }
+            '''
+
+            def binding = new Binding([datastore: DatastoreServiceFactory.datastoreService])
+
+            def ret = clazz.newInstance(binding).run()
+
+            assert ret.size() == 1
+            
+            Entity re = ret[0]
+            
+            assert re.hasProperty('prop1')
+            assert re.hasProperty('prop2')
+            assert !re.hasProperty('prop3')
+            
+            assert re.getProperty('prop1') instanceof RawValue
+            assert re.getProperty('prop2') instanceof RawValue
+            assert re.getProperty('prop3') == null
         }
     }
 

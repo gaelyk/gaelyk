@@ -467,6 +467,10 @@ Here are the various options of those verbs:
     select all
     // return just the keys of the entities matched by the query
     select keys
+    // return just a few properties (must be indexed)
+    select name: String, age: Integer
+    // return just a few properties (must be indexed) as RawValue
+    select name, age
 
     // specify the entity kind to search into
     from entityKind
@@ -540,6 +544,10 @@ In addition, you can specify the <code>FetchOptions</code> with additional verbs
     select single
     // return the count of entities matched by the query
     select count
+    // return just a few properties (must be indexed)
+    select name: String, age: Integer
+    // return just a few properties (must be indexed) as RawValue
+    select name, age
 
     // from an entity kind
     from entityKind

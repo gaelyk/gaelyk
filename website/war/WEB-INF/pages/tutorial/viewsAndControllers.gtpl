@@ -184,6 +184,16 @@ by injecting specific elements of the Google App Engine SDK:
             </li>
         </ul>
     </li>
+    <li>
+        <tt>geo</tt> : a map variable with the following keys and values:
+        <ul>
+            <li><tt>country</tt> : country from which the request originated, as an ISO 3166-1 alpha-2 country code determinated from the client's IP address</li>
+            <li><tt>region</tt> : name of region from which the request originated (e.g. <tt>ca</tt> for California)</li>
+            <li><tt>city</tt> : name of city from which the request originated (in lower case e.g. mountain view)</li>
+            <li><tt>latitude</tt> : latitude of city from which the request originated (e.g. 37.386051)</li>
+            <li><tt>longitude</tt> : longitude of city from which the request originated (e.g. -122.083851)</li>
+        </ul>
+    </li>
 </ul>
 
 <blockquote>

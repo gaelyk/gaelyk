@@ -118,7 +118,8 @@ class GaelykServletTest extends GroovyTestCase {
                         forward: { ServletRequest request, ServletResponse response ->
                             println "forward $p"
                         }
-                ] as RequestDispatcher }
+                ] as RequestDispatcher },
+                getHeader: {String name->}
         ] as HttpServletRequest
 
         def response = [

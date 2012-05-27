@@ -50,6 +50,7 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Allow using enum values as POGO properties for coercion</li>
     <li>Changed Maven/Gradle group id from <code>groovyx.gaelyk</code> to <code>org.gaelyk</code></li>
     <li>Added the <a href="/tutorial/plugins#search">search service</a> to the binding</li>
+    <li>New <a href="/tutorial/views-and-controllers#lazy">geo variables</a> in the binding</li>
 </ul>
 
 <h3>Artifacts</h3>

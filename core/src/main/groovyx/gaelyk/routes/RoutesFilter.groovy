@@ -177,22 +177,22 @@ class RoutesFilter implements Filter {
     *         hints provided by the servlet container
     */
    protected String getScriptUri(HttpServletRequest request) {
-       String uri = null;
-       String info = null;
+       String uri = null
+       String info = null
 
-       uri = request.getAttribute(AbstractHttpServlet.INC_SERVLET_PATH);
+       uri = request.getAttribute(AbstractHttpServlet.INC_SERVLET_PATH)
        if (uri != null) {
-           info = request.getAttribute(AbstractHttpServlet.INC_PATH_INFO);
+           info = request.getAttribute(AbstractHttpServlet.INC_PATH_INFO)
            if (info != null) {
-               uri += info;
+               uri += info
            }
-           return uri;
+           return uri
        }
 
-       uri = request.getServletPath();
-       info = request.getPathInfo();
+       uri = request.getServletPath()
+       info = request.getPathInfo()
        if (info != null) {
-           uri += info;
+           uri += info
        }
        return uri
    }

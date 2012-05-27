@@ -128,10 +128,28 @@ class QueryBuilder {
                 return result
             }
         } else {
-            if (iterable)
-                return preparedQuery.asIterator(options)
-            else
-                return preparedQuery.asList(options)
+            def result = iterable ? preparedQuery.asIterator(options) : preparedQuery.asList(options)
+            if (queryType == QueryType.KEYS) {
+                if (iterable) {
+                    return new Iterator() {
+                        boolean hasNext() {
+                            result.hasNext()
+                        }
+
+                        Object next() {
+                            result.next().key
+                        }
+
+                        void remove() {
+                            throw new UnsupportedOperationException("Forbidden to call remove() on this Query DSL results iterator")
+                        }
+                    }
+                } else {
+                    return result.collect { it.key }
+                }
+            } else {
+                return result
+            }
         }
     }
 

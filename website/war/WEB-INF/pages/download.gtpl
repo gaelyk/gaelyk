@@ -57,6 +57,16 @@ But to get you started quickly, you may use a ready-made template project which 
     </li>
 </ul>
 
+<h4>Breaking changes</h4>
+
+<ul>
+    <li>
+        When using <code>select keys</code> with the Query DSL, instances of <code>Key</code> are returned
+        instead of <code>Entity</code>s with only a key field.
+        Hence, you don't need anymore to call <code>.key</code> on the results of the query.
+    </li>
+</ul>
+
 <h3>Artifacts</h3>
 <ul>
     <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar">gaelyk-1.2.jar</a></li>

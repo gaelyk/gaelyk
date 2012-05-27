@@ -506,14 +506,22 @@ class QueryDslTest extends GroovyTestCase {
                     select all from mugs as Mug
                 }
 
-                return [r1, r2]
+                def r3 = datastore.iterate {
+                    select keys from mugs
+                }
+
+                def r4 = datastore.execute {
+                    select keys from mugs
+                }
+
+                return [r1, r2, r3, r4]
 
                 class Mug { String name }
             '''
 
             def binding = new Binding([datastore: DatastoreServiceFactory.datastoreService])
 
-            def (r1, r2) = clazz.newInstance(binding).run()
+            def (r1, r2, r3, r4) = clazz.newInstance(binding).run()
 
             assert r1 instanceof Iterator
             assert r1.size() == 10
@@ -523,6 +531,12 @@ class QueryDslTest extends GroovyTestCase {
             def counter = 0
             assert r2.every { counter++; it.class.simpleName == 'Mug' }
             assert counter == 10
+
+            assert r3 instanceof Iterator
+            assert r3.next() instanceof Key
+
+            assert r4 instanceof List
+            assert r4[0] instanceof Key
         }
     }
 }

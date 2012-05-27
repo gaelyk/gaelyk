@@ -184,7 +184,8 @@ Further customization of the coercion can be achieved by using annotations on yo
     You can set default behavior from unindexed to indexed setting <code>unidexed</code> property of the annotations to <code>false</code>.
       
     </li>
-    <li><code>@Key</code> to specify that a particular property or getter method should be used as the key for the entity (should be a String or a long)</li>
+    <li><code>@Key</code> to specify that a particular property or getter method should be used as the key for the entity (should be a <code>String</code> or a <code>long</code>)</li>
+    <li><code>@Version</code> to specify that a particular property or getter method should be used as the unique autoincrement version for the entity (should be type <code>long</code>)</li>
     <li><code>@Indexed</code> for properties or getter methods that should be indexed (ie. can be used in queries)</li>
     <li><code>@Unindexed</code> for properties or getter methods that should be set as unindexed (ie. on which no queries can be done)</li>
     <li><code>@Ignore</code> for properties or getter methods that should be ignored and not persisted</li>

@@ -38,6 +38,7 @@ import com.google.appengine.api.users.User
 import com.google.appengine.api.prospectivesearch.ProspectiveSearchServiceFactory
 import com.google.appengine.api.log.LogServiceFactory
 import com.google.appengine.api.search.SearchServiceFactory
+import javax.servlet.http.HttpServletRequest
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -111,6 +112,21 @@ class GaelykBindingEnhancer {
 
         // Search service in SDK 1.6.6
         binding.setVariable("search", SearchServiceFactory.searchService)
+
+        // Geo headers
+        if(binding.hasVariable('request')) {
+            def req = binding.getVariable('request')
+            if(req instanceof HttpServletRequest){
+                def latlong = req.getHeader('X-AppEngine-CityLatLong')?.split(',').collect { String s -> s.toBigDecimal() } ?: [0,0]
+                binding.setVariable("geo", [
+                        country: req.getHeader('X-AppEngine-Country'),
+                        region:  req.getHeader('X-AppEngine-Region'),
+                        city:    req.getHeader('X-AppEngine-City'),
+                        latitude: latlong[0],
+                        longitude: latlong[1],
+                ])
+            }
+        }
     }
 
     static User getCurrentUser() {

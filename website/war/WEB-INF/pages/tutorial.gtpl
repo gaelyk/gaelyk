@@ -100,6 +100,7 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
         <ul>
             <li><a href="/tutorial/app-engine-shortcuts#entity">Using <code>Entity</code>s as maps or POJOs/POGOs</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#conversion">Converting beans to entities and back</a></li>
+            <li><a href="/tutorial/app-engine-shortcuts#pogo-entity-coercion-annotations">Adding CRUD operations to classes with @Entity</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#list-to-key-coercion">List to <code>Key</code> conversion</a></li>
             <li><a href="/tutorial/app-engine-shortcuts#save-delete">Added <code>save()</code> and <code>delete()</code> methods on <code>Entity</code></a></li>
             <li><a href="/tutorial/app-engine-shortcuts#delete-get-on-key">Added <code>delete()</code> and <code>get()</code> methods on <code>Key</code></a></li>

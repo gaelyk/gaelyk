@@ -33,11 +33,10 @@ class QueryBuilder {
     private Binding binding
     private Map<String, Class<?>> projections = [:]
 
-	
-	static QueryBuilder builder(){
-		new QueryBuilder(null)
-	}
-	
+    static QueryBuilder builder(){
+        new QueryBuilder(null)
+    }
+
     /**
      * Create a query builder object.
      *
@@ -91,10 +90,10 @@ class QueryBuilder {
             return preparedQuery.countEntities(options)
         } else if (queryType == QueryType.SINGLE) {
             if (coercedClass) {
-				Entity en = preparedQuery.asSingleEntity()
-				if(en == null){
-					return null
-				}
+                Entity en = preparedQuery.asSingleEntity()
+                if(en == null){
+                    return null
+                }
                 return GaelykCategory.asType(en, coercedClass)
             } else {
                 return preparedQuery.asSingleEntity()

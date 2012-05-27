@@ -147,25 +147,25 @@ class QueryDslTransformation implements ASTTransformation {
             }
 
             protected SourceUnit getSourceUnit() { source }
-			
-			protected boolean isOnDatastore(MethodCallExpression call){
-				// 'datastore' variable
-				call.objectExpression instanceof VariableExpression && call.objectExpression.variable == 'datastore' &&
-				// 'query' or 'execute' or 'iterate' method
-				call.method instanceof ConstantExpression &&
-						(call.method.value == 'query' || call.method.value == 'execute' || call.method.value == 'iterate') &&
-				// closure single argument
-				call.arguments.expressions.size() == 1 && call.arguments.expressions[0] instanceof ClosureExpression
-			}
-			
-			protected boolean isOnPogo(MethodCallExpression call){
-				// 'datastore' variable
-				call.objectExpression instanceof ClassExpression && call.objectExpression.type.getAnnotations(ClassHelper.make(Entity).plainNodeReference)  &&
-				// 'query' or 'execute' or 'iterate' method
-				call.method instanceof ConstantExpression && (call.method.value == 'find' || call.method.value == 'findAll' || call.method.value == 'count' || call.method.value == 'iterate') &&
-				// closure single argument
-				call.arguments.expressions.size() == 1 && call.arguments.expressions[0] instanceof ClosureExpression
-			}
+
+            protected boolean isOnDatastore(MethodCallExpression call){
+                // 'datastore' variable
+                call.objectExpression instanceof VariableExpression && call.objectExpression.variable == 'datastore' &&
+                        // 'query' or 'execute' or 'iterate' method
+                        call.method instanceof ConstantExpression &&
+                        (call.method.value == 'query' || call.method.value == 'execute' || call.method.value == 'iterate') &&
+                        // closure single argument
+                        call.arguments.expressions.size() == 1 && call.arguments.expressions[0] instanceof ClosureExpression
+            }
+
+            protected boolean isOnPogo(MethodCallExpression call){
+                // 'datastore' variable
+                call.objectExpression instanceof ClassExpression && call.objectExpression.type.getAnnotations(ClassHelper.make(Entity).plainNodeReference)  &&
+                        // 'query' or 'execute' or 'iterate' method
+                        call.method instanceof ConstantExpression && (call.method.value == 'find' || call.method.value == 'findAll' || call.method.value == 'count' || call.method.value == 'iterate') &&
+                        // closure single argument
+                        call.arguments.expressions.size() == 1 && call.arguments.expressions[0] instanceof ClosureExpression
+            }
         }
 
         source.AST.classes.each { ClassNode cn ->

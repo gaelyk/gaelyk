@@ -9,3 +9,4 @@ out
 .classpath
 .project
 .settings
+src/main/webapp/WEB-INF/lib

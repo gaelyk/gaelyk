@@ -70,6 +70,8 @@ dependencies {
                 'javax.servlet:servlet-api:2.5',
                 'cglib:cglib-nodep:2.2',
                 'org.objenesis:objenesis:1.2'
+    functionalTestCompile 'org.codehaus.geb:geb-spock:0.7.0',
+                          'org.seleniumhq.selenium:selenium-firefox-driver:2.20.0'
     gaeSdk "com.google.appengine:appengine-java-sdk:$gaeVersion"
 }
 

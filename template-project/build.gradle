@@ -31,11 +31,14 @@ buildscript {
             addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
         }
         add resolver
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'bmuschko:gradle-gae-plugin:0.6.2'
+        classpath 'bmuschko:gradle-gae-plugin:0.7'
         classpath 'bmuschko:gradle-gaelyk-plugin:0.3.1'
+        // for runtime optimalization
+        // classpath 'eu.appsatori:gradle-fatjar-plugin:0.1.1'
     }
 }
 
@@ -74,6 +77,8 @@ dependencies {
 gae {
     downloadSdk = true
     warDir = file('src/main/webapp/')
+     // for runtime optimalization
+     // optimizeWar = true
 }
 
 gaeExplodeWar.dependsOn gaelykPrecompileGroovlet

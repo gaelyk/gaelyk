@@ -37,8 +37,7 @@ buildscript {
     dependencies {
         classpath 'bmuschko:gradle-gae-plugin:0.7'
         classpath 'bmuschko:gradle-gaelyk-plugin:0.3.1'
-        // for runtime optimalization
-        // classpath 'eu.appsatori:gradle-fatjar-plugin:0.1.1'
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.1.1'
     }
 }
 
@@ -77,8 +76,7 @@ dependencies {
 gae {
     downloadSdk = true
     warDir = file('src/main/webapp/')
-     // for runtime optimalization
-     // optimizeWar = true
+    optimizeWar = true
 }
 
 gaeExplodeWar.dependsOn gaelykPrecompileGroovlet

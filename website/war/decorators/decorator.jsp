@@ -17,8 +17,8 @@
 
         <link rel="stylesheet" type="text/css" media="print" href="/css/print.css" />
 
-    	<link type="text/css" rel="stylesheet" href="/css/shCore.css"/>
-    	<link type="text/css" rel="stylesheet" href="/css/shThemeDefault.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/shThemeDefault.css"/>
 
         <script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
 
@@ -27,9 +27,9 @@
         <script language="javascript" src="/js/shBrushXml.js"></script>
 
         <script type="text/javascript">
-        	SyntaxHighlighter.config.clipboardSwf = '/falsh/clipboard.swf';
-        	SyntaxHighlighter.defaults['light'] = true;
-        	SyntaxHighlighter.all();
+            SyntaxHighlighter.config.clipboardSwf = '/falsh/clipboard.swf';
+            SyntaxHighlighter.defaults['light'] = true;
+            SyntaxHighlighter.all();
         </script>
 
         <script type="text/javascript">
@@ -68,7 +68,7 @@
         </div>
 
         <div id="footer">
-            <p>&copy; 2009-2011 &mdash; <b>Guillaume Laforge</b></p>
+            <p>&copy; 2009-2012 &mdash; <b>Guillaume Laforge</b> and the <b>Gaelyk development team</b></p>
             <p>Powered by <b>Gaelyk</b> and <b>Groovy</b></p>
         </div>
     </body>

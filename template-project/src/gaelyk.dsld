@@ -2,713 +2,274 @@
 
 import java.util.concurrent.Future;
 
-// Things to discuss
-// # are there any ways how to promote dsls to templates like gtpl?
-// # are there any ways to check operators like left shift?
-// # is there any way to handle generics like Key<Entity>?
-// # how to handle closure parameters?
+import org.codehaus.groovy.ast.AnnotationNode
+import org.codehaus.groovy.ast.ClassHelper
+import org.codehaus.groovy.ast.ClassNode
+import org.codehaus.groovy.ast.PropertyNode
+import org.codehaus.groovy.ast.MethodNode
 
 class EnvDescriptor {
-	String name
-	String version
+  String name
+  String version
 }
 
 class GaelykDescriptor {
-	String version
+  String version
 }
 
 class AppDescriptor {
-	String id
-	String version
-	EnvDescriptor env
-	GaelykDescriptor gaelyk
+  String id
+  String version
+  EnvDescriptor env
+  GaelykDescriptor gaelyk
+}
 
+class GeoDescriptor {
+  String country
+  String region
+  String city
+  BigDecimal latitude
+  BigDecimal longitude
 }
 
 def shortcutFor = { type ->
-	bind(clazz: currentType(type)) & enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy'))
+  bind(clazz: currentType(type)) & enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy'))
+}
+
+contribute(enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy'))) {
+  provider = 'Gaelyk Groovlet'
+  delegatesTo type: 'groovyx.gaelyk.GaelykCategory', asCategory: true
 }
 
 (sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy') & enclosingScript()).accept {
-	provider = 'Gaelyk Groovlet'
-	property name: 'datastore',
-			type: 'com.google.appengine.api.datastore.DatastoreService'
+  provider = 'Gaelyk Groovlet'
+  property name: 'datastore',
+      type: 'com.google.appengine.api.datastore.DatastoreService'
 
-	property name: 'request', type: 'javax.servlet.http.HttpServletRequest', doc: 'the HttpServletRequest object'
-	property name: 'response', type: 'javax.servlet.http.HttpServletResponse', doc: 'the HttpServletResponse object'
-	property name: 'context',  type: 'javax.servlet.ServletContext', doc: 'the ServletContext object'
-	property name: 'application', type: 'javax.servlet.ServletContext', doc: 'same as context'
-	property name: 'session', type: 'javax.servlet.http.HttpSession', doc: 'shorthand for request.getSession(false) (can be null) which returns an HttpSession'
-	property name: 'params', type: Map, doc: 'map of all form parameters (can be empty)'
-	property name: 'headers', type: Map, doc: 'map of all request header fields'
-	property name: 'log', type: 'groovyx.gaelyk.logging.GroovyLogger', doc: 'a Groovy logger is available for logging messages through java.util.logging'
+  property name: 'request', type: 'javax.servlet.http.HttpServletRequest', doc: 'the HttpServletRequest object'
+  property name: 'response', type: 'javax.servlet.http.HttpServletResponse', doc: 'the HttpServletResponse object'
+  property name: 'context',  type: 'javax.servlet.ServletContext', doc: 'the ServletContext object'
+  property name: 'application', type: 'javax.servlet.ServletContext', doc: 'same as context'
+  property name: 'session', type: 'javax.servlet.http.HttpSession', doc: 'shorthand for request.getSession(false) (can be null) which returns an HttpSession'
+  property name: 'params', type: Map, doc: 'map of all form parameters (can be empty)'
+  property name: 'headers', type: Map, doc: 'map of all request header fields'
+  property name: 'log', type: 'groovyx.gaelyk.logging.GroovyLogger', doc: 'a Groovy logger is available for logging messages through java.util.logging'
 
-	property name: 'out', type: PrintWriter, doc:'shorthand for response.getWriter() which returns a PrintWriter'
-	property name: 'sout', type: 'javax.servlet.ServletOutputStream', doc: 'shorthand for response.getOutputStream() which returns a ServletOutputStream'
-	property name: 'html', type: 'groovy.xml.MarkupBuilder', doc: 'shorthand for new MarkupBuilder(response.getWriter()) which returns a MarkupBuilder'
+  property name: 'out', type: PrintWriter, doc:'shorthand for response.getWriter() which returns a PrintWriter'
+  property name: 'sout', type: 'javax.servlet.ServletOutputStream', doc: 'shorthand for response.getOutputStream() which returns a ServletOutputStream'
+  property name: 'html', type: 'groovy.xml.MarkupBuilder', doc: 'shorthand for new MarkupBuilder(response.getWriter()) which returns a MarkupBuilder'
 
-	method name: 'forward',         type: 'void',       params: [path: 'java.lang.String'], doc: "forwards to given url, groovlet or template"
-	method name: 'include',         type: 'void',       params: [path: 'java.lang.String'], doc: "includes given template"
-	method name: 'redirect',        type: 'void',       params: [path: 'java.lang.String'], doc: "redirects to given url, groovlet or template"
+  method name: 'forward',         type: 'void',       params: [path: 'java.lang.String'], doc: "forwards to given url, groovlet or template"
+  method name: 'include',         type: 'void',       params: [path: 'java.lang.String'], doc: "includes given template"
+  method name: 'redirect',        type: 'void',       params: [path: 'java.lang.String'], doc: "redirects to given url, groovlet or template"
+
+  property name: 'app', type: AppDescriptor, doc: 'map of all form parameters (can be empty)'
+  property name: 'geo', type: GeoDescriptor, doc: 'geographic information from the requests IP'
 }
 
 ((sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy') & enclosingScript()) | annotatedBy('groovyx.gaelyk.GaelykBindings')).accept {
-	property name: 'logger', type: Map, doc: 'a logger accessor can be used to get access to any logger'
-	property name: 'datastore', type: 'com.google.appengine.api.datastore.DatastoreService', doc: 'the Datastore service'
-	property name: 'memcache', type: 'com.google.appengine.api.memcache.MemcacheService', doc: 'the Memcache service'
-	property name: 'urlFetch', type: 'com.google.appengine.api.urlfetch.URLFetchService', doc: 'the URL Fetch service'
-	property name: 'mail', type: 'com.google.appengine.api.mail.MailService', doc: 'the Mail service'
-	
-	property name: 'images', type: 'groovyx.gaelyk.ImagesServiceWrapper', doc: 'the Images service (actually a convenient wrapper class combining both the methods of ImagesService and ImagesServiceFactory and implementing the ImagesService interface)'
-	property name: 'users', type: 'com.google.appengine.api.users.UserService', doc: 'the User service'
-	property name: 'user', type: 'com.google.appengine.api.users.User', doc: 'the currently logged in user (null if no user logged in)'
-	property name: 'defaultQueue', type: 'com.google.appengine.api.taskqueue.Queue', doc: 'the default queue'
-	property name: 'queues', type: Map, doc: 'a map-like object with which you can access the configured queues'
-	property name: 'xmpp', type: 'com.google.appengine.api.xmpp.XMPPService', doc: 'the Jabber/XMPP service.'
-	property name: 'blobstore', type: 'com.google.appengine.api.blobstore.BlobstoreService', doc: 'the Blobstore service.'
-	property name: 'oauth', type: 'com.google.appengine.api.oauth.OAuthService', doc: 'the OAuth service.'
-	property name: 'namespace', type: Class, doc: 'the Namespace manager'
-	property name: 'capabilities', type: 'com.google.appengine.api.capabilities.CapabilitiesService', doc: 'the Capabilities service'
-	property name: 'channel', type: 'com.google.appengine.api.channel.ChannelService', doc: 'the Channel service'
-	property name: 'files', type: 'com.google.appengine.api.files.FileService', doc: 'the File service'
-	property name: 'backends', type: 'com.google.appengine.api.backends.BackendService', doc: 'the Backend service'
-	property name: 'lifecycle', type: 'com.google.appengine.api.LifecycleManager', doc: 'the Lifecycle manager'
-	property name: 'localMode', type: Boolean, doc: 'a boolean variable which is true when the application is running in local development mode, and false when deployed on Google\'s cloud.'
-	
-	property name: 'app', type: AppDescriptor, doc: 'map of all form parameters (can be empty)'
+  property name: 'logger', type: Map, doc: 'a logger accessor can be used to get access to any logger'
+  property name: 'datastore', type: 'com.google.appengine.api.datastore.DatastoreService', doc: 'the Datastore service'
+  property name: 'memcache', type: 'com.google.appengine.api.memcache.MemcacheService', doc: 'the Memcache service'
+  property name: 'urlFetch', type: 'com.google.appengine.api.urlfetch.URLFetchService', doc: 'the URL Fetch service'
+  property name: 'mail', type: 'com.google.appengine.api.mail.MailService', doc: 'the Mail service'
+
+  property name: 'images', type: 'groovyx.gaelyk.ImagesServiceWrapper', doc: 'the Images service (actually a convenient wrapper class combining both the methods of ImagesService and ImagesServiceFactory and implementing the ImagesService interface)'
+  property name: 'users', type: 'com.google.appengine.api.users.UserService', doc: 'the User service'
+  property name: 'user', type: 'com.google.appengine.api.users.User', doc: 'the currently logged in user (null if no user logged in)'
+  property name: 'defaultQueue', type: 'com.google.appengine.api.taskqueue.Queue', doc: 'the default queue'
+  property name: 'queues', type: Map, doc: 'a map-like object with which you can access the configured queues'
+  property name: 'xmpp', type: 'com.google.appengine.api.xmpp.XMPPService', doc: 'the Jabber/XMPP service.'
+  property name: 'blobstore', type: 'com.google.appengine.api.blobstore.BlobstoreService', doc: 'the Blobstore service.'
+  property name: 'oauth', type: 'com.google.appengine.api.oauth.OAuthService', doc: 'the OAuth service.'
+  property name: 'namespace', type: Class, doc: 'the Namespace manager'
+  property name: 'capabilities', type: 'com.google.appengine.api.capabilities.CapabilitiesService', doc: 'the Capabilities service'
+  property name: 'channel', type: 'com.google.appengine.api.channel.ChannelService', doc: 'the Channel service'
+  property name: 'files', type: 'com.google.appengine.api.files.FileService', doc: 'the File service'
+  property name: 'backends', type: 'com.google.appengine.api.backends.BackendService', doc: 'the Backend service'
+  property name: 'lifecycle', type: 'com.google.appengine.api.LifecycleManager', doc: 'the Lifecycle manager'
+  property name: 'localMode', type: Boolean, doc: 'a boolean variable which is true when the application is running in local development mode, and false when deployed on Google\'s cloud.'
+  property name: 'prospectiveSearch', type: 'com.google.appengine.api.prospectivesearch.ProspectiveSearchService', doc: 'the prospective search service'
+  property name: 'logService', type: 'com.google.appengine.api.log.LogService', doc: 'the log service'
+  property name: 'search', type: 'com.google.appengine.api.search.SearchService', doc: 'the search service'
 }
 
 (sourceFolderOfCurrentFile('src/main/webapp/WEB-INF') & name("routes") & enclosingScript()).accept {
-	provider = 'Gaelyk'
-	method name: 'all',
-			useNamedArgs: true,
-			type: List,
-			params: [route: String, forward: String, redirect: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
-			doc: 'Routes all HTTP methods.'
-	method name: 'get',
-			useNamedArgs: true,
-			type: List,
-			params: [route: String, forward: String, redirect: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
-			doc: 'Routes GET HTTP method.'
-	method name: 'post',
-			useNamedArgs: true,
-			type: List,
-			params: [route: String, forward: String, redirect: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
-			doc: 'Routes POST HTTP method.'
-	method name: 'put',
-			useNamedArgs: true,
-			type: List,
-			params: [route: String, forward: String, redirect: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
-			doc: 'Routes PUT HTTP method.'
-	method name: 'delete',
-			useNamedArgs: true,
-			type: List,
-			params: [route: String, forward: String, redirect: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
-			doc: 'Routes DELETE HTTP method.'
-	method name: 'email',
-			useNamedArgs: true,
-			type: List,
-			params: [to: String],
-			doc: 'Routes incoming email messages.'
-	method name: 'jabber',
-			useNamedArgs: true,
-			type: List,
-			params: [type: String, to: String],
-			doc: 'Routes incomming jabber messages and statuses.'
+  delegatesTo type: 'groovyx.gaelyk.routes.RoutesBaseScript'
+  provider = 'Gaelyk'
+  method name: 'all',
+      useNamedArgs: true,
+      type: List,
+      params: [route: String, forward: String, redirect: String, redirect301: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
+      doc: 'Routes all HTTP methods.'
+  method name: 'get',
+      useNamedArgs: true,
+      type: List,
+      params: [route: String, forward: String, redirect: String, redirect301: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
+      doc: 'Routes GET HTTP method.'
+  method name: 'post',
+      useNamedArgs: true,
+      type: List,
+      params: [route: String, forward: String, redirect: String, redirect301: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
+      doc: 'Routes POST HTTP method.'
+  method name: 'put',
+      useNamedArgs: true,
+      type: List,
+      params: [route: String, forward: String, redirect: String, redirect301: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
+      doc: 'Routes PUT HTTP method.'
+  method name: 'delete',
+      useNamedArgs: true,
+      type: List,
+      params: [route: String, forward: String, redirect: String, redirect301: String, validate: Closure, cache: int, ignore: boolean, namespace: String],
+      doc: 'Routes DELETE HTTP method.'
+  method name: 'email',
+      useNamedArgs: true,
+      type: List,
+      params: [to: String],
+      doc: 'Routes incoming email messages.'
+  method name: 'jabber',
+      useNamedArgs: true,
+      type: List,
+      params: [type: String, to: String],
+      doc: 'Routes incomming jabber messages and statuses.'
 }
 
+(sourceFolderOfCurrentFile('src/main/webapp/WEB-INF') & name("plugins") & enclosingScript()).accept {
+  delegatesTo type: 'groovyx.gaelyk.plugins.PluginsListBaseScript'
+  provider = 'Gaelyk'
+}
+
+(sourceFolderOfCurrentFile('src/main/webapp/WEB-INF/plugins') & enclosingScript()).accept {
+  delegatesTo type: 'groovyx.gaelyk.plugins.PluginBaseScript'
+  provider = 'Gaelyk'
+}
 
 shortcutFor('com.google.appengine.api.taskqueue.Queue').accept {
-	provider = 'Gaelyk'
-	method name: 'add',
-			useNamedArgs: true,
-			type: 'com.google.appengine.api.taskqueue.TaskHandle',
-			params: [coundDownMillis: long, etaMillis: long, headers: Map, method: 'com.google.appengine.api.taskqueue.TaskOptions.Method', params: Map, payload: Object, taskName: String, url: String, retryOption: 'com.google.appengine.api.taskqueue.RetryOptions'],
-			doc: 'Add a new task on the queue using a map for holding the task attributes instead of a TaskOptions builder object.'
-	method name: 'getName',
-			type: 'java.lang.String',
-			doc: 'Shorcut to get the name of the Queue.'
-	property name: 'name',
-			type: 'java.lang.String',
-			doc: 'Shorcut to get the name of the Queue.'
-	method name: 'leftShift',
-			useNamedArgs: true,
-			type: 'com.google.appengine.api.taskqueue.TaskHandle',
-			params: [coundDownMillis: long, etaMillis: long, headers: Map, method: 'com.google.appengine.api.taskqueue.TaskOptions.Method', params: Map, payload: Object, taskName: String, url: String, retryOption: 'com.google.appengine.api.taskqueue.RetryOptions'],
-			doc: 'Add a new task on the queue using a map for holding the task attributes instead of a TaskOptions builder object.'
+  provider = 'Gaelyk'
+  property name: 'name', type: 'java.lang.String', doc: 'Shorcut to get the name of the Queue.'
 }
 
 
-shortcutFor('com.google.appengine.api.datastore.Entity').accept {
-	provider = 'Gaelyk'
-
-	method name: 'get',
-			type: 'java.lang.Object',
-			params: [name: 'java.lang.String'],
-			doc: 'Provides a shortcut notation to get a property of an entity.'
-
-	method name: 'save',
-			type: 'com.google.appengine.api.datastore.Key',
-			doc: 'Save this entity in the data store.'
-
-	method name: 'set',
-			type: 'void',
-			params: [name: 'java.lang.String', property: 'java.lang.Object'],
-			doc: 'Provides a shortcut notation to set a property of an entity.'
-
-	method name: 'delete',
-			type: 'void',
-			doc: 'Delete this entity from the data store.'
-
-	method name: 'leftShift',
-			type: 'com.google.appengine.api.datastore.Entity',
-			params: [params: 'java.util.Map'],
-			doc: '''Set the <code>Entity</code> properties with the key / value pairs of the map,
-using the leftshift operator as follows:
-<code>entity &lt;&lt; params</code>'''
-
-	method name: 'getAt',
-			type: 'java.lang.Object',
-			params: [name: 'java.lang.String'],
-			doc: 'Provides a shortcut notation to get a property of an entity.'
-
-	method name: 'asType',
-			type: 'java.lang.Object',
-			params: [type: 'java.lang.Class'],
-			doc: '''Gaelyk supports a simplistic object/entity mapping, thanks to type coercion.
- You can use this type coercion mechanism to coerce POJOs/POGOs and datastore Entities.
- The <code>Entity</code> kind will be the simple name of the POJO/POGO (same approach as Objectify).
- So with this mechanism, you can do:
-
-<pre><code>
-class Person { String name, int age }
-
- def e = new Entity("Person")
- e.name = "Guillaume"
- e.age = 33
- 
- def p = e as Person
-
- assert e.name == p.name
- assert e.age == p.age
-</code></pre>'''
-
-	method name: 'setAt',
-			type: 'void',
-			params: [name: 'java.lang.String', property: 'java.lang.Object'],
-			doc: 'Provides a shortcut notation to set a property of an entity.'
-
-	method name: 'asyncSave',
-			type: 'java.util.concurrent.Future',
-			doc: 'Save this entity in the data store asynchronously.'
-
-	method name: 'asyncDelete',
-			type: 'java.util.concurrent.Future',
-			doc: 'Delete this entity from the data store.'
-}
 
 shortcutFor('com.google.appengine.api.memcache.MemcacheService').accept {
-	provider = 'Gaelyk'
-	method name: 'get',
-			type: 'java.lang.Object',
-			params: [key: 'java.lang.String'],
-			doc: 'Get an object from the cache with a String key'
-
-	method name: 'get',
-			type: 'java.lang.Object',
-			params: [key: 'groovy.lang.GString'],
-			doc: 'Get an object from the cache, with a GString key, coerced to a String.'
-
-	method name: 'put',
-			type: 'void',
-			params: [key: 'groovy.lang.GString', value: 'java.lang.Object'],
-			doc: 'Put an object in the cache under a GString key, coerced to a String.'
-
-	method name: 'put',
-			type: 'void',
-			params: [key: 'groovy.lang.GString', value: 'java.lang.Object', expiration: 'com.google.appengine.api.memcache.Expiration'],
-			doc: 'Put an object in the cache under a GString key, coerced to a String, with an expiration.'
-
-	method name: 'put',
-			type: 'void',
-			params: [key: 'groovy.lang.GString', value: 'java.lang.Object', expiration: 'com.google.appengine.api.memcache.Expiration', policy: 'com.google.appengine.api.memcache.MemcacheService$SetPolicy'],
-			doc: 'Put an object in the cache under a GString key, coerced to a String, with an expiration and a SetPolicy.'
-
-	method name: 'set',
-			type: 'void',
-			params: [key: 'java.lang.String', value: 'java.lang.Object'],
-			doc: 'Put an object in the cache under a String key.'
-
-	method name: 'isCase',
-			type: 'boolean',
-			params: [key: 'java.lang.Object'],
-			doc: '''Shortcut to check whether a key is contained in the cache using the <code>in</code> operator:
-<code>key in memcache</code>'''
-
-	method name: 'memoize',
-			type: 'groovy.lang.Closure',
-			params: [closure: 'groovy.lang.Closure'],
-			doc: '''Memoize a closure invocation in memcache.
-Closure call result are stored in memcache, retaining the closure hashCode and the argument values as key.
-The results are kept in memcache only up to the 30 seconds request time limit of Google App Engine.
-
+  provider = 'Gaelyk'
+  property name: 'name', type: 'com.google.appengine.api.memcache.AsyncMemcacheService', doc: '''From the <code>memcache</code> binding variable, you can access the asynchronous Memcache service:
 <pre><code>
-def countEntities = memcache.memoize { String kind -> datastore.prepare( new Query(kind) ).countEntities() }
-def totalPhotos = countEntities('photos')
-</pre></code>
-'''
-
-	method name: 'getAt',
-			type: 'java.lang.Object',
-			params: [key: 'java.lang.Object'],
-			doc: '''Get an object from the cache, identified by its key, using the subscript notation:
-<code>def obj = memcache[key]</code>'''
-
-	method name: 'getAt',
-			type: 'java.lang.Object',
-			params: [key: 'java.lang.String'],
-			doc: '''Get an object from the cache, identified by its key, using the subscript notation:
-<code>def obj = memcache[key]</code>'''
-
-	method name: 'putAt',
-			type: 'void',
-			params: [key: 'java.lang.String', value: 'java.lang.Object'],
-			doc: '''Put an object into the cache, identified by its key, using the subscript notation:
-<code>memcache[key] = value</code>'''
-
-	method name: 'putAt',
-			type: 'void',
-			params: [key: 'java.lang.Object', value: 'java.lang.Object'],
-			doc: '''Put an object into the cache, identified by its key, using the subscript notation:
-<code>memcache[key] = value</code>'''
-
-	method name: 'clearCacheForUri',
-			type: 'java.util.Set',
-			params: [uri: 'java.lang.String'],
-			doc: 'Clear the cached content for a given URI.'
-
+    memcache.async
+</code></pre>'''
 }
 
 
 shortcutFor('java.net.URL').accept {
-	provider = 'Gaelyk'
-	method name: 'get',
-			type: 'java.lang.Object',
-			useNamedArgs: true,
-			params: [allowTruncate: boolean, followRedirects: boolean, deadline: double, headers: Map, payload: byte[], params: Map, async: boolean ],
-			doc: 'Use the URLFetch Service to do a GET on the URL.'
-
-	method name: 'get',
-			type: 'java.lang.Object',
-			doc: 'Use the URLFetch Service to do a GET on the URL.'
-
-	method name: 'put',
-			type: 'java.lang.Object',
-			useNamedArgs: true,
-			params: [allowTruncate: boolean, followRedirects: boolean, deadline: double, headers: Map, payload: byte[], params: Map, async: boolean ],
-			doc: 'Use the URLFetch Service to do a PUT on the URL.'
-
-	method name: 'put',
-			type: 'java.lang.Object',
-			doc: 'Use the URLFetch Service to do a PUT on the URL.'
-
-	method name: 'delete',
-			type: 'java.lang.Object',
-			useNamedArgs: true,
-			params: [allowTruncate: boolean, followRedirects: boolean, deadline: double, headers: Map, payload: byte[], params: Map, async: boolean ],
-			doc: 'Use the URLFetch Service to do a DELETE on the URL.'
-
-	method name: 'delete',
-			type: 'java.lang.Object',
-			doc: 'Use the URLFetch Service to do a DELETE on the URL.'
-
-	method name: 'head',
-			type: 'java.lang.Object',
-			useNamedArgs: true,
-			params: [allowTruncate: boolean, followRedirects: boolean, deadline: double, headers: Map, payload: byte[], params: Map, async: boolean ],
-			doc: 'Use the URLFetch Service to do a HEAD on the URL.'
-
-	method name: 'head',
-			type: 'java.lang.Object',
-			doc: 'Use the URLFetch Service to do a HEAD on the URL.'
-
-	method name: 'asType',
-			type: 'com.google.appengine.api.datastore.Link',
-			params: [arg1: 'java.lang.Class'],
-			doc: 'Converter method for converting a URL into a Link instance.'
-
-	method name: 'post',
-			type: 'java.lang.Object',
-			useNamedArgs: true,
-			params: [allowTruncate: boolean, followRedirects: boolean, deadline: double, headers: Map, payload: byte[], params: Map, async: boolean ],
-			doc: 'Use the URLFetch Service to do a POST on the URL.'
-
-	method name: 'post',
-			type: 'java.lang.Object',
-			doc: 'Use the URLFetch Service to do a POST on the URL.'
-
+  provider = 'Gaelyk'
+  property name: 'unindexed', type: 'groovyx.gaelyk.UnindexedEntityWrapper'
 }
 
 shortcutFor('com.google.appengine.api.datastore.DatastoreService').accept {
-	provider = 'Gaelyk'
-	method name: 'getProperty',
-			type: 'com.google.appengine.api.datastore.Entity',
-			params: [kind: 'java.lang.String', property: 'java.lang.String'],
-			doc: 'Gets datastore kind property.'
+  provider = 'Gaelyk'
+  property name: 'properties',
+      type: 'java.util.List',
+      doc: 'Gets all datastore kinds and their properties.'
+  property name: 'async',
+      type: 'com.google.appengine.api.datastore.AsyncDatastoreService',
+      doc: 'The asynchronous datastore service.'
 
-	method name: 'getProperties',
-			type: 'java.util.List',
-			params: [options: 'com.google.appengine.api.datastore.FetchOptions'],
-			doc: 'Gets all datastore kinds and their properties.'
-
-	method name: 'getProperties',
-			type: 'java.util.List',
-			params: [options: 'com.google.appengine.api.datastore.FetchOptions', closure: 'groovy.lang.Closure'],
-			doc: 'Gets all datastore kinds and their properties. The closure lets you apply additional filters to your query.'
-
-	method name: 'getProperties',
-			type: 'java.util.List',
-			params: [kind: 'java.lang.String', options: 'com.google.appengine.api.datastore.FetchOptions'],
-			doc: 'Gets datastore kind properties.'
-
-	method name: 'getProperties',
-			type: 'java.util.List',
-			params: [kind: 'java.lang.String', options: 'com.google.appengine.api.datastore.FetchOptions', closure: 'groovy.lang.Closure'],
-			doc: 'Gets datastore kind properties. The closure lets you apply additional filters to your query.'
-
-	method name: 'getProperties',
-			type: 'java.util.List',
-			doc: 'Gets all datastore kinds and their properties.'
-
-	property name: 'properties',
-			type: 'java.util.List',
-			doc: 'Gets all datastore kinds and their properties.'
-
-	method name: 'getProperties',
-			type: 'java.util.List',
-			params: [closure: 'groovy.lang.Closure'],
-			doc: 'Gets all datastore kinds and their properties. The closure lets you apply additional filters to your query.'
-
-	method name: 'getProperties',
-			type: 'java.util.List',
-			params: [kind: 'java.lang.String'],
-			doc: 'Gets datastore kind properties.'
-
-	method name: 'getProperties',
-			type: 'java.util.List',
-			params: [kind: 'java.lang.String', closure: 'groovy.lang.Closure'],
-			doc: 'Gets datastore kind properties. The closure lets you apply additional filters to your query.'
-
-	method name: 'withTransaction',
-			type: 'com.google.appengine.api.datastore.Transaction',
-			params: [closure: 'groovy.lang.Closure'],
-			doc: '''With this method, transaction handling is done transparently.
-The transaction is committed if the closure executed properly.
-The transaction is rollbacked if anything went wrong.
-You can use this method as follows:
-<code>
-datastore.withTransaction { transaction ->
-    // do something in that transaction
-}
-</code>'''
-
-	method name: 'getAsync',
-			type: 'com.google.appengine.api.datastore.AsyncDatastoreService',
-			doc: 'The asynchronous datastore service.'
-
-	property name: 'async',
-			type: 'com.google.appengine.api.datastore.AsyncDatastoreService',
-			doc: 'The asynchronous datastore service.'
-
-	method name: 'getNamespaces',
-			type: 'java.util.List',
-			params: [options: 'com.google.appengine.api.datastore.FetchOptions'],
-			doc: 'Gets datastore namespaces.'
-
-	method name: 'getNamespaces',
-			type: 'java.util.List',
-			params: [options: 'com.google.appengine.api.datastore.FetchOptions', clsoure: 'groovy.lang.Closure'],
-			doc: 'Gets datastore namespaces. The closure lets you apply additional filters to your query.'
-
-	method name: 'getNamespaces',
-			type: 'java.util.List',
-			doc: 'Gets datastore namespaces.'
-
-	property name: 'namespaces',
-			type: 'java.util.List',
-			doc: 'Gets datastore namespaces.'
-
-	method name: 'getNamespaces',
-			type: 'java.util.List',
-			params: [arg1: 'groovy.lang.Closure'],
-			doc: 'Gets datastore namespaces. The closure lets you apply additional filters to your query.'
-
-	method name: 'getKinds',
-			type: 'java.util.List',
-			params: [options: 'com.google.appengine.api.datastore.FetchOptions'],
-			doc: 'Gets datastore kinds.'
-
-	method name: 'Gets datastore kinds. The closure lets you apply additional filters to your query.',
-			type: 'java.util.List',
-			params: [options: 'com.google.appengine.api.datastore.FetchOptions', closure: 'groovy.lang.Closure'],
-			doc: 'Gets datastore kinds. The closure lets you apply additional filters to your query.'
-
-	method name: 'getKinds',
-			type: 'java.util.List',
-			doc: 'Gets datastore kinds.'
-
-	property name: 'kinds',
-			type: 'java.util.List',
-			doc: 'Gets datastore kinds.'
-
-	method name: 'getKinds',
-			type: 'java.util.List',
-			params: [arg1: 'groovy.lang.Closure'],
-			doc: 'Gets datastore kinds. The closure lets you apply additional filters to your query.'
-
+  property name: 'namespaces',
+      type: 'java.util.List',
+      doc: 'Gets datastore namespaces.'
+  property name: 'kinds',
+      type: 'java.util.List',
+      doc: 'Gets datastore kinds.'
 }
 
 
 
 
-(enclosingCallName("transform") & inClosure() & enclosingCallDeclaringType('com.google.appengine.api.images.Image')).accept{
-	provider = 'Gaelyk'
-	method name: 'resize',
-		type: 'com.google.appengine.api.images.Image',
-		params: [width: 'int', height: 'int'],
-		doc: 'Resizes the image.'
-	method name: 'crop',
-		type: 'com.google.appengine.api.images.Image',
-		params: [leftX: 'double', topY: 'double', rightY: 'double', bottomY: 'double'],
-		doc: 'Croppes the image.'
-	
-	method name: 'horizontal',
-		type: 'com.google.appengine.api.images.Image',
-		params: [flip: boolean],
-		doc: 'Applies the horizontal flip.'
-	
-	method name: 'vertical',
-		type: 'com.google.appengine.api.images.Image',
-		params: [flip: boolean],
-		doc: 'Applies the vertical flip.'
-	
-	method name: 'feeling',
-		type: 'com.google.appengine.api.images.Image',
-		params: [lucky: boolean],
-		doc: 'Applies the "I\'m feeling lucky" transformation.'
-		
-	property name: 'lucky',
-		type: boolean,
-		doc: 'Use after the "feeling" keyword'
-		
-	property name: 'flip',
-		type: boolean,
-		doc: 'Use after the "horizontal" or the "vertical" keyword'
-	
+(enclosingCallName("transform") & inClosure() & enclosingCallDeclaringType('groovyx.gaelyk.GaelykCategory')).accept{
+  provider = 'Gaelyk'
+  method name: 'resize',
+      type: 'com.google.appengine.api.images.Image',
+      params: [width: 'int', height: 'int'],
+      doc: 'Resizes the image.'
+  method name: 'crop',
+      type: 'com.google.appengine.api.images.Image',
+      params: [leftX: 'double', topY: 'double', rightY: 'double', bottomY: 'double'],
+      doc: 'Croppes the image.'
+
+  method name: 'horizontal',
+      type: 'com.google.appengine.api.images.Image',
+      params: [flip: boolean],
+      doc: 'Applies the horizontal flip.'
+
+  method name: 'vertical',
+      type: 'com.google.appengine.api.images.Image',
+      params: [flip: boolean],
+      doc: 'Applies the vertical flip.'
+
+  method name: 'feeling',
+      type: 'com.google.appengine.api.images.Image',
+      params: [lucky: boolean],
+      doc: 'Applies the "I\'m feeling lucky" transformation.'
+
+  property name: 'lucky',
+      type: boolean,
+      doc: 'Use after the "feeling" keyword'
+
+  property name: 'flip',
+      type: boolean,
+      doc: 'Use after the "horizontal" or the "vertical" keyword'
 }
 
 shortcutFor('com.google.appengine.api.images.Image').accept {
-	provider = 'Gaelyk'
-	
-	method name: 'transform',
-			type: 'com.google.appengine.api.images.Image',
-			params: [closure: 'groovy.lang.Closure'],
-			doc: '''Image transform DSL.
-<pre><code>
-bytes.image.transform {
-    resize 100, 100
-    crop 0.1, 0.1, 0.9, 0.9
-    flip horizontal
-    flip vertical
-    rotate 90
-    feeling lucky
-}
-</code></pre>'''
-
-	method name: 'resize',
-			type: 'com.google.appengine.api.images.Image',
-			params: [width: 'int', height: 'int'],
-			doc: '''Create a new resized image.
-<pre><code>
- def thumbnail = image.resize(100, 100)
-</code></pre>'''
-
-	method name: 'rotate',
-			type: 'com.google.appengine.api.images.Image',
-			params: [degrees: 'int'],
-			doc: '''Create a new rotated image.
-
-<pre><code>
- def rotated = image.rotate(90)
-</code></pre>'''
-
-	method name: 'crop',
-			type: 'com.google.appengine.api.images.Image',
-			params: [leftX: 'double', topY: 'double', rightY: 'double', bottomY: 'double'],
-			doc: '''Create a new cropped image.
-
-<pre><code>
- def cropped = image.crop(0.1, 0.1, 0.9, 0.9)
-</code></pre>'''
-
-	method name: 'horizontalFlip',
-			type: 'com.google.appengine.api.images.Image',
-			doc: '''Create a new image flipped horizontally.
-
-<pre><code>
- def himage = image.horizontalFlip()
-</code></pre>'''
-
-	method name: 'verticalFlip',
-			type: 'com.google.appengine.api.images.Image',
-			doc: '''Create a new image flipped vertically.
-
-<pre><code>
- def vimage = image.verticalFlip()
-</code></pre>'''
-
-	method name: 'imFeelingLucky',
-			type: 'com.google.appengine.api.images.Image',
-			doc: '''Create a new image applying the "I'm feeling lucky" transformation.
-
-<pre><code>
- def adjusted = image.iAmFeelingLucky()
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.blobstore.BlobKey').accept {
-	provider = 'Gaelyk'
-	method name: 'getSize',
-			type: 'long',
-			doc: 'The size of the blob.'
+  provider = 'Gaelyk'
+  property name: 'size',
+      type: 'long',
+      doc: 'The size of the blob.'
 
-	property name: 'size',
-			type: 'long',
-			doc: 'The size of the blob.'
+  property name: 'contentType',
+      type: 'java.lang.String',
+      doc: 'The content-type of the blob.'
 
-	method name: 'delete',
-			type: 'void',
-			doc: 'Delete the blob associated with this blob key.'
-
-	method name: 'getContentType',
-			type: 'java.lang.String',
-			doc: 'The content-type of the blob.'
-
-	property name: 'contentType',
-			type: 'java.lang.String',
-			doc: 'The content-type of the blob.'
-
-	method name: 'withStream',
-			type: 'java.lang.Object',
-			params: [closure: 'groovy.lang.Closure'],
-			doc: '''Creates an <code>InputStream</code> over the blob.
-The stream is passed as parameter of the closure.
-This methods takes care of properly opening and closing the stream.
-You can use this method as follows:
-<pre><code>
-blobKey.withStream { inputstream -> ... }
-</code></pre>'''
-
-	method name: 'withReader',
-			type: 'java.lang.Object',
-			params: [encoding: 'java.lang.String', c: 'groovy.lang.Closure'],
-			doc: '''Creates a (buffered) <code>Reader</code> over the blob with a specified encoding.
-The reader is passed as parameter of the closure.
-This methods takes care of properly opening and closing the reader and underlying stream.
-You can use this method as follows:
-<pre><code>
-blobKey.withReader("UTF-8") { reader -> ... }
-</code></pre>'''
-
-	method name: 'withReader',
-			type: 'java.lang.Object',
-			params: [closure: 'groovy.lang.Closure'],
-			doc: '''Creates a (buffered) <code>Reader</code> over the blob using UTF-8 as default encoding.
-The reader is passed as parameter of the closure.
-This methods takes care of properly opening and closing the reader and underlying stream.
-You can use this method as follows:
-<pre><code>
- blobKey.withReader { reader -> ... }
-</code></pre>'''
-
-	method name: 'getInfo',
-			type: 'com.google.appengine.api.blobstore.BlobInfo',
-			doc: '''Get the <code>BlobInfo</code> associated with a blob key with:
+  property name: 'info',
+      type: 'com.google.appengine.api.blobstore.BlobInfo',
+      doc: '''Get the <code>BlobInfo</code> associated with a blob key with:
 <pre><code>
  blobKey.info
 </code></pre>'''
 
-	property name: 'info',
-			type: 'com.google.appengine.api.blobstore.BlobInfo',
-			doc: '''Get the <code>BlobInfo</code> associated with a blob key with:
-<pre><code>
- blobKey.info
-</code></pre>'''
+  property name: 'filename',
+      type: 'java.lang.String',
+      doc: 'The name of the file stored in the blob.'
 
-	method name: 'getFilename',
-			type: 'java.lang.String',
-			doc: 'The name of the file stored in the blob.'
+  property name: 'creation',
+      type: 'java.util.Date',
+      doc: 'The creation date of the file stored in the blob.'
 
-	property name: 'filename',
-			type: 'java.lang.String',
-			doc: 'The name of the file stored in the blob.'
-
-	method name: 'getCreation',
-			type: 'java.util.Date',
-			doc: 'The creation date of the file stored in the blob.'
-
-	property name: 'creation',
-			type: 'java.util.Date',
-			doc: 'The creation date of the file stored in the blob.'
-
-	method name: 'serve',
-			type: 'void',
-			params: [response: 'javax.servlet.http.HttpServletResponse', range: 'com.google.appengine.api.blobstore.ByteRange'],
-			doc: 'Serve a range of the blob to the response.'
-
-	method name: 'Serve a range of the blob to the response.',
-			type: 'void',
-			params: [response: 'javax.servlet.http.HttpServletResponse', range: 'groovy.lang.IntRange'],
-			doc: 'TODO'
-
-	method name: 'serve',
-			type: 'void',
-			params: [response: 'javax.servlet.http.HttpServletResponse'],
-			doc: 'Serve a range of the blob to the response.'
-
-	method name: 'fetchData',
-			type: 'byte[]',
-			params: [start: 'long', end: 'long'],
-			doc: 'Fetch a segment of a blob.'
-
-	method name: 'fetchData',
-			type: 'byte[]',
-			params: [range: 'groovy.lang.IntRange'],
-			doc: '''Fetch a segment of a blob
-<pre><code>
- blobKey.fetchData 1000..2000
-</code></pre>'''
-
-	method name: 'fetchData',
-			type: 'byte[]',
-			params: [range: 'com.google.appengine.api.blobstore.ByteRange'],
-			doc: '''Fetch a segment of a blob'''
-
-	method name: 'getImage',
-			type: 'com.google.appengine.api.images.Image',
-			doc: '''Fetch an image stored in the blobstore.
+  property name: 'image',
+      type: 'com.google.appengine.api.images.Image',
+      doc: '''Fetch an image stored in the blobstore.
 <pre><code>
 def image = blobKey.image
 // equivalent of ImagesServiceFactory.makeImageFromBlob(selfKey)
 </code></pre>'''
-
-	property name: 'image',
-			type: 'com.google.appengine.api.images.Image',
-			doc: '''Fetch an image stored in the blobstore.
-<pre><code>
-def image = blobKey.image
-// equivalent of ImagesServiceFactory.makeImageFromBlob(selfKey)
+      
+  property name: 'servingUrl',
+      type: 'String',
+      doc: '''Obtains a URL that can serve the image stored as a blob dynamically.
+ 
+  Note: getServingUrl can be time consuming so this should only be
+  done once per blobkey and the result should be stored for future use.
+ 
+  <pre><code>
+  image.url = blobKey.getServingUrl(retry: 2, onRetry: { ex, i ->
+     // do something... log exception? Thread.sleep(1000*i) ?
+     true // must return true in order to continue next retry
+ }, onFail: { ex -> // do something
+})
 </code></pre>'''
 
 }
@@ -717,193 +278,15 @@ def image = blobKey.image
 // scaffolded
 
 shortcutFor('com.google.appengine.api.datastore.Key').accept {
-	provider = 'Gaelyk'
-	method name: 'delete',
-			type: 'void',
-			doc: '''Delete the entity represented by that key, from the data store.
-Usage: <code>key.delete()</code> '''
-
-	method name: 'asyncDelete',
-			type: 'java.util.concurrent.Future',
-			doc: '''Delete the entity represented by that key, from the data store.
-Usage: <code>key.asyncDelete()</code> '''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
-	provider = 'Gaelyk'
-	method name: 'delete',
-			type: 'void',
-			doc: 'Delete an AppEngineFile file from the blobstore.'
+  provider = 'Gaelyk'
 
-	method name: 'withReader',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			useNamedArgs: true,
-			params: [encoding: String, locked: boolean, finalize: true, c: 'groovy.lang.Closure'],
-			doc: '''Method creating a reader for the AppEngineFile, read textual content from it, and closes it when done.
-
-<pre><code>
- def file = files.fromPath(someStringPath)
-
- // with default options
- file.withReader { reader ->
-     log.info reader.text
- }
-
- // with specific options:
- file.withReader(encoding: "US-ASCII", locked: true) { reader ->
-     log.info reader.text
- }
-</code></pre>'''
-
-	method name: 'withReader',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			params: [c: 'groovy.lang.Closure'],
-			doc: '''Method creating a reader for the AppEngineFile, read textual content from it, and closes it when done.
-
-<pre><code>
- def file = files.fromPath(someStringPath)
-
- // with default options
- file.withReader { reader ->
-     log.info reader.text
- }
-
- // with specific options:
- file.withReader(encoding: "US-ASCII", locked: true) { reader ->
-     log.info reader.text
- }
-</code></pre>'''
-
-	method name: 'withOutputStream',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			useNamedArgs: true,
-			params: [encoding: String, locked: boolean, finalize: true, c: 'groovy.lang.Closure'],
-			doc: '''Method creating an output stream for the AppEngineFile, writing bynary content to it, and closes it when done.
-
-<pre><code>
- def file = files.createNewBlobFile("text/plain", "hello.txt")
-
- // with default options
- file.withOutputStream { stream ->
-     stream << "some content".bytes
- }
-
- // with specific options:
- file.withOutputStream(locked: true, finalize: false) { writer ->
-     stream << "some content".bytes
- }
-</code></pre>'''
-
-	method name: 'withOutputStream',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			params: [c: 'groovy.lang.Closure'],
-			doc: '''Method creating an output stream for the AppEngineFile, writing bynary content to it, and closes it when done.
-
-<pre><code>
- def file = files.createNewBlobFile("text/plain", "hello.txt")
-
- // with default options
- file.withOutputStream { stream ->
-     stream << "some content".bytes
- }
-
- // with specific options:
- file.withOutputStream(locked: true, finalize: false) { writer ->
-     stream << "some content".bytes
- }
-</code></pre>'''
-
-	method name: 'withInputStream',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			useNamedArgs: true,
-			params: [encoding: String, locked: boolean, finalize: true, c: 'groovy.lang.Closure'],
-			doc: '''Method creating a buffered input stream for the AppEngineFile, read binary content from it, and closes it when done.
-
-<pre><code>
- def file = files.fromPath(someStringPath)
-
- // with default options
- file.withInputStream { stream ->
-     // read from the buffered input stream
- }
-
- // with specific options:
- file.withInputStream(locked: true) { stream ->
-     // read from the buffered input stream
- }
-</code></pre>'''
-			
-	method name: 'withInputStream',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			params: [c: 'groovy.lang.Closure'],
-			doc: '''Method creating a buffered input stream for the AppEngineFile, read binary content from it, and closes it when done.
-
-<pre><code>
- def file = files.fromPath(someStringPath)
-
- // with default options
- file.withInputStream { stream ->
-     // read from the buffered input stream
- }
-
- // with specific options:
- file.withInputStream(locked: true) { stream ->
-     // read from the buffered input stream
- }
-</code></pre>'''
-
-	method name: 'withWriter',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			useNamedArgs: true,
-			params: [encoding: String, locked: boolean, finalize: true, c: 'groovy.lang.Closure'],
-			doc: '''Method creating a writer for the AppEngineFile, writing textual content to it, and closes it when done.
-
-<pre><code>
- def file = files.createNewBlobFile("text/plain", "hello.txt")
-
- // with default options
- file.withWriter { writer ->
-     writer << "some content"
- }
-
- // with specific options:
- file.withWriter(encoding: "US-ASCII", locked: true, finalize: false) { writer ->
-     writer << "some content
- }
-</code></pre>'''
-
-	method name: 'withWriter',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			params: [c: 'groovy.lang.Closure'],
-			doc: '''Method creating a writer for the AppEngineFile, writing textual content to it, and closes it when done.
-
-<pre><code>
- def file = files.createNewBlobFile("text/plain", "hello.txt")
-
- // with default options
- file.withWriter { writer ->
-     writer << "some content"
- }
-
- // with specific options:
- file.withWriter(encoding: "US-ASCII", locked: true, finalize: false) { writer ->
-     writer << "some content
- }
-</code></pre>'''
-
-	method name: 'getBlobKey',
-			type: 'com.google.appengine.api.blobstore.BlobKey',
-			doc: '''Retrieves the blob key associated with an App Engine file.
-<pre><code>
- def file = files.createNewBlobFile("text/plain")
- def key = file.blobKey
- // equivalent of FileServiceFactory.fileService.getBlobKey(file)
-</code></pre>'''
-
-	property name: 'blobKey',
-			type: 'com.google.appengine.api.blobstore.BlobKey',
-			doc: '''Retrieves the blob key associated with an App Engine file.
+  property name: 'blobKey',
+      type: 'com.google.appengine.api.blobstore.BlobKey',
+      doc: '''Retrieves the blob key associated with an App Engine file.
 <pre><code>
  def file = files.createNewBlobFile("text/plain")
  def key = file.blobKey
@@ -913,115 +296,23 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
 }
 
 shortcutFor('com.google.appengine.api.mail.MailService').accept {
-	provider = 'Gaelyk'
-	method name: 'send',
-			type: 'void',
-			useNamedArgs: true,
-			params: [attachments: Collection, bcc: Collections, cc: Collection, htmlBody: String, replyTo: String, sender: String, textBody: String, to: Collection],
-			doc: '''Additional <code>send()</code> method taking a map as parameter.
-The map can contain the normal properties of the
-<code>MailService.Message</code> class.'''
-
-	method name: 'sendToAdmins',
-			type: 'void',
-			useNamedArgs: true,
-			params: [attachments: Collection, bcc: Collections, cc: Collection, htmlBody: String, replyTo: String, sender: String, textBody: String, to: Collection],
-			doc: '''Additional <code>sendToAdmins()</code> method for sending emails to the application admins. 
-This method is taking a map as parameter.
-The map can contain the normal properties of the
-<code>MailService.Message</code> class.'''
-			
-	method name: 'parseMessage',
-			type: 'javax.mail.internet.MimeMessage',
-			params: [request: 'javax.servlet.http.HttpServletRequest'],
-			doc: 'Parses an incoming email message coming from the request into a <code>MimeMessage</code>'
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.xmpp.XMPPService').accept {
-	provider = 'Gaelyk'
-	method name: 'send',
-			type: 'com.google.appengine.api.xmpp.SendResponse',
-			useNamedArgs: true,
-			params: [from: String, to: List, type: 'com.google.appengine.api.xmpp.MessageType', body: String, xml: Closure],
-			doc: '''Send an XMPP/Jabber message with the XMPP service using a map of attributes to build the message.
-<p>
-Possible attributes are:
-<ul>
-<li>from: the sender Jabber ID represented as a String</li>
-<li>to: a String or a list of String representing recepients' Jabber IDs</li>
-<li>type: an instance of the MessageType enum, or a String representation
-('CHAT', 'ERROR', 'GROUPCHAT', 'HEADLINE', 'NORMAL')</li>
-<li>body: a String representing the raw text to send</li>
-<li>xml: a closure representing the XML you want to send (serialized using StreamingMarkupBuilder)</li>
-</ul>'''
-
-	method name: 'sendInvitation',
-			type: 'void',
-			params: [jabberId: 'java.lang.String'],
-			doc: 'Send a chat invitation to a Jabber ID.'
-
-	method name: 'sendInvitation',
-			type: 'void',
-			params: [jabberId: 'java.lang.String', jabberIdFrom: 'java.lang.String'],
-			doc: 'Send a chat invitation to a Jabber ID from another Jabber ID.'
-
-	method name: 'getPresence',
-			type: 'com.google.appengine.api.xmpp.Presence',
-			params: [jabberId: 'java.lang.String'],
-			doc: 'Get the presence of a Jabber ID.'
-
-	method name: 'getPresence',
-			type: 'com.google.appengine.api.xmpp.Presence',
-			params:[jabberId: 'java.lang.String', jabberIdFrom: 'java.lang.String'],
-			doc: 'Get the presence of a Jabber ID.'
-
-	method name: 'parsePresence',
-			type: 'com.google.appengine.api.xmpp.Presence',
-			params: [request: 'javax.servlet.http.HttpServletRequest'],
-			doc: ''' Override the GAE SDK XMPPService#parsePresence as it hard-codes the path for the presence handler,
-thus preventing from using Gaelyk's routing to point at our own handler.'''
-
-	method name: 'parseSubscription',
-			type: 'com.google.appengine.api.xmpp.Subscription',
-			params: [request: 'javax.servlet.http.HttpServletRequest'],
-			doc: '''Override the GAE SDK XMPPService#parseSubscription as it hard-codes the path for the subscription handler,
-thus preventing from using Gaelyk's routing to point at our own handler.'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.channel.ChannelService').accept {
-	provider = 'Gaelyk'
-	method name: 'send',
-			type: 'void',
-			params: [clientId: 'java.lang.String', message: 'java.lang.String'],
-			doc: 'Send a message through the Channel service.'
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('javax.servlet.http.HttpServletResponse').accept {
-	provider = 'Gaelyk'
-	method name: 'getHeaders',
-			type: 'java.util.Map',
-			doc: '''Adds a fake <code>getHeaders()</code> method to <code>HttpServletResponse</code>.
-It allows the similar subscript notation syntax of request,
-but for setting or overriding a header on the response
-(ie. calling <code>response.setHeader()</code>).
-It also allows the leftShift notation for adding a header to the response
-(ie. calling <code>response.addHeader()</code>.
-
-<pre><code>
- // sets or overrides the header 'a'
- response.headers['a'] == 'b'
-
- // adds an additional value to an existing header
- // or sets a first value for a non-existant header
- response.headers['a'] << 'b' 
-</code></pre>'''
-
-	property name: 'headers',
-			type: 'java.util.Map',
-			doc: '''Adds a fake <code>getHeaders()</code> method to <code>HttpServletResponse</code>.
+  provider = 'Gaelyk'
+  
+  property name: 'headers',
+      type: 'java.util.Map',
+      doc: '''Adds a fake <code>getHeaders()</code> method to <code>HttpServletResponse</code>.
 It allows the similar subscript notation syntax of request,
 but for setting or overriding a header on the response
 (ie. calling <code>response.setHeader()</code>).
@@ -1040,185 +331,64 @@ It also allows the leftShift notation for adding a header to the response
 }
 
 shortcutFor('com.google.appengine.api.urlfetch.HTTPResponse').accept {
-	provider = 'Gaelyk'
-	method name: 'getText',
-			type: 'java.lang.String',
-			params: [encoding: 'java.lang.String'],
-			doc: 'Gets the text of the response.'
+  provider = 'Gaelyk'
+  property name: 'text',
+      type: 'java.lang.String',
+      doc: 'Gets the text of the response.'
 
-	method name: 'getText',
-			type: 'java.lang.String',
-			doc: 'Gets the text of the response.'
+  property name: 'statusCode',
+      type: 'int',
+      doc: 'The HTTP status code (synonym of <code>getResponseCode()</code>).'
 
-	property name: 'text',
-			type: 'java.lang.String',
-			doc: 'Gets the text of the response.'
-
-	method name: 'getStatusCode',
-			type: 'int',
-			doc: 'The HTTP status code (synonym of <code>getResponseCode()</code>).'
-
-	property name: 'statusCode',
-			type: 'int',
-			doc: 'The HTTP status code (synonym of <code>getResponseCode()</code>).'
-
-	method name: 'getHeadersMap',
-			type: 'java.util.Map',
-			doc: 'A convenient Map<String, String> of HTTP Headers from the response.'
-
-	property name: 'headersMap',
-			type: 'java.util.Map',
-			doc: 'A convenient Map<String, String> of HTTP Headers from the response.'
+  property name: 'headersMap',
+      type: 'java.util.Map',
+      doc: 'A convenient Map<String, String> of HTTP Headers from the response.'
 
 }
 
 shortcutFor('com.google.appengine.api.images.CompositeTransform').accept {
-	provider = 'Gaelyk'
-	method name: 'rightShift',
-			type: 'com.google.appengine.api.images.CompositeTransform',
-			params: [transform: 'com.google.appengine.api.images.Transform'],
-			doc: '''Use the rightShift operator, >>, to "pre-concatenate" a transform to the composite transform.
-<pre><code>
-def cropTransform = ...
-def rotateTransform = ...
-
-croptTransform >> rotateTransform
-</code></pre>'''
-
-	method name: 'leftShift',
-			type: 'com.google.appengine.api.images.CompositeTransform',
-			params: [transform: 'com.google.appengine.api.images.Transform'],
-			doc: '''Use the leftShift operator, <<, to concatenate a transform to the composite transform.
-<pre><code>
-def cropTransform = ...
-def rotateTransform = ...
-
-croptTransform << rotateTransform
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.xmpp.Message').accept {
-	provider = 'Gaelyk'
-	method name: 'getFrom',
-			type: 'java.lang.String',
-			doc: 'Get the sender Jabber ID of the message in the form of a String.'
+  provider = 'Gaelyk'
 
-	property name: 'from',
-			type: 'java.lang.String',
-			doc: 'Get the sender Jabber ID of the message in the form of a String.'
+  property name: 'from',
+      type: 'java.lang.String',
+      doc: 'Get the sender Jabber ID of the message in the form of a String.'
 
-	method name: 'getXml',
-			type: 'groovy.util.slurpersupport.GPathResult',
-			doc: 'Get the XML content of this message (if it\'s an XML message) in the form of a DOM parsed with XmlSlurper.'
+  property name: 'xml',
+      type: 'groovy.util.slurpersupport.GPathResult',
+      doc: 'Get the XML content of this message (if it\'s an XML message) in the form of a DOM parsed with XmlSlurper..'
 
-	property name: 'xml',
-			type: 'groovy.util.slurpersupport.GPathResult',
-			doc: 'Get the XML content of this message (if it\'s an XML message) in the form of a DOM parsed with XmlSlurper..'
-
-	method name: 'getRecipients',
-			type: 'java.util.List',
-			doc: 'Gets the list of recipients of this message in the form of a list of Jabber ID strings.'
-
-	property name: 'recipients',
-			type: 'java.util.List',
-			doc: 'Gets the list of recipients of this message in the form of a list of Jabber ID strings.'
+  property name: 'recipients',
+      type: 'java.util.List',
+      doc: 'Gets the list of recipients of this message in the form of a list of Jabber ID strings.'
 
 }
 
 shortcutFor('com.google.appengine.api.capabilities.CapabilitiesService').accept {
-	provider = 'Gaelyk'
-	method name: 'getAt',
-			type: 'com.google.appengine.api.capabilities.CapabilityStatus',
-			params: [capability: 'com.google.appengine.api.capabilities.Capability'],
-			doc: '''Query the status of the various App Engine services.
-
-<pre><code>
-import static com.google.appengine.api.capabilities.Capability.*
-import static com.google.appengine.api.capabilities.CapabilityStatus.*
-
-capabilities[DATASTORE] == ENABLED
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('java.lang.String').accept {
-	provider = 'Gaelyk'
-	method name: 'asType',
-			type: 'java.lang.Object',
-			params: [cls: 'java.lang.Class'],
-			doc: '''Converter method for converting strings into various GAE specific types
-<pre><code>
- "foo@bar.com" as Email
- "http://www.google.com" as Link
- "+3361234543" as PhoneNumber
- "50 avenue de la Madeleine, Paris" as PostalAddress
- "groovy" as DatastoreCategory
- "32" as Rating
- "long text" as Text
- "foobar" as BlobKey
- "foo@gmail.com" as JID
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('java.lang.Object').accept {
-	provider = 'Gaelyk'
-	method name: 'asType',
-			type: 'java.lang.Object',
-			params: [arg1: 'java.lang.Class'],
-			doc: '''Gaelyk supports a simplistic object/entity mapping, thanks to type coercion.
-You can use this type coercion mechanism to coerce POJOs/POGOs and datastore Entities.
-The <code>Entity</code> kind will be the simple name of the POJO/POGO (same approach as Objectify).
-So with this mechanism, you can do:
-
-<pre><code>
- class Person { String name, int age }
-
- def p = new Person(name: "Guillaume", age: 33)
- def e = p as Entity
-
- assert p.name == e.name
- assert p.age == e.age
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('java.lang.Integer').accept {
-	provider = 'Gaelyk'
-	method name: 'asType',
-			type: 'java.lang.Object',
-			params: [cls: 'java.lang.Class'],
-			doc: '''Converter method for converting an integer into a Rating instance
-<pre><code>
- 32 as Rating
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('byte[]').accept {
-	provider = 'Gaelyk'
-	method name: 'asType',
-			type: 'java.lang.Object',
-			params: [cls: 'java.lang.Class'],
-			doc: '''Converter method for converting a byte array into a Blob or ShortBlob instance
-<pre><code>
- "some byte".getBytes() as Blob
- "some byte".getBytes() as ShortBlob
-</code></pre>'''
+  provider = 'Gaelyk'
 
-	method name: 'getImage',
-			type: 'com.google.appengine.api.images.Image',
-			doc: '''Transform a byte array into an Image.
-
-<pre><code>
-def byteArray = ...
-def image = byteArray.image
-</code></pre>'''
-
-	property name: 'image',
-			type: 'com.google.appengine.api.images.Image',
-			doc: '''Transform a byte array into an Image.
+  property name: 'image',
+      type: 'com.google.appengine.api.images.Image',
+      doc: '''Transform a byte array into an Image.
 
 <pre><code>
 def byteArray = ...
@@ -1228,127 +398,143 @@ def image = byteArray.image
 }
 
 shortcutFor('java.util.List').accept {
-	provider = 'Gaelyk'
-	method name: 'asType',
-			type: 'java.lang.Object',
-			params: [geoPtClass: 'java.lang.Class'],
-			doc: '''Converter method for converting a pair of numbers (in a list) into a GeoPt instance
-<pre><code>
- [45.32, 54.54f] as GeoPt
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('groovy.lang.IntRange').accept {
-	provider = 'Gaelyk'
-	method name: 'asType',
-			type: 'java.lang.Object',
-			params: [byteRangeClass: 'java.lang.Class'],
-			doc: '''Converter method for converting an int range to a blobstore <code>ByteRange</code>:
-<pre><code>
-    300..400 as ByteRange
-</code></pre>
-Note that Groovy already allowed: <code>[300, 400] as ByteRange</code>.'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.capabilities.CapabilityStatus').accept {
-	provider = 'Gaelyk'
-	method name: 'asBoolean',
-			type: 'boolean',
-			doc: '''Coerces a capability status into a boolean.
-This mechanism is used by the "Groovy Truth".'''
-
+  provider = 'Gaelyk'
 }
 
 
 (shortcutFor('java.lang.Class')| shortcutFor('com.google.appengine.api.NamespaceManager')).accept {
-	provider = 'Gaelyk'
-	
-	method name: 'of',
-			type: 'void',
-			isStatic: true,
-			params: [namespace: 'java.lang.String', c: 'groovy.lang.Closure'],
-			doc: '''Use a namespace in the context of the excution of the closure.
-This method will save the original namespace and restore it afterwards.
-
-<pre><code>
-namespace.of('test') { ... }
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('java.util.Map').accept {
-	provider = 'Gaelyk'
-	method name: 'toQueryString',
-			type: 'java.lang.String',
-			doc: 'Transforms a map of key / value pairs into a properly URL encoded query string.'
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.xmpp.SendResponse').accept {
-	provider = 'Gaelyk'
-	method name: 'isSuccessful',
-			type: 'boolean',
-			doc: 'Checks the status of the sending of the message was successful for all its recipients.'
-
-	property name: 'successful',
-			type: 'boolean',
-			doc: 'Checks the status of the sending of the message was successful for all its recipients.'
+  provider = 'Gaelyk'
+  property name: 'successful',
+      type: 'boolean',
+      doc: 'Checks the status of the sending of the message was successful for all its recipients.'
 
 }
 
 shortcutFor('javax.servlet.http.HttpServletRequest').accept {
-	provider = 'Gaelyk'
-	method name: 'parseXmppFormData',
-			type: 'java.util.Map',
-			doc: '''Parse the form-data from the Jabber requests,
-as it contains useful information like presence and subscription details, etc.'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('java.io.File').accept {
-	provider = 'Gaelyk'
-	method name: 'getImage',
-			type: 'com.google.appengine.api.images.Image',
-			doc: 'Create an image from a file.'
-
-	property name: 'image',
-			type: 'com.google.appengine.api.images.Image',
-			doc: 'Create an image from a file.'
+  provider = 'Gaelyk'
+  property name: 'image',
+      type: 'com.google.appengine.api.images.Image',
+      doc: 'Create an image from a file.'
 
 }
 
 shortcutFor('com.google.appengine.api.files.FileService').accept {
-	provider = 'Gaelyk'
-	method name: 'fromPath',
-			type: 'com.google.appengine.api.files.AppEngineFile',
-			params: [path: 'java.lang.String'],
-			doc: '''Get a reference to an App Engine file from its path.
-<pre><code>
- def path = "...some path..."
- def file = files.fromPath(path)
-// equivalent of new AppEngineFile(path)
-</code></pre>'''
-
+  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.LifecycleManager').accept {
-	provider = 'Gaelyk'
-	method name: 'setShutdownHook',
-			type: 'void',
-			params: [hook: 'groovy.lang.Closure'],
-			doc: '''Shortcut to use closures as shutdown hooks.
-<pre><code>
- lifecycle.shutdownHook = { ...shutdown logic... }
-</code></pre>'''
-
-	property name: 'shutdownHook',
-			type: 'groovy.lang.Closure',
-			doc: '''Shortcut to use closures as shutdown hooks.
+  provider = 'Gaelyk'
+  property name: 'shutdownHook',
+      type: 'groovy.lang.Closure',
+      doc: '''Shortcut to use closures as shutdown hooks.
 <pre><code>
  lifecycle.shutdownHook = { ...shutdown logic... }
 </code></pre>'''
 
 }
+
+contribute(annotatedBy('groovyx.gaelyk.datastore.Entity')) {
+  provider 'Gaelyk Entity'
+
+  method name: 'delete', type: 'void', doc: "Removes this object from the datastore"
+  method name: 'save', type: 'void', doc: "Saves this object from the datastore"
+
+  PropertyNode existingKeyProperty = currentType.properties.find { PropertyNode field ->
+    field.annotations.any{ AnnotationNode anno ->
+      anno.classNode.name == 'groovyx.gaelyk.datastore.Key'
+    }
+  }
+
+  ClassNode keyType = existingKeyProperty?.type ?: ClassHelper.long_TYPE
+
+  if(!existingKeyProperty){
+    property name: 'id', type: ClassHelper.long_TYPE, doc: "Identificator of the object in the datastore"
+  }
+
+  method isStatic: true, name: 'get', type: currentType, params: [key: keyType], doc: "Fetches the object from the datastore by given id"
+  method isStatic: true, name: 'exists', type: boolean, params: [key: keyType], doc: "Checks whether the with given id exists in the datastore"
+  method isStatic: true, name: 'count', type: int, doc: "Counts all objects of current type in the database"
+  method isStatic: true, name: 'count', type: int, params: [query: Closure], doc: "Counts all objects of current type in the database which satify given query"
+  method isStatic: true, name: 'findAll', type: 'java.util.List<' + currentType.name + '>', doc: "Find all objects of current type in the database"
+  method isStatic: true, name: 'findAll', type: 'java.util.List<' + currentType.name + '>', params: [query: Closure], doc: "Find all objects of current type in the database which satify given query"
+  method isStatic: true, name: 'findAll', type: 'java.util.List<' + currentType.name + '>', params: [query: 'groovyx.gaelyk.query.QueryBuilder'], doc: "Find all objects of current type in the database which satify given query"
+  method isStatic: true, name: 'find', type: currentType, params: [query: Closure], doc: "Find single object of current type in the database which satifies given query"
+  method isStatic: true, name: 'find', type: currentType, params: [query: 'groovyx.gaelyk.query.QueryBuilder'], doc: "Find single object of current type in the database which satifies given query"
+  method isStatic: true, name: 'iterate', type: 'java.util.Iterator<' + currentType.name + '>', doc: "Iterates over all objects of current type in the database"
+  method isStatic: true, name: 'iterate', type: 'java.util.Iterator<' + currentType.name + '>', params: [query: Closure], doc: "Iterates over all objects of current type in the database which satify given query"
+  method isStatic: true, name: 'iterate', type: 'java.util.Iterator<' + currentType.name + '>', params: [query: 'groovyx.gaelyk.query.QueryBuilder'], doc: "Iterates over all objects of current type in the database which satify given query"
+}
+
+(
+    ((
+    (
+    enclosingCallName("find") |
+    enclosingCallName("findAll") |
+    enclosingCallName("count") |
+    enclosingCallName("iterate")
+    )
+    & enclosingCallDeclaringType(
+    annotatedBy(
+    'groovyx.gaelyk.datastore.Entity'
+    )
+    )
+    )
+    |
+    (
+    (
+    enclosingCallName("execute") |
+    enclosingCallName("query") |
+    enclosingCallName("iterate")
+    )
+    & enclosingCallDeclaringType(
+    'groovyx.gaelyk.GaelykCategory'
+    )
+    ))
+    & inClosure()
+    ).accept {
+  delegatesTo type: 'groovyx.gaelyk.query.QueryBuilder'
+
+  for(String kwd in [
+    'all',
+    'keys',
+    'single',
+    'count',
+    'asc',
+    'desc']
+  ){
+    property name: kwd, type: String, doc: "The " + kwd + " keyword"
+  }
+}
+ 
+contribute(enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy')) & inClosure() & enclosingCallName("add") & enclosingCallDeclaringType('groovyx.gaelyk.GaelykCategory')){
+  delegatesTo type: 'groovyx.gaelyk.search.DocumentDefinitions'
+}
+
+contribute(enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy')) & inClosure() & enclosingCallDeclaringType('groovyx.gaelyk.search.DocumentDefinitions')){
+  delegatesTo type: 'groovyx.gaelyk.search.FieldDefinitions'
+  property name: 'xyz123'
+}
+
+
+
 

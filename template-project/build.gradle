@@ -11,32 +11,14 @@ def compatibilityVersion = 1.5
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
-def gitHub = {
-        def resolver = new URLResolver()
-
-        resolver.with {
-            name = 'GitHub'
-            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
-        }
-
-        resolver
-}
-
 buildscript {
     repositories {
-
-        def resolver = new URLResolver()
-        resolver.with {
-            name = 'GitHub'
-            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
-        }
-        add resolver
         mavenCentral()
     }
 
     dependencies {
         classpath 'org.gradle.api.plugins:gradle-gae-plugin:0.7'
-        classpath 'bmuschko:gradle-gaelyk-plugin:0.3.2'
+        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.3.2'
         classpath 'eu.appsatori:gradle-fatjar-plugin:0.1.1'
     }
 }
@@ -44,13 +26,6 @@ buildscript {
 repositories {
     mavenCentral()
     mavenRepo name: 'sonatype-snapshots', url: 'https://oss.sonatype.org/content/repositories/snapshots'
-
-    def resolver = new URLResolver()
-    resolver.with {
-        name = 'GitHub'
-        addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
-    }
-    add resolver
 }
 
 dependencies {
@@ -64,7 +39,7 @@ dependencies {
     testCompile 'org.spockframework:spock-core:0.6-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'org.gaelyk:gaelyk-spock:0.3',
+    testCompile 'org.gaelyk:gaelyk-spock:0.3.0.1',
                 "com.google.appengine:appengine-api-stubs:$gaeVersion",
                 "com.google.appengine:appengine-testing:$gaeVersion",
                 'javax.servlet:servlet-api:2.5',
@@ -96,8 +71,6 @@ task copyRuntimeLibraries(type: Sync) {
 }
 
 gaeRun.dependsOn copyRuntimeLibraries
-gaelykPrecompileGroovlet.dependsOn copyRuntimeLibraries
-gaelykPrecompileTemplate.dependsOn copyRuntimeLibraries
 
 idea {
     project {

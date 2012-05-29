@@ -81,14 +81,6 @@ task template {
     description = "Packaging the template project"
 
     doFirst {
-        println "Deleting old Gaelyk JARs from the template project"
-        ant.delete {
-            fileset dir: projLib, includes: "gaelyk-*.jar"
-        }
-
-        println "Copying the latest Gaelyk JAR in the template project"
-        ant.copy file: jar.archivePath, todir: projLib
-
         println "Creating the template project ZIP file"
         ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX,*.iml,.DS_Store,bin/**,.gradle/**,build/**,war/WEB-INF/appengine-generated/**'
     }

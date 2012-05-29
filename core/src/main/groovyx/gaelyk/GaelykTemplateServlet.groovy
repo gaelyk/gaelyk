@@ -157,7 +157,7 @@ class GaelykTemplateServlet extends TemplateServlet {
         
         def match = servletPath =~ "/((.+?/)*)(.+)\\.gtpl"
         if(!match){
-            return null
+            throw new ClassNotFoundException('No class found for servlet path ' + servletPath)
         }
         String ret = ''
         if(match[0][1]){

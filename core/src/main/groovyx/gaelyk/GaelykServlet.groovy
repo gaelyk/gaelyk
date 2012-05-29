@@ -172,7 +172,7 @@ class GaelykServlet extends GroovyServlet {
     static String getPrecompiledClassName(servletPath){
         def match = servletPath =~ "/(.+)\\.groovy"
         if(!match){
-            return null
+            throw new ClassNotFoundException('No class found for servlet path ' + servletPath)
         }
         match[0][1].replace '/', '.'
     }

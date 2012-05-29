@@ -9,7 +9,8 @@ You will notice it features a <code>build.gradle</code> file for letting you bui
 This build file is using the <a href="http://gradle.org">Gradle</a> build system,
 which is using the <b>Groovy</b> language for its build description DSL.
 This Gradle build file leverages key plugins that we'll describe below,
-and offers integration with the <a href="http://spockframework.org">Spock</a> testing framework for testing your groovlets.
+and offers integration with the <a href="http://spockframework.org">Spock</a> testing framework for testing your groovlets,
+and with <a href="http://www.gebish.org/">Geb</a> for your functional tests.
 </p>
 
 <blockquote>
@@ -72,6 +73,9 @@ You will find the following Gradle tasks handy:
     </li>
     <li>
         <tt>gradlew test</tt>: to compile and run your tests from <code>src/test/java</code> and <code>src/test/groovy</code>
+    </li>
+    <li>
+        <tt>gradlew gaeFunctionalTest</tt>: to run the Spock and Geb-powered functional tests from <code>src/functionalTest/groovy</code>
     </li>
     <li>
         <tt>gradlew gaeRun</tt>: to run your application locally
@@ -165,4 +169,44 @@ Then, you could run the test by executing the gradle command: <code>gradlew test
 <p>
 For further information, please have a look at the
 <a href="https://github.com/marcoVermeulen/gaelyk-spock">Spock support for Gaelyk</a>.
+</p>
+
+<a name="geb"></a>
+<h1>Functional tests with Geb</h1>
+
+<p>
+With <a href="http://www.gebish.org/">Geb</a>, you can add functional tests to your <b>Gaelyk</b> application.
+You'll need to instruct Geb the address of your local dev server, in <code>src/functionalTest/groovy/GebConfig.groovy</code>:
+</p>
+
+<pre class="brush:groovy">
+baseUrl = 'http://localhost:8080/'
+</pre>
+
+<p>
+Then you can create your first smoke test as follows in <code>src/functionalTest/groovy/SmokeSpec.groovy</code>:
+</p>
+
+<pre class="brush:groovy">
+import geb.spock.GebSpec
+
+class SmokeSpec extends GebSpec {
+    void "main page title should be 'Gaelyk'"() {
+        when:
+        go ''
+
+        then:
+        title == 'Gaelyk'
+    }
+}
+</pre>
+
+<p>
+Then you can run the functional tests with:
+</p>
+
+<p>
+For more information, please have a look at this quick
+<a href="http://blog.proxerd.pl/article/funcational-testing-of-gae-lyk-applications-with-geb">tutorial</a>,
+and <a href="http://www.gebish.org/">learn more about Geb</a>.
 </p>

@@ -41,22 +41,21 @@ But to get you started quickly, you may use a ready-made template project which 
         <b>Gaelyk</b> will be available on Maven Central from now on,
         in the <code>org.gaelyk</code> group with the <code>gaelyk</code> artifact
     </li>
+    <li>Changed Maven/Gradle group id from <code>groovyx.gaelyk</code> to <code>org.gaelyk</code></li>
     <li>Introduction of <a href="/tutorial/plugins#binaryplugins">binary plugins</a></li>
     <li>You can use <code>redirect301</code> for permanent redirects in routes</li>
     <li>New <code>withTransaction{}</code> and <code>withTransactionAsyncCommit{}</code> methods for the async datastore</li>
     <li>Memcache get()/put() failures are silently ignored to avoid painful exceptions when Memcache service is misbehaving</li>
     <li>Improve POGO coercion's performance</li>
-    <li>Generated CRUD operations for POGO annotated with <code>@Entity</code></li>
+    <li>
+        Generated CRUD operations for POGO annotated with
+        <a href="/tutorial/app-engine-shortcuts#pogo-entity-coercion-annotations"><code>@Entity</code></a>
+    </li>
     <li>Allow using enum values as POGO properties for coercion</li>
-    <li>Changed Maven/Gradle group id from <code>groovyx.gaelyk</code> to <code>org.gaelyk</code></li>
     <li>
         Added the <a href="/tutorial/plugins#search">search service</a> to the binding and bring additional DSLs for index handling and querying
     </li>
     <li>New <a href="/tutorial/views-and-controllers#lazy">geo variables</a> in the binding</li>
-    <li>
-        An <a href="/tutorial/app-engine-shortcuts#pogo-entity-coercion-annotations">@Entity</a>
-        annotation to add CRUD operations to classes
-    </li>
 </ul>
 
 <h4>Breaking changes</h4>
@@ -66,6 +65,10 @@ But to get you started quickly, you may use a ready-made template project which 
         When using <code>select keys</code> with the Query DSL, instances of <code>Key</code> are returned
         instead of <code>Entity</code>s with only a key field.
         Hence, you don't need anymore to call <code>.key</code> on the results of the query.
+    </li>
+    <li>
+        For those using dependency tools like Maven for building their projects,
+        please remember to change the groupId for the Gaelyk dependency (group: org.gaelyk / module: gaelyk)
     </li>
 </ul>
 

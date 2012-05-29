@@ -49,7 +49,9 @@ But to get you started quickly, you may use a ready-made template project which 
     <li>Generated CRUD operations for POGO annotated with <code>@Entity</code></li>
     <li>Allow using enum values as POGO properties for coercion</li>
     <li>Changed Maven/Gradle group id from <code>groovyx.gaelyk</code> to <code>org.gaelyk</code></li>
-    <li>Added the <a href="/tutorial/plugins#search">search service</a> to the binding</li>
+    <li>
+        Added the <a href="/tutorial/plugins#search">search service</a> to the binding and bring additional DSLs for index handling and querying
+    </li>
     <li>New <a href="/tutorial/views-and-controllers#lazy">geo variables</a> in the binding</li>
     <li>
         An <a href="/tutorial/app-engine-shortcuts#pogo-entity-coercion-annotations">@Entity</a>

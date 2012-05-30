@@ -111,6 +111,13 @@ You will find the following Gradle tasks handy:
     </li>
 </ul>
 
+<blockquote>
+<b>Remark:</b> Note that the <a href="https://github.com/bmuschko/gradle-gaelyk-plugin">Gradle Gaelyk plugin</a>
+takes care of precompiling your Groovlets and Templates before upload to production, for faster startup times.
+The <code>gaelykPrecompileGroovlet</code> and <code>gaelykPrecompileTemplate</code>
+are called automatically and transparently during the build.
+</blockquote>
+
 <a name="spock"></a>
 <h1>Testing with Spock</h1>
 

@@ -41,6 +41,11 @@ But to get you started quickly, you may use a ready-made template project which 
         <b>Gaelyk</b> will be available on Maven Central from now on,
         in the <code>org.gaelyk</code> group with the <code>gaelyk</code> artifact
     </li>
+    <li>
+        The Gradle Gaelyk plugin used by the template project transparently
+        <a href="https://github.com/bmuschko/gradle-gaelyk-plugin#tasks">precompiles your Groovlets and Templates</a>
+        for faster startup times
+    </li>
     <li>Changed Maven/Gradle group id from <code>groovyx.gaelyk</code> to <code>org.gaelyk</code></li>
     <li>Introduction of <a href="/tutorial/plugins#binaryplugins">binary plugins</a></li>
     <li>You can use <code>redirect301</code> for permanent redirects in routes</li>

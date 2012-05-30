@@ -15,6 +15,7 @@
  */
 package groovyx.gaelyk.routes
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 
 import javax.servlet.Filter
@@ -69,6 +70,9 @@ class RoutesFilter implements Filter {
         this.filterConfig = filterConfig
         this.routesFileLocation = filterConfig.getInitParameter("routes.location") ?: "WEB-INF/routes.groovy"
         this.log = new GroovyLogger('gaelyk.routesfilter')
+        if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
+            routes = new CopyOnWriteArrayList<Route>()
+        }
         loadRoutes()
     }
 
@@ -104,7 +108,8 @@ class RoutesFilter implements Filter {
                 use(ExpirationTimeCategory) {
                     script.run()
                 }
-                routes = script.routes
+                routes.clear()
+                routes.addAll script.routes
 
                 // update the last modified flag
                 lastRoutesFileModification = lastModified
@@ -127,7 +132,9 @@ class RoutesFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest)servletRequest
         HttpServletResponse response = (HttpServletResponse)servletResponse
         
-        request.setAttribute(ORIGINAL_URI, getScriptUri(request))
+        if(!request.getAttribute(ORIGINAL_URI)){
+            request.setAttribute(ORIGINAL_URI, getIncludeAwareUri(request))            
+        }
 
         def method = request.method
 
@@ -170,13 +177,13 @@ class RoutesFilter implements Filter {
     void destroy() { }
     
     /**
-    * Returns the include-aware uri of the script or template file.
+    * Returns the include-aware uri.
     *
     * @param request the http request to analyze
     * @return the include-aware uri either parsed from request attributes or
     *         hints provided by the servlet container
     */
-   protected String getScriptUri(HttpServletRequest request) {
+   protected String getIncludeAwareUri(HttpServletRequest request) {
        String uri = null
        String info = null
 

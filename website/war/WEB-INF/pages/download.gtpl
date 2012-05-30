@@ -61,7 +61,10 @@ But to get you started quickly, you may use a ready-made template project which 
         Added the <a href="/tutorial/app-engine-shortcuts#search">search service</a> to the binding and bring additional DSLs for index handling and querying
     </li>
     <li>New <a href="/tutorial/views-and-controllers#lazy">geo variables</a> in the binding</li>
-    <li>The template project now uses <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> for its look'n feel</li>
+    <li>
+        The <a href="/tutorial/template-project">template project</a> now uses
+        <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> for its look'n feel
+    </li>
 </ul>
 
 <h4>Breaking changes</h4>

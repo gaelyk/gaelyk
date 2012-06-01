@@ -5,7 +5,7 @@
 <p>
 The backend service support is quite minimal, from a <b>Gaelyk</b> perspective,
 as only a <code>backends</code> (corresponding to a <code>BackendService</code> instance)
-and <code>lifecylce</code> (the <code>LifecycleManager</code>) variables
+and <code>lifecycle</code> (the <code>LifecycleManager</code>) variables
 have been added to the binding of Groovlets and templates.
 </p>
 

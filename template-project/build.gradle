@@ -51,8 +51,11 @@ dependencies {
 
 gae {
     downloadSdk = true
-    warDir = file('src/main/webapp/')
     optimizeWar = true
+    warDir = file('src/main/webapp/')
+    
+    // uncomment following to enable remote debugging
+    // jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
 }
 
 gaeExplodeWar.dependsOn gaelykPrecompileGroovlet

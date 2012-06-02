@@ -61,6 +61,8 @@ gae {
 gaeExplodeWar.dependsOn gaelykPrecompileGroovlet
 gaeExplodeWar.dependsOn gaelykPrecompileTemplate
 
+sourceSets.main.output.classesDir = 'src/main/webapp/WEB-INF/classes'
+
 clean {
      delete sourceSets*.output.classesDir
 }

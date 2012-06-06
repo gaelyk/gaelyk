@@ -1,6 +1,6 @@
 package groovyx.gaelyk
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest
 
 import com.google.appengine.api.datastore.DatastoreService
 import com.google.appengine.api.memcache.MemcacheService
@@ -68,7 +68,7 @@ class BindingEnhancerTest extends GroovyTestCase {
         SystemProperty.environment.set("Development")
 
         def headers = [ 'X-AppEngine-Country': 'CZ', 'X-AppEngine-Region': 'pr', 'X-AppEngine-City': 'prague', 'X-AppEngine-CityLatLong': '50.087811,14.420460']
-        
+
         binding = new Binding()
         binding.request = [getHeader: { String name -> headers[name]}] as HttpServletRequest
         GaelykBindingEnhancer.bind(binding)
@@ -97,19 +97,19 @@ class BindingEnhancerTest extends GroovyTestCase {
      * Check the various GAE services variables are available in the binding
      */
     void testVariablesPresent() {
-        ["datastore", "memcache", "urlFetch", "mail", "oauth", 
+        ["datastore", "memcache", "urlFetch", "mail", "oauth",
                 "images", "users", "defaultQueue", "queues",
                 "xmpp", "localMode", "blobstore", "logService"].each {
             assert binding.variables.containsKey(it)
         }
     }
-    
+
     /**
     * Check the geo variable
     */
    void testGeo() {
        def geo = binding.geo
-       
+
        assert geo.country == 'CZ'
        assert geo.region == 'pr'
        assert geo.city == 'prague'

@@ -1,12 +1,12 @@
 package groovyx.gaelyk.query
 
-import java.util.Map.Entry;
+import java.util.Map.Entry
 
 import groovy.transform.PackageScope
-import groovyx.gaelyk.GaelykCategory;
+import groovyx.gaelyk.GaelykCategory
 
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PropertyProjection;
+import com.google.appengine.api.datastore.Entity
+import com.google.appengine.api.datastore.PropertyProjection
 import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.PreparedQuery
 import com.google.appengine.api.datastore.DatastoreServiceFactory
@@ -59,7 +59,7 @@ class QueryBuilder {
 
         if (ancestor)
             query.setAncestor(ancestor)
-            
+
         if(projections){
             for(Entry<String, Class> entry in projections){
                 query.addProjection(new PropertyProjection(entry.key, entry.value))
@@ -103,7 +103,7 @@ class QueryBuilder {
         if (coercedClass) {
             if (iterable) {
                 def entitiesIterator = preparedQuery.asIterator(options)
-                
+
                 return new Iterator() {
                     boolean hasNext() {
                         entitiesIterator.hasNext()
@@ -124,7 +124,7 @@ class QueryBuilder {
                 // the delegation transforms the class into a string expression
                 def result = []
                 for (entity in entities) result << GaelykCategory.asType(entity, coercedClass)
-                
+
                 return result
             }
         } else {
@@ -197,8 +197,8 @@ class QueryBuilder {
         queryType = qt
         return this
     }
-    
-    
+
+
     /**
      * Select particular entity properties of entities matching that query.
      * Possible syntax:
@@ -213,7 +213,7 @@ class QueryBuilder {
         projections.putAll(projs)
         return this
     }
-    
+
     /**
     * Select particular entity properties of entities matching that query.
     * Possible syntax:
@@ -230,7 +230,7 @@ class QueryBuilder {
        }
        return this
    }
-    
+
 
     /**
      * @throws QuerySyntaxException if a wrong parameter is passed to the select clause.

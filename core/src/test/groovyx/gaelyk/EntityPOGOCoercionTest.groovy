@@ -2,12 +2,11 @@ package groovyx.gaelyk
 
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.google.appengine.api.datastore.dev.LocalDatastoreService
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
 
 /**
  * Test GaelykCategory's methods for POGO to Entity and Entity to POGO coercions.
- * 
+ *
  * @author Guillaume Laforge
  */
 class EntityPOGOCoercionTest extends GroovyTestCase {

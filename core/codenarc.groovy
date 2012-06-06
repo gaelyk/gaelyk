@@ -1,4 +1,14 @@
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Switch rulesets to check for an explicitly specified rules only
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/*
+ruleset {
+    UnnecessaryGString
+}
+*/
+
 ruleset {
 
     description 'Gaelyk CodeNarc RuleSet'

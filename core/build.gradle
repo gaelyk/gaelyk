@@ -3,8 +3,9 @@ apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-
-// http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
+/**
+ * http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
+ */
 ext.codenarcPriority1Violations = 0     // Work
 ext.codenarcPriority2Violations = 213   // in
 ext.codenarcPriority3Violations = 985   // progress ..
@@ -12,7 +13,6 @@ ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
 ext.codenarcSources             = [ 'src/main', 'src/test' ]
 apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
-//apply from: '/Users/evgenyg/Projects/gradle-plugins/src/main/groovy/CodeNarc.gradle'
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
@@ -25,11 +25,11 @@ final appEngineVersion = '1.6.6'
 final groovyVersion    = '1.8.6'
 
 // various directory places and file names
-final tmpProj    = "../template-project"
+final tmpProj    = '../template-project'
 final zipName    = "${buildDir}/gaelyk-template-project-${version}.zip"
 final projLib    = "${tmpProj}/src/main/webapp/WEB-INF/lib"
 
-final website    = "../website"
+final website    = '../website'
 final apiDir     = "${website}/war/api"
 final websiteLib = "${website}/war/WEB-INF/lib"
 
@@ -58,9 +58,9 @@ dependencies {
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
     compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
     compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
-    compile "javax.servlet:servlet-api:2.5"
-    testCompile "javax.servlet.jsp:jsp-api:2.2"
-    testCompile "junit:junit:4.8.2"
+    compile 'javax.servlet:servlet-api:2.5'
+    testCompile 'javax.servlet.jsp:jsp-api:2.2'
+    testCompile 'junit:junit:4.8.2'
     testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
     testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
     testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
@@ -90,16 +90,16 @@ groovydoc {
 }
 
 task template {
-    description = "Packaging the template project"
+    description = 'Packaging the template project'
 
     doFirst {
-        println "Creating the template project ZIP file"
+        println 'Creating the template project ZIP file'
         ant.zip basedir: tmpProj, destfile: zipName, excludes: '__MACOSX,*.iml,.DS_Store,bin/**,.gradle/**,build/**,war/WEB-INF/appengine-generated/**'
     }
 }
 
 task dist(dependsOn: [jar, groovydoc, template]) {
-    description = "Updating the Gaelyk JAR of the website"
+    description = 'Updating the Gaelyk JAR of the website'
 
     doFirst {
         ant.copy file: jar.archivePath, todir: websiteLib
@@ -128,12 +128,12 @@ artifacts {
 
 tasks.withType(Upload) { // map the groovy configuration to compile in the pom
     repositories.withType(MavenResolver) {
-        pom.scopeMappings.addMapping(1, configurations.groovy, "compile")
+        pom.scopeMappings.addMapping(1, configurations.groovy, 'compile')
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion "1.0-rc-3"
+    gradleVersion '1.0-rc-3'
 }
 
 if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
@@ -151,8 +151,8 @@ if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
                     authentication(userName: sonatypeUsername, password: sonatypePassword)
                 }
 
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/", auth)
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots", auth)
+                repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/', auth)
+                snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots', auth)
 
 
                 pom.project {

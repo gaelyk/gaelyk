@@ -1,6 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
@@ -54,7 +55,7 @@ dependencies {
     testCompile 'org.spockframework:spock-core:0.5-groovy-1.8', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    
+
     testCompile fileTree(dir: 'testLibs', include: ['gaelyk-resources-0.1.1-SNAPSHOT.jar'])
 }
 
@@ -121,7 +122,7 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion "1.0-milestone-9"
+    gradleVersion "1.0-rc-3"
 }
 
 if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){

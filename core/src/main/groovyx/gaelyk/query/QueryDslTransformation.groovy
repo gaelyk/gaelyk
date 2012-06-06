@@ -1,6 +1,6 @@
 package groovyx.gaelyk.query
 
-import groovyx.gaelyk.datastore.Entity;
+import groovyx.gaelyk.datastore.Entity
 
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.transform.GroovyASTTransformation
@@ -8,7 +8,6 @@ import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.ast.expr.MethodCallExpression
-import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassCodeVisitorSupport
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.expr.VariableExpression

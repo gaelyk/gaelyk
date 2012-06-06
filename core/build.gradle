@@ -3,6 +3,17 @@ apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
+
+// http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
+ext.codenarcPriority1Violations = 0     // Work
+ext.codenarcPriority2Violations = 213   // in
+ext.codenarcPriority3Violations = 985   // progress ..
+ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
+ext.codenarcSources             = [ 'src/main', 'src/test' ]
+apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
+
+//apply from: '/Users/evgenyg/Projects/gradle-plugins/src/main/groovy/CodeNarc.gradle'
+
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 defaultTasks 'clean', 'build'

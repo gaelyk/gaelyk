@@ -9,13 +9,13 @@ import com.google.appengine.api.datastore.Entity
 import groovyx.gaelyk.GaelykCategory
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
-import com.google.appengine.api.datastore.RawValue;
+import com.google.appengine.api.datastore.RawValue
 
 import groovyx.gaelyk.query.QuerySyntaxException
 import com.google.appengine.api.datastore.DatastoreServiceFactory
 
 /**
- * 
+ *
  * @author Guillaume Laforge
  */
 class QueryDslTest extends GroovyTestCase {
@@ -332,7 +332,7 @@ class QueryDslTest extends GroovyTestCase {
             '''
 
             def resultBook = clazz.newInstance().run()
-            
+
             assert resultBook.isbn == '1234567890'
         }
     }
@@ -411,7 +411,7 @@ class QueryDslTest extends GroovyTestCase {
             assert peopleInSanJose.size() == 1
         }
     }
-    
+
     void testProjectionQueryWithMap() {
         use (GaelykCategory) {
             def e1 = new Entity("city", "San Jose")
@@ -435,19 +435,19 @@ class QueryDslTest extends GroovyTestCase {
             def ret = clazz.newInstance(binding).run()
 
             assert ret.size() == 1
-            
+
             Entity re = ret[0]
-            
+
             assert re.hasProperty('prop1')
             assert re.hasProperty('prop2')
             assert !re.hasProperty('prop3')
-            
+
             assert re.getProperty('prop1') instanceof String
             assert re.getProperty('prop2') instanceof Long
             assert re.getProperty('prop3') == null
         }
     }
-    
+
     void testProjectionQueryWithList() {
         use (GaelykCategory) {
             def e1 = new Entity("city", "San Jose")
@@ -471,13 +471,13 @@ class QueryDslTest extends GroovyTestCase {
             def ret = clazz.newInstance(binding).run()
 
             assert ret.size() == 1
-            
+
             Entity re = ret[0]
-            
+
             assert re.hasProperty('prop1')
             assert re.hasProperty('prop2')
             assert !re.hasProperty('prop3')
-            
+
             assert re.getProperty('prop1') instanceof RawValue
             assert re.getProperty('prop2') instanceof RawValue
             assert re.getProperty('prop3') == null

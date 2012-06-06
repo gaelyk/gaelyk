@@ -2,12 +2,11 @@ package groovyx.gaelyk
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalChannelServiceTestConfig
-import groovyx.gaelyk.GaelykCategory
 import com.google.appengine.api.channel.ChannelServiceFactory
 
 /**
  * Channel service send message test
- *  
+ *
  * @author Guillaume Laforge
  */
 class ChannelServiceTest extends GroovyTestCase {

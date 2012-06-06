@@ -1,7 +1,7 @@
-import org.codehaus.groovy.ast.AnnotationNode;
-import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.AnnotationNode
+import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
-import org.codehaus.groovy.ast.PropertyNode;
+import org.codehaus.groovy.ast.PropertyNode
 
 class EnvDescriptor {
     String name
@@ -22,22 +22,22 @@ class AppDescriptor {
 
 contribute(annotatedBy('groovyx.gaelyk.datastore.Entity')) {
     provider 'Gaelyk Entity'
-    
+
     method name: 'delete', type: 'void', doc: "Removes this object from the datastore"
     method name: 'save', type: 'void', doc: "Saves this object from the datastore"
-    
+
     PropertyNode existingKeyProperty = currentType.properties.find { PropertyNode field ->
         field.annotations.any{ AnnotationNode anno ->
             anno.classNode.name == 'groovyx.gaelyk.datastore.Key'
         }
     }
-    
+
     ClassNode keyType = existingKeyProperty?.type ?: ClassHelper.long_TYPE
-    
+
     if(!existingKeyProperty){
         property name: 'id', type: ClassHelper.long_TYPE, doc: "Identificator of the object in the datastore"
     }
-    
+
     method isStatic: true, name: 'get', type: currentType, params: [key: keyType], doc: "Fetches the object from the datastore by given id"
     method isStatic: true, name: 'exists', type: boolean, params: [key: keyType], doc: "Checks whether the with given id exists in the datastore"
     method isStatic: true, name: 'count', type: int, doc: "Counts all objects of current type in the database"
@@ -54,10 +54,10 @@ contribute(annotatedBy('groovyx.gaelyk.datastore.Entity')) {
 
 def queryDslSupport = {
     delegatesTo type: 'groovyx.gaelyk.query.QueryBuilder'
-    
+
     for(String kwd in ['all', 'keys', 'single', 'count', 'asc', 'desc'] ){
         property name: kwd, type: String, doc: "The " + kwd + " keyword"
-    }    
+    }
 }
 
 (
@@ -67,12 +67,12 @@ def queryDslSupport = {
             enclosingCallName("findAll") |
             enclosingCallName("count") |
             enclosingCallName("iterate")
-        ) 
+        )
         & enclosingCallDeclaringType(
             annotatedBy(
                 'groovyx.gaelyk.datastore.Entity'
             )
-        ) 
+        )
     )
     |
     (
@@ -121,7 +121,7 @@ def shortcutFor = { type ->
     property name: 'memcache', type: 'com.google.appengine.api.memcache.MemcacheService', doc: 'the Memcache service', isStatic: true
     property name: 'urlFetch', type: 'com.google.appengine.api.urlfetch.URLFetchService', doc: 'the URL Fetch service', isStatic: true
     property name: 'mail', type: 'com.google.appengine.api.mail.MailService', doc: 'the Mail service', isStatic: true
-    
+
     property name: 'images', type: 'groovyx.gaelyk.ImagesServiceWrapper', doc: 'the Images service (actually a convenient wrapper class combining both the methods of ImagesService and ImagesServiceFactory and implementing the ImagesService interface)', isStatic: true
     property name: 'users', type: 'com.google.appengine.api.users.UserService', doc: 'the User service', isStatic: true
     property name: 'user', type: 'com.google.appengine.api.users.User', doc: 'the currently logged in user (null if no user logged in)', isStatic: true
@@ -137,7 +137,7 @@ def shortcutFor = { type ->
     property name: 'backends', type: 'com.google.appengine.api.backends.BackendService', doc: 'the Backend service', isStatic: true
     property name: 'lifecycle', type: 'com.google.appengine.api.LifecycleManager', doc: 'the Lifecycle manager', isStatic: true
     property name: 'localMode', type: Boolean, doc: 'a boolean variable which is true when the application is running in local development mode, and false when deployed on Google\'s cloud.', isStatic: true
-    
+
     property name: 'app', type: AppDescriptor, doc: 'map of all form parameters (can be empty)', isStatic: true
 }
 
@@ -249,7 +249,7 @@ class Person { String name, int age }
  def e = new Entity("Person")
  e.name = "Guillaume"
  e.age = 33
- 
+
  def p = e as Person
 
  assert e.name == p.name
@@ -349,8 +349,8 @@ def totalPhotos = countEntities('photos')
             type: 'java.util.Set',
             params: [uri: 'java.lang.String'],
             doc: 'Clear the cached content for a given URI.'
-            
-            
+
+
     property name: 'async',
             type: 'com.google.appengine.api.memcache.AsyncMemcacheService',
             doc: 'Asynchronous memcache service'
@@ -532,17 +532,17 @@ datastore.withTransaction { transaction ->
             type: 'java.util.List',
             params: [arg1: 'groovy.lang.Closure'],
             doc: 'Gets datastore kinds. The closure lets you apply additional filters to your query.'
-            
-            
+
+
     method name: 'execute',
             params: [query: 'groovy.lang.Closure'],
             doc: 'Executes query in the datastore.'
-            
+
     method name: 'iterate',
             type: 'java.lang.Iterator',
             params: [query: 'groovy.lang.Closure'],
             doc: 'Executes query in the datastore and returs the results as Iterator.'
-            
+
     method name: 'query',
             type: 'com.google.appengine.api.datastore.Query',
             params: [query: 'groovy.lang.Closure'],
@@ -561,35 +561,35 @@ datastore.withTransaction { transaction ->
         type: 'com.google.appengine.api.images.Image',
         params: [leftX: 'double', topY: 'double', rightY: 'double', bottomY: 'double'],
         doc: 'Croppes the image.'
-    
+
     method name: 'horizontal',
         type: 'com.google.appengine.api.images.Image',
         params: [flip: boolean],
         doc: 'Applies the horizontal flip.'
-    
+
     method name: 'vertical',
         type: 'com.google.appengine.api.images.Image',
         params: [flip: boolean],
         doc: 'Applies the vertical flip.'
-    
+
     method name: 'feeling',
         type: 'com.google.appengine.api.images.Image',
         params: [lucky: boolean],
         doc: 'Applies the "I\'m feeling lucky" transformation.'
-        
+
     property name: 'lucky',
         type: boolean,
         doc: 'Use after the "feeling" keyword'
-        
+
     property name: 'flip',
         type: boolean,
         doc: 'Use after the "horizontal" or the "vertical" keyword'
-    
+
 }
 
 shortcutFor('com.google.appengine.api.images.Image').accept {
     provider = 'Gaelyk'
-    
+
     method name: 'transform',
             type: 'com.google.appengine.api.images.Image',
             params: [closure: 'groovy.lang.Closure'],
@@ -913,7 +913,7 @@ shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
      // read from the buffered input stream
  }
 </code></pre>'''
-            
+
     method name: 'withInputStream',
             type: 'com.google.appengine.api.files.AppEngineFile',
             params: [c: 'groovy.lang.Closure'],
@@ -1006,11 +1006,11 @@ The map can contain the normal properties of the
             type: 'void',
             useNamedArgs: true,
             params: [attachments: Collection, bcc: Collections, cc: Collection, htmlBody: String, replyTo: String, sender: String, textBody: String, to: Collection],
-            doc: '''Additional <code>sendToAdmins()</code> method for sending emails to the application admins. 
+            doc: '''Additional <code>sendToAdmins()</code> method for sending emails to the application admins.
 This method is taking a map as parameter.
 The map can contain the normal properties of the
 <code>MailService.Message</code> class.'''
-            
+
     method name: 'parseMessage',
             type: 'javax.mail.internet.MimeMessage',
             params: [request: 'javax.servlet.http.HttpServletRequest'],
@@ -1096,7 +1096,7 @@ It also allows the leftShift notation for adding a header to the response
 
  // adds an additional value to an existing header
  // or sets a first value for a non-existant header
- response.headers['a'] << 'b' 
+ response.headers['a'] << 'b'
 </code></pre>'''
 
     property name: 'headers',
@@ -1111,10 +1111,10 @@ It also allows the leftShift notation for adding a header to the response
 <pre><code>
  // sets or overrides the header 'a'
  response.headers['a'] == 'b'
- 
+
  // adds an additional value to an existing header
  // or sets a first value for a non-existant header
- response.headers['a'] << 'b' 
+ response.headers['a'] << 'b'
 </code></pre>'''
 
 }
@@ -1344,7 +1344,7 @@ This mechanism is used by the "Groovy Truth".'''
 
 (shortcutFor('java.lang.Class')| shortcutFor('com.google.appengine.api.NamespaceManager')).accept {
     provider = 'Gaelyk'
-    
+
     method name: 'of',
             type: 'void',
             isStatic: true,

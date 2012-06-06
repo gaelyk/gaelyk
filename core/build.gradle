@@ -16,7 +16,7 @@ apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
-defaultTasks 'clean', 'build'
+defaultTasks 'clean', 'codenarc', 'build'
 
 // current Gaelyk version
 version                = '1.2'

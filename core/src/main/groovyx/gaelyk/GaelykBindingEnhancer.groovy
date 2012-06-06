@@ -24,7 +24,6 @@ import com.google.appengine.api.mail.MailServiceFactory
 import com.google.appengine.api.memcache.MemcacheServiceFactory
 import com.google.appengine.api.oauth.OAuthServiceFactory
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory
-import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.xmpp.XMPPServiceFactory
@@ -61,7 +60,7 @@ class GaelykBindingEnhancer {
         binding.setVariable("urlFetch", URLFetchServiceFactory.URLFetchService)
         binding.setVariable("mail", MailServiceFactory.mailService)
         binding.setVariable("images", ImagesServiceWrapper.instance)
-        
+
         // bind user service and current user
         binding.setVariable("users", UserServiceFactory.userService)
         binding.setVariable("user", getCurrentUser())

@@ -1,10 +1,10 @@
 package groovyx.gaelyk.datastore
 
-import groovyx.gaelyk.GaelykCategory;
+import groovyx.gaelyk.GaelykCategory
 
-import com.google.appengine.api.datastore.Entities;
+import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
-import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.EntityNotFoundException
 
 /**
  * Utility class handling the POGO to Entity coercion, and Entity to POGO coercion as well.
@@ -67,7 +67,7 @@ class PogoEntityCoercion {
             if (m.key()) return prop
         }
     }
-    
+
     /**
     * Find the key in the properties
     *
@@ -88,7 +88,7 @@ class PogoEntityCoercion {
      */
     static Entity convert(Object p) {
         Entity entity
-        
+
         Map props = props(p)
         String key = findKey(props)
         def value = key ? p."$key" : null
@@ -97,7 +97,7 @@ class PogoEntityCoercion {
         } else {
             entity = new Entity(p.class.simpleName)
         }
-        
+
         props.each { String propName, Map m ->
             if (propName != key) {
                 if (!props[propName].ignore() && !props[propName].version()) {
@@ -110,14 +110,14 @@ class PogoEntityCoercion {
                         entity.setUnindexedProperty(propName, p."$propName")
 //                  }
                     } else {
-                        
+
                         if (val instanceof Enum) val = val as String
                         entity.setProperty(propName, val)
                     }
                 }
             }
         }
-        
+
         return entity
     }
 
@@ -133,11 +133,11 @@ class PogoEntityCoercion {
 
         def o = clazz.newInstance()
         entityProps.each { k, v ->
-            if (o.metaClass.hasProperty(o, k)) {  
+            if (o.metaClass.hasProperty(o, k)) {
                 o[k] = v
             }
         }
-        
+
         def classProps = props(o)
 
         String key = findKey(classProps)
@@ -145,19 +145,19 @@ class PogoEntityCoercion {
         if (key) {
             o."$key" = e.key.name ?: e.key.id
         }
-        
+
         String version = findVersion(classProps)
-        
+
         if (version) {
             try {
                 if(e.key)  {
-                   o."$version" = Entities.getVersionProperty(GaelykCategory.get(Entities.createEntityGroupKey(e.key)))   
-                }                             
+                   o."$version" = Entities.getVersionProperty(GaelykCategory.get(Entities.createEntityGroupKey(e.key)))
+                }
             } catch (EntityNotFoundException ex){
                 o."$version" = 0
             }
         }
-        
+
         return o
     }
 }

@@ -9,7 +9,6 @@ import com.google.appengine.api.files.FinalizationException
 import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig
 import com.google.appengine.api.images.Image.Format
 import javax.servlet.http.HttpServletResponse
-import com.google.appengine.api.blobstore.BlobstoreServicePb.BlobstoreService
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.blobstore.BlobInfo
 
@@ -274,7 +273,7 @@ class BlobstoreServiceTest extends GroovyTestCase {
             key.file.withReader { Reader reader -> assert reader.text == "dummy" }
         }
     }
-    
+
     void testEachAndCollectOnBlobstore() {
         def blobstore = BlobstoreServiceFactory.blobstoreService
         def files = FileServiceFactory.fileService

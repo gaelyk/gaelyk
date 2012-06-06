@@ -15,8 +15,8 @@
  */
 package groovyx.gaelyk.routes
 
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.regex.Matcher;
+import java.util.concurrent.CopyOnWriteArrayList
+import java.util.regex.Matcher
 
 import javax.servlet.Filter
 import javax.servlet.FilterChain
@@ -26,7 +26,7 @@ import javax.servlet.FilterConfig
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-import groovy.servlet.AbstractHttpServlet;
+import groovy.servlet.AbstractHttpServlet
 import groovyx.gaelyk.GaelykBindingEnhancer
 import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.ExpirationTimeCategory
@@ -34,7 +34,6 @@ import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
 import groovyx.gaelyk.GaelykCategory
 
-import com.google.appengine.api.search.query.QueryParser.orOp_return;
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.NamespaceManager
 
@@ -54,7 +53,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
  * @author Guillaume Laforge
  */
 class RoutesFilter implements Filter {
-    
+
     static final String ORIGINAL_URI = 'originalURI'
 
     /**
@@ -101,7 +100,7 @@ class RoutesFilter implements Filter {
                 binding.chat         = 'chat'
                 binding.presence     = 'presence'
                 binding.subscription = 'subscription'
-                
+
                 // evaluate the route definitions
                 RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(binding, config).parse(routesFile)
 
@@ -131,9 +130,9 @@ class RoutesFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest)servletRequest
         HttpServletResponse response = (HttpServletResponse)servletResponse
-        
+
         if(!request.getAttribute(ORIGINAL_URI)){
-            request.setAttribute(ORIGINAL_URI, getIncludeAwareUri(request))            
+            request.setAttribute(ORIGINAL_URI, getIncludeAwareUri(request))
         }
 
         def method = request.method
@@ -168,14 +167,14 @@ class RoutesFilter implements Filter {
                 }
             }
         }
-        
+
         if (!foundRoute) {
             filterChain.doFilter servletRequest, servletResponse
         }
     }
 
     void destroy() { }
-    
+
     /**
     * Returns the include-aware uri.
     *

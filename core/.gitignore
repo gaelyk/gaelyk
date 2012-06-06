@@ -5,4 +5,6 @@ bin
 .settings
 .gradle
 WEB-INF
-
+*.iml
+*.ipr
+*.iws

@@ -18,7 +18,6 @@ package groovyx.gaelyk.routes
 import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
 import com.google.appengine.api.capabilities.Capability
 import com.google.appengine.api.capabilities.CapabilitiesService
-import groovyx.gaelyk.logging.GroovyLogger
 
 /**
  * A routing rule represents the forward or redirect part of a rule definition.

@@ -1,8 +1,8 @@
 package groovyx.gaelyk
 
 import com.google.appengine.api.LifecycleManager
-import com.google.appengine.api.backends.BackendService;
-import com.google.appengine.api.backends.BackendServiceFactory;
+import com.google.appengine.api.backends.BackendService
+import com.google.appengine.api.backends.BackendServiceFactory
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 
 /**
@@ -38,7 +38,7 @@ class BackendServiceTest extends GroovyTestCase {
             assert shutdown
         }
     }
-    
+
     void testBackgroundThreads() {
         def backends = BackendServiceFactory.backendService
 
@@ -47,7 +47,7 @@ class BackendServiceTest extends GroovyTestCase {
 
             def thread = backends.run{ run = true }
             thread.run()
-            
+
             assert run
         }
     }

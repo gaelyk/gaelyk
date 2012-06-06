@@ -20,7 +20,7 @@ import java.util.jar.JarFile
 
 import org.codehaus.groovy.control.CompilerConfiguration
 
-import groovyx.gaelyk.ExpirationTimeCategory;
+import groovyx.gaelyk.ExpirationTimeCategory
 import groovyx.gaelyk.GaelykBindingEnhancer
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
@@ -29,7 +29,7 @@ import groovyx.gaelyk.logging.GroovyLogger
 
 /**
  * Configure the installed plugins.
- * 
+ *
  * @author Guillaume Laforge
  * @author Vladimir Orany
  */
@@ -111,11 +111,11 @@ class PluginsHandler {
                 binding.setVariable("log", new GroovyLogger("gaelyk.plugins.${pluginName}", true))
 
                 pluginScript.binding = binding
-                
+
                 use(ExpirationTimeCategory) {
                     pluginScript.run()
                 }
-                
+
                 // use getters directly,
                 // otherwise property access returns variables from the binding of the scripts
                 bindingVariables.putAll pluginScript.getBindingVariables()
@@ -131,11 +131,11 @@ class PluginsHandler {
             try {
                 for(PluginBaseScript plugin in loader){
                     init plugin
-                }                
+                }
             } catch(java.util.ServiceConfigurationError e){
                 log.config e.message
             }
-            
+
             for(PluginBaseScript plugin in loadedPlugins){
                 init plugin
             }

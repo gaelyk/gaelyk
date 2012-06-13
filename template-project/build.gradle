@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'gae'
 apply plugin: 'gaelyk'
+apply plugin: 'gae-geb'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
@@ -18,6 +19,7 @@ buildscript {
         classpath 'org.gradle.api.plugins:gradle-gae-plugin:0.7.2'
         classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.3.2'
         classpath 'eu.appsatori:gradle-fatjar-plugin:0.1.1'
+        classpath 'org.gradle.api.plugins:gradle-gae-geb-plugin:0.1'
     }
 }
 
@@ -45,7 +47,7 @@ dependencies {
                 "com.google.appengine:appengine-testing:$gaeVersion"
                 
     functionalTestCompile 'org.codehaus.geb:geb-spock:0.7.0',
-                          'org.seleniumhq.selenium:selenium-firefox-driver:2.20.0'
+                          'org.seleniumhq.selenium:selenium-firefox-driver:2.22.0'
     gaeSdk "com.google.appengine:appengine-java-sdk:$gaeVersion"
 }
 

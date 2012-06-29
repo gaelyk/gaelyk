@@ -19,7 +19,7 @@ targetCompatibility = 1.5
 defaultTasks 'clean', 'codenarc', 'build'
 
 // current Gaelyk version
-version                = '1.2'
+version                = '1.3-SNAPSHOT'
 group                  = 'org.gaelyk'
 final appEngineVersion = '1.6.6'
 final groovyVersion    = '1.8.6'
@@ -133,7 +133,7 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion '1.0-rc-3'
+    gradleVersion '1.0'
 }
 
 if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){

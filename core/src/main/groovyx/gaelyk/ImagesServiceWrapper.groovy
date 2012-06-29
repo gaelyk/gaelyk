@@ -26,7 +26,7 @@ import com.google.appengine.api.images.ImagesService
  */
 @Singleton
 class ImagesServiceWrapper implements ImagesService {
-    @Delegate ImagesService service = ImagesServiceFactory.imagesService
+    @Delegate(deprecated = true) ImagesService service = ImagesServiceFactory.imagesService
 
     def methodMissing(String name, args) {
         // special case for makeImage which takes byte[] as param

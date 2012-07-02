@@ -64,12 +64,12 @@ If you wish to contribute to the development of <b>Gaelyk</b>:
 <a name="repository"></a>
 <h3>Latest activity on our <a href="https://github.com/glaforge/gaelyk/commits/master">repository</a></h3>
 
-<% include "/latestcommits.groovy" %>
+<% // include "/latestcommits.groovy" %>
 
 <a name="bugtracker"></a>
 <h3>Open issues in our <a href="https://github.com/glaforge/gaelyk/issues">bug tracker</a></h3>
 
-<% include "/latestissues.groovy" %>
+<% // include "/latestissues.groovy" %>
 
 </body>
 </html>

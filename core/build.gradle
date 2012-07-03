@@ -1,7 +1,6 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
-apply plugin: 'idea'
 
 /**
  * http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
@@ -18,9 +17,6 @@ sourceCompatibility = 1.5
 targetCompatibility = 1.5
 defaultTasks 'clean', 'codenarc', 'build'
 
-// current Gaelyk version
-version                = '1.3-SNAPSHOT'
-group                  = 'org.gaelyk'
 final appEngineVersion = '1.7.0'
 final groovyVersion    = '1.8.6'
 
@@ -130,10 +126,6 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
     repositories.withType(MavenResolver) {
         pom.scopeMappings.addMapping(1, configurations.groovy, 'compile')
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion '1.0'
 }
 
 if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){

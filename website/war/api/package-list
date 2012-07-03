@@ -6,3 +6,4 @@ groovyx.gaelyk.plugins
 groovyx.gaelyk.query
 groovyx.gaelyk.routes
 groovyx.gaelyk.search
+groovyx.gaelyk.web.servlet

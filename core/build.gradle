@@ -22,7 +22,7 @@ defaultTasks 'clean', 'codenarc', 'build'
 version                = '1.3-SNAPSHOT'
 group                  = 'org.gaelyk'
 final appEngineVersion = '1.7.0'
-final groovyVersion    = '2.0.0'
+final groovyVersion    = '2.0.1'
 
 // various directory places and file names
 final tmpProj    = '../template-project'

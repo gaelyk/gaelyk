@@ -1,2 +1,12 @@
+bin
 build
+out
+*.iml
+*.ipr
+*.iws
+.idea
 .gradle
+.classpath
+.project
+.settings
+website/war/api

@@ -115,6 +115,8 @@ import com.google.appengine.api.images.ImagesServiceFailureException
 import com.google.appengine.api.backends.BackendService
 import com.google.appengine.api.ThreadManager
 
+import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
 import groovy.transform.PackageScope
 import com.google.appengine.api.search.SearchService
 import com.google.appengine.api.search.SearchServiceFactory
@@ -134,6 +136,7 @@ import groovyx.gaelyk.search.DocumentDefinitions
  * @author Guillaume Laforge
  * @author Scott Murphy
  */
+@CompileStatic
 class GaelykCategory extends GaelykCategoryBase {
 
     // ----------------------------------------------------------------
@@ -203,6 +206,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Create a <code>MailService.Message</code> out of Map parameters.
      * Each map key must correspond to a valid property on the message object.
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     private static Message createMessageFromMap(Map m) {
         def msg = new Message()
         m.each { k, v ->
@@ -309,6 +313,7 @@ class GaelykCategory extends GaelykCategoryBase {
     // All transformations that need to be done on entity fields
     // before being accessed by the user
     @PackageScope
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Object transformValueForRetrieval(Object value) {
         value instanceof Text ? value.value : value
     }
@@ -651,6 +656,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure representing the query
      * @return the query
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Query query(DatastoreService service, Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
@@ -682,6 +688,7 @@ class GaelykCategory extends GaelykCategoryBase {
         return builder.iterate()
     }
 
+    @CompileStatic(TypeCheckingMode.SKIP)
     private static QueryBuilder prepareAndLaunchQuery(Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
@@ -1067,6 +1074,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  new URL("http://gaelyk.appspot.com") as Link
      * </code></pre>
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Link asType(URL self, Class linkClass) {
         if (linkClass == Link)
             new Link(self.toString())
@@ -1113,6 +1121,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  ['address', 'name'] as Key
      * </code></pre>
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Object asType(List list, Class clazz) {
         if (clazz == GeoPt && list.size() == 2 && list.every { it instanceof Number }) {
             new GeoPt(*list*.floatValue())
@@ -1140,6 +1149,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param byteRangeClass the class of the byte range
      * @return a <code>ByteRange</code> instance
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Object asType(IntRange range, Class byteRangeClass) {
         if (byteRangeClass == ByteRange)
             new ByteRange(range.fromInt, range.toInt)
@@ -1179,6 +1189,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param params the map of task attributes
      * @return a TaskHandle instance
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static TaskHandle add(Queue selfQueue, Map params) {
         TaskOptions options = TaskOptions.Builder.withDefaults()
         params.each { key, value ->
@@ -1287,6 +1298,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param msgAttr a map of attributes as described
      * @return an intance of SendResponse
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static SendResponse send(XMPPService xmppService, Map msgAttr) {
         MessageBuilder msgBuilder = new MessageBuilder()
 
@@ -1397,6 +1409,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return a list of Jabber ID strings
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static List getRecipients(com.google.appengine.api.xmpp.Message message) {
         message.getRecipientJids().collect { it.getId() }
     }
@@ -1404,6 +1417,7 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * Checks the status of the sending of the message was successful for all its recipients
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static boolean isSuccessful(SendResponse status) {
         status.statusMap.every { it.value == SendResponse.Status.SUCCESS }
     }
@@ -1416,6 +1430,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param request the servlet request
      * @return a Presence
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Presence parsePresence(XMPPService xmppService, HttpServletRequest request) {
         // value of the presence, added by the routing logic as request parameter
         String value = request.getParameter('value')
@@ -1438,6 +1453,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param request the servlet request
      * @return a Subscription
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Subscription parseSubscription(XMPPService xmppService, HttpServletRequest request) {
         // value of the subscription, added by the routing logic as request parameter
         String value = request.getParameter('value')
@@ -1458,6 +1474,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param text the body of the request
      * @return a map containing form-data key value pairs
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Map parseXmppFormData(HttpServletRequest request) {
         /*
             App Engine encodes the presence, subscription into the body of the post request, in form-data.
@@ -1924,6 +1941,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param response
      * @param range
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static void serve(BlobKey selfKey, HttpServletResponse response, IntRange range) {
         BlobstoreServiceFactory.blobstoreService.serve selfKey, new ByteRange(range.fromInt, range.toInt), response
     }
@@ -1950,6 +1968,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param a Groovy int range
      * @return an array of bytes
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static byte[] fetchData(BlobKey selfKey, IntRange intRange) {
         fetchData(selfKey, intRange.fromInt, intRange.toInt)
     }
@@ -2010,6 +2029,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *              the result of onFail will be returned as the URL.
      * @return a URL that can serve the image dynamically.
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static String getServingUrl(BlobKey blobKey, Map options) {
         ImagesService images = ImagesServiceFactory.getImagesService()
         int retries = options.retry?:0
@@ -2096,6 +2116,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure with the writer as parameter
      * @return the original file, for chaining purpose
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static AppEngineFile withWriter(AppEngineFile file , Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
@@ -2138,6 +2159,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure with the output stream as parameter
      * @return the original file, for chaining purpose
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static AppEngineFile withOutputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
@@ -2180,6 +2202,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure with the reader as parameter
      * @return the original file, for chaining purpose
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static AppEngineFile withReader(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
 
@@ -2215,6 +2238,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure with the input stream as parameter
      * @return the original file, for chaining purpose
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static AppEngineFile withInputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
 
@@ -2376,6 +2400,7 @@ class GaelykCategory extends GaelykCategoryBase {
       * @param c the closure containg the various transform steps
       * @return a transformed image
       */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Image transform(Image selfImage, Closure c) {
         Closure clone = c.clone()
         clone.resolveStrategy = Closure.DELEGATE_ONLY
@@ -2550,6 +2575,7 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * @return a convenient Map<String, String> of HTTP Headers from the response
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Map<String, String> getHeadersMap(HTTPResponse response) {
         response.headers.inject([:]) { Map m, HTTPHeader h -> m[h.name] = h.value; m }
     }
@@ -2561,10 +2587,12 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param encoding encoding used (default: 'UTF-8')
      * @return the string representing the response content
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static String getText(HTTPResponse response, String encoding = 'UTF-8') {
         new String(response.content, encoding)
     }
 
+    @CompileStatic(TypeCheckingMode.SKIP)
     private static fetch(URL url, HTTPMethod method, Map<String, String> options) {
         URLFetchService urlFetch = URLFetchServiceFactory.URLFetchService
         def fetchOptions = UrlFetchOptions.Builder.withDefaults()
@@ -2811,6 +2839,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param fieldName the field name
      * @return a raw value or a list of raw values if the field is multivalued
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Object get(Document document, String fieldName) {
         List<Field> fields = document.getField(fieldName).collect()
 
@@ -2845,6 +2874,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param name the property
      * @return the value associated with that property
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Object get(Future future, String name) {
         transformValueForRetrieval(future.get().getProperty(name))
     }
@@ -2856,6 +2886,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param name the property
      * @param value the new value for the property
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static void set(Future future, String name, Object value) {
         future.get().setProperty(name, transformValueForStorage(value))
     }

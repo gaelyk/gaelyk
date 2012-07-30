@@ -1668,6 +1668,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure to memoize
      * @return a memoized closure
      */
+    @CompileStatic(TypeCheckingMode.SKIP)
     static Closure memoize(MemcacheService memcache, Closure closure) {
         return new Closure(closure.owner) {
             Object call(Object[] args) {

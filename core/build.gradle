@@ -18,7 +18,7 @@ targetCompatibility = 1.5
 defaultTasks 'clean', 'codenarc', 'build'
 
 final appEngineVersion = '1.7.0'
-final groovyVersion    = '2.0.1'
+final groovyVersion    = '2.0.2-SNAPSHOT'
 
 // various directory places and file names
 final tmpProj    = '../template-project'
@@ -48,8 +48,9 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    maven { // for Spock Groovy 2.0 Support
+    maven { // for Spock Groovy 2.0 Support and Groovy 2.0.2 Snapshots
         url "http://oss.sonatype.org/content/repositories/snapshots/"
+        url "http://snapshots.repository.codehaus.org/"
     }	
 }
 

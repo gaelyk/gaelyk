@@ -48,10 +48,12 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    maven { // for Spock Groovy 2.0 Support and Groovy 2.0.2 Snapshots
+    maven { // for Spock Groovy 2.0 Support
         url "http://oss.sonatype.org/content/repositories/snapshots/"
-        url "http://snapshots.repository.codehaus.org/"
     }	
+    maven { // for Groovy 2.0.2 Snapshots
+        url "http://snapshots.repository.codehaus.org/"
+    }
 }
 
 dependencies {

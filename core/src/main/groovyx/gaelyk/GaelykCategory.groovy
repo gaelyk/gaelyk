@@ -2339,7 +2339,6 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @param file the file to delete
      */
-    @CompileStatic
     static void delete(AppEngineFile file) {
         delete(getBlobKey(file))
     }
@@ -2623,7 +2622,7 @@ class GaelykCategory extends GaelykCategoryBase {
      */
     @CompileStatic
     static Image getImage(File f) {
-        ISF.makeImage(f.bytes)
+        ISF.makeImage((byte[])f.bytes)
     }
 
     // ----------------------------------------------------------------

@@ -116,7 +116,6 @@ import com.google.appengine.api.backends.BackendService
 import com.google.appengine.api.ThreadManager
 
 import groovy.transform.CompileStatic
-import groovy.transform.TypeCheckingMode
 import groovy.transform.PackageScope
 import com.google.appengine.api.search.SearchService
 import com.google.appengine.api.search.SearchServiceFactory

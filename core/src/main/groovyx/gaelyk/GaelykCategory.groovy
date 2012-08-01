@@ -136,7 +136,6 @@ import groovyx.gaelyk.search.DocumentDefinitions
  * @author Guillaume Laforge
  * @author Scott Murphy
  */
-@CompileStatic
 class GaelykCategory extends GaelykCategoryBase {
 
     // ----------------------------------------------------------------
@@ -164,6 +163,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param response
      * @return a custom map on which you can use the subscript notation to add headers
      */
+    @CompileStatic
     static Map getHeaders(HttpServletResponse response) {
         new HashMap() {
             Object put(Object k, Object v) {
@@ -194,6 +194,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return a query string
      */
+    @CompileStatic
     static String toQueryString(Map self) {
         self.collect { k, v -> "${URLEncoder.encode(k.toString(), 'UTF-8')}=${URLEncoder.encode(v.toString(), 'UTF-8')}" }.join('&')
     }
@@ -206,7 +207,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * Create a <code>MailService.Message</code> out of Map parameters.
      * Each map key must correspond to a valid property on the message object.
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     private static Message createMessageFromMap(Map m) {
         def msg = new Message()
         m.each { k, v ->
@@ -247,6 +247,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @throws groovy.lang.MissingPropertyException when the key doesn't correspond
      * to a property of the <code>MailService.Message</code> class.
      */
+    @CompileStatic
     static void send(MailService mailService, Map m) {
         Message msg = createMessageFromMap(m)
         mailService.send msg
@@ -262,6 +263,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @throws groovy.lang.MissingPropertyException when the key doesn't correspond
      * to a property of the <code>MailService.Message</code> class.
      */
+    @CompileStatic
     static void sendToAdmins(MailService mailService, Map m) {
         Message msg = createMessageFromMap(m)
         mailService.sendToAdmins msg 
@@ -273,6 +275,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param request incoming request
      * @return an instance of <code>MimeMessage</code>
      */
+    @CompileStatic
     static MimeMessage parseMessage(MailService mailService, HttpServletRequest request) {
         def session = Session.getDefaultInstance(new Properties(), null)
         return new MimeMessage(session, request.inputStream)
@@ -289,6 +292,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * You can use the shortcut
      * <code>entity['propertyName']</code>
      */
+    @CompileStatic
     static Object getAt(Entity entity, String name) {
         if(!entity.hasProperty(name)){
             return null;
@@ -303,6 +307,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * You can use the shortcut
      * <code>entity.propertyName</code>
      */
+    @CompileStatic
     static Object get(Entity entity, String name) {
         if(!entity.hasProperty(name)){
             return null;
@@ -313,7 +318,6 @@ class GaelykCategory extends GaelykCategoryBase {
     // All transformations that need to be done on entity fields
     // before being accessed by the user
     @PackageScope
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Object transformValueForRetrieval(Object value) {
         value instanceof Text ? value.value : value
     }
@@ -325,8 +329,9 @@ class GaelykCategory extends GaelykCategoryBase {
      * You can use the shortcut
      * <code>entity['propertyName'] = value</code>
      */
+    @CompileStatic
     static void setAt(Entity entity, String name, Object value) {
-// TODO: deside the correct behaviour
+// TODO: decide the correct behaviour
 //      if(!value){
 //          entity.removeProperty(name)
 //          return
@@ -341,8 +346,9 @@ class GaelykCategory extends GaelykCategoryBase {
      * You can use the shortcut
      * <code>entity.propertyName = value</code>
      */
+    @CompileStatic
     static void set(Entity entity, String name, Object value) {
-// TODO: deside the correct behaviour
+// TODO: decide the correct behaviour
 //      if(!value){
 //          entity.removeProperty(name)
 //          return
@@ -353,6 +359,7 @@ class GaelykCategory extends GaelykCategoryBase {
     // All transformations that need to be done on entity fields
     // prior to their insertion in the datastore
     @PackageScope
+    @CompileStatic
     static Object transformValueForStorage(Object value) {
         // the datastore doesn't allow to store GStringImpl
         // so we need a toString() first
@@ -369,6 +376,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Save this entity in the data store.
      * Usage: <code>entity.save()</code>
      */
+    @CompileStatic
     static Key save(Entity entity) {
         DatastoreServiceFactory.datastoreService.put(entity)
     }
@@ -377,6 +385,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Save this entity in the data store asynchronously.
      * Usage: <code>entity.asyncSave()</code>
      */
+    @CompileStatic
     static Future<Key> asyncSave(Entity entity) {
         DatastoreServiceFactory.asyncDatastoreService.put(entity)
     }
@@ -385,6 +394,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Delete this entity from the data store.
      * Usage: <code>entity.delete()</code>
      */
+    @CompileStatic
     static void delete(Entity entity) {
         DatastoreServiceFactory.datastoreService.delete(entity.key)
     }
@@ -393,6 +403,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Delete this entity from the data store.
      * Usage: <code>entity.asyncDelete()</code>
      */
+    @CompileStatic
     static Future<Void> asyncDelete(Entity entity) {
         DatastoreServiceFactory.asyncDatastoreService.delete(entity.key)
     }
@@ -401,6 +412,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Delete the entity represented by that key, from the data store.
      * Usage: <code>key.delete()</code> 
      */
+    @CompileStatic
     static void delete(Key key) {
         DatastoreServiceFactory.datastoreService.delete(key)
     }
@@ -411,6 +423,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @returns an entity
      */
+    @CompileStatic
     static Entity get(Key key) {
         DatastoreServiceFactory.datastoreService.get(key)
     }
@@ -421,6 +434,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @returns a map of key and entity
      */
+    @CompileStatic
     static Map<Key, Entity> get(Iterable<Key> keys) {
         DatastoreServiceFactory.datastoreService.get(keys)
     }
@@ -431,6 +445,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return an entity future
      */
+    @CompileStatic
     static Future<Entity> asyncGet(Key key) {
         DatastoreServiceFactory.asyncDatastoreService.get(key)
     }
@@ -441,6 +456,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return a map of key and future entity
      */
+    @CompileStatic
     static Future<Map<Key, Entity>> asyncGet(Iterable<Key> keys) {
         DatastoreServiceFactory.asyncDatastoreService.get(keys)
     }
@@ -449,6 +465,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Delete the entity represented by that key, from the data store.
      * Usage: <code>key.delete()</code>
      */
+    @CompileStatic
     static Future<Void> asyncDelete(Key key) {
         DatastoreServiceFactory.asyncDatastoreService.delete(key)
     }
@@ -464,6 +481,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * }
      * </code>
      */
+    @CompileStatic
     static Transaction withTransaction(DatastoreService service, Closure c) {
         Transaction transaction = service.beginTransaction()
         try {
@@ -493,6 +511,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * }
      * </code>
      */
+    @CompileStatic
     static Future<Transaction> withTransaction(AsyncDatastoreService service, Closure c) {
         Future<Transaction> transaction = service.beginTransaction()
         try {
@@ -524,6 +543,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * </code>
      * @return Future<Void> calling .get() blocks until all oustanding async calls have completed 
      */
+    @CompileStatic
     static Future<Void> withTransactionCommitAsync(AsyncDatastoreService service, Closure c) {
         Future<Transaction> transaction = service.beginTransaction()
         try {
@@ -554,6 +574,7 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * @return the asynchronous datastore service.
      */
+    @CompileStatic
     static AsyncDatastoreService getAsync(DatastoreService service) {
         DatastoreServiceFactory.asyncDatastoreService
     }
@@ -566,6 +587,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param id the id
      * @return the entity identified by its parent key, its kind, and id, retrieved from the datastore
      */
+    @CompileStatic
     static Entity get(DatastoreService service, Key parentKey, String kind, long id) {
         service.get(KeyFactory.createKey(parentKey, kind, id))
     }
@@ -578,6 +600,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param name the name
      * @return the entity identified by its parent key, its kind, and name, retrieved from the datastore
      */
+    @CompileStatic
     static Entity get(DatastoreService service, Key parentKey, String kind, String name) {
         service.get(KeyFactory.createKey(parentKey, kind, name))
     }
@@ -589,6 +612,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param id the id
      * @return the entity identified by its kind, and id, retrieved from the datastore
      */
+    @CompileStatic
     static Entity get(DatastoreService service, String kind, long id) {
         service.get(KeyFactory.createKey(kind, id))
     }
@@ -600,6 +624,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param name the name
      * @return the entity identified by its kind, and name, retrieved from the datastore
      */
+    @CompileStatic
     static Entity get(DatastoreService service, String kind, String name) {
         service.get(KeyFactory.createKey(kind, name))
     }
@@ -612,6 +637,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param id the id
      * @return the entity future identified by its parent key, its kind, and id, retrieved from the datastore
      */
+    @CompileStatic
     static Future<Entity> get(AsyncDatastoreService service, Key parentKey, String kind, long id) {
         service.get(KeyFactory.createKey(parentKey, kind, id))
     }
@@ -624,6 +650,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param name the name
      * @return the entity future identified by its parent key, its kind, and name, retrieved from the datastore
      */
+    @CompileStatic
     static Future<Entity> get(AsyncDatastoreService service, Key parentKey, String kind, String name) {
         service.get(KeyFactory.createKey(parentKey, kind, name))
     }
@@ -635,6 +662,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param id the id
      * @return the entity future identified by its kind, and id, retrieved from the datastore
      */
+    @CompileStatic
     static Future<Entity> get(AsyncDatastoreService service, String kind, long id) {
         service.get(KeyFactory.createKey(kind, id))
     }
@@ -646,6 +674,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param name the name
      * @return the entity future identified by its kind, and name, retrieved from the datastore
      */
+    @CompileStatic
     static Future<Entity> get(AsyncDatastoreService service, String kind, String name) {
         service.get(KeyFactory.createKey(kind, name))
     }
@@ -656,7 +685,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure representing the query
      * @return the query
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Query query(DatastoreService service, Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
@@ -672,6 +700,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure representing the query to execute
      * @return the results
      */
+    @CompileStatic
     static execute(DatastoreService service, Closure c) {
         QueryBuilder builder = prepareAndLaunchQuery(c)
         return builder.execute()
@@ -683,12 +712,12 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure representing the query to execute
      * @return the iterator over the results
      */
+    @CompileStatic
     static iterate(DatastoreService service, Closure c) {
         QueryBuilder builder = prepareAndLaunchQuery(c)
         return builder.iterate()
     }
 
-    @CompileStatic(TypeCheckingMode.SKIP)
     private static QueryBuilder prepareAndLaunchQuery(Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
@@ -704,6 +733,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return a wrapper for an entity
      */
+    @CompileStatic
     static UnindexedEntityWrapper getUnindexed(Entity entity) {
         new UnindexedEntityWrapper(entity)
     }
@@ -727,6 +757,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return an instance of a POJO/POGO to coerce into
      */
+    @CompileStatic
     static Object asType(Future<Entity> self, Class clazz) {
         asType(self.get(), clazz)
     }
@@ -736,6 +767,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * using the leftshift operator as follows:
      * <code>futureEntity &lt;&lt; params</code>
      */
+    @CompileStatic
     static Future<Entity> leftShift(Future<Entity> future, Map params) {
         leftShift(future.get(), params)
         return future
@@ -745,6 +777,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Save this entity future in the data store.
      * Usage: <code>futureEntity.save()</code>
      */
+    @CompileStatic
     static Key save(Future<Entity> future) {
         save(future.get())
     }
@@ -753,6 +786,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Save this entity future in the data store asynchronously.
      * Usage: <code>futureEntity.asyncSave()</code>
      */
+    @CompileStatic
     static Future<Key> asyncSave(Future<Entity> future) {
         asyncSave(future.get())
     }
@@ -761,6 +795,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Delete this entity from the data store.
      * Usage: <code>entity.delete()</code>
      */
+    @CompileStatic
     static void delete(Future<Entity> future) {
         delete(future.get())
     }
@@ -769,6 +804,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Delete this entity from the data store.
      * Usage: <code>entity.asyncDelete()</code>
      */
+    @CompileStatic
     static Future<Void> asyncDelete(Future<Entity> future) {
         asyncDelete(future.get())
     }
@@ -777,6 +813,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Convenience method to retrieve the key from a Future Entity
      * Usage: <code>future.key</code>
      */
+    @CompileStatic
     static Key getKey(Future<Entity> future) {
         future.get().key
     }
@@ -795,6 +832,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param options Fetch options
      * @return Entities
      */
+    @CompileStatic
     static List<Entity> getNamespaces(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS) {
         queryMetaData(service, options, Query.NAMESPACE_METADATA_KIND)
     }
@@ -807,6 +845,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure Closure
      * @return Entities
      */
+    @CompileStatic
     static List<Entity> getNamespaces(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS, Closure closure) {
         queryMetaData(service, options, Query.NAMESPACE_METADATA_KIND, closure)
     }
@@ -818,6 +857,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param options Fetch options
      * @return Entities
      */
+    @CompileStatic
     static List<Entity> getKinds(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS) {
         queryMetaData(service, options, Query.KIND_METADATA_KIND)
     }
@@ -830,6 +870,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure Closure
      * @return Entities
      */
+    @CompileStatic
     static List<Entity> getKinds(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS, Closure closure) {
         queryMetaData(service, options, Query.KIND_METADATA_KIND, closure)
     }
@@ -841,6 +882,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param options Fetch options
      * @return Entities
      */
+    @CompileStatic
     static List<Entity> getProperties(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS) {
         queryMetaData(service, options, Query.PROPERTY_METADATA_KIND)
     }
@@ -854,6 +896,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure Closure
      * @return Entities
      */
+    @CompileStatic
     static List<Entity> getProperties(DatastoreService service, FetchOptions options = DEFAULT_FETCH_OPTIONS, Closure closure) {
         queryMetaData(service, options, Query.PROPERTY_METADATA_KIND, closure)
     }
@@ -866,6 +909,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param options Fetch options
      * @return Entities
      */
+    @CompileStatic
     static List<Entity> getProperties(DatastoreService service, String kind, FetchOptions options = DEFAULT_FETCH_OPTIONS) {
         Query query = new Query(Query.PROPERTY_METADATA_KIND)
         query.setAncestor(createKindKey(kind))
@@ -882,6 +926,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure Closure
      * @return Entities
      */
+    @CompileStatic
     static List<Entity> getProperties(DatastoreService service, String kind, FetchOptions options = DEFAULT_FETCH_OPTIONS, Closure closure) {
         Query query = new Query(Query.PROPERTY_METADATA_KIND)
         query.setAncestor(createKindKey(kind))
@@ -898,6 +943,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param property Property
      * @return Entity
      */
+    @CompileStatic
     static Entity getProperty(DatastoreService service, String kind, String property) {
         Query query = new Query(Query.PROPERTY_METADATA_KIND)
         query.setAncestor(createPropertyKey(kind, property))
@@ -913,6 +959,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param metaDataQuery Query
      * @return Entities
      */
+    @CompileStatic
     private static List<Entity> queryMetaData(DatastoreService service, FetchOptions options, String metaDataQuery) {
         Query query = new Query(metaDataQuery)
         PreparedQuery preparedQuery = service.prepare(query)
@@ -941,6 +988,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param kind Kind
      * @return Key
      */
+    @CompileStatic
     private static Key createKindKey(String kind) {
         KeyFactory.createKey(Query.KIND_METADATA_KIND, kind)
     }
@@ -952,6 +1000,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param property Property
      * @return Key
      */
+    @CompileStatic
     private static Key createPropertyKey(String kind, String property) {
         KeyFactory.createKey(createKindKey(kind), Query.PROPERTY_METADATA_KIND, property)
     }
@@ -1007,6 +1056,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param clazz the String class
      * @return the encoded string representation of the key
      */
+    @CompileStatic
     static String asType(Key self, Class clazz) {
         if (clazz == String)
             KeyFactory.keyToString(self)
@@ -1031,6 +1081,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return an instance of Entity 
      */
+    @CompileStatic
     static Object asType(Object self, Class clazz) {
         if (clazz == Entity) {
             PogoEntityCoercion.convert(self)
@@ -1062,7 +1113,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return an instance of a POJO/POGO to coerce into
      */
-    
+    @CompileStatic
     static Object asType(Entity self, Class clazz) {
 //        return clazz.newInstance(self.properties)
         return PogoEntityCoercion.convert(self, clazz)
@@ -1074,7 +1125,6 @@ class GaelykCategory extends GaelykCategoryBase {
      *  new URL("http://gaelyk.appspot.com") as Link
      * </code></pre>
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Link asType(URL self, Class linkClass) {
         if (linkClass == Link)
             new Link(self.toString())
@@ -1087,6 +1137,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  32 as Rating
      * </code></pre>
      */
+    @CompileStatic
     static Object asType(Integer self, Class ratingClass) {
         if (ratingClass == Rating)
             new Rating(self)
@@ -1100,6 +1151,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  "some byte".getBytes() as ShortBlob
      * </code></pre>
      */
+    @CompileStatic
     static Object asType(byte[] self, Class blobClass) {
         if (blobClass == ShortBlob)
             new ShortBlob(self)
@@ -1121,7 +1173,6 @@ class GaelykCategory extends GaelykCategoryBase {
      *  ['address', 'name'] as Key
      * </code></pre>
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Object asType(List list, Class clazz) {
         if (clazz == GeoPt && list.size() == 2 && list.every { it instanceof Number }) {
             new GeoPt(*list*.floatValue())
@@ -1149,7 +1200,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param byteRangeClass the class of the byte range
      * @return a <code>ByteRange</code> instance
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Object asType(IntRange range, Class byteRangeClass) {
         if (byteRangeClass == ByteRange)
             new ByteRange(range.fromInt, range.toInt)
@@ -1168,6 +1218,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return the name of the queue
      */
+    @CompileStatic
     static String getName(Queue selfQueue) {
         selfQueue.getQueueName()
     }
@@ -1189,7 +1240,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param params the map of task attributes
      * @return a TaskHandle instance
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static TaskHandle add(Queue selfQueue, Map params) {
         TaskOptions options = TaskOptions.Builder.withDefaults()
         params.each { key, value ->
@@ -1274,6 +1324,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param params the map of task attributes
      * @return a TaskHandle instance
      */
+    @CompileStatic
     static TaskHandle leftShift(Queue selfQueue, Map params) {
         GaelykCategory.add(selfQueue, params)
     }
@@ -1298,7 +1349,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param msgAttr a map of attributes as described
      * @return an intance of SendResponse
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static SendResponse send(XMPPService xmppService, Map msgAttr) {
         MessageBuilder msgBuilder = new MessageBuilder()
 
@@ -1346,6 +1396,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @param the Jabber ID to invite
      */
+    @CompileStatic
     static void sendInvitation(XMPPService xmppService, String jabberId) {
         xmppService.sendInvitation(new JID(jabberId))
     }
@@ -1356,6 +1407,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param jabberIdTo the Jabber ID to invite
      * @param jabberIdFrom the Jabber ID to use to send the invitation request
      */
+    @CompileStatic
     static void sendInvitation(XMPPService xmppService, String jabberIdTo, String jabberIdFrom) {
         xmppService.sendInvitation(new JID(jabberIdTo), new JID(jabberIdFrom))
     }
@@ -1366,6 +1418,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param the Jabber ID
      * @return the presence information
      */
+    @CompileStatic
     static Presence getPresence(XMPPService xmppService, String jabberId) {
         xmppService.getPresence(new JID(jabberId))
     }
@@ -1377,6 +1430,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param jabberIdFrom the Jabber ID to use to send the presence request
      * @return the presence information
      */
+    @CompileStatic
     static Presence getPresence(XMPPService xmppService, String jabberIdTo, String jabberIdFrom) {
         xmppService.getPresence(new JID(jabberIdTo), new JID(jabberIdFrom))
     }
@@ -1386,6 +1440,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return the Jabber ID of the sender
      */
+    @CompileStatic
     static String getFrom(com.google.appengine.api.xmpp.Message message) {
         message.getFromJid().getId()
     }
@@ -1395,6 +1450,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return the slurped XML document 
      */
+    @CompileStatic
     static GPathResult getXml(com.google.appengine.api.xmpp.Message message) {
         if (message.isXml()) {
             def slurper = new XmlSlurper()
@@ -1409,15 +1465,14 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return a list of Jabber ID strings
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
+    @CompileStatic
     static List getRecipients(com.google.appengine.api.xmpp.Message message) {
-        message.getRecipientJids().collect { it.getId() }
+        message.getRecipientJids().collect { JID jid -> jid.getId() }
     }
 
     /**
      * Checks the status of the sending of the message was successful for all its recipients
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static boolean isSuccessful(SendResponse status) {
         status.statusMap.every { it.value == SendResponse.Status.SUCCESS }
     }
@@ -1430,7 +1485,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param request the servlet request
      * @return a Presence
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Presence parsePresence(XMPPService xmppService, HttpServletRequest request) {
         // value of the presence, added by the routing logic as request parameter
         String value = request.getParameter('value')
@@ -1453,7 +1507,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param request the servlet request
      * @return a Subscription
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Subscription parseSubscription(XMPPService xmppService, HttpServletRequest request) {
         // value of the subscription, added by the routing logic as request parameter
         String value = request.getParameter('value')
@@ -1474,7 +1527,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param text the body of the request
      * @return a map containing form-data key value pairs
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Map parseXmppFormData(HttpServletRequest request) {
         /*
             App Engine encodes the presence, subscription into the body of the post request, in form-data.
@@ -1531,6 +1583,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the GString key
      * @return the value stored under that key
      */
+    @CompileStatic
     static Object get(MemcacheService memcache, String key) {
         get(memcache, (Object)key)
     }
@@ -1541,6 +1594,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the GString key
      * @return the value stored under that key
      */
+    @CompileStatic
     static Object get(MemcacheService memcache, GString key) {
         get(memcache, (Object)key.toString())
     }
@@ -1551,6 +1605,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @param key the key identifying the object to get from the cache
      */
+    @CompileStatic
     static Object getAt(MemcacheService memcache, Object key) {
         get(memcache, key)
     }
@@ -1561,6 +1616,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @param key the key identifying the object to get from the cache
      */
+    @CompileStatic
     static Object getAt(MemcacheService memcache, String key) {
         //TODO this method should be removed once we only need a getAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
@@ -1573,6 +1629,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key a GString key
      * @param value the value to put in the cache
      */
+    @CompileStatic
     static void set(MemcacheService memcache, String key, Object value) {
         put(memcache, (Object)key, value, null, SetPolicy.SET_ALWAYS)
     }
@@ -1583,6 +1640,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key a GString key
      * @param value the value to put in the cache
      */
+    @CompileStatic
     static void put(MemcacheService memcache, GString key, Object value) {
         put(memcache, (Object)key.toString(), value, null, SetPolicy.SET_ALWAYS)
     }
@@ -1594,6 +1652,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param value the value to put in the cache
      * @param expiration expiration of the key/value
      */
+    @CompileStatic
     static void put(MemcacheService memcache, GString key, Object value, Expiration expiration) {
         put(memcache, (Object)key.toString(), value, expiration, SetPolicy.SET_ALWAYS)
     }
@@ -1606,6 +1665,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param expiration expiration of the key/value
      * @param policy a SetPolicy 
      */
+    @CompileStatic
     static void put(MemcacheService memcache, GString key, Object value, Expiration expiration, SetPolicy policy) {
         put(memcache, (Object)key.toString(), value, expiration, policy)
     }
@@ -1617,6 +1677,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
      */
+    @CompileStatic
     static void putAt(MemcacheService memcache, String key, Object value) {
         //TODO this method should be removed once we only need a putAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
@@ -1630,6 +1691,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
      */
+    @CompileStatic
     static void putAt(MemcacheService memcache, Object key, Object value) {
         put(memcache, key, value, null, SetPolicy.SET_ALWAYS)
     }
@@ -1638,6 +1700,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * Shortcut to check whether a key is contained in the cache using the <code>in</code> operator:
      * <code>key in memcache</code>
      */
+    @CompileStatic
     static boolean isCase(MemcacheService memcache, Object key) {
         try {
             return memcache.contains(key)
@@ -1651,6 +1714,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param uri the URI for which to clear the cache
      * @return the set of keys that have been cleared (should be two in this case)
      */
+    @CompileStatic
     static Set clearCacheForUri(MemcacheService memcache, String uri) {
         CacheHandler.clearCacheForUri(uri)
     }
@@ -1668,7 +1732,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure to memoize
      * @return a memoized closure
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Closure memoize(MemcacheService memcache, Closure closure) {
         return new Closure(closure.owner) {
             Object call(Object[] args) {
@@ -1701,6 +1764,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * </code></pre>
      * @return the asynchronous Memcache service
      */
+    @CompileStatic
     static AsyncMemcacheService getAsync(MemcacheService memcache) {
         MemcacheServiceFactory.asyncMemcacheService
     }
@@ -1711,6 +1775,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the GString key
      * @return the value stored under that key
      */
+    @CompileStatic
     static Future<? extends Object> get(AsyncMemcacheService memcache, String key) {
         memcache.get((Object)key)
     }
@@ -1721,6 +1786,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the GString key
      * @return the value stored under that key
      */
+    @CompileStatic
     static Future<? extends Object> get(AsyncMemcacheService memcache, GString key) {
         memcache.get(key.toString())
     }
@@ -1731,6 +1797,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @param key the key identifying the object to get from the cache
      */
+    @CompileStatic
     static Future<? extends Object> getAt(AsyncMemcacheService memcache, Object key) {
         memcache.get(key)
     }
@@ -1741,6 +1808,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @param key the key identifying the object to get from the cache
      */
+    @CompileStatic
     static Future<? extends Object> getAt(AsyncMemcacheService memcache, String key) {
         //TODO this method should be removed once we only need a getAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
@@ -1753,6 +1821,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key a GString key
      * @param value the value to put in the cache
      */
+    @CompileStatic
     static Future<Void> set(AsyncMemcacheService memcache, String key, Object value) {
         memcache.put(key, value)
     }
@@ -1763,6 +1832,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key a GString key
      * @param value the value to put in the cache
      */
+    @CompileStatic
     static Future<Void> put(AsyncMemcacheService memcache, GString key, Object value) {
         memcache.put(key.toString(), value)
     }
@@ -1774,6 +1844,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param value the value to put in the cache
      * @param expiration expiration of the key/value
      */
+    @CompileStatic
     static Future<Void> put(AsyncMemcacheService memcache, GString key, Object value, Expiration expiration) {
         memcache.put(key.toString(), value, expiration)
     }
@@ -1786,6 +1857,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param expiration expiration of the key/value
      * @param policy a SetPolicy
      */
+    @CompileStatic
     static Future<Boolean> put(AsyncMemcacheService memcache, GString key, Object value, Expiration expiration, SetPolicy policy) {
         memcache.put(key.toString(), value, expiration, policy)
     }
@@ -1797,6 +1869,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
      */
+    @CompileStatic
     static Future<Void> putAt(AsyncMemcacheService memcache, String key, Object value) {
         //TODO this method should be removed once we only need a putAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
@@ -1810,6 +1883,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
      */
+    @CompileStatic
     static Future<Void> putAt(AsyncMemcacheService memcache, Object key, Object value) {
         memcache.put(key, value)
     }
@@ -1831,6 +1905,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure to execute, passing in the stream as parameter of the closure
      * @return the return value of the closure execution
      */
+    @CompileStatic
     static Object withStream(BlobKey selfKey, Closure c) {
         def stream = new BlobstoreInputStream(selfKey)
         stream.withStream(c)
@@ -1850,6 +1925,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure to execute, passing in the stream as parameter of the closure
      * @return the return value of the closure execution
      */
+    @CompileStatic
     static Object withReader(BlobKey selfKey, String encoding, Closure c) {
         def stream = new BlobstoreInputStream(selfKey)
         stream.withReader(encoding, c)
@@ -1869,6 +1945,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure to execute, passing in the stream as parameter of the closure
      * @return the return value of the closure execution
      */
+    @CompileStatic
     static Object withReader(BlobKey selfKey, Closure c) {
         withReader(selfKey, "UTF-8", c)
     }
@@ -1881,6 +1958,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param selfKey the blob key to get information from
      * @return an instance of <code>BlobInfo</code>
      */
+    @CompileStatic
     static BlobInfo getInfo(BlobKey selfKey) {
         new BlobInfoFactory().loadBlobInfo(selfKey)
     }
@@ -1888,6 +1966,7 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * @return the name of the file stored in the blob
      */
+    @CompileStatic
     static String getFilename(BlobKey selfKey) {
         getInfo(selfKey).filename
     }
@@ -1895,6 +1974,7 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * @return the content-type of the blob
      */
+    @CompileStatic
     static String getContentType(BlobKey selfKey) {
         getInfo(selfKey).contentType
     }
@@ -1902,6 +1982,7 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * @return the creation date of the file stored in the blob
      */
+    @CompileStatic
     static Date getCreation(BlobKey selfKey) {
         getInfo(selfKey).creation
     }
@@ -1909,6 +1990,7 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * @return the size of the blob
      */
+    @CompileStatic
     static long getSize(BlobKey selfKey) {
         getInfo(selfKey).size
     }
@@ -1918,6 +2000,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @param selfKey the blob to delete, identified by its key
      */
+    @CompileStatic
     static void delete(BlobKey selfKey) {
         BlobstoreServiceFactory.blobstoreService.delete selfKey
     }
@@ -1929,6 +2012,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param the response on which to serve the blob
      * @param range the range of the blob (parameter can be ommitted)
      */
+    @CompileStatic
     static void serve(BlobKey selfKey, HttpServletResponse response, ByteRange range = null) {
         if (range)
             BlobstoreServiceFactory.blobstoreService.serve selfKey, range, response
@@ -1942,7 +2026,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param response
      * @param range
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static void serve(BlobKey selfKey, HttpServletResponse response, IntRange range) {
         BlobstoreServiceFactory.blobstoreService.serve selfKey, new ByteRange(range.fromInt, range.toInt), response
     }
@@ -1955,6 +2038,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param end the end of the segment
      * @return an array of bytes
      */
+    @CompileStatic
     static byte[] fetchData(BlobKey selfKey, long start, long end) {
         BlobstoreServiceFactory.blobstoreService.fetchData selfKey, start, end
     }
@@ -1969,7 +2053,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param a Groovy int range
      * @return an array of bytes
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static byte[] fetchData(BlobKey selfKey, IntRange intRange) {
         fetchData(selfKey, intRange.fromInt, intRange.toInt)
     }
@@ -1981,6 +2064,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param byteRange a <code>ByteRange</code> representing the segment
      * @return an array of bytes
      */
+    @CompileStatic
     static byte[] fetchData(BlobKey selfKey, ByteRange byteRange) {
         fetchData(selfKey, byteRange.start, byteRange.end)
     }
@@ -1995,6 +2079,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param selfKey the key
      * @return an Image
      */
+    @CompileStatic
     static Image getImage(BlobKey selfKey) {
         ISF.makeImageFromBlob(selfKey)
     }
@@ -2030,7 +2115,6 @@ class GaelykCategory extends GaelykCategoryBase {
      *              the result of onFail will be returned as the URL.
      * @return a URL that can serve the image dynamically.
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static String getServingUrl(BlobKey blobKey, Map options) {
         ImagesService images = ImagesServiceFactory.getImagesService()
         int retries = options.retry?:0
@@ -2069,6 +2153,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure passed to the collect method
      * @return a List of BlobInfos
      */
+    @CompileStatic
     static List<BlobInfo> collect(BlobstoreService blobstore, Closure<BlobInfo> c) {
         new BlobInfoFactory().queryBlobInfos().collect c
     }
@@ -2083,6 +2168,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param c the closure passed to the each method
      * @return an iterator over BlobInfos
      */
+    @CompileStatic
     static Iterator<BlobInfo> each(BlobstoreService blobstore, Closure<BlobInfo> c) {
         new BlobInfoFactory().queryBlobInfos().each c
     }
@@ -2117,7 +2203,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure with the writer as parameter
      * @return the original file, for chaining purpose
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static AppEngineFile withWriter(AppEngineFile file , Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
@@ -2160,7 +2245,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure with the output stream as parameter
      * @return the original file, for chaining purpose
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static AppEngineFile withOutputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
@@ -2203,7 +2287,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure with the reader as parameter
      * @return the original file, for chaining purpose
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static AppEngineFile withReader(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
 
@@ -2239,7 +2322,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure with the input stream as parameter
      * @return the original file, for chaining purpose
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static AppEngineFile withInputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
 
@@ -2257,6 +2339,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @param file the file to delete
      */
+    @CompileStatic
     static void delete(AppEngineFile file) {
         delete(getBlobKey(file))
     }
@@ -2273,6 +2356,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param path the path representing an AppEngineFile
      * @return the AppEngineFile instance
      */
+    @CompileStatic
     static AppEngineFile fromPath(FileService files, String path) {
         new AppEngineFile(path)
     }
@@ -2288,6 +2372,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param file the file to get the blob key of
      * @return the blob key associated with the AppEngineFile
      */
+    @CompileStatic
     static BlobKey getBlobKey(AppEngineFile file) {
         FileServiceFactory.fileService.getBlobKey(file)
     }
@@ -2298,6 +2383,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param key the blob key
      * @return the app engine file
      */
+    @CompileStatic
     static AppEngineFile getFile(BlobKey key) {
         FileServiceFactory.fileService.getBlobFile(key)
     }
@@ -2318,6 +2404,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param ns the name of the namespace to use
      * @param c the code to execute under that namespace
      */
+    @CompileStatic
     static void of(Class nm, String ns, Closure c) {
         if (nm != NamespaceManager)
             throw new MissingMethodException("of", nm, [ns, c] as Object[])
@@ -2347,6 +2434,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param rightTransform another transform
      * @return a composite transform
      */
+    @CompileStatic
     static CompositeTransform leftShift(CompositeTransform leftTransform, Transform rightTransform) {
         leftTransform.concatenate(rightTransform)
     }
@@ -2363,7 +2451,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param rightTransform another transform
      * @return a composite transform
      */
-
+    @CompileStatic
     static CompositeTransform rightShift(CompositeTransform leftTransform, Transform rightTransform) {
         leftTransform.preConcatenate(rightTransform)
     }
@@ -2379,6 +2467,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param byteArray a byte array
      * @return an Image
      */
+    @CompileStatic
     static Image getImage(byte[] byteArray) {
         ISF.makeImage(byteArray)
     }
@@ -2401,7 +2490,6 @@ class GaelykCategory extends GaelykCategoryBase {
       * @param c the closure containg the various transform steps
       * @return a transformed image
       */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Image transform(Image selfImage, Closure c) {
         Closure clone = c.clone()
         clone.resolveStrategy = Closure.DELEGATE_ONLY
@@ -2442,6 +2530,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param height new height
      * @return a resized image
      */
+    @CompileStatic
     static Image resize(Image selfImage, int width, int height) {
         ISF.imagesService.applyTransform(ISF.makeResize(width, height), selfImage)
     }
@@ -2460,6 +2549,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param bottomY
      * @return a cropped image
      */
+    @CompileStatic
     static Image crop(Image selfImage, double leftX, double topY, double rightX, double bottomY) {
         ISF.imagesService.applyTransform(ISF.makeCrop(leftX, topY, rightX, bottomY), selfImage)
     }
@@ -2474,6 +2564,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param selfImage image to flip horizontally
      * @return a flipped image
      */
+    @CompileStatic
     static Image horizontalFlip(Image selfImage) {
         ISF.imagesService.applyTransform(ISF.makeHorizontalFlip(), selfImage)
     }
@@ -2488,6 +2579,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param selfImage image to flip vertically
      * @return a flipped image
      */
+    @CompileStatic
     static Image verticalFlip(Image selfImage) {
         ISF.imagesService.applyTransform(ISF.makeVerticalFlip(), selfImage)
     }
@@ -2503,6 +2595,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param degrees number of degrees to rotate (must be a multiple of 90)
      * @return a rotated image
      */
+    @CompileStatic
     static Image rotate(Image selfImage, int degrees) {
         ISF.imagesService.applyTransform(ISF.makeRotate(degrees), selfImage)
     }
@@ -2517,6 +2610,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param selfImage image to adjust
      * @return an adjusted image
      */
+    @CompileStatic
     static Image imFeelingLucky(Image selfImage) {
         ISF.imagesService.applyTransform(ISF.makeImFeelingLucky(), selfImage)
     }
@@ -2527,6 +2621,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param f PNG or JPEG file
      * @return an instance of <code>Image</code>
      */
+    @CompileStatic
     static Image getImage(File f) {
         ISF.makeImage(f.bytes)
     }
@@ -2548,6 +2643,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param capa the capability to know the status of
      * @return a status
      */
+    @CompileStatic
     static CapabilityStatus getAt(CapabilitiesService capabilities, Capability capa) {
         return capabilities.getStatus(capa).getStatus()
     }
@@ -2558,6 +2654,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      * @return true if the capability status is ENABLED, otherwise false.
      */
+    @CompileStatic
     static boolean asBoolean(CapabilityStatus capabilityStatus) {
         capabilityStatus == CapabilityStatus.ENABLED || capabilityStatus == CapabilityStatus.SCHEDULED_MAINTENANCE
     }
@@ -2569,6 +2666,7 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * @return the HTTP status code (synonym of <code>getResponseCode()</code>)
      */
+    @CompileStatic
     static int getStatusCode(HTTPResponse response) {
         response.responseCode
     }
@@ -2576,7 +2674,6 @@ class GaelykCategory extends GaelykCategoryBase {
     /**
      * @return a convenient Map<String, String> of HTTP Headers from the response
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Map<String, String> getHeadersMap(HTTPResponse response) {
         response.headers.inject([:]) { Map m, HTTPHeader h -> m[h.name] = h.value; m }
     }
@@ -2588,12 +2685,10 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param encoding encoding used (default: 'UTF-8')
      * @return the string representing the response content
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static String getText(HTTPResponse response, String encoding = 'UTF-8') {
         new String(response.content, encoding)
     }
 
-    @CompileStatic(TypeCheckingMode.SKIP)
     private static fetch(URL url, HTTPMethod method, Map<String, String> options) {
         URLFetchService urlFetch = URLFetchServiceFactory.URLFetchService
         def fetchOptions = UrlFetchOptions.Builder.withDefaults()
@@ -2671,6 +2766,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  payload (byte[]), params (map of String key/value pairs), async (boolean)
      * @return an HTTPResponse or a Future<HTTPResponse> if async options is set to true
      */
+    @CompileStatic
     static get(URL url, Map<String, String> options = [:]) {
         fetch(url, HTTPMethod.GET, options)
     }
@@ -2684,6 +2780,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  payload (byte[]), params (map of String key/value pairs), async (boolean)
      * @return an HTTPResponse or a Future<HTTPResponse> if async options is set to true
      */
+    @CompileStatic
     static post(URL url, Map<String, String> options = [:]) {
         fetch(url, HTTPMethod.POST, options)
     }
@@ -2697,6 +2794,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  payload (byte[]), params (map of String key/value pairs), async (boolean)
      * @return an HTTPResponse or a Future<HTTPResponse> if async options is set to true
      */
+    @CompileStatic
     static put(URL url, Map<String, String> options = [:]) {
         fetch(url, HTTPMethod.PUT, options)
     }
@@ -2710,6 +2808,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  payload (byte[]), params (map of String key/value pairs), async (boolean)
      * @return an HTTPResponse or a Future<HTTPResponse> if async options is set to true
      */
+    @CompileStatic
     static delete(URL url, Map<String, String> options = [:]) {
         fetch(url, HTTPMethod.DELETE, options)
     }
@@ -2723,6 +2822,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *  payload (byte[]), params (map of String key/value pairs), async (boolean)
      * @return an HTTPResponse or a Future<HTTPResponse> if async options is set to true
      */
+    @CompileStatic
     static head(URL url, Map<String, String> options = [:]) {
         fetch(url, HTTPMethod.HEAD, options)
     }
@@ -2737,6 +2837,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param clientId the client ID
      * @param message the message to send
      */
+    @CompileStatic
     static void send(ChannelService channel, String clientId, String message) {
         channel.sendMessage(new ChannelMessage(clientId, message))
     }
@@ -2754,6 +2855,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param manager the lifecycle manager
      * @param c the closure as shutdown hook
      */
+    @CompileStatic
     static void setShutdownHook(LifecycleManager manager, Closure c) {
         manager.setShutdownHook(c as ShutdownHook)
     }
@@ -2772,6 +2874,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param namespace the namespace name
      * @return a search service over a specific namespace
      */
+    @CompileStatic
     static SearchService getAt(SearchService search, String namespace) {
         SearchServiceFactory.getSearchService(namespace)
     }
@@ -2787,6 +2890,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param consistency the consistency
      * @return an index
      */
+    @CompileStatic
     static Index index(SearchService search, String indexName, Consistency consistency) {
         search.getIndex(IndexSpec.newBuilder().setName(indexName).setConsistency(consistency).build())
     }
@@ -2818,6 +2922,7 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param closure the closure defining the documents to be added to the index
      * @return an instance of AddResponse
      */
+    @CompileStatic
     static AddResponse add(Index index, Closure closure) {
         def docDefClosure = (Closure)closure.clone()
         docDefClosure.resolveStrategy = Closure.DELEGATE_FIRST
@@ -2840,7 +2945,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param fieldName the field name
      * @return a raw value or a list of raw values if the field is multivalued
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Object get(Document document, String fieldName) {
         List<Field> fields = document.getField(fieldName).collect()
 
@@ -2854,6 +2958,7 @@ class GaelykCategory extends GaelykCategoryBase {
         }
     }
 
+    @CompileStatic
     private static getFieldRawValue(Field field) {
         switch(field.getType()) {
             case Field.FieldType.ATOM:   return field.atom
@@ -2875,7 +2980,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param name the property
      * @return the value associated with that property
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static Object get(Future future, String name) {
         transformValueForRetrieval(future.get().getProperty(name))
     }
@@ -2887,7 +2991,6 @@ class GaelykCategory extends GaelykCategoryBase {
      * @param name the property
      * @param value the new value for the property
      */
-    @CompileStatic(TypeCheckingMode.SKIP)
     static void set(Future future, String name, Object value) {
         future.get().setProperty(name, transformValueForStorage(value))
     }
@@ -2897,6 +3000,7 @@ class GaelykCategory extends GaelykCategoryBase {
     *
     * @param the code supposed to run in background thread
     */
+    @CompileStatic
     static Thread run(BackendService backends, Runnable code){
         Thread thread = ThreadManager.createBackgroundThread(code);
         thread.start()

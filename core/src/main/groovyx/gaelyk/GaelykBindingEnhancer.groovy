@@ -38,6 +38,7 @@ import com.google.appengine.api.prospectivesearch.ProspectiveSearchServiceFactor
 import com.google.appengine.api.log.LogServiceFactory
 import com.google.appengine.api.search.SearchServiceFactory
 import javax.servlet.http.HttpServletRequest
+import groovy.transform.CompileStatic
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -46,6 +47,7 @@ import javax.servlet.http.HttpServletRequest
  * @author Guillaume Laforge
  * @author Benjamin Muschko
  */
+@CompileStatic
 class GaelykBindingEnhancer {
 
     /**

@@ -26,12 +26,10 @@ import com.google.appengine.api.taskqueue.TaskHandle
 import com.google.appengine.api.taskqueue.TaskOptions
 import com.google.appengine.api.xmpp.XMPPService
 import com.google.appengine.api.xmpp.MessageBuilder
-import groovy.xml.StreamingMarkupBuilder
 import com.google.appengine.api.xmpp.JID
 import com.google.appengine.api.xmpp.SendResponse
 import com.google.appengine.api.xmpp.MessageType
 import com.google.appengine.api.xmpp.Presence
-import groovy.util.slurpersupport.GPathResult
 import com.google.appengine.api.memcache.MemcacheService
 import com.google.appengine.api.mail.MailService.Attachment
 import com.google.appengine.api.datastore.Email
@@ -42,7 +40,6 @@ import com.google.appengine.api.datastore.Link
 import com.google.appengine.api.datastore.PhoneNumber
 import com.google.appengine.api.datastore.PostalAddress
 import com.google.appengine.api.datastore.Rating
-import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import com.google.appengine.api.datastore.ShortBlob
 import com.google.appengine.api.datastore.Blob
 import com.google.appengine.api.datastore.GeoPt
@@ -55,16 +52,12 @@ import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.NamespaceManager
 import com.google.appengine.api.images.Transform
 import com.google.appengine.api.images.CompositeTransform
-import javax.servlet.http.HttpServletResponse
 import com.google.appengine.api.images.Image
 import com.google.appengine.api.images.ImagesServiceFactory as ISF
-import groovyx.gaelyk.cache.CacheHandler
 import com.google.appengine.api.memcache.Expiration
-
 import com.google.appengine.api.capabilities.Capability
 import com.google.appengine.api.capabilities.CapabilityStatus
 import com.google.appengine.api.capabilities.CapabilitiesService
-
 import com.google.appengine.api.urlfetch.HTTPResponse
 import com.google.appengine.api.urlfetch.URLFetchService
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory
@@ -76,11 +69,7 @@ import com.google.appengine.api.memcache.MemcacheService.SetPolicy
 import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelMessage
 import com.google.appengine.api.taskqueue.RetryOptions
-import javax.mail.internet.MimeMessage
-import javax.servlet.http.HttpServletRequest
-import javax.mail.Session
 import com.google.appengine.api.datastore.AsyncDatastoreService
-import java.util.concurrent.Future
 import com.google.appengine.api.xmpp.Subscription
 import com.google.appengine.api.xmpp.PresenceBuilder
 import com.google.appengine.api.xmpp.PresenceType
@@ -90,7 +79,6 @@ import com.google.appengine.api.xmpp.PresenceShow
 import com.google.appengine.api.files.AppEngineFile
 import com.google.appengine.api.files.FileService
 import com.google.appengine.api.files.FileServiceFactory
-import java.nio.channels.Channels
 import com.google.appengine.api.taskqueue.DeferredTask
 import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.PreparedQuery
@@ -98,25 +86,16 @@ import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.LifecycleManager.ShutdownHook
-import com.google.appengine.api.ThreadManager;
-
-import groovyx.gaelyk.query.QueryBuilder
 import com.google.appengine.api.blobstore.BlobstoreService
 import com.google.appengine.api.memcache.AsyncMemcacheService
 import com.google.appengine.api.memcache.MemcacheServiceFactory
-import groovyx.gaelyk.datastore.PogoEntityCoercion
-
 import com.google.appengine.api.memcache.MemcacheServiceException
 import com.google.apphosting.api.ApiProxy
 import com.google.appengine.api.images.ImagesService
 import com.google.appengine.api.images.ImagesServiceFactory
 import com.google.appengine.api.images.ImagesServiceFailureException
-
 import com.google.appengine.api.backends.BackendService
 import com.google.appengine.api.ThreadManager
-
-import groovy.transform.CompileStatic
-import groovy.transform.PackageScope
 import com.google.appengine.api.search.SearchService
 import com.google.appengine.api.search.SearchServiceFactory
 import com.google.appengine.api.search.Index
@@ -125,7 +104,27 @@ import com.google.appengine.api.search.IndexSpec
 import com.google.appengine.api.search.AddResponse
 import com.google.appengine.api.search.Document
 import com.google.appengine.api.search.Field
+
+import groovy.transform.CompileStatic
+import groovy.transform.PackageScope
+import groovy.xml.StreamingMarkupBuilder
+import groovy.util.slurpersupport.GPathResult
+
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
+
+import groovyx.gaelyk.datastore.PogoEntityCoercion
+import groovyx.gaelyk.query.QueryBuilder
 import groovyx.gaelyk.search.DocumentDefinitions
+import groovyx.gaelyk.cache.CacheHandler
+
+import java.nio.channels.Channels
+import java.util.concurrent.Future
+import javax.mail.internet.MimeMessage
+import javax.mail.Session
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+
+
 
 /**
  * Category methods decorating the Google App Engine SDK classes

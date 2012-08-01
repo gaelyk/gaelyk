@@ -30,6 +30,7 @@ import groovyx.gaelyk.logging.GroovyLogger
  * 
  * @author Guillaume Laforge
  */
+@groovy.transform.CompileStatic
 class CacheHandler {
 
     // Date formatter for caching headers date creation
@@ -77,11 +78,11 @@ class CacheHandler {
                     return
                 }
             }
-            serveAndCacheOrServeFromCache(request, response, result.destination, uri, route.cacheExpiration)
+            serveAndCacheOrServeFromCache(request, response, (String)result['destination'], uri, route.cacheExpiration)
         } else {
             log.config "Route not cacheable"
 
-            request.getRequestDispatcher(result.destination).forward request, response
+            request.getRequestDispatcher((String)result['destination']).forward request, response
         }
     }
 
@@ -120,7 +121,7 @@ class CacheHandler {
             log.config "Wrapping a response for caching and forwarding to resource to be cached"
             def cachedResponse = new CachedResponse(response)
             request.getRequestDispatcher(destination).forward request, cachedResponse
-            def byteArray = cachedResponse.output.toByteArray()
+            byte[] byteArray = cachedResponse.output.toByteArray()
 
             log.config "Byte array of wrapped response will be put in memcache: ${new String(byteArray)}"
 

@@ -38,6 +38,7 @@ import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.NamespaceManager
 
 import org.codehaus.groovy.control.CompilerConfiguration
+import groovy.transform.CompileStatic
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -65,6 +66,7 @@ class RoutesFilter implements Filter {
     private FilterConfig filterConfig
     private GroovyLogger log
 
+    @CompileStatic
     void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig
         this.routesFileLocation = filterConfig.getInitParameter("routes.location") ?: "WEB-INF/routes.groovy"
@@ -97,9 +99,9 @@ class RoutesFilter implements Filter {
                 GaelykBindingEnhancer.bind(binding)
 
                 // adds three nouns for the XMPP support
-                binding.chat         = 'chat'
-                binding.presence     = 'presence'
-                binding.subscription = 'subscription'
+                binding.setVariable('chat',         'chat')
+                binding.setVariable('presence',     'presence')
+                binding.setVariable('subscription', 'subscription')
 
                 // evaluate the route definitions
                 RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(binding, config).parse(routesFile)
@@ -173,6 +175,7 @@ class RoutesFilter implements Filter {
         }
     }
 
+    @CompileStatic
     void destroy() { }
 
     /**
@@ -182,24 +185,25 @@ class RoutesFilter implements Filter {
     * @return the include-aware uri either parsed from request attributes or
     *         hints provided by the servlet container
     */
-   protected String getIncludeAwareUri(HttpServletRequest request) {
-       String uri = null
-       String info = null
+    @CompileStatic
+    protected String getIncludeAwareUri(HttpServletRequest request) {
+        String uri = null
+        String info = null
 
-       uri = request.getAttribute(AbstractHttpServlet.INC_SERVLET_PATH)
-       if (uri != null) {
-           info = request.getAttribute(AbstractHttpServlet.INC_PATH_INFO)
-           if (info != null) {
-               uri += info
-           }
-           return uri
-       }
+        uri = request.getAttribute(AbstractHttpServlet.INC_SERVLET_PATH)
+        if (uri != null) {
+            info = request.getAttribute(AbstractHttpServlet.INC_PATH_INFO)
+            if (info != null) {
+                uri += info
+            }
+            return uri
+        }
 
-       uri = request.getServletPath()
-       info = request.getPathInfo()
-       if (info != null) {
-           uri += info
-       }
-       return uri
-   }
+        uri = request.getServletPath()
+        info = request.getPathInfo()
+        if (info != null) {
+            uri += info
+        }
+        return uri
+    }
 }

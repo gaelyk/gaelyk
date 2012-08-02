@@ -15,11 +15,14 @@
  */
 package groovyx.gaelyk.plugins
 
+import groovy.transform.CompileStatic
+
 /**
  * Base script class used for listing the plugins to configure.
  *
  * @author Guillaume Laforge
  */
+@CompileStatic
 abstract class PluginsListBaseScript extends Script {
     List plugins = []
 

@@ -16,6 +16,7 @@
 package groovyx.gaelyk
 
 import com.google.appengine.api.taskqueue.QueueFactory
+import groovy.transform.CompileStatic
 
 /**
  * Holder for queues providing a Groovy map-like syntax for accessing queues.
@@ -23,6 +24,7 @@ import com.google.appengine.api.taskqueue.QueueFactory
  *
  * @author Guillaume Laforge
  */
+@CompileStatic
 class QueueAccessor {
 
     /**

@@ -17,12 +17,14 @@ package groovyx.gaelyk.plugins
 
 import groovyx.gaelyk.routes.RoutesBaseScript
 import groovyx.gaelyk.GaelykBindingEnhancer
+import groovy.transform.CompileStatic
 
 /**
  * Base script class used for evaluating the plugin descriptors.
  *
  * @author Guillaume Laforge
  */
+@CompileStatic
 abstract class PluginBaseScript extends RoutesBaseScript {
 
     /** contributed binding variables */
@@ -43,7 +45,7 @@ abstract class PluginBaseScript extends RoutesBaseScript {
      * @param c closure containing the new variables to add to the binding
      */
     void binding(Closure c) {
-        Closure clonedClosure = c.clone()
+        Closure clonedClosure = (Closure)c.clone()
 
         // puts the new binding variables into the map directly through closure delegation
         clonedClosure.delegate = bindingVariables

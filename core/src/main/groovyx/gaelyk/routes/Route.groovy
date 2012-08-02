@@ -62,7 +62,7 @@ class Route {
 
     /** If the route is for incoming jabber messages */
     boolean jabber
-	
+
     /**
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
      * and a closure for validating the variables against regular expression patterns.
@@ -92,7 +92,6 @@ class Route {
         this.destination = destination instanceof String || ignore == true ?
             destination :
             RoutingRule.buildRoutingRule((Closure) destination)
-			
     }
 
     /**

@@ -22,11 +22,12 @@ import groovy.text.Template
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-
-import groovyx.gaelyk.plugins.PluginsHandler
 import javax.servlet.ServletConfig
 
+import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.logging.GroovyLogger
+
+import groovy.transform.CompileStatic
 
 /**
  * The Gaelyk template servlet extends Groovy's own template servlet 
@@ -44,6 +45,7 @@ class GaelykTemplateServlet extends TemplateServlet {
     private Closure serviceClosure = {}
 
     @Override
+    @CompileStatic
     void init(ServletConfig config) {
         if(config.getInitParameter('preferPrecompiled') == 'true' || !GaelykBindingEnhancer.localMode){
             serviceClosure = { HttpServletRequest request, HttpServletResponse response, ServletBinding binding ->
@@ -125,6 +127,7 @@ class GaelykTemplateServlet extends TemplateServlet {
         serviceClosure(request, response, binding)
     }
 
+    @CompileStatic
     private runTemplate(HttpServletRequest request, HttpServletResponse response, ServletBinding binding) {
         Template template = tryFindTemplate(request)
         response.setStatus(HttpServletResponse.SC_OK)
@@ -135,6 +138,7 @@ class GaelykTemplateServlet extends TemplateServlet {
         template.make(binding.getVariables()).writeTo(out)
     }
 
+    @CompileStatic
     private Template tryFindTemplate(HttpServletRequest request) {
         String uri = getScriptUri(request)
         File file = super.getScriptUriAsFile(request)
@@ -167,14 +171,16 @@ class GaelykTemplateServlet extends TemplateServlet {
         ret += match[0][3]
         ret
     }
-    
+
+    @CompileStatic
     static String packageToDir(String pkg){
         return pkg.replaceAll(/[^a-zA-Z0-9\/]/, '_').replace('/', '.').toLowerCase()
     }
 
+    @CompileStatic
     private runPrecompiled(String precompiledClassName, ServletBinding binding, HttpServletResponse response) {
         try {
-            Class precompiledClass = Class.forName(precompiledClassName)
+            Class<Script> precompiledClass = Class.forName(precompiledClassName)
             Script precompiled = precompiledClass.newInstance([binding]as Object[])
             precompiled.run()
             response.setStatus(HttpServletResponse.SC_OK)
@@ -183,7 +189,7 @@ class GaelykTemplateServlet extends TemplateServlet {
                 throw e
             }
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
-            e.printStackTrace(binding.out)
+            e.printStackTrace((PrintWriter)binding.getVariable('out'))
         }
     }
 }

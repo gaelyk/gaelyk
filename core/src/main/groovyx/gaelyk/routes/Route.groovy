@@ -18,7 +18,6 @@ package groovyx.gaelyk.routes
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.servlet.http.HttpServletRequest
-import groovyx.gaelyk.GaelykCategory
 import groovy.servlet.ServletCategory
 
 /**
@@ -157,9 +156,7 @@ class Route {
                 clonedValidator.resolveStrategy = Closure.DELEGATE_ONLY
 
                 boolean validated = false
-                use (ServletCategory, GaelykCategory) {
                     validated = clonedValidator()
-                }
                 if (!validated) {
                     return [matches: false]
                 }

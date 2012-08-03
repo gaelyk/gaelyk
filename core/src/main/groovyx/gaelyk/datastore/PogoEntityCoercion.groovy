@@ -1,7 +1,5 @@
 package groovyx.gaelyk.datastore
 
-import groovyx.gaelyk.GaelykCategory
-
 import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.EntityNotFoundException

@@ -25,26 +25,24 @@ class QueueTaskTest extends GroovyTestCase {
 
     void testTaskCreation() {
         def queue = QueueFactory.defaultQueue
-        use(GaelykCategory) {
-            queue.add countdownMillis: 1000, url: "/task/dailyEmail",
-                    taskName: "dailyNewsletter1",
-                    method: 'PUT', params: [date: '20090914'],
-                    payload: "some content",
-                    headers: [info: 'some-header-info']
-                    retryOptions: [
-                            taskRetryLimit: 10,
-                            taskAgeLimitSeconds: 100,
-                            minBackoffSeconds: 40,
-                            maxBackoffSeconds: 50,
-                            maxDoublings: 15
-                    ]
+        queue.add countdownMillis: 1000, url: "/task/dailyEmail",
+                taskName: "dailyNewsletter1",
+                method: 'PUT', params: [date: '20090914'],
+                payload: "some content",
+                headers: [info: 'some-header-info']
+        retryOptions: [
+                taskRetryLimit: 10,
+                taskAgeLimitSeconds: 100,
+                minBackoffSeconds: 40,
+                maxBackoffSeconds: 50,
+                maxDoublings: 15
+        ]
 
-            queue << [
-                    countdownMillis: 1000, url: "/task/dailyEmail",
-                    taskName: "dailyNewsletter2",
-                    method: 'PUT', params: [date: '20090914'],
-                    payload: "some content", retryOptions: RetryOptions.Builder.withDefaults()
-            ]
-        }
+        queue << [
+                countdownMillis: 1000, url: "/task/dailyEmail",
+                taskName: "dailyNewsletter2",
+                method: 'PUT', params: [date: '20090914'],
+                payload: "some content", retryOptions: RetryOptions.Builder.withDefaults()
+        ]
     }
 }

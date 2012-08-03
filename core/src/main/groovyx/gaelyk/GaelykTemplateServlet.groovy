@@ -16,7 +16,6 @@
 package groovyx.gaelyk
 
 import groovy.servlet.ServletBinding
-import groovy.servlet.ServletCategory
 import groovy.servlet.TemplateServlet
 import groovy.text.Template
 
@@ -93,8 +92,7 @@ class GaelykTemplateServlet extends TemplateServlet {
     }
 
     /**
-     * Service incoming requests applying the <code>GaelykCategory</code>
-     * and the other categories defined by the installed plugins.
+     * Service incoming requests and executing before/after actions defined by plugins
      *
      * @param request the request
      * @param response the response

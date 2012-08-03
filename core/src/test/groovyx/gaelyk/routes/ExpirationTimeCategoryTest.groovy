@@ -10,14 +10,11 @@ import groovyx.gaelyk.ExpirationTimeCategory
 class ExpirationTimeCategoryTest extends GroovyTestCase {
 
     void testTimeDsl() {
-        use(ExpirationTimeCategory) {
-            assert  1.second  == 1
-            assert 11.seconds == 11
-            assert  1.minute  == 60
-            assert 22.minutes == 1320
-            assert  1.hour    == 3600
-            assert 24.hours   == 3600 * 24
-
-        }
+        assert 1.second == 1
+        assert 11.seconds == 11
+        assert 1.minute == 60
+        assert 22.minutes == 1320
+        assert 1.hour == 3600
+        assert 24.hours == 3600 * 24
     }
 }

@@ -73,8 +73,7 @@ class GaelykServlet extends GroovyServlet {
     }
 
     /**
-     * Service incoming requests applying the <code>GaelykCategory</code>
-     * and the other categories defined by the installed plugins.
+     * Service incoming requests and executing before/after actions defined by plugins.
      *
      * @param request the request
      * @param response the response

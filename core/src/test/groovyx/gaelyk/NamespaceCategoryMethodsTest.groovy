@@ -26,25 +26,23 @@ class NamespaceCategoryMethodsTest extends GroovyTestCase {
     }
 
     void testNamespaceOf() {
-        use(GaelykCategory) {
-            def oldNs = namespace.get()
-            boolean executed = false
+        def oldNs = namespace.get()
+        boolean executed = false
 
-            namespace.of("customerA") {
-                executed = true
-                assert namespace.get() == "customerA"
-            }
-            assert executed
-
-            def currentNs = namespace.get()
-            // check that the original namespace is restored 
-            assert oldNs == currentNs
+        namespace.of("customerA") {
+            executed = true
+            assert namespace.get() == "customerA"
         }
+        assert executed
+
+        def currentNs = namespace.get()
+        // check that the original namespace is restored
+        assert oldNs == currentNs
     }
 
     void testAnExceptionIsThrownWhenUsingCategoryMethodWithWrongClass() {
         shouldFail(MissingMethodException) {
-            Integer.of("foo") {}            
+            Integer.of("foo") {}
         }
     }
 

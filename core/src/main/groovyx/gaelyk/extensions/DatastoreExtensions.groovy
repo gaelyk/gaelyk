@@ -16,7 +16,6 @@ import groovyx.gaelyk.query.QueryBuilder
 import groovyx.gaelyk.UnindexedEntityWrapper
 import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.datastore.PreparedQuery
-import groovyx.gaelyk.GaelykCategory
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import groovyx.gaelyk.datastore.PogoEntityCoercion
 

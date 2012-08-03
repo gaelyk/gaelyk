@@ -6,7 +6,6 @@ import org.codehaus.groovy.tools.ast.TransformTestHelper
 import groovyx.gaelyk.query.QueryDslTransformation
 import org.codehaus.groovy.control.CompilePhase
 import com.google.appengine.api.datastore.Entity
-import groovyx.gaelyk.GaelykCategory
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.api.datastore.RawValue
@@ -57,7 +56,7 @@ class QueryDslTest extends GroovyTestCase {
                             where name == 'Guillaume'
                             sort desc by age
                         ''') ==
-                            'SELECT * FROM persons WHERE name = Guillaume ORDER BY age DESC'
+                'SELECT * FROM persons WHERE name = Guillaume ORDER BY age DESC'
 
         // example using variables
         assert queryFor('''
@@ -68,49 +67,49 @@ class QueryDslTest extends GroovyTestCase {
                             where name == params.name
                             sort desc by col
                         ''') ==
-                            'SELECT * FROM persons WHERE name = Guillaume ORDER BY age DESC'
+                'SELECT * FROM persons WHERE name = Guillaume ORDER BY age DESC'
 
         // example on the same line with command chain expressions
         assert queryFor('''select all from persons where name == 'Guillaume' sort desc by age''') ==
-                            'SELECT * FROM persons WHERE name = Guillaume ORDER BY age DESC'
+                'SELECT * FROM persons WHERE name = Guillaume ORDER BY age DESC'
 
         // with quotes for entity kind and columns, getting keys only, and additional comparisons
         assert queryFor('''
                             select keys from 'persons'
                             where 'age' <= 99 and 'age' > 15
                         ''') ==
-                            'SELECT __key__ FROM persons WHERE age <= 99 AND age > 15'
+                'SELECT __key__ FROM persons WHERE age <= 99 AND age > 15'
 
         // inequality
         assert queryFor('''
                             select all from persons where age != 18
                         ''') ==
-                            'SELECT * FROM persons WHERE age != 18'
+                'SELECT * FROM persons WHERE age != 18'
 
         // 'in'
         assert queryFor('''
                             select all from persons where age in [0, 1, 2, 3]
                         ''') ==
-                            'SELECT * FROM persons WHERE age IN [0, 1, 2, 3]'
+                'SELECT * FROM persons WHERE age IN [0, 1, 2, 3]'
 
         // ancestor
         Key key = KeyFactory.createKey('persons', 1234)
         assert queryFor('''
                             select all ancestor KeyFactory.createKey('persons', 1234)
                         ''') ==
-                            "SELECT * WHERE __ancestor__ is ${key}"
+                "SELECT * WHERE __ancestor__ is ${key}"
 
         // check for where !alive
         assert queryFor('''
                             select all from persons where !alive
                         ''') ==
-                            'SELECT * FROM persons WHERE alive = false'
+                'SELECT * FROM persons WHERE alive = false'
 
         // check for where alive
         assert queryFor('''
                             select all from persons where alive
                         ''') ==
-                            'SELECT * FROM persons WHERE alive = true'
+                'SELECT * FROM persons WHERE alive = true'
 
 
     }
@@ -150,11 +149,11 @@ class QueryDslTest extends GroovyTestCase {
 
     void createTestData() {
         [
-            [name: 'Guillaume', age: 34, size: 'L'],
-            [name: 'Marion',    age: 3,  size: 'XS'],
-            [name: 'John',      age: 53, size: 'XL'],
-            [name: 'Jack',      age: 21, size: 'L'],
-            [name: 'Gus',       age: 13, size: 'M'],
+                [name: 'Guillaume', age: 34, size: 'L'],
+                [name: 'Marion', age: 3, size: 'XS'],
+                [name: 'John', age: 53, size: 'XL'],
+                [name: 'Jack', age: 21, size: 'L'],
+                [name: 'Gus', age: 13, size: 'M'],
         ].each { props ->
             def e = new Entity('persons')
             props.each { k, v -> e."$k" = v }
@@ -228,12 +227,10 @@ class QueryDslTest extends GroovyTestCase {
         Script script = clazz.newInstance()
         script.binding = new Binding([params: [name: 'Guillaume'], datastore: DatastoreServiceFactory.datastoreService])
 
-        use(GaelykCategory) {
-            def persons = script.run()
+        def persons = script.run()
 
-            assert persons.size() == 1
-            assert persons[0].age == 34
-        }
+        assert persons.size() == 1
+        assert persons[0].age == 34
     }
 
     void testComparisonOnKey() {

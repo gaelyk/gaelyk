@@ -41,198 +41,164 @@ class DatastoreMetadataCategoryTest extends GroovyTestCase {
     }
 
     void testGetNamespacesForDefaultFetchOptions() {
-        use(GaelykCategory) {
-            addNamespaces()
+        addNamespaces()
 
-            def namespaces = datastore.namespaces
+        def namespaces = datastore.namespaces
 
-            assert namespaces.key.name == ["tenant1", "tenant2", "tenant3"]
-        }
+        assert namespaces.key.name == ["tenant1", "tenant2", "tenant3"]
     }
 
     void testGetNamespacesForLimitedResultSet() {
-        use(GaelykCategory) {
-            addNamespaces()
+        addNamespaces()
 
-            def namespaces = datastore.getNamespaces(withLimit(1))
+        def namespaces = datastore.getNamespaces(withLimit(1))
 
-            assert namespaces.key.name == ["tenant1"]
-        }
+        assert namespaces.key.name == ["tenant1"]
     }
 
     void testGetNamespacesForFilteredResultSetWithDefaultFetchOptions() {
-        use(GaelykCategory) {
-            addNamespaces()
+        addNamespaces()
 
-            def namespaces = datastore.getNamespaces { query ->
-                query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeNamespaceKey("tenant2"))
-            }
-
-            assert namespaces.key.name == ["tenant2", "tenant3"]
+        def namespaces = datastore.getNamespaces { query ->
+            query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeNamespaceKey("tenant2"))
         }
+
+        assert namespaces.key.name == ["tenant2", "tenant3"]
     }
 
     void testGetNamespacesForFilteredResultSetWithLimitedFetchOptions() {
-        use(GaelykCategory) {
-            addNamespaces()
+        addNamespaces()
 
-            def namespaces = datastore.getNamespaces(withLimit(1)) { query ->
-                query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeNamespaceKey("tenant2"))
-            }
-
-            assert namespaces.key.name == ["tenant2"]
+        def namespaces = datastore.getNamespaces(withLimit(1)) { query ->
+            query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeNamespaceKey("tenant2"))
         }
+
+        assert namespaces.key.name == ["tenant2"]
     }
 
     void testGetKindsForDefaultFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def kinds = datastore.kinds
+        def kinds = datastore.kinds
 
-            assert kinds.key.name == ["Comment", "Goal", "User"]
-        }
+        assert kinds.key.name == ["Comment", "Goal", "User"]
     }
 
     void testGetKindsForLimitedResultSet() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def kinds = datastore.getKinds(withLimit(2))
+        def kinds = datastore.getKinds(withLimit(2))
 
-            assert kinds.key.name == ["Comment", "Goal"]
-        }
+        assert kinds.key.name == ["Comment", "Goal"]
     }
 
     void testGetKindsForFilteredResultSetWithDefaultFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def kinds = datastore.getKinds { query ->
-                query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeKindKey("G"))
-            }
-
-            assert kinds.key.name == ["Goal", "User"]
+        def kinds = datastore.getKinds { query ->
+            query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeKindKey("G"))
         }
+
+        assert kinds.key.name == ["Goal", "User"]
     }
 
     void testGetKindsForFilteredResultSetWithLimitedFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def kinds = datastore.getKinds(withLimit(1)) { query ->
-                query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeKindKey("G"))
-            }
-
-            assert kinds.key.name == ["Goal"]
+        def kinds = datastore.getKinds(withLimit(1)) { query ->
+            query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeKindKey("G"))
         }
+
+        assert kinds.key.name == ["Goal"]
     }
 
     void testGetPropertiesForDefaultFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def properties = datastore.properties
+        def properties = datastore.properties
 
-            assert properties.key.parent.name == ["Comment", "Comment", "Goal", "Goal", "User", "User"]
-            assert properties.key.name == ["text", "userId", "description", "name", "firstname", "lastname"]
-        }
+        assert properties.key.parent.name == ["Comment", "Comment", "Goal", "Goal", "User", "User"]
+        assert properties.key.name == ["text", "userId", "description", "name", "firstname", "lastname"]
     }
 
     void testGetPropertiesForLimitedResultSet() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def properties = datastore.getProperties(withLimit(4))
+        def properties = datastore.getProperties(withLimit(4))
 
-            assert properties.key.parent.name == ["Comment", "Comment", "Goal", "Goal"]
-            assert properties.key.name == ["text", "userId", "description", "name"]
-        }
+        assert properties.key.parent.name == ["Comment", "Comment", "Goal", "Goal"]
+        assert properties.key.name == ["text", "userId", "description", "name"]
     }
 
     void testGetPropertiesForFilteredResultSetWithDefaultFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def properties = datastore.getProperties { query ->
-                query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeKindKey("G"))
-            }
-
-            assert properties.key.parent.name == ["Goal", "Goal", "User", "User"]
-            assert properties.key.name == ["description", "name", "firstname", "lastname"]
+        def properties = datastore.getProperties { query ->
+            query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeKindKey("G"))
         }
+
+        assert properties.key.parent.name == ["Goal", "Goal", "User", "User"]
+        assert properties.key.name == ["description", "name", "firstname", "lastname"]
     }
 
     void testGetPropertiesForFilteredResultSetWithLimitedFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def properties = datastore.getProperties(withLimit(2)) { query ->
-                query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeKindKey("G"))
-            }
-
-            assert properties.key.parent.name == ["Goal", "Goal"]
-            assert properties.key.name == ["description", "name"]
+        def properties = datastore.getProperties(withLimit(2)) { query ->
+            query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makeKindKey("G"))
         }
+
+        assert properties.key.parent.name == ["Goal", "Goal"]
+        assert properties.key.name == ["description", "name"]
     }
 
     void testGetPropertiesForGoalKindWithDefaultFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def properties = datastore.getProperties("Goal")
+        def properties = datastore.getProperties("Goal")
 
-            assert properties.key.parent.name == ["Goal", "Goal"]
-            assert properties.key.name == ["description", "name"]
-        }
+        assert properties.key.parent.name == ["Goal", "Goal"]
+        assert properties.key.name == ["description", "name"]
     }
 
     void testGetPropertiesForGoalKindFilteredResultSetWithDefaultFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def properties = datastore.getProperties("Goal", withLimit(1)) { query ->
-                query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makePropertyKey("Goal", "d"))
-            }
-
-            assert properties.key.parent.name == ["Goal"]
-            assert properties.key.name == ["description"]
+        def properties = datastore.getProperties("Goal", withLimit(1)) { query ->
+            query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makePropertyKey("Goal", "d"))
         }
+
+        assert properties.key.parent.name == ["Goal"]
+        assert properties.key.name == ["description"]
     }
 
     void testGetPropertiesForGoalKindFilteredResultSetWithLimitedFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def properties = datastore.getProperties("Goal") { query ->
-                query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makePropertyKey("Goal", "n"))
-            }
-
-            assert properties.key.parent.name == ["Goal"]
-            assert properties.key.name == ["name"]
+        def properties = datastore.getProperties("Goal") { query ->
+            query.addFilter(KEY_RESERVED_PROPERTY, GREATER_THAN_OR_EQUAL, makePropertyKey("Goal", "n"))
         }
+
+        assert properties.key.parent.name == ["Goal"]
+        assert properties.key.name == ["name"]
     }
-    
+
     void testGetPropertiesForGoalKindWithLimitedFetchOptions() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def properties = datastore.getProperties("Goal", withLimit(1))
+        def properties = datastore.getProperties("Goal", withLimit(1))
 
-            assert properties.key.parent.name == ["Goal"]
-            assert properties.key.name == ["description"]
-        }
+        assert properties.key.parent.name == ["Goal"]
+        assert properties.key.name == ["description"]
     }
 
     void testGetProperty() {
-        use(GaelykCategory) {
-            addKinds()
+        addKinds()
 
-            def property = datastore.getProperty("Goal", "name")
+        def property = datastore.getProperty("Goal", "name")
 
-            assert property != null
-            assert property.getProperty("property_representation") == ["STRING"]
-        }
+        assert property != null
+        assert property.getProperty("property_representation") == ["STRING"]
     }
 
     private void addNamespaces() {

@@ -26,10 +26,9 @@ class ChannelServiceTest extends GroovyTestCase {
 
     void testSendMessage() {
         def channel = ChannelServiceFactory.channelService
-        use (GaelykCategory) {
-            def clientId = "1234"
-            channel.createChannel(clientId)
-            channel.send clientId, "hello"
-        }
+
+        def clientId = "1234"
+        channel.createChannel(clientId)
+        channel.send clientId, "hello"
     }
 }

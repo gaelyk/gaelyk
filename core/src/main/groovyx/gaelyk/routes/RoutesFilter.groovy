@@ -32,7 +32,6 @@ import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.ExpirationTimeCategory
 import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
-import groovyx.gaelyk.GaelykCategory
 
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.NamespaceManager
@@ -106,9 +105,8 @@ class RoutesFilter implements Filter {
                 // evaluate the route definitions
                 RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(binding, config).parse(routesFile)
 
-                use(ExpirationTimeCategory) {
-                    script.run()
-                }
+                script.run()
+
                 routes.clear()
                 routes.addAll script.routes
 

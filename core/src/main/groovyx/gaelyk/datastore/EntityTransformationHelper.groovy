@@ -1,6 +1,5 @@
 package groovyx.gaelyk.datastore
 
-import groovyx.gaelyk.GaelykCategory
 import groovyx.gaelyk.query.QueryBuilder
 import groovyx.gaelyk.query.QueryType
 

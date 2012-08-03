@@ -13,7 +13,7 @@ import com.google.appengine.api.datastore.Blob
 import com.google.appengine.api.datastore.GeoPt
 import com.google.appengine.api.blobstore.ByteRange
 
-class GaelykCategoryTest extends GroovyTestCase {
+class MiscExtensionMethodsTest extends GroovyTestCase {
 
     void testMapToQueryString() {
         assert [:].toQueryString() == ""

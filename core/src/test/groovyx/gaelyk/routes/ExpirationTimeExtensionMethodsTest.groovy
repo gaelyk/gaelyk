@@ -1,13 +1,11 @@
 package groovyx.gaelyk.routes
 
-import groovyx.gaelyk.ExpirationTimeCategory
-
 /**
- * Test the ExpirationTimeCategory used in the URL routing DSL to define the caching times.
+ * Test the ExpirationTimeExtensionMethods used in the URL routing DSL to define the caching times.
  *
  * @author Guillaume Laforge
  */
-class ExpirationTimeCategoryTest extends GroovyTestCase {
+class ExpirationTimeExtensionMethodsTest extends GroovyTestCase {
 
     void testTimeDsl() {
         assert 1.second == 1

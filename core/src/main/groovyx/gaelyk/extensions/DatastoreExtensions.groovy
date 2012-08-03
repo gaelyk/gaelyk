@@ -20,7 +20,7 @@ import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import groovyx.gaelyk.datastore.PogoEntityCoercion
 
 /**
- * Category methods dedicated to the low-level DataStore service
+ * Extension methods dedicated to the low-level DataStore service
  */
 class DatastoreExtensions {
 

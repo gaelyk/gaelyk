@@ -4,11 +4,11 @@ import com.google.appengine.api.NamespaceManager
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 
 /**
- * Test the category methods associated with the NamespaceManager class introduced in SDK 1.3.7.
+ * Test the extension methods associated with the NamespaceManager class introduced in SDK 1.3.7.
  *
  * @author Guillaume Laforge
  */
-class NamespaceCategoryMethodsTest extends GroovyTestCase {
+class NamespaceExtensionMethodsTest extends GroovyTestCase {
 
     def namespace = NamespaceManager
 
@@ -39,11 +39,4 @@ class NamespaceCategoryMethodsTest extends GroovyTestCase {
         // check that the original namespace is restored
         assert oldNs == currentNs
     }
-
-    void testAnExceptionIsThrownWhenUsingCategoryMethodWithWrongClass() {
-        shouldFail(MissingMethodException) {
-            Integer.of("foo") {}
-        }
-    }
-
 }

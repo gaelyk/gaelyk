@@ -18,7 +18,6 @@ package groovyx.gaelyk.routes
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.servlet.http.HttpServletRequest
-import groovy.servlet.ServletCategory
 
 /**
  * Representation of a route URL mapping.

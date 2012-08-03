@@ -17,6 +17,6 @@ extensionClasses=\
   groovyx.gaelyk.extensions.ImageExtensions,\
   groovyx.gaelyk.extensions.BackendExtensions,\
   groovyx.gaelyk.extensions.MiscExtensions,\
-  groovyx.gaelyk.ExpirationTimeCategory
+  groovyx.gaelyk.extensions.ExpirationTimeExtensionMethods
 staticExtensionClasses=\
   groovyx.gaelyk.extensions.NamespaceStaticExtensions

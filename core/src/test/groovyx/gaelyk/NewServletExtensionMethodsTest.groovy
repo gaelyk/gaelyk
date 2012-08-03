@@ -3,12 +3,12 @@ package groovyx.gaelyk
 import javax.servlet.http.HttpServletResponse
 
 /**
- * The new category methods for the Servlet API
+ * The new extension methods for the Servlet API
  * which are not covered by Groovy's own servlet category. 
  *
  * @author Guillaume Laforge
  */
-class NewServletCategoryMethodsTest extends GroovyTestCase {
+class NewServletExtensionMethodsTest extends GroovyTestCase {
 
     void testResponseHeadersAccessor() {
         def h = [:]

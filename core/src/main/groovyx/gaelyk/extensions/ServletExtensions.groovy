@@ -7,11 +7,6 @@ import javax.servlet.http.HttpServletResponse
  * Extension methods related to the servlet APIs
  */
 class ServletExtensions {
-    // ----------------------------------------------------------------
-    // New methods related to the Servlet API,
-    // not covered by the ServletCategory from Groovy
-    // ----------------------------------------------------------------
-
     /**
      * Adds a fake <code>getHeaders()</code> method to <code>HttpServletResponse</code>.
      * It allows the similar subscript notation syntax of request,

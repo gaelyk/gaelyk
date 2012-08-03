@@ -16,7 +16,6 @@
 package groovyx.gaelyk.routes
 
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.regex.Matcher
 
 import javax.servlet.Filter
 import javax.servlet.FilterChain
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletResponse
 import groovy.servlet.AbstractHttpServlet
 import groovyx.gaelyk.GaelykBindingEnhancer
 import groovyx.gaelyk.plugins.PluginsHandler
-import groovyx.gaelyk.ExpirationTimeCategory
 import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
 

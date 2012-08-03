@@ -12,7 +12,7 @@ import com.google.appengine.api.memcache.AsyncMemcacheService
  *
  * @author Guillaume Laforge
  */
-class MemcacheCategoryMethodsTest extends GroovyTestCase {
+class MemcacheExtensionMethodsTest extends GroovyTestCase {
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalMemcacheServiceTestConfig(),
     )

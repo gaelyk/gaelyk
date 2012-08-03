@@ -21,7 +21,7 @@ import static com.google.appengine.api.datastore.FetchOptions.Builder.*
  * @author Benjamin Muschko
  * @author Guillaume Laforge
  */
-class DatastoreMetadataCategoryTest extends GroovyTestCase {
+class DatastoreMetadataExtensionMethodsTest extends GroovyTestCase {
 
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig()

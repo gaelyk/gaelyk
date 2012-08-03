@@ -10,7 +10,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper
  */
 class BackendServiceTest extends GroovyTestCase {
 
-     // setup the local environment stub services
+    // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper()
 
     protected void setUp() {
@@ -28,27 +28,23 @@ class BackendServiceTest extends GroovyTestCase {
     void testShutdownHookClosure() {
         def lifecycle = LifecycleManager.instance
 
-        use (GaelykCategory) {
-            def shutdown = false
+        def shutdown = false
 
-            lifecycle.shutdownHook = { shutdown = true }
+        lifecycle.shutdownHook { shutdown = true }
 
-            lifecycle.beginShutdown(0)
+        lifecycle.beginShutdown(0)
 
-            assert shutdown
-        }
+        assert shutdown
     }
 
     void testBackgroundThreads() {
         def backends = BackendServiceFactory.backendService
 
-        use (GaelykCategory) {
-            def run = false
+        def run = false
 
-            def thread = backends.run{ run = true }
-            thread.run()
+        def thread = backends.run { run = true }
+        thread.run()
 
-            assert run
-        }
+        assert run
     }
 }

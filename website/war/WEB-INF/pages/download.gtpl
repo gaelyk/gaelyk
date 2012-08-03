@@ -48,6 +48,11 @@ But to get you started quickly, you may use a ready-made template project which 
         you should be using Groovy 2's <a href="http://docs.codehaus.org/display/GROOVY/Creating+an+extension+module">extension modules</a> approach.
     </li>
     <li>
+        For the lifecycle manager, the shutdown hook is now a method call with:
+        <code>lifecycle.shutdownHook { ... }</code> instead of setting a property:
+        <code>lifecycle.shutdownHook = { ... }</code>.
+    </li>
+    <li>
         On XMPP messages, you must now call the <code>message.xml()</code> method to get the parsed XML payload
         instead of calling the <code>message.xml</code> property.
     </li>

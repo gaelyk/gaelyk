@@ -15,7 +15,7 @@ instead of a <code>ShutdownHook</code> instance:
 </p>
 
 <pre class="brush:groovy">
-    lifecycle.shutdownHook = { /* shutting down logic */ }
+    lifecycle.shutdownHook { /* shutting down logic */ }
 </pre>
 
 <p>

@@ -286,24 +286,6 @@ class GaelykCategory {
     }
 
     // ----------------------------------------------------------------
-    // Backend service support
-    // ----------------------------------------------------------------
-
-    /**
-     * Shortcut to use closures as shutdown hooks.
-     * <pre><code>
-     *  lifecycle.shutdownHook = { ...shutdown logic... }
-     * </code></pre>
-     *
-     * @param manager the lifecycle manager
-     * @param c the closure as shutdown hook
-     */
-    @CompileStatic
-    static void setShutdownHook(LifecycleManager manager, Closure c) {
-        manager.setShutdownHook(c as ShutdownHook)
-    }
-
-    // ----------------------------------------------------------------
     // Miscellaneous methods
     // ----------------------------------------------------------------
 
@@ -329,15 +311,4 @@ class GaelykCategory {
         future.get().setProperty(name, DatastoreExtensions.transformValueForStorage(value))
     }
     
-    /**
-    * Runs code in the background thread.
-    *
-    * @param the code supposed to run in background thread
-    */
-    @CompileStatic
-    static Thread run(BackendService backends, Runnable code){
-        Thread thread = ThreadManager.createBackgroundThread(code);
-        thread.start()
-        thread
-    }
 }

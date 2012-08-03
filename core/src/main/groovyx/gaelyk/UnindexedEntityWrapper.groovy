@@ -1,7 +1,7 @@
 package groovyx.gaelyk
 
+import groovyx.gaelyk.extensions.DatastoreExtensions
 import com.google.appengine.api.datastore.Entity
-import static GaelykCategory.transformValueForStorage
 import groovy.transform.CompileStatic
 
 /**
@@ -32,7 +32,7 @@ class UnindexedEntityWrapper {
      * @param value of the unindexed property
      */
     void setProperty(String name, value) {
-        entity.setUnindexedProperty(name, GaelykCategory.transformValueForStorage(value))
+        entity.setUnindexedProperty(name, DatastoreExtensions.transformValueForStorage(value))
     }
 
     /**
@@ -42,6 +42,6 @@ class UnindexedEntityWrapper {
      * @param value of the unindexed property
      */
     void setAt(String name, value) {
-        entity.setUnindexedProperty(name, GaelykCategory.transformValueForStorage(value))
+        entity.setUnindexedProperty(name, DatastoreExtensions.transformValueForStorage(value))
     }
 }

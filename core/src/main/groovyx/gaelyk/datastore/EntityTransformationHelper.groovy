@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.api.datastore.Query
+import groovyx.gaelyk.extensions.DatastoreExtensions
 
 /**
  * Utility class used for delegating on from classes annotated with {@link groovyx.gaelyk.datastore.Entity}.
@@ -22,7 +23,7 @@ import com.google.appengine.api.datastore.Query
 class EntityTransformationHelper {
 
     static Key save(Object pogo) {
-        Key key = GaelykCategory.save(GaelykCategory.asType(pogo, Entity))
+        Key key = DatastoreExtensions.save(DatastoreExtensions.asType(pogo, Entity))
         if (CharSequence.class.isAssignableFrom(pogo.getClass().getMethod('get$key').returnType)) {
             pogo.set$key(key.name)
         } else {
@@ -32,12 +33,12 @@ class EntityTransformationHelper {
     }
 
     static void delete(Object pogo) {
-        GaelykCategory.delete(GaelykCategory.asType(pogo, Entity))
+        DatastoreExtensions.delete(DatastoreExtensions.asType(pogo, Entity))
     }
 
     static <P> P get(Class<P> pogoClass, long key) {
         try {
-           return GaelykCategory.asType(GaelykCategory.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
+           return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
         } catch (EntityNotFoundException e) {
            return null;
         }
@@ -45,14 +46,14 @@ class EntityTransformationHelper {
 
     static <P> P get(Class<P> pogoClass, String key) {
         try {
-           return GaelykCategory.asType(GaelykCategory.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
+           return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
         } catch (EntityNotFoundException e) {
            return null;
         }
     }
     
     static <P> void delete(Class<P> pogoClass, key) {
-        GaelykCategory.delete(KeyFactory.createKey(pogoClass.simpleName, key))
+        DatastoreExtensions.delete(KeyFactory.createKey(pogoClass.simpleName, key))
     }
 
     static int count(Class<?> pogoClass) {

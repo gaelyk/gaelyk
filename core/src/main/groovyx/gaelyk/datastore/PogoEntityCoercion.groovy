@@ -5,6 +5,7 @@ import groovyx.gaelyk.GaelykCategory
 import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.EntityNotFoundException
+import groovyx.gaelyk.extensions.DatastoreExtensions
 
 /**
  * Utility class handling the POGO to Entity coercion, and Entity to POGO coercion as well.
@@ -151,7 +152,7 @@ class PogoEntityCoercion {
         if (version) {
             try {
                 if(e.key)  {
-                   o."$version" = Entities.getVersionProperty(GaelykCategory.get(Entities.createEntityGroupKey(e.key)))
+                   o."$version" = Entities.getVersionProperty(DatastoreExtensions.get(Entities.createEntityGroupKey(e.key)))
                 }
             } catch (EntityNotFoundException ex){
                 o."$version" = 0

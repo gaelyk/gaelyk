@@ -3,7 +3,6 @@ package groovyx.gaelyk.query
 import java.util.Map.Entry
 
 import groovy.transform.PackageScope
-import groovyx.gaelyk.GaelykCategory
 
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.PropertyProjection
@@ -13,6 +12,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory
 import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.Cursor
+import groovyx.gaelyk.extensions.DatastoreExtensions
 
 /**
  * The query build is used to create a datastore <code>Query</code>
@@ -94,7 +94,7 @@ class QueryBuilder {
                 if(en == null){
                     return null
                 }
-                return GaelykCategory.asType(en, coercedClass)
+                return DatastoreExtensions.asType(en, coercedClass)
             } else {
                 return preparedQuery.asSingleEntity()
             }
@@ -123,7 +123,7 @@ class QueryBuilder {
                 // use "manual" collect{} as in the context of the query{} call
                 // the delegation transforms the class into a string expression
                 def result = []
-                for (entity in entities) result << GaelykCategory.asType(entity, coercedClass)
+                for (entity in entities) result << DatastoreExtensions.asType(entity, coercedClass)
 
                 return result
             }

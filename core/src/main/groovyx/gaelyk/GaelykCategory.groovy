@@ -319,21 +319,6 @@ class GaelykCategory {
     }
 
     // ----------------------------------------------------------------
-    // Category methods dedicated to the Channel service
-    // ----------------------------------------------------------------
-
-    /**
-     * Send a message through the Channel service
-     *
-     * @param clientId the client ID
-     * @param message the message to send
-     */
-    @CompileStatic
-    static void send(ChannelService channel, String clientId, String message) {
-        channel.sendMessage(new ChannelMessage(clientId, message))
-    }
-
-    // ----------------------------------------------------------------
     // Backend service support
     // ----------------------------------------------------------------
 

@@ -9,10 +9,11 @@ extensionClasses=\
   groovyx.gaelyk.extensions.FilesExtensions,\
   groovyx.gaelyk.extensions.MailExtensions,\
   groovyx.gaelyk.extensions.TaskQueueExtensions,\
-  groovyx.gaelyk.extensions.ImageExtensions,\
   groovyx.gaelyk.extensions.SearchExtensions,\
   groovyx.gaelyk.extensions.UrlFetchExtensions,\
+  groovyx.gaelyk.extensions.ChannelExtensions,\
   groovyx.gaelyk.extensions.XmppExtensions,\
+  groovyx.gaelyk.extensions.ImageExtensions,\
   groovyx.gaelyk.GaelykCategory,\
   groovyx.gaelyk.ExpirationTimeCategory
 staticExtensionClasses=\

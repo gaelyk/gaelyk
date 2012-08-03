@@ -46,7 +46,7 @@ class GaelykTemplateServlet extends TemplateServlet {
     @Override
     @CompileStatic
     void init(ServletConfig config) {
-        if(config.getInitParameter('preferPrecompiled') == 'true' || !GaelykBindingEnhancer.localMode){
+        if (config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true' || !GaelykBindingEnhancer.localMode)) {
             serviceClosure = { HttpServletRequest request, HttpServletResponse response, ServletBinding binding ->
                 try {
                     try {

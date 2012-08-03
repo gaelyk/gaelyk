@@ -17,9 +17,6 @@ sourceCompatibility = 1.5
 targetCompatibility = 1.5
 defaultTasks 'clean', 'codenarc', 'build'
 
-final appEngineVersion = '1.7.0'
-final groovyVersion    = '2.0.1'
-
 // various directory places and file names
 final tmpProj    = '../template-project'
 final zipName    = "${buildDir}/gaelyk-template-project-${version}.zip"

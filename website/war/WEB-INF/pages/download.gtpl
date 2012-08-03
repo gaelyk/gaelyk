@@ -9,12 +9,12 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.2.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.2.zip">Template project v1.2</a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-2.0.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-2.0.zip">Template project v2.0</a></td>
         </tr>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar">Gaelyk JAR v1.2</a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-2.0.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-2.0.jar">Gaelyk JAR v2.0</a></td>
         </tr>
     </table>
 </div>
@@ -25,7 +25,7 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and 
 
 <p>
 The latest version was tested with Groovy 2.0.1,
-and with the 1.6.6 version of the App Engine SDK.
+and with the 1.7.0 version of the App Engine SDK.
 </p>
 
 <p>
@@ -36,7 +36,15 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
-
+    <li>Migration to GAE SDK 1.7.0 and Groovy 2.0.1</li>
+    <li>
+        Several key classes of the Gaelyk code base are now statically compiled thanks to Groovy 2.0,
+        which should bring some performance improvements.
+        But a major change is the usage of Groovy 2.0's extension module mechanism
+        for all the added nice shortcuts decorating the GAE SDK.
+        This also means Groovy categories have been abandoned in favor of that mechanism,
+        as they were disabling certain optimizations of Groovy (such as efficient primitive arithmetic).
+    </li>
 </ul>
 
 <h4>Breaking changes</h4>

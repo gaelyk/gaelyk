@@ -23,12 +23,11 @@ repositories {
 }
 
 dependencies {
-    def gaeVersion = '1.6.6'
-    groovy 'org.codehaus.groovy:groovy-all:1.8.6'
-    compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
-            "com.google.appengine:appengine-api-labs:$gaeVersion",
-            'org.codehaus.groovy:groovy-all:1.8.6'
-    compile 'org.gaelyk:gaelyk:1.2'
+    groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
+    compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion",
+            "com.google.appengine:appengine-api-labs:$appEngineVersion",
+            "org.codehaus.groovy:groovy-all:$groovyVersion"
+    compile 'org.gaelyk:gaelyk:2.0'
     
     /** 
      * To add binary plugin just declare it as a dependency. For example,
@@ -38,12 +37,12 @@ dependencies {
     // compile 'org.codehaus.gpars:gpars-appengine:0.1'
     
     testCompile 'org.gaelyk:gaelyk-spock:0.3.0.1'
-    testCompile "com.google.appengine:appengine-api-stubs:$gaeVersion",
-                "com.google.appengine:appengine-testing:$gaeVersion"
+    testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion",
+                "com.google.appengine:appengine-testing:$appEngineVersion"
                 
     functionalTestCompile 'org.codehaus.geb:geb-spock:0.7.0',
                           'org.seleniumhq.selenium:selenium-firefox-driver:2.22.0'
-    gaeSdk "com.google.appengine:appengine-java-sdk:$gaeVersion"
+    gaeSdk "com.google.appengine:appengine-java-sdk:$appEngineVersion"
 }
 
 idea {

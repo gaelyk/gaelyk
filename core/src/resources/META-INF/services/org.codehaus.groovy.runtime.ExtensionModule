@@ -6,6 +6,7 @@ extensionClasses=\
   groovyx.gaelyk.extensions.DatastoreExtensions,\
   groovyx.gaelyk.extensions.MemcacheExtensions,\
   groovyx.gaelyk.extensions.BlobstoreExtensions,\
+  groovyx.gaelyk.extensions.FilesExtensions,\
   groovyx.gaelyk.extensions.MailExtensions,\
   groovyx.gaelyk.extensions.TaskQueueExtensions,\
   groovyx.gaelyk.extensions.XmppExtensions,\

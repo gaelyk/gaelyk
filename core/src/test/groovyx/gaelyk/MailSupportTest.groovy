@@ -14,7 +14,7 @@ import java.util.logging.LogRecord
  */
 class MailSupportTest extends GroovyTestCase {
 
-    // setup the local environement with a mail service stub
+    // setup the local environment with a mail service stub
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalMailServiceTestConfig().setLogMailBody(true)//.setLogMailLevel(Level.INFO)
     )
@@ -42,13 +42,11 @@ class MailSupportTest extends GroovyTestCase {
     void testSend() {
         def mail = MailServiceFactory.mailService
 
-        use (GaelykCategory) {
-            mail.send from: "glaforge@gmail.com",
-                    to: "someone@gmail.com",
-                    textBody: "hello you",
-                    subject: "new message",
-                    attachment: [fileName: 'report.csv', data: '1234'.bytes]
-        }
+        mail.send from: "glaforge@gmail.com",
+                to: "someone@gmail.com",
+                textBody: "hello you",
+                subject: "new message",
+                attachment: [fileName: 'report.csv', data: '1234'.bytes]
 
         println logResult
 

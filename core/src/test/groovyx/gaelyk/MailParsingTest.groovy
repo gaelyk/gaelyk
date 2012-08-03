@@ -47,13 +47,11 @@ class MailParsingTest extends GroovyTestCase {
 
         def mail = MailServiceFactory.mailService
 
-        use(GaelykCategory) {
-            def message = mail.parseMessage(request)
+        def message = mail.parseMessage(request)
 
-            assert message.allRecipients[0].toString() == 'to@appspot.com'
-            assert message.from[0].toString() == 'from@example.com'
-            assert message.subject == 'Hello World'
-            assert message.content.toString() == 'Thanks a lot for the invitation'
-        }
+        assert message.allRecipients[0].toString() == 'to@appspot.com'
+        assert message.from[0].toString() == 'from@example.com'
+        assert message.subject == 'Hello World'
+        assert message.content.toString() == 'Thanks a lot for the invitation'
     }
 }

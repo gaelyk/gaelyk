@@ -14,7 +14,7 @@ import java.util.logging.Logger
  */
 class MailToAdminSupportTest extends GroovyTestCase {
 
-    // setup the local environement with a mail service stub
+    // setup the local environment with a mail service stub
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalMailServiceTestConfig().setLogMailBody(true)//.setLogMailLevel(Level.INFO)
     )
@@ -42,11 +42,9 @@ class MailToAdminSupportTest extends GroovyTestCase {
     void testSendToAdmins() {
         def mail = MailServiceFactory.mailService
 
-        use (GaelykCategory) {
-            mail.sendToAdmins from: "glaforge@gmail.com",
-                    textBody: "hello admin",
-                    subject: "new message"
-        }
+        mail.sendToAdmins from: "glaforge@gmail.com",
+                textBody: "hello admin",
+                subject: "new message"
 
         println logResult
 

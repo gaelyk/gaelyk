@@ -12,4 +12,5 @@ extensionClasses=\
   groovyx.gaelyk.extensions.XmppExtensions,\
   groovyx.gaelyk.GaelykCategory,\
   groovyx.gaelyk.ExpirationTimeCategory
-staticExtensionClasses=
+staticExtensionClasses=\
+  groovyx.gaelyk.extensions.NamespaceStaticExtensions

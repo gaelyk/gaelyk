@@ -17,7 +17,6 @@ package groovyx.gaelyk
 
 import groovy.servlet.GroovyServlet
 import groovy.servlet.ServletBinding
-import groovy.servlet.ServletCategory
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -82,16 +81,11 @@ class GaelykServlet extends GroovyServlet {
      * @throws IOException when anything goes wrong
      */
     @Override
+    @CompileStatic
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        use([
-            ServletCategory,
-            GaelykCategory,
-            * PluginsHandler.instance.categories
-        ]) {
-            PluginsHandler.instance.executeBeforeActions(request, response)
-            doService(request, response)
-            PluginsHandler.instance.executeAfterActions(request, response)
-        }
+        PluginsHandler.instance.executeBeforeActions(request, response)
+        doService(request, response)
+        PluginsHandler.instance.executeAfterActions(request, response)
     }
 
     /**

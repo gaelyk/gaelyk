@@ -30,9 +30,6 @@ abstract class PluginBaseScript extends RoutesBaseScript {
     /** contributed binding variables */
     Map bindingVariables = [:]
 
-    /** contributed categories */
-    List<Class> categories = []
-
     /** "before" request hook */
     Closure beforeAction = null
 
@@ -62,15 +59,6 @@ abstract class PluginBaseScript extends RoutesBaseScript {
     void routes(Closure c) {
         // use the RoutesBaseScript class logic to define the rules
         c()
-    }
-
-    /**
-     * Install new categories
-     *
-     * @param cats vararg of categories to install
-     */
-    void categories(Class... cats) {
-        categories = cats as List
     }
 
     /**

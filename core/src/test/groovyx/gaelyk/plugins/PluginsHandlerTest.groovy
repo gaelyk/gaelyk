@@ -14,7 +14,6 @@ import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import groovy.servlet.ServletCategory
 import com.google.appengine.api.memcache.MemcacheService
 import com.google.appengine.api.datastore.DatastoreService
 
@@ -24,7 +23,7 @@ import com.google.appengine.api.datastore.DatastoreService
  */
 class PluginsHandlerTest extends GroovyTestCase {
 
-    // setup the local environement stub services
+    // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalMemcacheServiceTestConfig(),
@@ -83,7 +82,6 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 } else ""
             }
-			
 
             initPlugins(true)
 
@@ -101,7 +99,6 @@ class PluginsHandlerTest extends GroovyTestCase {
 
             assert !bindingVariables
             assert !routes
-            assert !categories
             assert !beforeActions
             assert !afterActions
         }
@@ -123,8 +120,6 @@ class PluginsHandlerTest extends GroovyTestCase {
                         post "/upload", forward: "/upload.groovy"
                     }
 
-                    categories MyCat
-
                     before { 'before' }
 
                     after  { 'after' }
@@ -134,12 +129,10 @@ class PluginsHandlerTest extends GroovyTestCase {
                 } else ""
             }
 
-			
             initPlugins(true)
 
             assert bindingVariables.version == "1.2.3"
             assert routes.size() == 2
-            assert categories*.name == ['MyCat']
             assert beforeActions.size() == 1
             assert beforeActions[0]() == 'before'
             assert afterActions.size() == 1
@@ -151,7 +144,8 @@ class PluginsHandlerTest extends GroovyTestCase {
         def output = new StringBuilder()
 
         def request  = [
-                getAttribute: { String key -> output }
+                getAttribute: { String key -> output },
+                setAttribute: { String attrName, String attrValue -> output << attrValue }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse
@@ -166,22 +160,22 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 } else if (path == "WEB-INF/plugins/pluginOne.groovy") {
                     """
-                    before { request.sample << '1' }
-                    after  { request.sample << '2' }
+                    before { request.setAttribute('sample', '1') }
+                    after  { request.setAttribute('sample', '2') }
                     """
                 } else if (path == "WEB-INF/plugins/pluginTwo.groovy") {
                     """
-                    before { request.sample << '3' }
-                    after  { request.sample << '4' }
+                    before { request.setAttribute('sample', '3') }
+                    after  { request.setAttribute('sample', '4') }
                     """
                 } else if (path == "WEB-INF/plugins/pluginThree.groovy") {
                     """
-                    before { request.sample << '5' }
-                    after  { request.sample << '6' }
+                    before { request.setAttribute('sample', '5') }
+                    after  { request.setAttribute('sample', '6') }
                     """
                 }
             }
-			
+
             initPlugins(true)
 
             assert beforeActions.size() == 3
@@ -190,9 +184,7 @@ class PluginsHandlerTest extends GroovyTestCase {
             executeBeforeActions request, response
             executeAfterActions  request, response
 
-            use(ServletCategory) {
-                assert request.sample.toString() == '135642'
-            }
+            assert output.toString() == '135642'
         }
     }
 
@@ -209,13 +201,13 @@ class PluginsHandlerTest extends GroovyTestCase {
                     }
 
                     before {
-                        request.fromBindingBlock = binding
-                        request.fromBeforeBlock = this.datastore
+                        request.setAttribute('fromBindingBlock', binding)
+                        request.setAttribute('fromBeforeBlock', this.datastore)
                     }
                     """
                 } else ""
             }
-			
+
             initPlugins(true)
 
             def values = [:]

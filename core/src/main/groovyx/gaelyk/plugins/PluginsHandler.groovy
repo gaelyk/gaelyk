@@ -20,11 +20,9 @@ import java.util.jar.JarFile
 
 import org.codehaus.groovy.control.CompilerConfiguration
 
-import groovyx.gaelyk.ExpirationTimeCategory
 import groovyx.gaelyk.GaelykBindingEnhancer
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
-import groovy.servlet.ServletCategory
 import groovyx.gaelyk.logging.GroovyLogger
 
 /**
@@ -43,7 +41,6 @@ class PluginsHandler {
 
     Map bindingVariables = [:]
     List routes = []
-    List categories = []
     List beforeActions = []
     List afterActions = []
     List installed = []
@@ -66,7 +63,6 @@ class PluginsHandler {
         initialized = false
         bindingVariables = [:]
         routes = []
-        categories = []
         beforeActions = []
         afterActions = []
         installed = []
@@ -112,15 +108,12 @@ class PluginsHandler {
 
                 pluginScript.binding = binding
 
-                use(ExpirationTimeCategory) {
-                    pluginScript.run()
-                }
+                pluginScript.run()
 
                 // use getters directly,
                 // otherwise property access returns variables from the binding of the scripts
                 bindingVariables.putAll pluginScript.getBindingVariables()
                 routes.addAll pluginScript.getRoutes()
-                categories.addAll pluginScript.getCategories()
 
                 if (pluginScript.getBeforeAction()) beforeActions.add pluginScript.getBeforeAction()
                 if (pluginScript.getAfterAction())  afterActions .add pluginScript.getAfterAction()
@@ -226,6 +219,6 @@ class PluginsHandler {
                     binding: bindingVariables
                 ]
 
-        use (ServletCategory) { cloned() }
+        cloned()
     }
 }

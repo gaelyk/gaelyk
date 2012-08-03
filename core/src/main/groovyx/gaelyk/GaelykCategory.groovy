@@ -112,6 +112,7 @@ import groovy.util.slurpersupport.GPathResult
 
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
+
 import groovyx.gaelyk.datastore.PogoEntityCoercion
 import groovyx.gaelyk.query.QueryBuilder
 import groovyx.gaelyk.search.DocumentDefinitions
@@ -120,8 +121,8 @@ import groovyx.gaelyk.cache.CacheHandler
 import java.nio.channels.Channels
 import java.util.concurrent.Future
 import javax.mail.internet.MimeMessage
-import javax.mail.Session
 import javax.servlet.http.HttpServletRequest
+import javax.mail.Session
 import javax.servlet.http.HttpServletResponse
 
 
@@ -155,7 +156,7 @@ class GaelykCategory extends GaelykCategoryBase {
      *
      *  // adds an additional value to an existing header
      *  // or sets a first value for a non-existant header
-     *  response.headers['a'] << 'b' 
+     *  response.headers['a'] << 'b'
      * </code></pre>
      *
      * @param response

@@ -20,7 +20,7 @@ import groovyx.gaelyk.GaelykBindingEnhancer
  */
 class PluginBaseScriptTest extends GroovyTestCase {
 
-    // setup the local environement stub services
+    // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalMemcacheServiceTestConfig(),
@@ -69,8 +69,6 @@ class PluginBaseScriptTest extends GroovyTestCase {
                 version = "1.2"
             }
 
-            categories MyCategory, MyOtherCategory
-
             routes {
                 get "/crud", forward: "/crud.groovy"
             }
@@ -83,16 +81,12 @@ class PluginBaseScriptTest extends GroovyTestCase {
                 "after"
             }
 
-            class MyCategory {}
-            class MyOtherCategory {}
-
             return "initialized"
         """)
 
         assert script.run() == "initialized"
 
         assert script.getBindingVariables()['version'] == "1.2"
-        assert script.getCategories()*.name == ['MyCategory', 'MyOtherCategory']
         assert script.getBeforeAction()() == "before"
         assert script.getAfterAction()() == "after"
     }

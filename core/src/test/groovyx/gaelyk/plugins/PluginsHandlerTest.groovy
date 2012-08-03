@@ -160,18 +160,18 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 } else if (path == "WEB-INF/plugins/pluginOne.groovy") {
                     """
-                    before { request.setAttribute('sample', '1') }
-                    after  { request.setAttribute('sample', '2') }
+                    before { request.sample << '1' }
+                    after  { request.sample << '2' }
                     """
                 } else if (path == "WEB-INF/plugins/pluginTwo.groovy") {
                     """
-                    before { request.setAttribute('sample', '3') }
-                    after  { request.setAttribute('sample', '4') }
+                    before { request.sample << '3' }
+                    after  { request.sample << '4' }
                     """
                 } else if (path == "WEB-INF/plugins/pluginThree.groovy") {
                     """
-                    before { request.setAttribute('sample', '5') }
-                    after  { request.setAttribute('sample', '6') }
+                    before { request.sample << '5' }
+                    after  { request.sample << '6' }
                     """
                 }
             }
@@ -201,8 +201,8 @@ class PluginsHandlerTest extends GroovyTestCase {
                     }
 
                     before {
-                        request.setAttribute('fromBindingBlock', binding)
-                        request.setAttribute('fromBeforeBlock', this.datastore)
+                        request.fromBindingBlock = binding
+                        request.fromBeforeBlock = this.datastore
                     }
                     """
                 } else ""

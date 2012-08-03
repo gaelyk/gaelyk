@@ -12,6 +12,7 @@ extensionClasses=\
   groovyx.gaelyk.extensions.SearchExtensions,\
   groovyx.gaelyk.extensions.UrlFetchExtensions,\
   groovyx.gaelyk.extensions.ChannelExtensions,\
+  groovyx.gaelyk.extensions.CapabilitiesExtensions,\
   groovyx.gaelyk.extensions.XmppExtensions,\
   groovyx.gaelyk.extensions.ImageExtensions,\
   groovyx.gaelyk.GaelykCategory,\

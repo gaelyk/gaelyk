@@ -16,7 +16,7 @@ extensionClasses=\
   groovyx.gaelyk.extensions.XmppExtensions,\
   groovyx.gaelyk.extensions.ImageExtensions,\
   groovyx.gaelyk.extensions.BackendExtensions,\
-  groovyx.gaelyk.GaelykCategory,\
+  groovyx.gaelyk.extensions.MiscExtensions,\
   groovyx.gaelyk.ExpirationTimeCategory
 staticExtensionClasses=\
   groovyx.gaelyk.extensions.NamespaceStaticExtensions

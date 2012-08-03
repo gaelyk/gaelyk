@@ -24,13 +24,34 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and 
 </p>
 
 <p>
-The latest version was tested with Groovy 1.8.6,
+The latest version was tested with Groovy 2.0.1,
 and with the 1.6.6 version of the App Engine SDK.
 </p>
 
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 2.0</h2>
+
+<h3>Changes</h3>
+<ul>
+
+</ul>
+
+<h4>Breaking changes</h4>
+<ul>
+    <li>
+        The usage and support of Groovy categories for enriching the SDK or any third-party library has been removed.
+        In particular, your plugins descriptor using the <code>category</code> section might be affected.
+        Instead of using categories which disable some performance optimizations of Groovy,
+        you should be using Groovy 2's <a href="http://docs.codehaus.org/display/GROOVY/Creating+an+extension+module">extension modules</a> approach.
+    </li>
+    <li>
+        On XMPP messages, you must now call the <code>message.xml()</code> method to get the parsed XML payload
+        instead of calling the <code>message.xml</code> property.
+    </li>
+</ul>
 
 <h2>Version 1.2</h2>
 

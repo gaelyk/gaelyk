@@ -19,7 +19,6 @@ A plugin lets you:
 <ul>
     <li>provide additional <b>groovlets</b> and <b>templates</b></li>
     <li>contribute new URL <b>routes</b></li>
-    <li>add new <b>categories</b> to enhance existing classes (like third-party libraries)</li>
     <li>define and bind new <b>variables in the binding</b> (the "global" variables available in groovlets and templates)</li>
     <li>provide any kind of <b>static content</b>, such as JavaScript, HTML, images, etc.</li>
     <li>add new <b>libraries</b> (ie. additional JARs)</li>
@@ -52,7 +51,7 @@ They can be removed easily as well. You just delete the JAR file from the <code>
 
 <p>
 To let Gaelyk application to recognize your binary plugin, you'll have to create a plugin descriptor which 
-will allow you to define new binding variables, new routes, new categories, and any initialization code your plugin may need on application startup.
+will allow you to define new binding variables, new routes, and any initialization code your plugin may need on application startup.
 This plugin descriptor must extend <code>groovyx.gaelyk.plugins.PluginBaseScript</code> manually. 
 Place your plugin descriptor's code inside the method <code>run</code>.
 </p>
@@ -189,7 +188,7 @@ The content of exploded plugin would look something like the following hierarchy
         |    +-- someInclude.gtpl               // your includes
         |
         +-- classes                             // compiled classes
-        |                                       // like categories
+        |
         +-- lib
             |
             +-- my-additional-dependency.jar    // your JARs
@@ -218,7 +217,6 @@ The plugin descriptor is where you'll be able to tell the <b>Gaelyk</b> runtime 
 <ul>
     <li>add new variables in the binding of groovlets and templates</li>
     <li>add new routes to the URL routing system</li>
-    <li>define new categories to be applied to enrich APIs (GAE, third-party or your own)</li>
     <li>define before / after request actions</li>
     <li>and do any initialization you may need</li>
 </ul>
@@ -255,9 +253,6 @@ after {
     log.info "Exiting \${request.requestURI}"
 }
 
-// install a category you've developped
-categories jsonlib.JsonlibCategory
-
 // any other initialization code you'd need
 // ...
 </pre>
@@ -277,7 +272,7 @@ Inside the <code>routes</code> closure block, you'll put the URL routes followin
 as the one we explained in the <a href="tutorial.gtpl#url-routing">URL routing</a> section.
 
 <blockquote>
-<b>Note:</b> Contrary to binding variables or categories, the first route that matches is the one which is chosen.
+<b>Note:</b> Contrary to binding variables, the first route that matches is the one which is chosen.
 This means a plugin cannot overwrite the existing application routes, or routes defined by previous plugins in the chain.
 </blockquote>
 
@@ -295,18 +290,12 @@ that are put in the binding of Groovlets and templates.
 </p>
 
 <p>
-The <code>categories</code> method call takes a list of classes
-which are <a href="http://groovy.codehaus.org/Groovy+Categories">Groovy categories</a>.
-It's actually just a <em>varargs</em> method taking as many classes as you want.
-</p>
-
-<p>
 Wherever in your plugin descriptor, you can put any initialization code you may need in your plugin.
 </p>
 
 <blockquote>
 <b>Important:</b> The plugins are loaded once, as soon as the first request is served.
-So your initialization code, adding binding variables, categories and routes, will only be done once per application load.
+So your initialization code, adding binding variables and routes, will only be done once per application load.
 Knowing that Google App Engine can load and unload apps depending on traffic, this is important to keep in mind as well.
 </blockquote>
 

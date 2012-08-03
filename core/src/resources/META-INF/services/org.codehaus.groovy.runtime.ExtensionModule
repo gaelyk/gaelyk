@@ -7,6 +7,7 @@ extensionClasses=\
   groovyx.gaelyk.extensions.MemcacheExtensions,\
   groovyx.gaelyk.extensions.MailExtensions,\
   groovyx.gaelyk.extensions.TaskQueueExtensions,\
+  groovyx.gaelyk.extensions.XmppExtensions,\
   groovyx.gaelyk.GaelykCategory,\
   groovyx.gaelyk.ExpirationTimeCategory
 staticExtensionClasses=

@@ -10,6 +10,7 @@ extensionClasses=\
   groovyx.gaelyk.extensions.MailExtensions,\
   groovyx.gaelyk.extensions.TaskQueueExtensions,\
   groovyx.gaelyk.extensions.ImageExtensions,\
+  groovyx.gaelyk.extensions.SearchExtensions,\
   groovyx.gaelyk.extensions.XmppExtensions,\
   groovyx.gaelyk.GaelykCategory,\
   groovyx.gaelyk.ExpirationTimeCategory

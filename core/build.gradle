@@ -18,12 +18,11 @@ targetCompatibility = 1.5
 defaultTasks 'clean', 'codenarc', 'build'
 
 final appEngineVersion = '1.7.0'
-final groovyVersion    = '2.0.2-SNAPSHOT'
+final groovyVersion    = '2.0.1'
 
 // various directory places and file names
 final tmpProj    = '../template-project'
 final zipName    = "${buildDir}/gaelyk-template-project-${version}.zip"
-final projLib    = "${tmpProj}/src/main/webapp/WEB-INF/lib"
 
 final website    = '../website'
 final apiDir     = "${website}/war/api"
@@ -33,6 +32,9 @@ sourceSets {
     main {
         groovy {
             srcDir 'src/main'
+        }
+        resources {
+            srcDir 'src/resources'
         }
     }
 
@@ -50,7 +52,7 @@ repositories {
     mavenCentral()
     maven { // for Spock Groovy 2.0 Support
         url "http://oss.sonatype.org/content/repositories/snapshots/"
-    }	
+    }
     maven { // for Groovy 2.0.2 Snapshots
         url "http://snapshots.repository.codehaus.org/"
     }
@@ -143,7 +145,7 @@ if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
     uploadArchives {
         repositories {
             mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+                beforeDeployment { deployment -> signPom(deployment) }
 
                 def auth = {
                     authentication(userName: sonatypeUsername, password: sonatypePassword)
@@ -208,7 +210,7 @@ if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
                 //mess with the generated pom to set the 'packaging' tag
                 pom.withXml { XmlProvider xmlProvider ->
                     def xml = xmlProvider.asString()
-                    def pomXml = new XmlParser().parse(new ByteArrayInputStream(xml.toString().bytes))
+                    def pomXml = new XmlParser().parse(xml.toString())
 
                     pomXml.version[0] + { packaging('jar') }
 

@@ -4,7 +4,7 @@ import groovy.transform.CompileStatic
 import javax.servlet.http.HttpServletResponse
 
 /**
- *
+ * Extension methods related to the servlet APIs
  */
 class ServletExtensions {
     // ----------------------------------------------------------------

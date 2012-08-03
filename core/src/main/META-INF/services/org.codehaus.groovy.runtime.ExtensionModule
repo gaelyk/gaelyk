@@ -1,4 +1,0 @@
-moduleName=gaelyk-extension-module
-moduleVersion=1.3-SNAPSHOT
-extensionClasses=groovy.servlet.ServletCategory,groovyx.gaelyk.GaelykCategory,groovyx.gaelyk.ExpirationTimeCategory
-staticExtensionClasses=

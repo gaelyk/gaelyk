@@ -94,9 +94,10 @@ class CacheHandler {
         String lastModifiedKey = "last-modified-$uri"
 
         def memcache = MemcacheServiceFactory.memcacheService
+        def asyncMemcache = MemcacheServiceFactory.asyncMemcacheService
 
-        def content = memcache.get(contentKey)
-        def type = memcache.get(typeKey)
+        byte[] content = (byte[])memcache.get(contentKey)
+        String type = memcache.get(typeKey)
 
         // the resource is still present in the cache
         if (content && type) {
@@ -104,7 +105,7 @@ class CacheHandler {
 
             // if it's in the cache, return the page from the cache
             response.contentType = type
-            response.outputStream << content
+            response.outputStream << content as byte[]
         } else { // serve and cache
             log.config "Not in the cache"
 
@@ -123,18 +124,18 @@ class CacheHandler {
             request.getRequestDispatcher(destination).forward request, cachedResponse
             byte[] byteArray = cachedResponse.output.toByteArray()
 
-            log.config "Byte array of wrapped response will be put in memcache: ${new String(byteArray)}"
-
-            // put the output in memcache
-            memcache.put(contentKey, byteArray, duration)
-            memcache.put(typeKey, cachedResponse.contentType, duration)
-            memcache.put(lastModifiedKey, lastModifiedString, duration)
-
             log.config "Serving content-type and byte array"
 
             // output back to the screen
             response.contentType = cachedResponse.contentType
-            response.outputStream << byteArray
+            response.outputStream << (byteArray as byte[])
+
+            log.config "Byte array of wrapped response will be put in memcache: ${new String(byteArray)}"
+
+            // put the output in memcache
+            asyncMemcache.put(contentKey, byteArray as byte[], duration)
+            asyncMemcache.put(typeKey, cachedResponse.contentType, duration)
+            asyncMemcache.put(lastModifiedKey, lastModifiedString, duration)
         }
     }
 }

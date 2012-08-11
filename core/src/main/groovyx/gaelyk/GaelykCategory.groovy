@@ -42,6 +42,7 @@ import com.google.appengine.api.datastore.Link
 import com.google.appengine.api.datastore.PhoneNumber
 import com.google.appengine.api.datastore.PostalAddress
 import com.google.appengine.api.datastore.Rating
+import com.google.appengine.api.datastore.TransactionOptions.Builder as TOB
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import com.google.appengine.api.datastore.ShortBlob
 import com.google.appengine.api.datastore.Blob
@@ -460,7 +461,26 @@ class GaelykCategory extends GaelykCategoryBase {
      * </code>
      */
     static Transaction withTransaction(DatastoreService service, Closure c) {
-        Transaction transaction = service.beginTransaction()
+			return withTransaction(service, false, c)
+		}
+
+    /**
+     * With this method, transaction handling is done transparently.
+     * The transaction is committed if the closure executed properly.
+     * The transaction is rollbacked if anything went wrong.
+		 * If you want to use cross-group transactions, pass {@literal true} 
+		 * as an argument.
+		 * <p />
+     * You can use this method as follows:
+     * <code>
+     * datastore.withTransaction(true) { transaction ->
+     *     // do something in that transaction
+     * }
+     * </code>
+     */
+    static Transaction withTransaction(DatastoreService service, boolean crossGroup, Closure c) {
+				def opts = crossGroup ? TOB.withDefaults() : TOB.withXG(true)
+        Transaction transaction = service.beginTransaction(opts)
         try {
             // pass the transaction as single parameter of the closure
             c(transaction)

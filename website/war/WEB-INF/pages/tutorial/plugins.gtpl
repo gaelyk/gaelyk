@@ -62,7 +62,7 @@ Binary plugins are resolved using <a href="http://docs.oracle.com/javase/7/docs/
 need to place binary name of your plugin descriptor e.g. <code>com.example.plugin.ExamplePlugin</code> in <code>META-INF/services/groovyx.gaelyk.plugins.PluginBaseScript</code> file inside your JAR.
 If you are not using templates you can just place your groovlets into your Groovy source folder to let the compiler compile them. 
 Otherwise you will need <a href="https://github.com/bmuschko/gradle-gaelyk-plugin">Gradle Gaelyk Plugin v.0.3.1 and higher</a> to help you package the plugin. As long as your structure follow Gaelyk convetions
-you only need to call <code>jar</code> task of the plugin. You may also need to enable the <code>jar</code> task placing <code>jar.endabled=true</code> into your build file.
+you only need to call <code>jar</code> task of the plugin. You may also need to enable the <code>jar</code> task placing <code>jar.enabled=true</code> into your build file.
 </p>
 
 <h4 id="binaryhierarchy">Hierarchy</h4>

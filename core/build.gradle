@@ -17,6 +17,11 @@ sourceCompatibility = 1.5
 targetCompatibility = 1.5
 defaultTasks 'clean', 'codenarc', 'build'
 
+test {                     
+  maxHeapSize = '320m'                                 
+}            
+
+
 // various directory places and file names
 final tmpProj    = '../template-project'
 final zipName    = "${buildDir}/gaelyk-template-project-${version}.zip"

@@ -20,15 +20,15 @@ buildscript {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
-    def gaeVersion = '1.6.6'
-    groovy 'org.codehaus.groovy:groovy-all:1.8.6'
+    def gaeVersion = '1.7.1'
+    groovy 'org.codehaus.groovy:groovy-all:2.0.2'
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
-            "com.google.appengine:appengine-api-labs:$gaeVersion",
-            'org.codehaus.groovy:groovy-all:1.8.6'
-    compile 'org.gaelyk:gaelyk:1.2'
+            "com.google.appengine:appengine-api-labs:$gaeVersion"
+    compile 'org.gaelyk:gaelyk:1.3-SNAPSHOT'
     
     /** 
      * To add binary plugin just declare it as a dependency. For example,

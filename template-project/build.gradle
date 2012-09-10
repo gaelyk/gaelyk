@@ -28,7 +28,7 @@ dependencies {
     groovy 'org.codehaus.groovy:groovy-all:2.0.2'
     compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion",
             "com.google.appengine:appengine-api-labs:$appEngineVersion"
-    compile 'org.gaelyk:gaelyk:2.0'
+    compile 'org.gaelyk:gaelyk:2.0-SNAPSHOT'
     
     /** 
      * To add binary plugin just declare it as a dependency. For example,

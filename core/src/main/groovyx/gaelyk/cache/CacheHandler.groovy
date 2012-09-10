@@ -128,7 +128,7 @@ class CacheHandler {
 
             // output back to the screen
             response.contentType = cachedResponse.contentType
-            response.outputStream << (byteArray as byte[])
+            response.outputStream << byteArray
 
             log.config "Byte array of wrapped response will be put in memcache: ${new String(byteArray)}"
 

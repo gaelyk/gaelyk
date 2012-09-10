@@ -24,12 +24,12 @@ repositories {
 }
 
 dependencies {
-    def appEngineVersion = '1.7.1'
-    groovy 'org.codehaus.groovy:groovy-all:2.0.2'
-    compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion",
-            "com.google.appengine:appengine-api-labs:$appEngineVersion"
+    def gaeVersion = '1.7.2'
+    groovy 'org.codehaus.groovy:groovy-all:2.0.4'
+    compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
+            "com.google.appengine:appengine-api-labs:$gaeVersion"
     compile 'org.gaelyk:gaelyk:2.0-SNAPSHOT'
-    
+
     /** 
      * To add binary plugin just declare it as a dependency. For example,
      * uncomment following to add GPars support to your Gaelyk project.

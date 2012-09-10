@@ -20,6 +20,13 @@ defaultTasks 'clean', 'codenarc', 'build'
 test {                     
   maxHeapSize = '320m'                                 
 }            
+<<<<<<< HEAD
+=======
+
+
+final appEngineVersion = '1.7.1'
+final groovyVersion    = '2.0.2'
+>>>>>>> 7ca1900... Update Groovy > 2.0.2 App Engine > 1.7.1 Update Template Project. Increase memory for unit tests.
 
 // various directory places and file names
 final tmpProj    = '../template-project'

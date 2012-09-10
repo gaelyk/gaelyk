@@ -101,7 +101,8 @@ class CacheHandlerTest extends GroovyTestCase {
 
         assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getHeader', 'resp.addHeader',
                 'resp.addHeader', 'resp.addHeader', 'req.getRequestDispatcher', 'reqDisp.forward',
-                'resp.getContentType', 'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream']
+                'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream', 'resp.getContentType']
+
     }
 
     void testCacheServingWithLastModified() {

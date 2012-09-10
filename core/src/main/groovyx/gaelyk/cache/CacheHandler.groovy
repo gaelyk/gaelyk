@@ -105,7 +105,7 @@ class CacheHandler {
 
             // if it's in the cache, return the page from the cache
             response.contentType = type
-            response.outputStream << content as byte[]
+            response.outputStream << content
         } else { // serve and cache
             log.config "Not in the cache"
 

@@ -51,7 +51,7 @@ class CacheHandlerTest extends GroovyTestCase {
         void write(byte[] bytes, int i, int i1) { }
         void write(int i) { }
     }
-    private output = new CustomServletOutputStream(output: stream)
+    private output = new CustomServletOutputStream(out: stream)
 
     private response = [
             addHeader: { String h, String v -> recorder << "resp.addHeader" },

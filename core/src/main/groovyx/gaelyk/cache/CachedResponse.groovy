@@ -24,14 +24,16 @@ import javax.servlet.http.HttpServletResponse
  * 
  * @author Guillaume Laforge
  */
+@groovy.transform.CompileStatic
 class CachedResponse extends HttpServletResponseWrapper {
 
     ByteArrayOutputStream output = new ByteArrayOutputStream(8192)
-    CustomServletOutputStream stream = new CustomServletOutputStream(output: output)
+    CustomServletOutputStream stream = new CustomServletOutputStream()
     PrintWriter writer = new PrintWriter(new OutputStreamWriter(stream, "UTF-8"))
 
     CachedResponse(HttpServletResponse response) {
         super(response)
+        stream.out = output
     }
 
     /**
@@ -48,26 +50,26 @@ class CachedResponse extends HttpServletResponseWrapper {
      * Custom extension of <code>CustomServletOutpuStream</code>
      */
     static class CustomServletOutputStream extends ServletOutputStream {
-        OutputStream output
+        OutputStream out
 
         void write(int i) {
-            output.write(i)
+            out.write(i)
         }
 
         void write(byte[] bytes) {
-            output.write(bytes)
+            out.write(bytes)
         }
 
         void write(byte[] bytes, int offset, int length) {
-            output.write(bytes, offset, length)
+            out.write(bytes, offset, length)
         }
 
         void flush() {
-            output.flush()
+            out.flush()
         }
 
         void close() {
-            output.close()
+            out.close()
         }
     }
 }

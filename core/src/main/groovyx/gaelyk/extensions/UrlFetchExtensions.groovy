@@ -53,6 +53,7 @@ class UrlFetchExtensions {
      * @param encoding encoding used (default: 'UTF-8')
      * @return the string representing the response content
      */
+    @CompileStatic
     static String getText(HTTPResponse response, String encoding = 'UTF-8') {
         new String(response.content, encoding)
     }

@@ -15,6 +15,8 @@
  */
 package groovyx.gaelyk.logging
 
+import groovy.transform.CompileStatic
+
 import java.util.logging.*
 
 /**
@@ -51,15 +53,18 @@ class GroovyLogger {
      * @param name the name of the logger
      * @param groovletOrTemplate false by default, but can be set to true to say it's a logger for templates or groovlets
      */
+    // TODO @CompileStatic
     GroovyLogger(String name, boolean groovletOrTemplate = false) {
         logger = Logger.getLogger(name)
         this.groovletOrTemplate = groovletOrTemplate
     }
 
+    @CompileStatic
     static GroovyLogger forTemplateUri(String uri) {
         new GroovyLogger("gaelyk.template.${uri[1..<uri.lastIndexOf('.')].replaceAll(/\//, '.')}", true)
     }
 
+    @CompileStatic
     static GroovyLogger forGroovletUri(String uri) {
         new GroovyLogger("gaelyk.groovlet.${uri[1..<uri.lastIndexOf('.')].replaceAll(/\//, '.') - 'WEB-INF.groovy.'}", true)
     }
@@ -67,11 +72,13 @@ class GroovyLogger {
     /**
      * @return the name of the logger
      */
+    @CompileStatic
     String getName() { logger.name }
 
     /**
      * @return the name of the logger
      */
+    @CompileStatic
     String toString() { "[GroovyLogger $logger.name" }
 
     /**
@@ -80,6 +87,7 @@ class GroovyLogger {
      * @param level the level of logging
      * @param msg the message to log
      */
+    @CompileStatic
     protected void log(Level level, String msg) {
         if (groovletOrTemplate) {
             // if it's a Groovlet or Template, just use the logger name
@@ -90,17 +98,17 @@ class GroovyLogger {
             def stack = Thread.currentThread().stackTrace
             // find the proper caller class and method
             def caller = stack.find { StackTraceElement elem ->
-                EXCLUDE_LIST.every { !elem.className.startsWith(it) }
+                EXCLUDE_LIST.every { String exclude -> !elem.className.startsWith(exclude) }
             }
             logger.logp(level, caller.className, caller.methodName, msg)
         }
     }
 
-    void severe (String msg) { log(Level.SEVERE,  msg) }
-    void warning(String msg) { log(Level.WARNING, msg) }
-    void info   (String msg) { log(Level.INFO,    msg) }
-    void config (String msg) { log(Level.CONFIG,  msg) }
-    void fine   (String msg) { log(Level.FINE,    msg) }
-    void finer  (String msg) { log(Level.FINER,   msg) }
-    void finest (String msg) { log(Level.FINEST,  msg) }
+    @CompileStatic void severe (String msg) { log(Level.SEVERE,  msg) }
+    @CompileStatic void warning(String msg) { log(Level.WARNING, msg) }
+    @CompileStatic void info   (String msg) { log(Level.INFO,    msg) }
+    @CompileStatic void config (String msg) { log(Level.CONFIG,  msg) }
+    @CompileStatic void fine   (String msg) { log(Level.FINE,    msg) }
+    @CompileStatic void finer  (String msg) { log(Level.FINER,   msg) }
+    @CompileStatic void finest (String msg) { log(Level.FINEST,  msg) }
 }

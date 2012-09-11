@@ -17,6 +17,8 @@ package groovyx.gaelyk.extensions
 
 import com.google.appengine.api.files.AppEngineFile
 import com.google.appengine.api.files.FileServiceFactory
+import com.google.appengine.api.files.FileWriteChannel
+
 import java.nio.channels.Channels
 import groovy.transform.CompileStatic
 import com.google.appengine.api.files.FileService
@@ -53,12 +55,14 @@ class FilesExtensions {
      * @param closure the closure with the writer as parameter
      * @return the original file, for chaining purpose
      */
+    // TODO @CompileStatic
     static AppEngineFile withWriter(AppEngineFile file , Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
+        String encoding = options.encoding ?: "UTF-8"
 
         def writeChannel = FileServiceFactory.fileService.openWriteChannel(file, locked)
-        def writer = new PrintWriter(Channels.newWriter(writeChannel, options.encoding ?: "UTF-8"))
+        def writer = new PrintWriter(Channels.newWriter(writeChannel, encoding))
 
         writer.withWriter closure
 
@@ -95,6 +99,7 @@ class FilesExtensions {
      * @param closure the closure with the output stream as parameter
      * @return the original file, for chaining purpose
      */
+    // TODO @CompileStatic
     static AppEngineFile withOutputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
@@ -137,11 +142,13 @@ class FilesExtensions {
      * @param closure the closure with the reader as parameter
      * @return the original file, for chaining purpose
      */
+    // TODO @CompileStatic
     static AppEngineFile withReader(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
+        String encoding = options.encoding ?: "UTF-8"
 
         def readChannel = FileServiceFactory.fileService.openReadChannel(file, locked)
-        def reader = new BufferedReader(Channels.newReader(readChannel, options.encoding ?: "UTF-8"))
+        def reader = new BufferedReader(Channels.newReader(readChannel, encoding))
 
         reader.withReader closure
         readChannel.close()
@@ -172,6 +179,7 @@ class FilesExtensions {
      * @param closure the closure with the input stream as parameter
      * @return the original file, for chaining purpose
      */
+    // TODO @CompileStatic
     static AppEngineFile withInputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
 
@@ -189,6 +197,7 @@ class FilesExtensions {
      *
      * @param file the file to delete
      */
+    @CompileStatic
     static void delete(AppEngineFile file) {
         BlobstoreExtensions.delete(getBlobKey(file))
     }

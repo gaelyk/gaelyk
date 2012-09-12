@@ -15,9 +15,7 @@
  */
 package groovyx.gaelyk.plugins
 
-import java.util.jar.JarEntry
-import java.util.jar.JarFile
-
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.control.CompilerConfiguration
 
 import groovyx.gaelyk.GaelykBindingEnhancer
@@ -45,7 +43,7 @@ class PluginsHandler {
     List afterActions = []
     List installed = []
 
-    final defaultScriptContentLoader = { String path ->
+    final Closure defaultScriptContentLoader = { String path ->
         def file = new File(path)
         if(file.exists()){
             return file.text
@@ -59,6 +57,7 @@ class PluginsHandler {
 
     GroovyLogger log = new GroovyLogger('gaelyk.pluginshandler')
 
+    @CompileStatic
     void reinit() {
         initialized = false
         bindingVariables = [:]
@@ -168,7 +167,8 @@ class PluginsHandler {
         return []
     }
 
-    public boolean isInstalled(String pluginName){
+    @CompileStatic
+    boolean isInstalled(String pluginName){
         pluginName in installed
     }
 
@@ -177,6 +177,7 @@ class PluginsHandler {
      *
      * @param binding the binding to add the variables to
      */
+    @CompileStatic
     void enrich(Binding binding) {
         bindingVariables.each { String k, Object v -> binding.setVariable(k, v) }
     }
@@ -187,6 +188,7 @@ class PluginsHandler {
      * @param request
      * @param response
      */
+    @CompileStatic
     void executeBeforeActions(HttpServletRequest request, HttpServletResponse response) {
         beforeActions.each { Closure action ->
             cloneDelegateAndExecute action, request, response
@@ -199,6 +201,7 @@ class PluginsHandler {
      * @param request
      * @param response
      */
+    @CompileStatic
     void executeAfterActions(HttpServletRequest request, HttpServletResponse response) {
         afterActions.each { Closure action ->
             cloneDelegateAndExecute action, request, response

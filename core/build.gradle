@@ -12,9 +12,9 @@ ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
 ext.codenarcSources             = [ 'src/main', 'src/test' ]
 apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
-sourceCompatibility = 1.5
-targetCompatibility = 1.5
 defaultTasks 'clean', 'codenarc', 'build'
 
 test {                     

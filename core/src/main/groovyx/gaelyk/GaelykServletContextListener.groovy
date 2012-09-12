@@ -15,6 +15,8 @@
  */
 package groovyx.gaelyk
 
+import groovy.transform.CompileStatic
+
 import javax.servlet.ServletContextListener
 import javax.servlet.ServletContextEvent
 import groovyx.gaelyk.plugins.PluginsHandler
@@ -25,6 +27,7 @@ import groovyx.gaelyk.plugins.PluginsHandler
  *
  * @author Guillaume Laforge
  */
+@CompileStatic
 class GaelykServletContextListener implements ServletContextListener {
 
     /**

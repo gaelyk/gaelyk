@@ -220,6 +220,11 @@ class BlobstoreExtensions {
      * // equivalent of ImagesServiceFactory.makeImageFromBlob(selfKey)
      * </code></pre>
      *
+     * <p>
+     *     Note that this creates an image object only with the blob key set,
+     *     it's not retrieving the image data right away, nor the dimensions of the image.
+     * </p>
+     *
      * @param selfKey the key
      * @return an Image
      */

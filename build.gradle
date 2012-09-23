@@ -3,7 +3,7 @@ defaultTasks 'clean', 'build', 'templateProjectZip'
 allprojects {
     apply plugin: 'idea'
 
-    ext.groovyVersion = '2.0.2'
+    ext.groovyVersion = '2.0.4'
     ext.appEngineVersion =  '1.7.1'
 
     version = '2.0-SNAPSHOT'
@@ -37,5 +37,5 @@ task templateProjectZip(type: Zip) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion '1.0'
+    gradleVersion '1.2'
 }

@@ -55,7 +55,7 @@ class FilesExtensions {
      * @param closure the closure with the writer as parameter
      * @return the original file, for chaining purpose
      */
-    // TODO @CompileStatic
+    @CompileStatic
     static AppEngineFile withWriter(AppEngineFile file , Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
@@ -99,7 +99,7 @@ class FilesExtensions {
      * @param closure the closure with the output stream as parameter
      * @return the original file, for chaining purpose
      */
-    // TODO @CompileStatic
+    @CompileStatic
     static AppEngineFile withOutputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         boolean closeFinally = options.containsKey("finalize") ? options.finalize : true
@@ -142,7 +142,7 @@ class FilesExtensions {
      * @param closure the closure with the reader as parameter
      * @return the original file, for chaining purpose
      */
-    // TODO @CompileStatic
+    @CompileStatic
     static AppEngineFile withReader(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
         String encoding = options.encoding ?: "UTF-8"
@@ -179,7 +179,7 @@ class FilesExtensions {
      * @param closure the closure with the input stream as parameter
      * @return the original file, for chaining purpose
      */
-    // TODO @CompileStatic
+    @CompileStatic
     static AppEngineFile withInputStream(AppEngineFile file, Map options = [:], Closure closure) {
         boolean locked = options.containsKey("locked") ? options.locked : true
 

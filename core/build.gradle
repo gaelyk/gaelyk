@@ -10,7 +10,7 @@ ext.codenarcPriority2Violations = 213   // in
 ext.codenarcPriority3Violations = 985   // progress ..
 ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
 ext.codenarcSources             = [ 'src/main', 'src/test' ]
-apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
+apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/codenarc/CodeNarc.gradle'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6

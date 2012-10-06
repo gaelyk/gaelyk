@@ -24,6 +24,7 @@ import groovyx.gaelyk.plugins.PluginsHandler
  * routines of the plugin system.
  *
  * @author Guillaume Laforge
+ * @author Marcin Erdmann
  */
 class GaelykServletContextListener implements ServletContextListener {
 
@@ -32,7 +33,7 @@ class GaelykServletContextListener implements ServletContextListener {
      * @param servletContextEvent
      */
     void contextInitialized(ServletContextEvent servletContextEvent) {
-        PluginsHandler.instance.initPlugins()
+        PluginsHandler.instance.initPlugins(servletContextEvent.servletContext)
     }
 
     void contextDestroyed(ServletContextEvent servletContextEvent) {

@@ -262,12 +262,12 @@ categories jsonlib.JsonlibCategory
 // ...
 </pre>
 
-All of the <a href="views-and-controllers#gaeSpecificVariables">GAE specific variables</a> are available in plugin descriptors as implicit variables. You can also access ServletContext instance of your application using the <code>servletContext</code> implicit variable.
+<p>All of the <a href="views-and-controllers#gaeSpecificVariables">GAE specific variables</a> are available in plugin descriptors as implicit variables. You can also access ServletContext instance of your application using the <code>servletContext</code> implicit variable.</p>
 
-Inside the <code>binding</code> closure block, you just assign a value to a variable.
+<p>Inside the <code>binding</code> closure block, you just assign a value to a variable.
 And this variable will actually be available within your groovlets and templates as implicit variables.
 So you can reference them with <code>\${myVar}}</code> in a template,
-or use <code>myVar</code> directly inside a groovlet, without having to declare or retrieve it in any way.
+or use <code>myVar</code> directly inside a groovlet, without having to declare or retrieve it in any way.</p>
 
 <blockquote>
 <b>Note:</b> a plugin may overwrite the default <b>Gaelyk</b> variable binding,

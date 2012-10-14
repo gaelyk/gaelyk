@@ -262,6 +262,8 @@ categories jsonlib.JsonlibCategory
 // ...
 </pre>
 
+All of the <a href="views-and-controllers#gaeSpecificVariables">GAE specific variables</a> are available in plugin descriptors as implicit variables. You can also access ServletContext instance of your application using the <code>servletContext</code> implicit variable.
+
 Inside the <code>binding</code> closure block, you just assign a value to a variable.
 And this variable will actually be available within your groovlets and templates as implicit variables.
 So you can reference them with <code>\${myVar}}</code> in a template,

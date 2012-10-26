@@ -21,8 +21,8 @@ test {
   maxHeapSize = '320m'                                 
 }            
 
-final appEngineVersion = '1.7.2'
-final groovyVersion    = '2.0.4'
+final appEngineVersion = '1.7.3'
+final groovyVersion    = '2.0.5'
 
 // various directory places and file names
 final tmpProj    = '../template-project'
@@ -71,7 +71,7 @@ dependencies {
     testCompile 'junit:junit:4.8.2'
     testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
     testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0-SNAPSHOT', {
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 

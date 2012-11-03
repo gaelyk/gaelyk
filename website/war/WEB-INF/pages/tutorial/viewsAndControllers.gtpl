@@ -441,6 +441,11 @@ Inside those Groovy scripts, you can use all the features and syntax constructs 
 (lists, maps, control structures, loops, create methods, utility classes, etc.)
 </p>
 
+<blockquote>
+<b>Note:</b>Don't forget to declare packages for Groovlets when you use Gradle Gaelyk Plugin to build the application. 
+Otherwise they will be placed in wrong destination folders!
+</blockquote>
+
 <a name="markup-builder"></a>
 <h3>Using <code>MarkupBuilder</code> to render XML or HTML snippets</h3>
 

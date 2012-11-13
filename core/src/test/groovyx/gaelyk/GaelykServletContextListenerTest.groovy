@@ -52,7 +52,15 @@ class GaelykServletContextListenerTest extends GroovyTestCase {
 
     void testContextListener() {
         boolean called = false
-        PluginsHandler.instance.scriptContent = { called = true }
+        PluginsHandler.instance.scriptContent = { String path ->
+            called = true
+            if (path == 'WEB-INF/plugins.groovy') {
+                'install myPlugin'
+            } else if (path == 'WEB-INF/plugins/myPlugin.groovy') {
+                '''import javax.servlet.ServletContext
+                assert servletContext in ServletContext'''
+            }
+        }
 
         def context = [:] as ServletContext
         def event = new ServletContextEvent(context)

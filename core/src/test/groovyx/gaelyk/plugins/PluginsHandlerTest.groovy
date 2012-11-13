@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse
 import groovy.servlet.ServletCategory
 import com.google.appengine.api.memcache.MemcacheService
 import com.google.appengine.api.datastore.DatastoreService
+import groovy.mock.interceptor.MockFor
+import javax.servlet.ServletContext
 
 /**
  * 
@@ -47,9 +49,6 @@ class PluginsHandlerTest extends GroovyTestCase {
 
         // sets the environment to "Development"
         SystemProperty.environment.set("Development")
-
-        binding = new Binding()
-        GaelykBindingEnhancer.bind(binding)
 
         PluginsHandler.instance.reinit()
     }
@@ -85,7 +84,7 @@ class PluginsHandlerTest extends GroovyTestCase {
             }
 			
 
-            initPlugins(true)
+            initPlugins(null, true)
 
             def binding = new Binding(version: '0.5.6')
             enrich binding
@@ -97,7 +96,7 @@ class PluginsHandlerTest extends GroovyTestCase {
     void testNoPlugins() {
         PluginsHandler.instance.with {
             scriptContent = { String path -> "" }
-            initPlugins(true)
+            initPlugins(null, true)
 
             assert !bindingVariables
             assert !routes
@@ -108,12 +107,16 @@ class PluginsHandlerTest extends GroovyTestCase {
     }
 
     void testOnePlugin() {
+        def servletContextControl = new MockFor(ServletContext)
+        servletContextControl.demand.setAttribute { String key, Object value -> }
+        def servletContextMock = servletContextControl.proxyInstance()
         PluginsHandler.instance.with {
             scriptContent = { String path ->
                 if (path == "WEB-INF/plugins.groovy") {
                     "install myPlugin"
                 } else if (path == "WEB-INF/plugins/myPlugin.groovy") {
                     """
+                    servletContext.setAttribute('foo', 'bar')
                     binding {
                         version = "1.2.3"
                     }
@@ -134,9 +137,9 @@ class PluginsHandlerTest extends GroovyTestCase {
                 } else ""
             }
 
-			
-            initPlugins(true)
+            initPlugins(servletContextMock, true)
 
+            servletContextControl.verify(servletContextMock)
             assert bindingVariables.version == "1.2.3"
             assert routes.size() == 2
             assert categories*.name == ['MyCat']
@@ -182,7 +185,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                 }
             }
 			
-            initPlugins(true)
+            initPlugins(null, true)
 
             assert beforeActions.size() == 3
             assert afterActions.size()  == 3
@@ -216,7 +219,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                 } else ""
             }
 			
-            initPlugins(true)
+            initPlugins(null, true)
 
             def values = [:]
             def request = [setAttribute: { String name, obj -> values[name] = obj }] as HttpServletRequest

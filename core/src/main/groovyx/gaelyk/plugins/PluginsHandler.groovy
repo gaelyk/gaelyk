@@ -26,12 +26,14 @@ import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
 import groovy.servlet.ServletCategory
 import groovyx.gaelyk.logging.GroovyLogger
+import javax.servlet.ServletContext
 
 /**
  * Configure the installed plugins.
  *
  * @author Guillaume Laforge
  * @author Vladimir Orany
+ * @author Marcin Erdmann
  */
 @Singleton(lazy = true)
 class PluginsHandler {
@@ -76,7 +78,7 @@ class PluginsHandler {
     /**
      * Initializes the plugins
      */
-    synchronized void initPlugins(ignoreBinary = false) {
+    synchronized void initPlugins(ServletContext servletContext, ignoreBinary = false) {
         if (!initialized) {
             log.config "Loading plugin descriptors"
 
@@ -109,6 +111,7 @@ class PluginsHandler {
                 GaelykBindingEnhancer.bind(binding)
                 // and plugin logger
                 binding.setVariable("log", new GroovyLogger("gaelyk.plugins.${pluginName}", true))
+                binding.setVariable("servletContext", servletContext)
 
                 pluginScript.binding = binding
 

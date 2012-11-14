@@ -81,6 +81,8 @@ A special servlet binding gives you direct access to some implicit variables tha
     The <i>lazy</i> variables are instantiated and inserted in the binding only upon the first request.
 </blockquote>
 
+<a name="gaeSpecificVariables"></a>
+<h3>GAE specific variables</h3>
 <p>
 Beyond those standard Servlet variables provided by Groovy's servlet binding, <b>Gaelyk</b> also adds ones of his own
 by injecting specific elements of the Google App Engine SDK:
@@ -440,6 +442,11 @@ or to send fragments written with a Markup builder as we shall see in the next s
 Inside those Groovy scripts, you can use all the features and syntax constructs of Groovy
 (lists, maps, control structures, loops, create methods, utility classes, etc.)
 </p>
+
+<blockquote>
+<b>Note:</b>Don't forget to declare packages for Groovlets when you use Gradle Gaelyk Plugin to build the application. 
+Otherwise they will be placed in wrong destination folders!
+</blockquote>
 
 <a name="markup-builder"></a>
 <h3>Using <code>MarkupBuilder</code> to render XML or HTML snippets</h3>

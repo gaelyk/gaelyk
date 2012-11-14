@@ -10,6 +10,7 @@ ext.codenarcPriority2Violations = 213   // in
 ext.codenarcPriority3Violations = 985   // progress ..
 ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
 ext.codenarcSources             = [ 'src/main', 'src/test' ]
+
 // apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
 
@@ -53,9 +54,6 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    maven { // for Spock Groovy 2.0 Support
-        url "http://oss.sonatype.org/content/repositories/snapshots/"
-    }	
 }
 
 dependencies {
@@ -67,9 +65,10 @@ dependencies {
     testCompile 'junit:junit:4.8.2'
     testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
     testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0-SNAPSHOT', {
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0', {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
+    testCompile 'cglib:cglib-nodep:2.2.2'
 
     testCompile fileTree(dir: 'testLibs', include: ['gaelyk-resources-0.1.1-SNAPSHOT.jar'])
 }

@@ -57,22 +57,6 @@ class DatastoreShortcutsTest extends GroovyTestCase {
 				c2 << [title: 'child pic 2']
 				c2.save()
 				assert datastore.prepare( new Query('photo') ).countEntities() == 4
-
-				datastore.withTransaction(true) { 
-					def photos = datastore.prepare( new Query('photo') ).asList()
-					photos*.newProp = true
-					photos*.save()
-					assert datastore.prepare( new Query('photo') ).countEntities() == 4
-				}
-
-				shouldFail {
-					datastore.withTransaction(false) { 
-						def photos = datastore.prepare( new Query('photo') ).asList()
-						photos*.anotherNewProp = true
-						photos*.save()
-						assert datastore.prepare( new Query('photo') ).countEntities() == 4
-					}
-				}
 				
 			}
 		}

@@ -354,12 +354,26 @@ that <b>Gaelyk</b> adds on <code>DataService</code> and which takes care of that
     datastore.withTransaction {
         // do stuff with your entities within the transaction
     }
+    // enable cross group transactions
+    datastore.withTransaction(true) {
+        // do stuff with more than one entity group
+        new Entity('foo').save()
+        new Entity('bar').save()
+    }
 </pre>
 
 <p>
-The <code>withTransaction()</code> method takes a closure as the sole parameter,
-and within that closure, upon its execution by <b>Gaelyk</b>, your code will be in the context of a transaction.
+The <code>withTransaction()</code> method takes a closure as the two parameters.
+First one is optional boolean value. If set to <code>true</code> 
+<a href="https://developers.google.com/appengine/docs/java/datastore/overview#Cross_Group_Transactions"> 
+cross group transactions</a> are enabled. The second parameter is closure 
+and within that closure, upon its execution by <b>Gaelyk</b>, 
+your code will be in the context of a transaction.
 </p>
+
+<pre class="brush:groovy">
+
+</pre>
 
 <a name="datastore-get"></a>
 <h3>Added <code>get()</code> methods on the datastore service</h3>

@@ -371,10 +371,6 @@ and within that closure, upon its execution by <b>Gaelyk</b>,
 your code will be in the context of a transaction.
 </p>
 
-<pre class="brush:groovy">
-
-</pre>
-
 <a name="datastore-get"></a>
 <h3>Added <code>get()</code> methods on the datastore service</h3>
 

@@ -51,13 +51,21 @@ class GaelykTemplateServlet extends TemplateServlet {
                 try {
                     try {
                         runPrecompiled(getPrecompiledClassName(request), binding, response)
-                    } catch(ClassNotFoundException e){
+                    } catch(e){
                         runTemplate(request, response, binding)
                     }
                 } catch(FileNotFoundException te){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+                    log("Exception serving template", te)
+                    throw te
                 } catch(IllegalAccessException te){
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+                    log("Exception serving template", te)
+                    throw te
+                } catch(e){
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+                    log("Exception serving template", e)
+                    throw e
                 }
             }
         } else {
@@ -65,13 +73,13 @@ class GaelykTemplateServlet extends TemplateServlet {
                 try {
                     try {
                         runTemplate(request, response, binding)
-                    } catch(FileNotFoundException e){
-                        runPrecompiled(getPrecompiledClassName(request), binding, response)
-                    } catch(IllegalAccessException e){
+                    } catch(e){
                         runPrecompiled(getPrecompiledClassName(request), binding, response)
                     }
-                } catch(ClassNotFoundException te){
+                } catch(e){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+                    log("Exception serving template", e)
+                    throw e
                 }
             }
         }
@@ -142,7 +150,8 @@ class GaelykTemplateServlet extends TemplateServlet {
             }
             return getTemplate(file)
         }
-        throw new FileNotFoundException()
+        String message = file ? "Cannot find template: $file.absolutePath" : "Cannot find template for URI $uri"
+        throw new FileNotFoundException(message)
     }
 
     /**

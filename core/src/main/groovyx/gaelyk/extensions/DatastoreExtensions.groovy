@@ -15,6 +15,7 @@
  */
 package groovyx.gaelyk.extensions
 
+import groovy.lang.Closure;
 import groovy.transform.CompileStatic
 import com.google.appengine.api.datastore.Entity
 import groovy.transform.PackageScope
@@ -33,6 +34,7 @@ import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.datastore.PreparedQuery
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import groovyx.gaelyk.datastore.PogoEntityCoercion
+import com.google.appengine.api.datastore.TransactionOptions.Builder as TOB
 
 /**
  * Extension methods dedicated to the low-level DataStore service
@@ -311,7 +313,27 @@ class DatastoreExtensions {
      */
     @CompileStatic
     static Transaction withTransaction(DatastoreService service, Closure c) {
-        Transaction transaction = service.beginTransaction()
+        return withTransaction(service, false, c);
+    }
+    
+    /**
+     * With this method, transaction handling is done transparently.
+     * The transaction is committed if the closure executed properly.
+     * The transaction is rollbacked if anything went wrong.
+         * If you want to use cross-group transactions, pass {@literal true}
+         * as an argument.
+         * <p />
+     * You can use this method as follows:
+     * <code>
+     * datastore.withTransaction(true) { transaction ->
+     *     // do something in that transaction
+     * }
+     * </code>
+     */
+    @CompileStatic
+    static Transaction withTransaction(DatastoreService service, boolean crossGroup, Closure c) {
+                def opts = crossGroup ? TOB.withXG(true) : TOB.withDefaults()
+        Transaction transaction = service.beginTransaction(opts)
         try {
             // pass the transaction as single parameter of the closure
             c(transaction)

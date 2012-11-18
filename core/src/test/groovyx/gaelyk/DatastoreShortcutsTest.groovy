@@ -16,14 +16,7 @@ import com.google.appengine.api.datastore.KeyFactory
  */
 class DatastoreShortcutsTest extends GroovyTestCase {
     // setup the local environment stub services
-    private LocalServiceTestHelper helper = makeHelper() 
-
-		static LocalServiceTestHelper makeHelper() {
-			def helperConfig = new LocalDatastoreServiceTestConfig()
-			helperConfig.defaultHighRepJobPolicyRandomSeed = 1L
-			helperConfig.defaultHighRepJobPolicyUnappliedJobPercentage = 0.0f
-			return new LocalServiceTestHelper(helperConfig)
-    }
+    private LocalServiceTestHelper helper = new LocalServiceTestHelper()
 
     protected void setUp() {
         super.setUp()
@@ -34,31 +27,6 @@ class DatastoreShortcutsTest extends GroovyTestCase {
         helper.tearDown()
         super.tearDown()
     }
-
-		void testDatastoreTransactionWithBuilderOptions() {
-			def datastore = DatastoreServiceFactory.datastoreService
-			use(GaelykCategory) {
-				def p1 = new Entity('photo')
-				p1 << [title: 'parent pic 1']
-				p1.save()
-				assert datastore.prepare( new Query('photo') ).countEntities() == 1
-
-				def p2 = new Entity('photo')
-				p2 << [title: 'parent pic 2']
-				p2.save()
-				assert datastore.prepare( new Query('photo') ).countEntities() == 2
-
-				def c1 = new Entity('photo', p1.key)
-				c1 << [title: 'child pic 1']
-				c1.save()
-				assert datastore.prepare( new Query('photo') ).countEntities() == 3
-
-				def c2 = new Entity('photo', p2.key)
-				c2 << [title: 'child pic 2']
-				c2.save()
-				assert datastore.prepare( new Query('photo') ).countEntities() == 4				
-			}
-		}
 
     void testDatastoreOperationMemoization() {
         def datastore = DatastoreServiceFactory.datastoreService

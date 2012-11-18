@@ -140,7 +140,7 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
     }
 }
 
-if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
+if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
     apply plugin: 'signing'
     signing {
         sign configurations.archives
@@ -152,7 +152,7 @@ if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
                 beforeDeployment { deployment -> signPom(deployment) }
 
                 def auth = {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                    authentication(userName: nexusUsername, password: nexusPassword)
                 }
 
                 repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/', auth)
@@ -212,19 +212,19 @@ if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
                 }
 
                 //mess with the generated pom to set the 'packaging' tag
-                pom.withXml { XmlProvider xmlProvider ->
-                    def xml = xmlProvider.asString()
-                    def pomXml = new XmlParser().parse(xml.toString())
-
-                    pomXml.version[0] + { packaging('jar') }
-
-                    def newXml = new StringWriter()
-                    def printer = new XmlNodePrinter(new PrintWriter(newXml))
-                    printer.preserveWhitespace = true
-                    printer.print(pomXml)
-                    xml.setLength(0)
-                    xml.append(newXml.toString())
-                }
+//                pom.withXml { XmlProvider xmlProvider ->
+//                    def xml = xmlProvider.asString()
+//                    def pomXml = new XmlParser().parse(xml.toString())
+//
+//                    pomXml.version[0] + { packaging('jar') }
+//
+//                    def newXml = new StringWriter()
+//                    def printer = new XmlNodePrinter(new PrintWriter(newXml))
+//                    printer.preserveWhitespace = true
+//                    printer.print(pomXml)
+//                    xml.setLength(0)
+//                    xml.append(newXml.toString())
+//                }
             }
         }
     }

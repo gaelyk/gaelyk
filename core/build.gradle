@@ -142,15 +142,21 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
 }
 
 if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
-    apply plugin: 'signing'
-    signing {
-        sign configurations.archives
+    boolean signingEnabled = !hasProperty('skipSigning') || skipSigning != 'true'
+    if(signingEnabled){
+        apply plugin: 'signing'
+        signing {
+            sign configurations.archives
+        }
     }
+        
 
     uploadArchives {
         repositories {
             mavenDeployer {
-                beforeDeployment { deployment -> signPom(deployment) }
+                if(signingEnabled){
+                    beforeDeployment { deployment -> signPom(deployment) }                    
+                }
 
                 def auth = {
                     authentication(userName: nexusUsername, password: nexusPassword)

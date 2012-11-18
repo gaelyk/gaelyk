@@ -6,10 +6,11 @@ apply plugin: 'eclipse'
  * http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
  */
 ext.codenarcPriority1Violations = 0     // Work
-ext.codenarcPriority2Violations = 213   // in
-ext.codenarcPriority3Violations = 985   // progress ..
-ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
+ext.codenarcPriority2Violations = 227   // in
+ext.codenarcPriority3Violations = 983   // progress ..
+ext.codenarcRuleSetFiles        = [ 'core/codenarc.groovy' ]
 ext.codenarcSources             = [ 'src/main', 'src/test' ]
+ext.codenarcReportType          = 'xml'
 apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/codenarc/CodeNarc.gradle'
 
 sourceCompatibility = 1.6

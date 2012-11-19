@@ -52,22 +52,22 @@ you can join the <a href="http://groups.google.com/group/gaelyk">Gaelyk Google G
 If you wish to contribute to the development of <b>Gaelyk</b>:
 <ul>
     <li>
-        you can do so by forking our <a href="http://github.com/glaforge/gaelyk/tree/master">repository on Github</a>
+        you can do so by forking our <a href="http://github.com/gaelyk/gaelyk/tree/master">repository on Github</a>
         and by providing patches,
     </li>
     <li>
-        you can submit new issues or features in our <a href="http://github.com/glaforge/gaelyk/issues">issue tracker</a>.
+        you can submit new issues or features in our <a href="http://github.com/gaelyk/gaelyk/issues">issue tracker</a>.
     </li>
 </ul>
 </p>
 
 <a name="repository"></a>
-<h3>Latest activity on our <a href="https://github.com/glaforge/gaelyk/commits/master">repository</a></h3>
+<h3>Latest activity on our <a href="https://github.com/gaelyk/gaelyk/commits/master">repository</a></h3>
 
 <% include "/latestcommits.groovy" %>
 
 <a name="bugtracker"></a>
-<h3>Open issues in our <a href="https://github.com/glaforge/gaelyk/issues">bug tracker</a></h3>
+<h3>Open issues in our <a href="https://github.com/gaelyk/gaelyk/issues">bug tracker</a></h3>
 
 <% include "/latestissues.groovy" %>
 

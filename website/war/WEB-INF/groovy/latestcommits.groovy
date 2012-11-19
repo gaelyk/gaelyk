@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat as SDF
 import com.ocpsoft.pretty.time.PrettyTime
 import groovy.json.JsonSlurper
 
-def url = "https://api.github.com/repos/glaforge/gaelyk/commits".toURL()
+def url = "https://api.github.com/repos/gaelyk/gaelyk/commits".toURL()
 
 def slurper = new JsonSlurper()
 def result = slurper.parseText(url.getText('UTF-8'))

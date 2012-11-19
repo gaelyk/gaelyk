@@ -9,12 +9,12 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.2.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.2.zip">Template project v1.2</a></td>
+            <td><a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-template-project-1.2.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-template-project-1.2.zip">Template project v1.2</a></td>
         </tr>
         <tr>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar">Gaelyk JAR v1.2</a></td>
+            <td><a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-1.2.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-1.2.jar">Gaelyk JAR v1.2</a></td>
         </tr>
     </table>
 </div>
@@ -83,8 +83,8 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Artifacts</h3>
 <ul>
-    <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.2.jar">gaelyk-1.2.jar</a></li>
-    <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.2.zip">gaelyk-template-project-1.2.zip</a></li>
+    <li>Gaelyk JAR: <a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-1.2.jar">gaelyk-1.2.jar</a></li>
+    <li>Gaelyk template project: <a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-template-project-1.2.zip">gaelyk-template-project-1.2.zip</a></li>
 </ul>
 
 <h2>Version 1.1</h2>
@@ -127,8 +127,8 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Artifacts</h3>
 <ul>
-    <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.1.jar">gaelyk-1.1.jar</a></li>
-    <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.1.zip">gaelyk-template-project-1.1.zip</a></li>
+    <li>Gaelyk JAR: <a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-1.1.jar">gaelyk-1.1.jar</a></li>
+    <li>Gaelyk template project: <a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-template-project-1.1.zip">gaelyk-template-project-1.1.zip</a></li>
 </ul>
 
 <ul>
@@ -176,8 +176,8 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Artifacts</h3>
 <ul>
-    <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-1.0.jar">gaelyk-1.0.jar</a></li>
-    <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-1.0.zip">gaelyk-template-project-1.0.zip</a></li>
+    <li>Gaelyk JAR: <a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-1.0.jar">gaelyk-1.0.jar</a></li>
+    <li>Gaelyk template project: <a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-template-project-1.0.zip">gaelyk-template-project-1.0.zip</a></li>
 </ul>
 
 <h4>Breaking changes</h4>
@@ -230,8 +230,8 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Artifacts</h3>
 <ul>
-    <li>Gaelyk JAR: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-0.7.jar">gaelyk-0.7.jar</a></li>
-    <li>Gaelyk template project: <a href="https://github.com/downloads/glaforge/gaelyk/gaelyk-template-project-0.7.zip">gaelyk-template-project-0.7.zip</a></li>
+    <li>Gaelyk JAR: <a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-0.7.jar">gaelyk-0.7.jar</a></li>
+    <li>Gaelyk template project: <a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-template-project-0.7.zip">gaelyk-template-project-0.7.zip</a></li>
 </ul>
 
 <h2>Version 0.6.1</h2>

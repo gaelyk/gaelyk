@@ -22,7 +22,7 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
     }
 }
 
-boolean skipSigningVal = !hasProperty('skipSigning') || skipSigning != 'true'
+boolean signingEnabled = !hasProperty('skipSigning') || skipSigning != 'true'
 nexus {
-    sign = skipSigningVal
+    sign = signingEnabled
 }

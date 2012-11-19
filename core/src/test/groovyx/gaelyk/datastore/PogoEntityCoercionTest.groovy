@@ -126,6 +126,21 @@ class PogoEntityCoercionTest extends GroovyTestCase {
 
         assert e2.outcome == 'WIN'
     }
+    
+    void testProblemWithInterface(){
+        Entity e = new Entity('User', 10)
+        e.firstName = 'Vladimir'
+        e.lastName = 'Orany'
+        
+        def user = e as User
+        assert user.id == 10
+    }
+    
+    void testFindVersion(){
+        assert PogoEntityCoercion.findVersion([:]) == null
+        assert PogoEntityCoercion.findVersion([prop: [:]]) == null
+        assert PogoEntityCoercion.findVersion(prop: [version: { 1 }]) == 'prop'
+    }
 }
 
 class P1 {
@@ -172,5 +187,11 @@ class Match {
 
 enum MatchOutcome {
     WIN, DRAW, LOSE
+}
+
+class User implements UserDetailsSocial {
+    @Key Long id
+    @Unindexed String firstName
+    @Unindexed String lastName
 }
 

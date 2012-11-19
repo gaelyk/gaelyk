@@ -55,7 +55,7 @@ class PogoEntityCoercion {
                     try {
                         annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
                     } catch (NoSuchMethodException nsme){
-                        return [(k), [ignore: {true}, unindexed: {false}, key: {false}]]
+                        return [(k), [ignore: {true}, unindexed: {false}, key: {false}, version: { false }]]
                     }
                 }
                 [(k), [
@@ -78,19 +78,19 @@ class PogoEntityCoercion {
      */
     static String findKey(Map props) {
         props.findResult { String prop, Map m ->
-            if (m.key()) return prop
+            if (m.containsKey('key') && m.key()) return prop
         }
     }
 
     /**
-    * Find the key in the properties
+    * Find the version in the properties
     *
     * @param props the properties
     * @return the name of the key or null if none is found
     */
     static String findVersion(Map props) {
         props.findResult { String prop, Map m ->
-            if (m.version()) return prop
+            if (m.containsKey('version') && m.version()) return prop
         }
     }
 

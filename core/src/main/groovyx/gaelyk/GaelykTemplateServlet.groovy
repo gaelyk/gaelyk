@@ -52,7 +52,7 @@ class GaelykTemplateServlet extends TemplateServlet {
                     try {
                         runPrecompiled(getPrecompiledClassName(request), binding, response)
                     } catch(e){
-                        log("Trying to run precompiled template, got ${e.class.name}")
+                        log("Trying to run precompiled template, got ${e.class.name} caused by ${e.cause ? e.cause : 'nothing'}")
                         runTemplate(request, response, binding)
                     }
                 } catch(FileNotFoundException te){
@@ -75,7 +75,7 @@ class GaelykTemplateServlet extends TemplateServlet {
                     try {
                         runTemplate(request, response, binding)
                     } catch(e){
-                        log("Trying to run template directly, got ${e.class.name}")
+                        log("Trying to run template directly, got ${e.class.name} caused by ${e.cause ? e.cause : 'nothing'}")
                         runPrecompiled(getPrecompiledClassName(request), binding, response)
                     }
                 } catch(e){

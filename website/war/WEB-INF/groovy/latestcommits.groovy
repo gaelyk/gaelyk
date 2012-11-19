@@ -7,7 +7,7 @@ def url = "https://api.github.com/repos/gaelyk/gaelyk/commits".toURL()
 def slurper = new JsonSlurper()
 def result = slurper.parseText(url.getText('UTF-8'))
 
-def sdf = new SDF("yyyy-MM-dd'T'HH:mm:ssz", Locale.US)
+def sdf = new SDF("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
 
 html.ul {
     result.commit.each { commit ->

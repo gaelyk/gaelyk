@@ -2,6 +2,7 @@ ext.gaelykGroovyVersion = '2.0.5'
 ext.gaelykSpockVersion = '0.7-groovy-2.0'
 ext.gaelykAppEngineVersion = '1.7.3'
 ext.gaelykLatestVersion = '2.0-SNAPSHOT'
+ext.gaelykSpockLatestVersion = '0.4-SNAPSHOT'
 ext.gaelykGradleVersion = '1.2'
 
 repositories {

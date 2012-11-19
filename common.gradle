@@ -1,8 +1,8 @@
-final groovyVersion = '2.0.5'
-final spockVersion = '0.7-groovy-2.0'
-final appEngineVersion = '1.7.3'
-final gaelykLatestVersion = '2.0-SNAPSHOT'
-final gaelykGradleVersion = '1.2'
+ext.gaelykGroovyVersion = '2.0.5'
+ext.gaelykSpockVersion = '0.7-groovy-2.0'
+ext.gaelykAppEngineVersion = '1.7.3'
+ext.gaelykLatestVersion = '2.0-SNAPSHOT'
+ext.gaelykGradleVersion = '1.2'
 
 repositories {
     mavenCentral()

@@ -1,6 +1,4 @@
-apply plugin: 'groovy'
-apply plugin: 'maven'
-apply plugin: 'eclipse'
+apply from: '../common.gradle'
 
 /**
  * http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
@@ -8,23 +6,15 @@ apply plugin: 'eclipse'
 ext.codenarcPriority1Violations = 0     // Work
 ext.codenarcPriority2Violations = 227   // in
 ext.codenarcPriority3Violations = 983   // progress ..
-ext.codenarcRuleSetFiles        = [ 'core/codenarc.groovy' ]
-ext.codenarcSources             = [ 'src/main', 'src/test' ]
-ext.codenarcReportType          = 'xml'
-ext.codenarcReportFile          = 'codenarc.xml'
-apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/codenarc/CodeNarc.gradle'
+apply from: '../common-codenarc-ci.gradle'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+apply plugin: 'maven'
 
 defaultTasks 'clean', 'codenarc', 'build'
 
 test {                     
   maxHeapSize = '320m'                                 
 }            
-
-final appEngineVersion = '1.7.3'
-final groovyVersion    = '2.0.5'
 
 // various directory places and file names
 final tmpProj    = '../template-project'
@@ -54,26 +44,16 @@ sourceSets {
     }
 }
 
-repositories {
-    mavenCentral()
-    maven { // for Spock Groovy 2.0 Support
-        url "http://oss.sonatype.org/content/repositories/snapshots/"
-    }
-    maven { // for Groovy 2.0.2 Snapshots
-        url "http://snapshots.repository.codehaus.org/"
-    }
-}
-
 dependencies {
-    groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-    compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
-    compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
+    groovy "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}"
+    compile "com.google.appengine:appengine-api-1.0-sdk:${ext.gaelykAppEngineVersion}"
+    compile "com.google.appengine:appengine-api-labs:${ext.gaelykAppEngineVersion}"
     compile 'javax.servlet:servlet-api:2.5'
     testCompile 'javax.servlet.jsp:jsp-api:2.2'
     testCompile 'junit:junit:4.8.2'
-    testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
-    testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0', {
+    testCompile "com.google.appengine:appengine-testing:${ext.gaelykAppEngineVersion}"
+    testCompile "com.google.appengine:appengine-api-stubs:${ext.gaelykAppEngineVersion}"
+    testCompile "org.spockframework:spock-core:${ext.gaelykSpockVersion}", {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 

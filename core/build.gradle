@@ -174,9 +174,9 @@ if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
                     url 'http://www.gaelyk.org'
 
                     scm {
-                        url 'scm:git://github.com/glaforge/gaelyk.git'
-                        connection 'scm:git://github.com/glaforge/gaelyk.git'
-                        developerConnection 'scm:git://github.com/glaforge/gaelyk.git'
+                        url 'scm:git://github.com/gaelyk/gaelyk.git'
+                        connection 'scm:git://github.com/gaelyk/gaelyk.git'
+                        developerConnection 'scm:git://github.com/gaelyk/gaelyk.git'
                     }
 
                     licenses {

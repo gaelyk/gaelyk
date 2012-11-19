@@ -57,15 +57,15 @@ class GaelykTemplateServlet extends TemplateServlet {
                     }
                 } catch(FileNotFoundException te){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)
-                    log("Exception serving template", te)
+                    log('Exception serving template', te)
                     throw te
                 } catch(IllegalAccessException te){
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN)
-                    log("Exception serving template", te)
+                    log('Exception serving template', te)
                     throw te
                 } catch(e){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)
-                    log("Exception serving template", e)
+                    log('Exception serving template', e)
                     throw e
                 }
             }
@@ -80,7 +80,7 @@ class GaelykTemplateServlet extends TemplateServlet {
                     }
                 } catch(e){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)
-                    log("Exception serving template", e)
+                    log('Exception serving template', e)
                     throw e
                 }
             }

@@ -4,7 +4,7 @@ apply from: '../common.gradle'
  * http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
  */
 ext.codenarcPriority1Violations = 0     // Work
-ext.codenarcPriority2Violations = 227   // in
+ext.codenarcPriority2Violations = 229   // in
 ext.codenarcPriority3Violations = 983   // progress ..
 apply from: '../common-codenarc-ci.gradle'
 

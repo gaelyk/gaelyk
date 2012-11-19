@@ -4,20 +4,10 @@ final appEngineVersion = '1.7.3'
 final gaelykLatestVersion = '2.0-SNAPSHOT'
 final gaelykGradleVersion = '1.2'
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    
-    dependencies {
-        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
-    }
-}
-
 repositories {
     mavenCentral()
     maven { // for Gaelyk Snapshots
-        url: 'https://oss.sonatype.org/content/repositories/snapshots'
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
     }
     maven { // for Spock Groovy 2.0 Support
         url "http://oss.sonatype.org/content/repositories/snapshots/"
@@ -30,25 +20,12 @@ repositories {
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'maven'
-apply plugin: 'nexus'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-tasks.withType(Upload) { // map the groovy configuration to compile in the pom
-    repositories.withType(MavenResolver) {
-        pom.scopeMappings.addMapping(1, configurations.groovy, 'compile')
-    }
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = gaelykGradleVersion
-}
-
-boolean skipSigningVal = !hasProperty('skipSigning') || skipSigning != 'true'
-nexus {
-    sign = skipSigningVal
 }
 
 configurations.all {

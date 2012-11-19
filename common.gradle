@@ -30,5 +30,5 @@ task wrapper(type: Wrapper) {
 }
 
 configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, seconds
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }

@@ -108,7 +108,7 @@ class Route {
     static String transformRouteIntoRegex(String route) {
         route.replaceAll('\\.', '\\\\.')
                 .replaceAll('\\*\\*', '(?:.+\\/?){0,}')
-                .replaceAll('\\*', '.+')
+                .replaceAll('\\*', '[^\\/]+')
                 .replaceAll('@\\w+', '(.+)')
     }
 

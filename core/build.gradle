@@ -1,5 +1,15 @@
 apply from: '../common.gradle'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+    }
+}
+
 /**
  * http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
  */
@@ -9,6 +19,7 @@ ext.codenarcPriority3Violations = 983   // progress ..
 apply from: '../common-codenarc-ci.gradle'
 
 apply plugin: 'maven'
+apply plugin: 'nexus'
 
 defaultTasks 'clean', 'codenarc', 'build'
 
@@ -96,125 +107,15 @@ task dist(dependsOn: [jar, groovydoc, template]) {
     }
 }
 
-// custom tasks for creating source/javadoc jars
-task sourcesJar(type: Jar, dependsOn:classes) {
-     baseName 'gaelyk'
-     classifier 'sources'
-     from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn:groovydoc) {
-     baseName 'gaelyk'
-     classifier 'javadoc'
-     from apiDir
-}
-
-// add javadoc/source jar tasks as artifacts
-artifacts {
-    archives jar
-    archives sourcesJar
-    archives javadocJar
-}
-
 tasks.withType(Upload) { // map the groovy configuration to compile in the pom
     repositories.withType(MavenResolver) {
         pom.scopeMappings.addMapping(1, configurations.groovy, 'compile')
     }
 }
 
-if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
-    boolean signingEnabled = !hasProperty('skipSigning') || skipSigning != 'true'
-    if(signingEnabled){
-        apply plugin: 'signing'
-        signing {
-            sign configurations.archives
-        }
-    }
-        
+boolean signingEnabled = !hasProperty('skipSigning') || skipSigning != 'true'
 
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                if(signingEnabled){
-                    beforeDeployment { deployment -> signPom(deployment) }                    
-                }
-
-                def auth = {
-                    authentication(userName: nexusUsername, password: nexusPassword)
-                }
-
-                repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/', auth)
-                snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots', auth)
-
-
-                pom.project {
-                    name 'Gaelyk'
-                    packaging 'jar'
-                    description 'Gaelyk is a lightweight toolkit for developing applications in Groovy for the Google App Engine environment.'
-                    url 'http://www.gaelyk.org'
-
-                    scm {
-                        url 'scm:git://github.com/gaelyk/gaelyk.git'
-                        connection 'scm:git://github.com/gaelyk/gaelyk.git'
-                        developerConnection 'scm:git://github.com/gaelyk/gaelyk.git'
-                    }
-
-                    licenses {
-                        license {
-                            name 'The Apache Software License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution 'repo'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id 'glaforge'
-                            name 'Guillaume Laforge'
-                        }
-                        developer {
-                            id 'vladimirorany'
-                            name 'Vladimir Orany'
-                        }
-                        developer {
-                            id 'bmuschko'
-                            name 'Benjamin Muschko'
-                        }
-                        developer {
-                            id 'codeconsole'
-                            name 'Scott Murphy'
-                        }
-                        developer {
-                            id 'alkemist'
-                            name 'Luke Daley'
-                        }
-                        developer {
-                            id 'lguzzon'
-                            name 'Luca Guzzon'
-                        }
-                        developer {
-                            id 'fabito'
-                            name 'Fábio Franco Uechi'
-                        }
-                    }
-                }
-
-                //mess with the generated pom to set the 'packaging' tag
-//                pom.withXml { XmlProvider xmlProvider ->
-//                    def xml = xmlProvider.asString()
-//                    def pomXml = new XmlParser().parse(xml.toString())
-//
-//                    pomXml.version[0] + { packaging('jar') }
-//
-//                    def newXml = new StringWriter()
-//                    def printer = new XmlNodePrinter(new PrintWriter(newXml))
-//                    printer.preserveWhitespace = true
-//                    printer.print(pomXml)
-//                    xml.setLength(0)
-//                    xml.append(newXml.toString())
-//                }
-            }
-        }
-    }
+nexus {
+    sign = signingEnabled
 }
 

@@ -20,6 +20,7 @@ import java.util.regex.Pattern
 import javax.servlet.http.HttpServletRequest
 import groovyx.gaelyk.GaelykCategory
 import groovy.servlet.ServletCategory
+import groovyx.gaelyk.GaelykBindingEnhancer
 
 /**
  * Representation of a route URL mapping.
@@ -151,10 +152,14 @@ class Route {
                 def clonedValidator = this.validator.clone()
 
                 // adds the request to the variables available for validation
-                def variablesAndRequest = variableMap.clone()
-                variablesAndRequest.request = request
+                def binding = new Binding()
+                GaelykBindingEnhancer.bind(binding)
+                def validatorDelegate = binding.variables
 
-                clonedValidator.delegate = variablesAndRequest
+                validatorDelegate += variableMap.clone()
+                validatorDelegate.request = request
+
+                clonedValidator.delegate = validatorDelegate
                 clonedValidator.resolveStrategy = Closure.DELEGATE_ONLY
 
                 boolean validated = false

@@ -5,3 +5,5 @@ all "/ignore", ignore: true
 get "/redirect", redirect: "/elsewhere.gtpl"
 
 get "/@cust/home", forward: "/customer.groovy?cust=@cust", namespace: { cust }
+
+get "/validate", forward: "/validate.gtpl", validate: { users in com.google.appengine.api.users.UserService }

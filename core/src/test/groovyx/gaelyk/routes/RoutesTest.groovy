@@ -16,6 +16,8 @@
 package groovyx.gaelyk.routes
 
 import static groovyx.gaelyk.TestUtil.request as r
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper
+import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 
 /**
  * Tests for the routing support.
@@ -24,7 +26,19 @@ import static groovyx.gaelyk.TestUtil.request as r
  */
 class RoutesTest extends GroovyTestCase {
 
-    /** Tests the variable extraction logic */
+    LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalUserServiceTestConfig())
+
+    protected void setUp() {
+        super.setUp()
+        helper.setUp()
+    }
+
+    protected void tearDown() {
+        super.tearDown()
+        helper.tearDown()
+    }
+
+/** Tests the variable extraction logic */
     void testRoutesParameterExtraction() {
         def inputOutputExpected = [
             "/":                                [],

@@ -22,7 +22,7 @@ import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 
 /**
- * 
+ *
  * @author Guillaume Laforge
  */
 class RoutesFilterTest extends GroovyTestCase {
@@ -193,7 +193,7 @@ class RoutesFilterTest extends GroovyTestCase {
         ] as RequestDispatcher
 
         def attributes = [:]
-    
+
         def request = [
                 getRequestURI: { -> "/somewhere" },
                 getQueryString: { -> "" },
@@ -216,4 +216,35 @@ class RoutesFilterTest extends GroovyTestCase {
         assert attributes[RoutesFilter.ORIGINAL_URI] == "/somewhere"
     }
 
+    void testValidatedRoute() {
+        def forwarded = false
+        def dispatched = ""
+
+        def dispatcher = [
+                forward: { ServletRequest req, ServletResponse resp -> forwarded = true }
+        ] as RequestDispatcher
+
+        def attributes = [:]
+
+        def request = [
+                getRequestURI: {-> "/validate" },
+                getQueryString: {-> "" },
+                getMethod: {-> "GET" },
+                getRequestDispatcher: { String s -> dispatched = s; return dispatcher },
+                setAttribute: { String name, val -> attributes[name] = val },
+                getAttribute: { String name -> attributes[name] },
+                getServletPath: {-> '' },
+                getPathInfo: {-> '/validate' }
+        ] as HttpServletRequest
+
+        def response = [:] as HttpServletResponse
+
+        def chain = [:] as FilterChain
+
+        filter.doFilter(request, response, chain)
+
+        assert forwarded
+        assert dispatched == "/validate.gtpl"
+        assert attributes[RoutesFilter.ORIGINAL_URI] == "/validate"
+    }
 }

@@ -162,7 +162,7 @@ till a new version of <b>Gaelyk</b> is released with the newer paths.
 
 <p>
 You can use a single and a double star as wildcards in your routes, similarly to the Ant globing patterns.
-A single star matches a word (<code>/\\w+/</code>), where as a double start matches an arbitrary path.
+A single star matches at least one character up to a slash (<code>/[^\\/]+/</code>), where as a double start matches an arbitrary path.
 For instance, if you want to show information about the blog authors,
 you may forward all URLs starting with <code>/author</code> to the same Groovlet:
 </p>

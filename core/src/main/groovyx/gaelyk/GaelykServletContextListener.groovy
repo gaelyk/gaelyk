@@ -36,9 +36,26 @@ class GaelykServletContextListener implements ServletContextListener {
      */
     void contextInitialized(ServletContextEvent servletContextEvent) {
         PluginsHandler.instance.initPlugins()
+        verifyGroovyVersion()
     }
 
     void contextDestroyed(ServletContextEvent servletContextEvent) {
         // nothing special to be done
     }
+    
+    /**
+     * Verifies if proper version of Gaelyk is used.
+     * Currently Groovy 2.x.x versions are supported but this may change
+     * until final Gaelyk 2.0 version will be released.
+     */
+    static void verifyGroovyVersion(){
+        if(!verifyGroovyVersionInternal(GroovySystem.version)){
+            throw new IllegalStateException("You must use Groovy 2.x to run Gaelyk ${GaelykBindingEnhancer.app['gaelyk']['version']} application.")
+        }
+    }
+    
+    private static boolean verifyGroovyVersionInternal(String version){
+        version ==~ /2\.\d+(\.[\d+])?/
+    }
+            
 }

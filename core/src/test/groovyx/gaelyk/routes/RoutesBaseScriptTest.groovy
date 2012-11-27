@@ -16,7 +16,7 @@ class RoutesBaseScriptTest extends GroovyTestCase {
                 new Binding([chat: 'chat', presence: 'presence', subscription: 'subscription']),
                 config)
         RoutesBaseScript script = shell.parse("""\
-            get "/foo",          forward:  "/foo.groovy"
+            get "/foo",          forward:  "/foo.groovy, cache: 24.hours"
             put "/create",       forward:  "/create.groovy"
             post "/upload",      forward:  "/upload.groovy"
             delete "/delete",    forward:  "/delete.groovy"

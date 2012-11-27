@@ -111,24 +111,24 @@ class DatastoreShortcutsTest extends GroovyTestCase {
 
         assert datastore.async instanceof AsyncDatastoreService
 
-        def dog = new Entity('animal')
+        def dog = new Entity('pets')
         dog.name = "Medor"
         Future<Key> fkDog = dog.asyncSave()
 
-        def cat = new Entity('animal')
+        def cat = new Entity('pets')
         cat.name = "Minou"
         Future<Key> fkCat = cat.asyncSave()
 
         def (Key kDog, Key kCat) = [fkDog, fkCat]*.get()
 
-        assert datastore.prepare(new Query('animal')).countEntities() == 2
+        assert datastore.prepare(new Query('pets')).countEntities() == 2
 
         Future<Void> deletedDogFuture = dog.asyncDelete()
         Future<Void> deletedCatFuture = kCat.asyncDelete()
 
         [deletedDogFuture, deletedCatFuture]*.get()
 
-        assert datastore.prepare(new Query('animal')).countEntities() == 0
+        assert datastore.prepare(new Query('pets')).countEntities() == 0
     }
 
     void testTransparentHandlingOfTextTypeOnEntityies() {

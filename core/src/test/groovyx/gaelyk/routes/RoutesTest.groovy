@@ -16,6 +16,8 @@
 package groovyx.gaelyk.routes
 
 import static groovyx.gaelyk.TestUtil.request as r
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper
+import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 
 /**
  * Tests for the routing support.
@@ -24,7 +26,19 @@ import static groovyx.gaelyk.TestUtil.request as r
  */
 class RoutesTest extends GroovyTestCase {
 
-    /** Tests the variable extraction logic */
+    LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalUserServiceTestConfig())
+
+    protected void setUp() {
+        super.setUp()
+        helper.setUp()
+    }
+
+    protected void tearDown() {
+        super.tearDown()
+        helper.tearDown()
+    }
+
+/** Tests the variable extraction logic */
     void testRoutesParameterExtraction() {
         def inputOutputExpected = [
             "/":                                [],
@@ -51,10 +65,10 @@ class RoutesTest extends GroovyTestCase {
     void testRegexRouteEquivalence() {
         def inputOutputExpected = [
             "/":                                /\//,
-            "/*":                               /\/.+/,
-            "/*.*":                             /\/.+\..+/,
+            "/*":                               /\/[^\/]+/,
+            "/*.*":                             /\/[^\/]+\.[^\/]+/,
             "/company/about":                   /\/company\/about/,
-            "/*/@from/*/@to":                   /\/.+\/(.+)\/.+\/(.+)/,
+            "/*/@from/*/@to":                   /\/[^\/]+\/(.+)\/[^\/]+\/(.+)/,
             "/say/@from/to/@to":                /\/say\/(.+)\/to\/(.+)/,
             "/script/@id":                      /\/script\/(.+)/,
             "/blog/@year/@month/@day/@title":   /\/blog\/(.+)\/(.+)\/(.+)\/(.+)/,
@@ -63,8 +77,8 @@ class RoutesTest extends GroovyTestCase {
             "/@file.@extension":                /\/(.+)\.(.+)/,
             "/**":                              /\/(?:.+\/?){0,}/,
             "/**/@file.@extension":             /\/(?:.+\/?){0,}\/(.+)\.(.+)/,
-            "/**/@filename.*":                  /\/(?:.+\/?){0,}\/(.+)\..+/,
-            "/**/*.*":                          /\/(?:.+\/?){0,}\/.+\..+/,
+            "/**/@filename.*":                  /\/(?:.+\/?){0,}\/(.+)\.[^\/]+/,
+            "/**/*.*":                          /\/(?:.+\/?){0,}\/[^\/]+\.[^\/]+/,
         ]
 
         inputOutputExpected.each { route, regex ->
@@ -82,6 +96,8 @@ class RoutesTest extends GroovyTestCase {
                     "/foo/bar/glaforge/file/cv.doc": ['author': 'glaforge', 'file': 'cv', 'extension': 'doc']
             ],
             "/*.*": ["/cv.doc": [:]],
+            "/*.*": ["/123-cv.doc": [:]],
+            "/*/wildcard": ["/some/wildcard": [:]],
             "/company/about": ["/company/about": [:]],
             "/*/@from/*/@to": ["/groovy/glaforge/gaelyk/me": ['from': 'glaforge', 'to': 'me']],
         ]
@@ -96,9 +112,16 @@ class RoutesTest extends GroovyTestCase {
         }
     }
 
-    void testNonMatchingRoute() {
-        def rt = new Route("/somewhere", "/somewhere.groovy")
-        assert !rt.forUri(r("/elsewhere")).matches
+    void testNonMatchingRoutes() {
+        def routeAndNonMatchingPaths = [
+            "/somewhere": "/elswhere",
+            "/*": "/something/not/matching"
+        ]
+
+        routeAndNonMatchingPaths.each { String route, String uri ->
+            def rt = new Route(route, "/somewhere.groovy")
+            assert !rt.forUri(r(uri)).matches
+        }
     }
 
     void testValidatorClosure() {

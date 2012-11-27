@@ -162,7 +162,7 @@ till a new version of <b>Gaelyk</b> is released with the newer paths.
 
 <p>
 You can use a single and a double star as wildcards in your routes, similarly to the Ant globing patterns.
-A single star matches a word (<code>/\\w+/</code>), where as a double start matches an arbitrary path.
+A single star matches at least one character up to a slash (<code>/[^\\/]+/</code>), where as a double start matches an arbitrary path.
 For instance, if you want to show information about the blog authors,
 you may forward all URLs starting with <code>/author</code> to the same Groovlet:
 </p>
@@ -316,7 +316,7 @@ but you can use boolean logic that you want, like <code>year.isNumber()</code>, 
 </blockquote>
 
 <p>
-In addition to the path variables, you also have access to the <code>request</code> from within the validation closure.
+In addition to the path variables, you also have access to the <code>request</code> as well as all GAE services from within the validation closure.
 For example, if you wanted to check that a particular attribute is present in the request,
 like checking a user is registered to access a message board, you could do:
 </p>
@@ -325,6 +325,16 @@ like checking a user is registered to access a message board, you could do:
     get "/message-board",
         forward: "/msgBoard.groovy",
         validate: { request.registered == true }
+</pre>
+
+<p>
+Another example would be to verify if the current user is an admin before allowing the route to kick in. The GAE services are available under the same variable names as in groovlets.
+</p>
+
+<pre class="brush:groovy">
+    get "/only-admin",
+        forward: "/secured.groovy",
+        validate: { users.isUserAdmin() }
 </pre>
 
 <a name="capability-routing"></a>

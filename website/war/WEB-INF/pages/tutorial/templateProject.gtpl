@@ -170,7 +170,49 @@ class DatastoreServiceSpec extends GaelykUnitSpec {
 </pre>
 
 <p>
-Then, you could run the test by executing the gradle command: <code>gradlew test</code>.
+Apart for testing groovlets you can also unit test routes.
+A test for the following routes definition which is located in <code>src/main/webapp/WEB-INF/routes.groovy</code>:
+</p>
+
+<pre class="brush:groovy">
+get "/about", redirect: "/blog/2008/10/20/welcome-to-my-blog"
+post "/other", forward: "/blog/2008/10/20/welcome-to-my-other-blog"
+</pre>
+
+<p>
+Could be located at <code>src/test/groovy/RoutesSpec.groovy</code> and look like:
+</p>
+
+<pre class="brush:groovy">
+class RoutesSpec extends GaelykRoutingSpec {
+
+    def setup() {
+        routing 'routes.groovy'
+    }
+
+    def "a get method may be routed"() {
+        expect:
+        get('/about')
+    }
+
+    def "an incorrectly routed method will not match"() {
+        expect:
+        !get('/aboutz')
+    }
+
+    def "a forward of a mapping may be configured"() {
+        expect:
+        with post('/other'), {
+            matches
+            destination == "/blog/2008/10/20/welcome-to-my-other-blog"
+            redirectionType == FORWARD
+        }
+    }
+}
+</pre>
+
+<p>
+Then, you could run the tests by executing the gradle command: <code>gradlew test</code>.
 </p>
 
 <p>
@@ -209,7 +251,7 @@ class SmokeSpec extends GebSpec {
 </pre>
 
 <p>
-Then you can run the functional tests with:
+Then you can run the functional tests with: <code>gradlew gaeFunctionalTest</code>.
 </p>
 
 <p>

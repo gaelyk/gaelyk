@@ -1,9 +1,25 @@
 defaultTasks 'clean', 'build', 'templateProjectZip'
 
+final groovyVersion = '1.8.8'
+
 allprojects {
     apply plugin: 'idea'
     version = '1.3-SNAPSHOT'
     group = 'org.gaelyk'
+}
+
+subprojects {
+    ext.appEngineVersion = '1.7.3'
+
+    apply plugin: 'groovy'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
+    }
 }
 
 ext.templateProjectDir = 'template-project'

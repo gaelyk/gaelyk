@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.gradle.api.plugins:gradle-gaelyk-plugin:0.4"
+        classpath "org.gradle.api.plugins:gradle-gaelyk-plugin:0.4.1"
     }
 }
 

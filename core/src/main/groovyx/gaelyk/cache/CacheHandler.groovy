@@ -50,12 +50,14 @@ class CacheHandler {
     static void serve(Route route, HttpServletRequest request, HttpServletResponse response) {
         log.config "Serving for route $route"
 
+        // should be 
+        // def requestURI = RoutesFilter.getIncludeAwareUri(request)
         def requestURI = request.requestURI
         def uri = requestURI + (request.queryString ? "?$request.queryString" : "")
 
         log.config "Request URI to cache: $uri"
 
-        def result = route.forUri(request)
+        def result = route.forUri(uri, request)
 
         if (route.cacheExpiration > 0) {
             log.config "Route cacheable"

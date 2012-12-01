@@ -22,6 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +40,9 @@ import org.codehaus.groovy.runtime.StringGroovyMethods;
  * @author Vladimir Orany
  */
 public class Route {
+    
+    private static final Logger log = Logger.getLogger(Route.class.getName());
+    
     /** The route pattern */
     private final String route;
 
@@ -105,17 +110,26 @@ public class Route {
 
     /**
      * Checks whether a URI matches a route.
+     * @param uri2
      *
      * @return a map with a 'matches' boolean key telling whether the route is matched
      * and a variables key containing a map of the variable key and matched value.
      */
-    public RouteMatch forUri(HttpServletRequest request) {
-        String uri = cutOffDisregardingParts(request.getRequestURI());
+    public RouteMatch forUri(String includeAwareURI, HttpServletRequest request) {
+        String uri = cutOffDisregardingParts(includeAwareURI);
+        
+        if(log.isLoggable(Level.FINEST)){
+            log.finest(route + ": matching '" + uri + "'");
+        }
+        
         Matcher matcher = regex.matcher(uri);
 
         String finalDestination = destination == null || ignore == true ? "" : destination.getFinalDestination();
-
+        
         if (matcher.matches()) {
+            if(log.isLoggable(Level.FINEST)){
+                log.finest(route + ": regex '" + regex.pattern() + "' matched");
+            }
             Map<String,String> variableMap = new LinkedHashMap<String, String>();
             if(variables != null && !variables.isEmpty()){
                 for (int i = 0; i < variables.size(); i++) {
@@ -126,13 +140,21 @@ public class Route {
             // if a closure validator was defined, check all the variables match the regex pattern
             if (validator != null) {
                 if (!isValid(request, variableMap)) {
+                    if(log.isLoggable(Level.FINEST)){
+                        log.finest(route + ": validator refused the route");
+                    }
                     return RouteMatch.noMatch();
+                } else {
+                    if(log.isLoggable(Level.FINEST)){
+                        log.finest(route + ": passed validator validation");
+                    }
                 }
             }
-            // XXX: this method should not modify request, move expression up in a call stack
-            request.setAttribute("originalURI", uri);
             return RouteMatch.to(getEffectiveDestination(finalDestination, variableMap), variableMap);
         } else {
+            if(log.isLoggable(Level.FINEST)){
+                log.finest(route + ": regex " + regex.pattern() + " did not match");
+            }
             return RouteMatch.noMatch();
         }
     }

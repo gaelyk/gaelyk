@@ -21,11 +21,14 @@ import groovy.servlet.AbstractHttpServlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -81,7 +84,7 @@ public class RoutesFilter implements Filter {
     /**
      * Location of the routes file definition
      */
-    private String routesFileLocation = "WEB-INF/routes.groovy";
+    private String routesFileLocation = "/WEB-INF/routes.groovy";
     private long lastRoutesFileModification = 0;
     private List<Route> routes = new ArrayList<Route>();
     private FilterConfig filterConfig;
@@ -127,9 +130,15 @@ public class RoutesFilter implements Filter {
     protected final synchronized void loadRoutes() throws CompilationFailedException, IOException {
         log.config("Loading routes configuration");
 
-        File routesFile = new File(this.routesFileLocation);
-
-        if (routesFile.exists()) {
+        URL routesFileURL = filterConfig.getServletContext().getResource(this.routesFileLocation);
+        File routesFile = null;
+        try {
+            routesFile = new File(routesFileURL.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("URI syntax expection while converting routes file URL", e);
+        }
+        if (routesFile != null && routesFile.exists()) {
+            log.config("Routes file exist, loading routes.");
             long lastModified = routesFile.lastModified();
 
             // if the file has changed since the last check, reload the routes
@@ -154,9 +163,12 @@ public class RoutesFilter implements Filter {
                 // update the last modified flag
                 lastRoutesFileModification = lastModified;
             }
+        } else {
+            log.config("Routes file " + this.routesFileLocation + "does not exist!.");
         }
         // add the routes defined by the plugins
         routes.addAll(getAdditionalRoutes());
+        log.info("Loaded routes: " + routes.size());
     }
     
     /**
@@ -201,18 +213,29 @@ public class RoutesFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
+        String uri = getIncludeAwareUri(request);
         if(request.getAttribute(ORIGINAL_URI) == null){
-            request.setAttribute(ORIGINAL_URI, getIncludeAwareUri(request));
+            request.setAttribute(ORIGINAL_URI, uri);
         }
 
-        String method = request.getMethod();
+        String method = request.getMethod().toUpperCase();
+        
+        if(log.isLoggable(Level.FINEST)){
+            log.finest("Routing: " + uri);
+        }
 
         boolean foundRoute = false;
         for (Route route : routes) {
+            if(log.isLoggable(Level.FINEST)){
+                log.finest("Trying route " + route.getRoute());
+            }
             // first, check that the HTTP methods are compatible
             if (route.getMethod() == HttpMethod.ALL || route.getMethod().toString().equals(method)) {
-                RouteMatch result = route.forUri(request);
+                RouteMatch result = route.forUri(uri, request);
                 if (result.isMatches()) {
+                    if(log.isLoggable(Level.FINEST)){
+                        log.finest("MATCH " + route.getRoute());
+                    }
                     if (route.isIgnore()) {
                         // skip out completely
                         break;
@@ -223,7 +246,13 @@ public class RoutesFilter implements Filter {
                     handleMatchedRoute(result, route, request, response);
                     foundRoute = true;
                     break;
+                } else {
+                    if(log.isLoggable(Level.FINEST)){
+                        log.finest("NO MATCH " + route.getRoute());
+                    }
                 }
+            } else if(log.isLoggable(Level.FINEST)){
+                log.finest("Route " + route.getMethod() + " '" + route.getRoute() + "' method don't support method " + method);
             }
         }
 
@@ -294,7 +323,7 @@ public class RoutesFilter implements Filter {
     * @return the include-aware uri either parsed from request attributes or
     *         hints provided by the servlet container
     */
-    protected String getIncludeAwareUri(HttpServletRequest request) {
+    public static String getIncludeAwareUri(HttpServletRequest request) {
         String uri = null;
         String info = null;
 

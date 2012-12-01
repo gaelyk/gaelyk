@@ -71,8 +71,10 @@ class RoutesFilterTest extends GroovyTestCase {
             }
 
             ServletContext getServletContext() {
-                [:] as ServletContext
+                [getResource: { String res -> new File(res).toURI().toURL()}] as ServletContext
             }
+            
+            
 
         })
 

@@ -116,8 +116,8 @@ public class Route extends groovyx.routes.Route {
     }
 
     @Override
-    public RouteMatch forUri(HttpServletRequest request) {
-        RouteMatch match = super.forUri(request);
+    public RouteMatch forUri(String includeAwareURI, HttpServletRequest request) {
+        RouteMatch match = super.forUri(includeAwareURI, request);
         if (namespace == null) {
             return match;
         }

@@ -243,8 +243,8 @@ class RoutesFilterTest extends GroovyTestCase {
 
         filter.doFilter(request, response, chain)
 
-        assert forwarded
         assert dispatched == "/validate.gtpl"
+        assert forwarded
         assert attributes[RoutesFilter.ORIGINAL_URI] == "/validate"
     }
 }

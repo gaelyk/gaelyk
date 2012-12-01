@@ -47,14 +47,14 @@ class CapabilityAwareRoutesTest extends GroovyTestCase {
 
     void testClosureDestinationDefinitionShouldThrowExceptionWhenNoTo() {
         shouldFail {
-            RoutingRule.buildRoutingRule {}
+            RoutingRuleBuilder.buildRoutingRule {}
         }
 
-        assert RoutingRule.buildRoutingRule { to "/default.gtpl" }.defaultDestination == "/default.gtpl"
+        assert RoutingRuleBuilder.buildRoutingRule { to "/default.gtpl" }.defaultDestination == "/default.gtpl"
     }
 
     void testClosureDestinationDefinition() {
-        def rule = RoutingRule.buildRoutingRule {
+        def rule = RoutingRuleBuilder.buildRoutingRule {
             to "/default.gtpl"
             to("/maintenance.gtpl").on(DATASTORE).not(ENABLED)
             to("/readonly.gtpl").on(DATASTORE_WRITE).not(ENABLED)
@@ -78,7 +78,7 @@ class CapabilityAwareRoutesTest extends GroovyTestCase {
     }
 
     void testWithMockedCapabilityService() {
-        def rule = RoutingRule.buildRoutingRule {
+        def rule = RoutingRuleBuilder.buildRoutingRule {
             to "/default.gtpl"
             to("/scheduled.gtpl") .on(DATASTORE_WRITE) .is(SCHEDULED_MAINTENANCE)
             to("/disabled.gtpl")  .on(DATASTORE)       .not(ENABLED)

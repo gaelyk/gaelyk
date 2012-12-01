@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.routes
+package groovyx.routes;
 
 /**
- * Enum listing the various HTTP methods, as well as an <code>ALL</code> element matching all possible methods.
- *
+ * Type of redirection for the URL rewriting: either "redirect" or "forward" to a new location.
+ * 
  * @author Guillaume Laforge
  */
-enum HttpMethod {
-    ALL, GET, POST, PUT, DELETE, HEAD, TRACE
+public enum RedirectionType {
+    REDIRECT, REDIRECT301, FORWARD
 }

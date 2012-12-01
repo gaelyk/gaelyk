@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse
 import javax.servlet.RequestDispatcher
 import javax.servlet.ServletResponse
 import javax.servlet.ServletRequest
-import groovyx.gaelyk.routes.HttpMethod
-import groovyx.gaelyk.routes.RedirectionType
 
 import groovyx.gaelyk.cache.CachedResponse.CustomServletOutputStream
+import groovyx.routes.HttpMethod;
+import groovyx.routes.RedirectionType;
 
 /**
  * Cache handler tests

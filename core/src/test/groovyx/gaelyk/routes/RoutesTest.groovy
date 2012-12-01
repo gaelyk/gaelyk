@@ -16,6 +16,9 @@
 package groovyx.gaelyk.routes
 
 import static groovyx.gaelyk.TestUtil.request as r
+import groovyx.routes.HttpMethod;
+import groovyx.routes.RedirectionType;
+
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 
@@ -129,22 +132,22 @@ class RoutesTest extends GroovyTestCase {
         def m = HttpMethod.GET
         def rt = RedirectionType.FORWARD
 
-        assert new Route("/blog/@year", d, m, rt, { year.isNumber() }).forUri(r("/blog/2004")).matches
-        assert !new Route("/blog/@year", d, m, rt, { year.isNumber() }).forUri(r("/blog/2004xxx")).matches
+        assert new Route("/blog/@year", d, m, rt, { year.isNumber() }, null, 0).forUri(r("/blog/2004")).matches
+        assert !new Route("/blog/@year", d, m, rt, { year.isNumber() }, null, 0).forUri(r("/blog/2004xxx")).matches
 
-        assert new Route("/isbn/@isbn/toc", d, m, rt, { isbn ==~ /\d{9}(\d|X)/ }).forUri(r("/isbn/012345678X/toc")).matches
-        assert !new Route("/isbn/@isbn/toc", d, m, rt, { isbn =~ /\d{9}(\d|X)/ }).forUri(r("/isbn/XYZ/toc")).matches
+        assert new Route("/isbn/@isbn/toc", d, m, rt, { isbn ==~ /\d{9}(\d|X)/ }, null, 0).forUri(r("/isbn/012345678X/toc")).matches
+        assert !new Route("/isbn/@isbn/toc", d, m, rt, { isbn =~ /\d{9}(\d|X)/ }, null, 0).forUri(r("/isbn/XYZ/toc")).matches
 
-        assert new Route("/admin", d, m, rt, { request.user == 'USER' }).forUri(r("/admin")).matches
-        assert !new Route("/admin", d, m, rt, { request.user == 'dummy' }).forUri(r("/admin")).matches
+        assert new Route("/admin", d, m, rt, { request.user == 'USER' }, null, 0).forUri(r("/admin")).matches
+        assert !new Route("/admin", d, m, rt, { request.user == 'dummy' }, null, 0).forUri(r("/admin")).matches
     }
 
     void testIgnoreRoute() {
-        assert new Route("/ignore", null, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, true).forUri(r("/ignore")).matches
+        assert new Route("/ignore", null, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, true, false, false).forUri(r("/ignore")).matches
     }
 
     void testNamespacedRoute() {
-        def route = new Route("/@cust/show", "/showCust.groovy?ns=@cust", HttpMethod.ALL, RedirectionType.FORWARD, null, { cust }).forUri(r("/acme/show"))
+        def route = new Route("/@cust/show", "/showCust.groovy?ns=@cust", HttpMethod.ALL, RedirectionType.FORWARD, null, { cust }, 0, false, false, false).forUri(r("/acme/show"))
 
         assert route.matches
         assert route.namespace == "acme"

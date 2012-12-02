@@ -12,7 +12,7 @@ def sdf = new SDF("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
 html.ul {
     result.commit.each { commit ->
         li {
-            a href: "https://github.com${commit.url}", commit.message
+            a href: "${commit.url}", commit.message
             def time = commit.committer.date.replaceAll(/(-|\+)(\d\d):(\d\d)/, '$1$2$3')
             def prettyTime = new PrettyTime().format(sdf.parse(time))
             i "committed ${prettyTime}"

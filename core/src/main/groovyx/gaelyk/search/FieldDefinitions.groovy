@@ -32,26 +32,51 @@ class FieldDefinitions {
         assert args[0] instanceof Map, "The document field definition should be described with a Map"
 
         Map fieldDefMap = args[0]
-
-        Field.Builder fieldBuilder = Field.newBuilder()
-        fieldBuilder.name = name
-
-        // special case for HTML, since the setHTML setter is uppercase,
-        // but the DSL allows lowercase
-        if (fieldDefMap.containsKey('html')) {
-            fieldDefMap.HTML = fieldDefMap.html
-            fieldDefMap.remove('html')
+        
+        Map listParameters = fieldDefMap.findAll{ key, value -> 
+            value instanceof Iterable 
         }
-
-        // special case for dates, as the time must be erased
-        if (fieldDefMap.containsKey('date')) {
-            fieldDefMap.date = Field.date(fieldDefMap.date)
+        
+        if(listParameters.size() > 1){
+            throw new IllegalArgumentException("Cannot have more than one list parameter in builder!")
+        } else if(listParameters.size() == 1){
+            def listParameter = listParameters.entrySet().first()
+            for(val in listParameter.value){
+                def map = new HashMap(fieldDefMap)
+                map[listParameter.key] = val
+                __addField(name, map)
+            }
+        } else {
+            __addField(name, fieldDefMap)
         }
+        
+        
 
-        fieldDefMap.each { String key, value ->
-            fieldBuilder."$key" = value
-        }
 
-        documentBuilder.addField(fieldBuilder.build())
     }
+
+	private __addField(String name, Map fieldDefMap) {
+		Field.Builder fieldBuilder = Field.newBuilder()
+		fieldBuilder.name = name
+
+		// special case for HTML, since the setHTML setter is uppercase,
+		// but the DSL allows lowercase
+		if (fieldDefMap.containsKey('html')) {
+			fieldDefMap.HTML = fieldDefMap.html
+			fieldDefMap.remove('html')
+		}
+
+
+
+		// special case for dates, as the time must be erased
+		if (fieldDefMap.containsKey('date')) {
+			fieldDefMap.date = Field.date(fieldDefMap.date)
+		}
+
+		fieldDefMap.each { String key, value ->
+			fieldBuilder."$key" = value
+		}
+
+		documentBuilder.addField(fieldBuilder.build())
+	}
 }

@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.plugins
+package groovyx.servlet.plugins;
+
+import groovy.lang.Binding;
 
 /**
  * Implementation of a lazy binding which returns a String
@@ -22,13 +24,15 @@ package groovyx.gaelyk.plugins
  * @author Guillaume Laforge
  */
 class LazyBinding extends Binding {
-    def getVariable(String name) {
+    
+    /**
+     * @return the name of the variable if not present in the binding
+     */
+    public Object getVariable(String name) {
         try {
-            super.getVariable(name)
-        } catch (any) {
-            // if no variable is found,
-            // return that unexisting variable name as a string
-            name
+            return super.getVariable(name);
+        } catch (Exception any) {
+            return name;
         }
     }
 }

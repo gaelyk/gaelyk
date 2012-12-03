@@ -1,5 +1,7 @@
 package groovyx.gaelyk.plugins
 
+import groovyx.servlet.plugins.LazyBinding;
+
 import org.codehaus.groovy.control.CompilerConfiguration
 
 /**

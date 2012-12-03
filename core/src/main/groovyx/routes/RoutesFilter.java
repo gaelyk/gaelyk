@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +88,11 @@ public class RoutesFilter implements Filter {
     private String routesFileLocation = "/WEB-INF/routes.groovy";
     private long lastRoutesFileModification = 0;
     private List<Route> routes = new ArrayList<Route>();
+    private List<Route> routesFromRoutesFile = new ArrayList<Route>();
     private FilterConfig filterConfig;
+    
+    ServiceLoader<RoutesProvider> routesProviders;
+    ServiceLoader<RoutesScriptBindingEnhancer> bindingEnhancers;
     
     protected Logger log;
 
@@ -99,7 +104,12 @@ public class RoutesFilter implements Filter {
         this.log = Logger.getLogger(getLoggerName());
         if (isHotReloadEnabled()) {
             routes = new CopyOnWriteArrayList<Route>();
+            routesFromRoutesFile =  new CopyOnWriteArrayList<Route>();
         }
+        
+        routesProviders = ServiceLoader.load(RoutesProvider.class);
+        bindingEnhancers = ServiceLoader.load(RoutesScriptBindingEnhancer.class);
+        
         try {
             loadRoutes();
         } catch (CompilationFailedException e) {
@@ -109,12 +119,22 @@ public class RoutesFilter implements Filter {
         }            
     }
 
+
+    private String getLoggerName() {
+        if(filterConfig.getInitParameter("logger.name") != null){
+            return filterConfig.getInitParameter("logger.name");
+        }
+        return getDefaultLoggerName();
+    }
+    
     /**
-     * @return name of the logger to be used for this filter
+     * @return name of the logger to be used for this filter if
+     *      init paramter <code>logger.name</code> is not set
      */
-    protected String getLoggerName() {
+    protected String getDefaultLoggerName(){
         return "groovyx.routesfilter";
     }
+    
     /**
      * @return <code>true</code> if the routes file may change after initialization
      */
@@ -129,7 +149,7 @@ public class RoutesFilter implements Filter {
      */
     protected final synchronized void loadRoutes() throws CompilationFailedException, IOException {
         log.config("Loading routes configuration");
-
+        routes.clear();
         URL routesFileURL = filterConfig.getServletContext().getResource(this.routesFileLocation);
         File routesFile = null;
         try {
@@ -149,7 +169,9 @@ public class RoutesFilter implements Filter {
                 // define a binding for the routes definition,
                 // and inject the Google services
                 Binding binding = new Binding();
-                enhanceRoutesScriptBinding(binding);
+                for(RoutesScriptBindingEnhancer enhancer : bindingEnhancers){
+                    enhancer.enhance(binding);
+                }
 
                 // evaluate the route definitions
                 GroovyShell groovyShell = new GroovyShell(binding, config);
@@ -157,17 +179,25 @@ public class RoutesFilter implements Filter {
 
                 script.run();
 
-                routes.clear();
-                routes.addAll(script.getRoutes());
-
+                List<Route> scriptRoutes = script.getRoutes();
+                routes.addAll(scriptRoutes);
+                routesFromRoutesFile.clear();
+                routesFromRoutesFile.addAll(scriptRoutes);
+                
                 // update the last modified flag
                 lastRoutesFileModification = lastModified;
+            } else {
+                routes.addAll(routesFromRoutesFile);
             }
         } else {
             log.config("Routes file " + this.routesFileLocation + "does not exist!.");
         }
         // add the routes defined by the plugins
-        routes.addAll(getAdditionalRoutes());
+        for(RoutesProvider provider : routesProviders){
+            List<Route> routesFromProvider = provider.getRoutes();
+            log.config("Adding " + routesFromProvider.size() + " routes from " + provider.getClass() + "!.");
+            routes.addAll(routesFromProvider);
+        }
         log.info("Loaded routes: " + routes.size());
     }
     
@@ -182,29 +212,26 @@ public class RoutesFilter implements Filter {
     /**
      * @return name of the class to be used as routes script base class, must extend {@link RoutesBaseScript}.
      */
-    protected String getRoutesScriptBaseName() {
+    private String getRoutesScriptBaseName() {
+        if(filterConfig.getInitParameter("base.script") != null){
+            return filterConfig.getInitParameter("base.script");
+        }
+        return getDefaultRoutesScriptBaseName();
+    }
+    
+    /**
+     * @return default routes script base class name if <code>base.script</code>
+     *      init parameter is missing
+     */
+    protected String getDefaultRoutesScriptBaseName() {
         return RoutesBaseScript.class.getName();
     }
-    
-    /**
-     * @return additional routes to be added
-     */
-    protected List<? extends Route> getAdditionalRoutes(){
-        return Collections.emptyList();
-        
-    }
-    
-    /**
-     * Ehnances binding for routes script.
-     * @param binding routes script binding
-     */
-    protected void enhanceRoutesScriptBinding(Binding binding){ }
 
     /**
      * Forward or redirects requests to another URL if a matching route is defined.
      * Otherwise, the normal filter chain and routing applies.
      */
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws java.io.IOException, javax.servlet.ServletException {
+    public final void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws java.io.IOException, javax.servlet.ServletException {
         // reload the routes in local dev mode in case the routes definition has changed since the last request
         if (isHotReloadEnabled()) {
             loadRoutes();

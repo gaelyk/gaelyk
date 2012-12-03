@@ -15,13 +15,10 @@
  */
 package groovyx.gaelyk.routes;
 
-import groovy.lang.Binding;
-import groovyx.gaelyk.GaelykBindingEnhancer;
 import groovyx.gaelyk.cache.CacheHandler;
 import groovyx.routes.RouteMatch;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +46,7 @@ public class RoutesFilter extends groovyx.routes.RoutesFilter {
     // instance is not recognized for some reason
 
     @Override
-    protected String getLoggerName() {
+    protected String getDefaultLoggerName() {
         return "gaelyk.routesfilter";
     }
     
@@ -59,23 +56,8 @@ public class RoutesFilter extends groovyx.routes.RoutesFilter {
     }
     
     @Override
-    protected void enhanceRoutesScriptBinding(Binding binding) {
-        GaelykBindingEnhancer.bind(binding);
-
-        // adds three nouns for the XMPP support
-        binding.setVariable("chat",         "chat");
-        binding.setVariable("presence",     "presence");
-        binding.setVariable("subscription", "subscription");
-    }
-    
-    @Override
-    protected String getRoutesScriptBaseName() {
+    protected String getDefaultRoutesScriptBaseName() {
         return RoutesBaseScript.class.getName();
-    }
-    
-    @Override
-    protected List<groovyx.routes.Route> getAdditionalRoutes() {
-        return RoutesFilterHelper.getPluginRoutes();
     }
     
     @Override

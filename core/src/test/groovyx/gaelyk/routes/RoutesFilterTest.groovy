@@ -173,7 +173,7 @@ class RoutesFilterTest extends GroovyTestCase {
                 setAttribute: { String name, val -> },
                 getAttribute: { String name -> },
                 getServletPath: { -> '' },
-                getPathInfo: { -> '/somewhere' }
+                getPathInfo: { -> "/acme/home" }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse

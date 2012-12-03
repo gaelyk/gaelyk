@@ -19,7 +19,6 @@ import groovy.transform.CompileStatic
 import com.google.appengine.api.search.SearchService
 import com.google.appengine.api.search.SearchServiceFactory
 import com.google.appengine.api.search.Index
-import com.google.appengine.api.search.Consistency
 import com.google.appengine.api.search.IndexSpec
 import com.google.appengine.api.search.AddResponse
 import groovyx.gaelyk.search.DocumentDefinitions
@@ -51,17 +50,16 @@ class SearchExtensions {
     /**
      * Shortcut notation to easily get an index from the search service.
      * <pre><code>
-     *     def index = search.index("books", Consistency.PER_DOCUMENT)
+     *     def index = search.index("books")
      * </code></pre>
      *
      * @param search the search service
      * @param indexName the name of the index
-     * @param consistency the consistency
      * @return an index
      */
     @CompileStatic
-    static Index index(SearchService search, String indexName, Consistency consistency) {
-        search.getIndex(IndexSpec.newBuilder().setName(indexName).setConsistency(consistency).build())
+    static Index index(SearchService search, String indexName) {
+        search.getIndex(IndexSpec.newBuilder().setName(indexName).build())
     }
 
     /**

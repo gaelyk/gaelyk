@@ -21,7 +21,7 @@
 </p>
 
 <pre class="brush:groovy">
-    def index = search.index("books", PER_DOCUMENT)
+    def index = search.index("books")
 </pre>
 
 <p>
@@ -32,7 +32,7 @@
 </p>
 
 <pre class="brush:groovy">
-    def index = search.index("books", PER_DOCUMENT)
+    def index = search.index("books")
 
     def response = index.add {
         document(id: "1234", locale: US, rank: 3) {

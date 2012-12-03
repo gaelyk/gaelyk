@@ -1,9 +1,7 @@
 package groovyx.gaelyk.search
 
-import static com.google.appengine.api.search.Consistency.*
 import static java.util.Locale.*
 
-import com.google.appengine.api.search.GeoPoint;
 import com.google.appengine.api.search.ScoredDocument
 import com.google.appengine.api.search.SearchServiceFactory
 import com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig
@@ -27,7 +25,7 @@ class SearchShortcutsTest extends GroovyTestCase {
     void testDocumentBuilding() {
         def search = SearchServiceFactory.searchService
 
-        def index = search.index("books", PER_DOCUMENT)
+        def index = search.index("books")
 
         def response = index.add {
             document(id: "1234", locale: US, rank: 3) {
@@ -65,7 +63,7 @@ class SearchShortcutsTest extends GroovyTestCase {
     void testListFieldsChecks() {
         def search = SearchServiceFactory.searchService
 
-        def index = search.index("books", PER_DOCUMENT)
+        def index = search.index("books")
 
         try {
             def response = index.add {

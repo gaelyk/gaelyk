@@ -35,8 +35,8 @@ class GaelykServletContextListener implements ServletContextListener {
      * @param servletContextEvent
      */
     void contextInitialized(ServletContextEvent servletContextEvent) {
-        PluginsHandler.instance.initPlugins()
         verifyGroovyVersion()
+        PluginsHandler.instance.initPlugins()
     }
 
     void contextDestroyed(ServletContextEvent servletContextEvent) {

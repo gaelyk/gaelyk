@@ -42,8 +42,8 @@
             summary html: "<p>super story</p>", locale: ENGLISH
             description text: "a book for children"
             category atom: "children"
-            keyword text: "wolf"
-            keyword text: "red hook"
+            category atom: "book"
+            keyword text: ["wolf", "red hook"]
         }
         // other documents with other document(...) {} calls
     }
@@ -55,7 +55,10 @@
     Inside the closure, you can have as many field definitions of the form:
     <code>fieldName type: value</code> or with an optional locale:
     <code>fieldName type: value, locale: someLocale</code>.
-    Fields can be repeated in order to have multi-valued document fields.
+    Fields can be repeated in order to have multi-valued document fields or you
+    can specify map values as list: <code>fieldName type: [one, two]</code>.
+    Empty lists and <code>null</code> values are ignored completely. Such fields
+    are not added to the document.
 </p>
 
 <p>

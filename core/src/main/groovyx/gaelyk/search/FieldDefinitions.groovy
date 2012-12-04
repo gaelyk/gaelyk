@@ -69,14 +69,21 @@ class FieldDefinitions {
 
 
 		// special case for dates, as the time must be erased
-		if (fieldDefMap.containsKey('date')) {
+		if (fieldDefMap.containsKey('date') && fieldDefMap.date) {
 			fieldDefMap.date = Field.date(fieldDefMap.date)
 		}
-
+        
+        def skipped = []
+        
 		fieldDefMap.each { String key, value ->
-			fieldBuilder."$key" = value
+            if(value != null){
+                fieldBuilder."$key" = value                
+            } else {
+                skipped << key
+            }
 		}
-
-		documentBuilder.addField(fieldBuilder.build())
+        if(!skipped){
+            documentBuilder.addField(fieldBuilder.build())            
+        }
 	}
 }

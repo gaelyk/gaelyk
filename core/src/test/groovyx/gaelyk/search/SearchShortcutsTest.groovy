@@ -35,8 +35,10 @@ class SearchShortcutsTest extends GroovyTestCase {
                 summary html: "<p>super story</p>", locale: ENGLISH
                 description text: "a book for children"
                 category atom: "children"
-                keyword text: ["red hook", "grandma"]
                 keyword text: "wolf"
+                keyword text: "red hook"
+                nothing text: null
+                emptyList text: []
             }
         }
 
@@ -53,10 +55,11 @@ class SearchShortcutsTest extends GroovyTestCase {
             assert doc.numberOfCopies == 35
             assert doc.summary.contains("story")
 
-            assert doc.keyword.size() == 3
+            assert doc.keyword.size() == 2
             assert "wolf" in doc.keyword
             assert "red hook" in doc.keyword
-            assert "grandma" in doc.keyword
+            assert !('nothing' in doc.fieldNames)
+            assert !('emptyList' in doc.fieldNames)
         }
     }
     

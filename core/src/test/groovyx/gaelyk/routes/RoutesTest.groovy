@@ -75,10 +75,11 @@ class RoutesTest extends GroovyTestCase {
             "/author/@author":                  /\/author\/(.+)/,
             "/tag/@tag":                        /\/tag\/(.+)/,
             "/@file.@extension":                /\/(.+)\.(.+)/,
-            "/**":                              /\/(?:.+\/?){0,}/,
+            "/**":                              /.*/,
             "/**/@file.@extension":             /\/(?:.+\/?){0,}\/(.+)\.(.+)/,
             "/**/@filename.*":                  /\/(?:.+\/?){0,}\/(.+)\.[^\/]+/,
-            "/**/*.*":                          /\/(?:.+\/?){0,}\/[^\/]+\.[^\/]+/,
+            "/**/*.*":                          /.*/,
+            "/**/*.groovy":                     /\/.*\.groovy$/,
         ]
 
         inputOutputExpected.each { route, regex ->

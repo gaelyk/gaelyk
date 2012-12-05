@@ -3,6 +3,8 @@ package groovyx.gaelyk
 import com.google.appengine.tools.development.testing.LocalMailServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.api.mail.MailServiceFactory
+
+import java.util.logging.Level;
 import java.util.logging.Logger
 import java.util.logging.Filter
 import java.util.logging.LogRecord
@@ -16,7 +18,7 @@ class MailSupportTest extends GroovyTestCase {
 
     // setup the local environment with a mail service stub
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-            new LocalMailServiceTestConfig().setLogMailBody(true)//.setLogMailLevel(Level.INFO)
+            new LocalMailServiceTestConfig().setLogMailBody(true).setLogMailLevel(Level.ALL)
     )
 
     private String logResult = ""

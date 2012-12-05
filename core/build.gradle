@@ -46,9 +46,12 @@ sourceSets {
 
 dependencies {
     groovy "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}"
+//    compile "org.codehaus.groovy:groovy-servlet:${ext.gaelykGroovyVersion}"
+//    groovy "org.codehaus.groovy:groovy-ant:${ext.gaelykGroovyVersion}"  // for groovy-doc only   
     compile "com.google.appengine:appengine-api-1.0-sdk:${ext.gaelykAppEngineVersion}"
     compile "com.google.appengine:appengine-api-labs:${ext.gaelykAppEngineVersion}"
     compile 'javax.servlet:servlet-api:2.5'
+//    groovy "org.codehaus.groovy:groovy-test:${ext.gaelykGroovyVersion}" // for tests only   
     testCompile 'javax.servlet.jsp:jsp-api:2.2'
     testCompile 'junit:junit:4.8.2'
     testCompile "com.google.appengine:appengine-testing:${ext.gaelykAppEngineVersion}"

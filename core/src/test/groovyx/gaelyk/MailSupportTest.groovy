@@ -9,11 +9,14 @@ import java.util.logging.Logger
 import java.util.logging.Filter
 import java.util.logging.LogRecord
 
+import org.junit.Ignore;
+
 /**
  * Test the mail service enhancements.
  *
  * @author Guillaume Laforge
  */
+@Ignore
 class MailSupportTest extends GroovyTestCase {
 
     // setup the local environment with a mail service stub

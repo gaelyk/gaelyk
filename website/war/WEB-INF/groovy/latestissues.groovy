@@ -10,7 +10,7 @@ def sdf = new SDF("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
 html.ul {
     struct.each { issue ->
         li {
-            a href: issue.url, issue.title
+            a href: issue.html_url, issue.title
 //          2009/07/20 01:41:25 -0700
             def prettyTime = new PrettyTime().format(sdf.parse(issue.created_at))
             i " opened ${prettyTime}"

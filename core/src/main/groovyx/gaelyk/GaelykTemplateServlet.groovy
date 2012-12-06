@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.ServletConfig
 
+import org.codehaus.groovy.runtime.InvokerInvocationException;
+
 import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.logging.GroovyLogger
 
@@ -51,9 +53,16 @@ class GaelykTemplateServlet extends TemplateServlet {
                 try {
                     try {
                         runPrecompiled(getPrecompiledClassName(request), binding, response)
-                    } catch(Exception e){
-                        log("Trying to run precompiled template, got ${e.class.name} caused by ${e.cause ? e.cause : 'nothing'}")
-                        runTemplate(request, response, binding)
+                    } catch(InvokerInvocationException e){
+                        if(e.cause instanceof ClassNotFoundException){
+                            try {
+                                runTemplate(request, response, binding)                                
+                            } catch(InvokerInvocationException iie){
+                                throw iie.cause ?: iie
+                            }
+                        } else {
+                            throw e.cause ?: e
+                        }
                     }
                 } catch(FileNotFoundException te){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)
@@ -74,9 +83,16 @@ class GaelykTemplateServlet extends TemplateServlet {
                 try {
                     try {
                         runTemplate(request, response, binding)
-                    } catch(Exception e){
-                        log("Trying to run template directly, got ${e.class.name} caused by ${e.cause ? e.cause : 'nothing'}")
-                        runPrecompiled(getPrecompiledClassName(request), binding, response)
+                    } catch(InvokerInvocationException e){
+                        if(e.cause instanceof FileNotFoundException){
+                            try {
+                                runPrecompiled(getPrecompiledClassName(request), binding, response)                                                            
+                            } catch(InvokerInvocationException iie){
+                                throw iie.cause ?: iie
+                            }
+                        } else {
+                            throw e.cause
+                        }
                     }
                 } catch(e){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)

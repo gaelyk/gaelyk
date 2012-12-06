@@ -32,3 +32,12 @@ task wrapper(type: Wrapper) {
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
+
+println "Using following common Gaelyk setting:"
+
+println "Groovy Version: $ext.gaelykGroovyVersion"
+println "Spock Version: $ext.gaelykSpockVersion"
+println "App Engine Version: $ext.gaelykAppEngineVersion"
+println "Gaelyk Version: $ext.gaelykLatestVersion"
+println "Gaelyk Spock Version: $ext.gaelykSpockLatestVersion"
+println "Gradle Version: $ext.gaelykGradleVersion"

@@ -1,6 +1,6 @@
 defaultTasks 'clean', 'build', 'templateProjectZip'
 
-final groovyVersion = '1.8.8'
+final groovyVersion = '1.8.9-SNAPSHOT'
 
 allprojects {
     apply plugin: 'idea'
@@ -15,6 +15,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenRepo urls: ["http://snapshots.repository.codehaus.org/"]
     }
 
     dependencies {

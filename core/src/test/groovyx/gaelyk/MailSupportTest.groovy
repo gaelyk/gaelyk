@@ -16,7 +16,6 @@ import org.junit.Ignore;
  *
  * @author Guillaume Laforge
  */
-@Ignore
 class MailSupportTest extends GroovyTestCase {
 
     // setup the local environment with a mail service stub

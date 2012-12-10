@@ -1,0 +1,22 @@
+apply from: '../common.gradle'
+apply plugin: 'gaelyk'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.gradle.api.plugins:gradle-gaelyk-plugin:0.4.1"
+    }
+}
+
+dependencies {
+    compile project(':core')
+	groovy "org.codehaus.groovy:groovy-all:$gaelykGroovyVersion"
+    gaeSdk "com.google.appengine:appengine-java-sdk:$appEngineVersion"
+    compile 'com.ocpsoft:ocpsoft-pretty-time:1.0.2',
+            'opensymphony:sitemesh:2.4.2'
+}
+
+webAppDirName = 'war'

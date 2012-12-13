@@ -60,6 +60,7 @@ class SearchShortcutsTest extends GroovyTestCase {
             assert "red hook" in doc.keyword
             assert !('nothing' in doc.fieldNames)
             assert !('emptyList' in doc.fieldNames)
+            assert !doc.noSuchField
         }
     }
     

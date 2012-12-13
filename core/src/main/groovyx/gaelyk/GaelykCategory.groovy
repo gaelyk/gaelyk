@@ -2836,7 +2836,7 @@ class GaelykCategory extends GaelykCategoryBase {
 
         switch (fields.size()) {
             case 0:
-                throw new GroovyRuntimeException("No such field '$fieldName' for document '$document'")
+                return null
             case 1:
                 return getFieldRawValue(fields[0])
             default:

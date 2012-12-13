@@ -1,6 +1,11 @@
 package groovyx.gaelyk.search
 
 import static java.util.Locale.*
+
+import org.junit.Ignore;
+
+import spock.util.mop.Use;
+
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig
 import com.google.appengine.api.search.SearchServiceFactory
@@ -27,8 +32,7 @@ class SearchShortcutsTest extends GroovyTestCase {
 
     void testDocumentBuilding() {
         def search = SearchServiceFactory.searchService
-
-        use (GaelykCategory) {
+        use(GaelykCategory){
             def index = search.index("books", PER_DOCUMENT)
 
             def response = index.add {
@@ -56,11 +60,36 @@ class SearchShortcutsTest extends GroovyTestCase {
                 assert doc.title == "Big bad wolf"
                 assert doc.numberOfCopies == 35
                 assert doc.summary.contains("story")
-
                 assert doc.keyword.size() == 2
                 assert "wolf" in doc.keyword
                 assert "red hook" in doc.keyword
+                assert !('nothing' in doc.fieldNames)
+                assert !('emptyList' in doc.fieldNames)
+                assert !doc.noSuchField
             }
         }
     }
+    
+
+    // works ok on groovy2 branch
+//    void testListFieldsChecks() {
+//        def search = SearchServiceFactory.searchService
+//        use(GaelykCategory){
+//            def index = search.index("books")
+//
+//            try {
+//                def response = index.add {
+//                    document(id: "1234", locale: US, rank: 3) {
+//                        keyword text: ["red hook", "grandma"], locale: [
+//                            Locale.ENGLISH,
+//                            Locale.CHINESE
+//                        ]
+//                    }
+//                }
+//                fail("Should failed with IllegalArgumentException")
+//            } catch (IllegalArgumentException e){
+//                // ok
+//            }
+//        }
+//    }
 }

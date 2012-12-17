@@ -37,7 +37,15 @@ sourceSets {
 }
 
 dependencies {
-    groovy "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}"
+    def groovyVersion = ext.groovyVersion
+    // groovy eclipse + spock bug - only 2.0.4 available in this moment
+    if(project.hasProperty('groovyEclipseCompilerVersion')){
+        groovyVersion = groovyEclipseCompilerVersion
+    }
+    
+    groovy "org.codehaus.groovy:groovy-all:$groovyVersion", {
+        force = true
+    }
 //    compile "org.codehaus.groovy:groovy-servlet:${ext.gaelykGroovyVersion}"
 //    groovy "org.codehaus.groovy:groovy-ant:${ext.gaelykGroovyVersion}"  // for groovy-doc only   
     compile "com.google.appengine:appengine-api-1.0-sdk:${ext.gaelykAppEngineVersion}"

@@ -16,6 +16,7 @@ class RoutesBaseScriptTest extends GroovyTestCase {
                 new Binding([chat: 'chat', presence: 'presence', subscription: 'subscription']),
                 config)
         RoutesBaseScript script = shell.parse("""\
+            get "/bar/@id?",     forward:  "/bar.groovy"
             get "/foo",          forward:  "/foo.groovy, cache: 24.hours"
             put "/create",       forward:  "/create.groovy"
             post "/upload",      forward:  "/upload.groovy"
@@ -31,7 +32,7 @@ class RoutesBaseScriptTest extends GroovyTestCase {
         script.run()
 
         def routes = script.routes
-        assert routes.size() == 10
+        assert routes.size() == 12
 
     }
 }

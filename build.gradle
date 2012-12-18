@@ -4,7 +4,7 @@ allprojects {
     apply plugin: 'idea'
 
     ext.groovyVersion = '2.0.5'
-    ext.appEngineVersion =  '1.7.3'
+    ext.appEngineVersion =  '1.7.4'
 
     version = '2.0-SNAPSHOT'
     group = 'org.gaelyk'

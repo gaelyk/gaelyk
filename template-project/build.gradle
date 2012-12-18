@@ -33,7 +33,7 @@ gaelykPrecompileTemplate.runtimeClasspath += project.configurations.precompile
 */
 
 dependencies {
-    def gaeVersion = '1.7.3'
+    def gaeVersion = '1.7.4'
     def groovyVersion = '2.0.5'
     groovy "org.codehaus.groovy:groovy-all:${groovyVersion}" 
 //    precompile "org.codehaus.groovy:groovy-ant:${groovyVersion}"     

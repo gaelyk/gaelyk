@@ -313,7 +313,7 @@ class DatastoreExtensions {
      */
     @CompileStatic
     static Transaction withTransaction(DatastoreService service, Closure c) {
-        return withTransaction(service, false, c);
+        return withTransaction(service, false, c)
     }
     
     /**
@@ -332,7 +332,7 @@ class DatastoreExtensions {
      */
     @CompileStatic
     static Transaction withTransaction(DatastoreService service, boolean crossGroup, Closure c) {
-                def opts = crossGroup ? TOB.withXG(true) : TOB.withDefaults()
+        def opts = crossGroup ? TOB.withXG(true) : TOB.withDefaults()
         Transaction transaction = service.beginTransaction(opts)
         try {
             // pass the transaction as single parameter of the closure
@@ -363,7 +363,27 @@ class DatastoreExtensions {
      */
     @CompileStatic
     static Future<Transaction> withTransaction(AsyncDatastoreService service, Closure c) {
-        Future<Transaction> transaction = service.beginTransaction()
+        return withTransaction(service, false, c)
+    }
+
+    /**
+     * With this method, transaction handling is done transparently.
+     * The transaction is committed if the closure executed properly.
+     * The transaction is rollbacked if anything went wrong.
+         * If you want to use cross-group transactions, pass {@literal true}
+         * as an argument.
+         * <p />
+     * You can use this method as follows:
+     * <code>
+     * datastore.withTransaction(true) { transactionFuture ->
+     *     // do something in that transaction
+     * }
+     * </code>
+     */
+    @CompileStatic
+    static Future<Transaction> withTransaction(AsyncDatastoreService service, boolean crossGroup, Closure c) {
+        def opts = crossGroup ? TOB.withXG(true) : TOB.withDefaults()
+        Future<Transaction> transaction = service.beginTransaction(opts)
         try {
             // pass the transaction as single parameter of the closure
             c(transaction)

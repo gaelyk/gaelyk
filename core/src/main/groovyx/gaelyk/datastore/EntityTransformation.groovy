@@ -112,7 +112,7 @@ class EntityTransformation implements ASTTransformation {
         )
 
         BlockStatement setKeyBlock = new BlockStatement()
-        setKeyBlock.addStatement(new ExpressionStatement(new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingKeyProperty.name), new VariableExpression(existingKeyProperty.name, existingKeyProperty.type)))))
+        setKeyBlock.addStatement(new ExpressionStatement(new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingKeyProperty.name), new VariableExpression(existingKeyProperty)))))
 
         parent.addMethod new MethodNode(
                 'set$key',

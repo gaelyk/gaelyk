@@ -100,7 +100,7 @@ class EntityTransformation implements ASTTransformation {
         }
 
         BlockStatement getKeyBlock = new BlockStatement()
-        getKeyBlock.addStatement(new ExpressionStatement(new VariableExpression(existingKeyProperty.name, existingKeyProperty.type)))
+        getKeyBlock.addStatement(new ExpressionStatement(new VariableExpression(existingKeyProperty)))
 
         parent.addMethod new MethodNode(
                 'get$key',
@@ -145,12 +145,17 @@ class EntityTransformation implements ASTTransformation {
     private MethodNode addStaticDelegatedMethod(ClassNode parent, String name, Map<String, Class> parameters, ClassNode returnType = ClassHelper.DYNAMIC_TYPE) {
         def helper = ClassHelper.makeWithoutCaching(EntityTransformationHelper).plainNodeReference
 
+        def methodParams = parameters.collect { String n, Class cls -> new Parameter(ClassHelper.makeWithoutCaching(cls).plainNodeReference, n)}
+        def variables = methodParams.collect {
+           new VariableExpression(it)
+        }
+        
         BlockStatement block = new BlockStatement()
         block.addStatement(new ReturnStatement(new MethodCallExpression(
                 new ClassExpression(helper), name,
                 new ArgumentListExpression(
                         new ClassExpression(parent),
-                        * parameters.collect { String n, Class cls -> new VariableExpression(n)}
+                        * variables
                 ))))
 
         new MethodNode(

@@ -24,6 +24,7 @@ class EntityTransformationSpec extends Specification {
     def "Save and delete works"(){
         def obj = newShell().evaluate '''
             @groovyx.gaelyk.datastore.Entity
+            @groovy.transform.CompileStatic
             class MyPogo {}
 
             new MyPogo()
@@ -42,7 +43,7 @@ class EntityTransformationSpec extends Specification {
         key
         key.kind == 'MyPogo'
         key.get()
-        obj.getClass().getMethod('get', Object).invoke(null, key.id)
+        obj.getClass().getMethod('get', long).invoke(null, key.id)
         obj.getClass().getMethod('count').invoke(null) == 1
         obj.id == key.id
 
@@ -53,23 +54,6 @@ class EntityTransformationSpec extends Specification {
 
         then:
         thrown(EntityNotFoundException)
-
-        where:
-        cls << [
-                ''' @groovyx.gaelyk.datastore.Entity
-                    class MyPogo {}
-
-                    new MyPogo()''',
-                ''' @groovyx.gaelyk.datastore.Entity
-                    class MyPogo { @groovyx.gaelyk.datastore.Key long id }
-
-                    new MyPogo()''',
-                ''' @groovyx.gaelyk.datastore.Entity
-                    class MyPogo { @groovyx.gaelyk.datastore.Key String id }
-
-                    new MyPogo(id: 'Test')'''
-        ]
-
     }
 
     def "Delete by key works"(){
@@ -87,7 +71,7 @@ class EntityTransformationSpec extends Specification {
         obj.count() == 1
 
         when:
-        obj.getClass().getMethod('delete', Object).invoke(null, key.id)
+        obj.getClass().getMethod('delete', long).invoke(null, key.id)
 
         then:
         obj.count() == 0

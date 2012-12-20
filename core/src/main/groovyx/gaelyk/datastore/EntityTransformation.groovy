@@ -38,6 +38,7 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
+import org.codehaus.groovy.syntax.SyntaxException;
 import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
@@ -53,11 +54,11 @@ class EntityTransformation implements ASTTransformation {
 
         AnnotationNode anno = (AnnotationNode) nodes[0]
         ClassNode parent = (ClassNode) nodes[1]
-        handleKey(parent, source)
+        ClassNode keyType = handleKey(parent, source)
         parent.addMethod(addDelegatedMethod('save', ClassHelper.makeWithoutCaching(Key).plainNodeReference))
         parent.addMethod(addDelegatedMethod('delete'))
-        parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: Object], parent.plainNodeReference))
-        parent.addMethod(addStaticDelegatedMethod(parent, "delete", [key: Object]))
+        parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: keyType], parent.plainNodeReference))
+        parent.addMethod(addStaticDelegatedMethod(parent, "delete", [key: keyType]))
         parent.addMethod(addStaticDelegatedMethod(parent, "find", [key: Closure], parent.plainNodeReference))
         parent.addMethod(addStaticDelegatedMethod(parent, "count", [:], ClassHelper.int_TYPE))
         parent.addMethod(addStaticDelegatedMethod(parent, "count", [query: Closure], ClassHelper.int_TYPE))
@@ -84,13 +85,18 @@ class EntityTransformation implements ASTTransformation {
         return pogoListNode
     }
 
-    private handleKey(ClassNode parent, SourceUnit source) {
+    private ClassNode handleKey(ClassNode parent, SourceUnit source) {
         ClassNode keyAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Key)
 
         PropertyNode existingKeyProperty = parent.properties.find { PropertyNode prop ->
             prop.field.annotations.any { AnnotationNode anno ->
                 anno.classNode == keyAnnoClassNode
             }
+        }
+        
+        if(existingKeyProperty && !(existingKeyProperty.type in [ClassHelper.long_TYPE, ClassHelper.STRING_TYPE])){
+            source.addError(new SyntaxException("Only long or String are allowed as a key properties!", existingKeyProperty.lineNumber, existingKeyProperty.columnNumber))
+            return
         }
 
         if (!existingKeyProperty) {
@@ -111,8 +117,9 @@ class EntityTransformation implements ASTTransformation {
                 getKeyBlock
         )
 
+        def mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingKeyProperty.name), new VariableExpression(existingKeyProperty)))
         BlockStatement setKeyBlock = new BlockStatement()
-        setKeyBlock.addStatement(new ExpressionStatement(new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingKeyProperty.name), new VariableExpression(existingKeyProperty)))))
+        setKeyBlock.addStatement(new ExpressionStatement(mce))
 
         parent.addMethod new MethodNode(
                 'set$key',
@@ -122,6 +129,7 @@ class EntityTransformation implements ASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
         )
+        existingKeyProperty.type
     }
 
     private MethodNode addDelegatedMethod(String name, ClassNode returnType = ClassHelper.DYNAMIC_TYPE) {
@@ -145,7 +153,11 @@ class EntityTransformation implements ASTTransformation {
     private MethodNode addStaticDelegatedMethod(ClassNode parent, String name, Map<String, Class> parameters, ClassNode returnType = ClassHelper.DYNAMIC_TYPE) {
         def helper = ClassHelper.makeWithoutCaching(EntityTransformationHelper).plainNodeReference
 
-        def methodParams = parameters.collect { String n, Class cls -> new Parameter(ClassHelper.makeWithoutCaching(cls).plainNodeReference, n)}
+        def methodParams = parameters.collect { String n, cls -> 
+            ClassNode clsNode = cls instanceof ClassNode ? cls : ClassHelper.makeWithoutCaching(cls)
+            new Parameter(clsNode.plainNodeReference, n)
+         
+        }
         def variables = methodParams.collect {
            new VariableExpression(it)
         }
@@ -162,7 +174,7 @@ class EntityTransformation implements ASTTransformation {
                 name,
                 Modifier.PUBLIC | Modifier.STATIC,
                 returnType,
-                parameters.collect { String n, Class cls -> new Parameter(ClassHelper.makeWithoutCaching(cls).plainNodeReference, n)} as Parameter[],
+                methodParams as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 block
         )

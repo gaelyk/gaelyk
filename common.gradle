@@ -1,4 +1,4 @@
-ext.gaelykGroovyVersion = '2.0.5'
+ext.gaelykGroovyVersion = '2.0.6-SNAPSHOT'
 ext.gaelykSpockVersion = '0.7-groovy-2.0'
 ext.gaelykAppEngineVersion = '1.7.3'
 ext.gaelykLatestVersion = '2.0-SNAPSHOT'
@@ -13,7 +13,7 @@ repositories {
     maven { // for Spock Groovy 2.0 Support
         url "http://oss.sonatype.org/content/repositories/snapshots/"
     }
-    maven { // for Groovy 2.0.2 Snapshots
+    maven { // for Groovy Snapshots
         url "http://snapshots.repository.codehaus.org/"
     }
 }

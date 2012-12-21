@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.routes;
+package groovyx.grout.routes;
 
 /**
  * A routing rule represents the forward or redirect part of a rule definition.

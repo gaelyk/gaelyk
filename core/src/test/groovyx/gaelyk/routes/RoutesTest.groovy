@@ -16,8 +16,8 @@
 package groovyx.gaelyk.routes
 
 import static groovyx.gaelyk.TestUtil.request as r
-import groovyx.routes.HttpMethod;
-import groovyx.routes.RedirectionType;
+import groovyx.grout.routes.HttpMethod;
+import groovyx.grout.routes.RedirectionType;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig

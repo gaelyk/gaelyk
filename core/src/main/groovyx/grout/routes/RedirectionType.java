@@ -13,26 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.servlet.plugins;
-
-import groovy.lang.Binding;
+package groovyx.grout.routes;
 
 /**
- * Implementation of a lazy binding which returns a String
- * representing the name of a variable that was not bound
- *
+ * Type of redirection for the URL rewriting: either "redirect" or "forward" to a new location.
+ * 
  * @author Guillaume Laforge
  */
-class LazyBinding extends Binding {
-    
-    /**
-     * @return the name of the variable if not present in the binding
-     */
-    public Object getVariable(String name) {
-        try {
-            return super.getVariable(name);
-        } catch (Exception any) {
-            return name;
-        }
-    }
+public enum RedirectionType {
+    REDIRECT, REDIRECT301, FORWARD
 }

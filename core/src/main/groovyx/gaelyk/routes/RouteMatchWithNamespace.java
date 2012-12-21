@@ -1,6 +1,6 @@
 package groovyx.gaelyk.routes;
 
-import groovyx.routes.RouteMatch;
+import groovyx.grout.routes.RouteMatch;
 
 /**
  * Route match with name space capabilities.

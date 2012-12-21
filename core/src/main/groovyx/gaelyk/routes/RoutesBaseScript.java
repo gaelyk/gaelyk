@@ -16,8 +16,8 @@
 package groovyx.gaelyk.routes;
 
 import groovy.lang.Closure;
-import groovyx.routes.HttpMethod;
-import groovyx.routes.RedirectionType;
+import groovyx.grout.routes.HttpMethod;
+import groovyx.grout.routes.RedirectionType;
 
 import java.util.Map;
 
@@ -27,10 +27,10 @@ import java.util.Map;
  * @author Guillaume Laforge
  * @author Vladimir Orany
  */
-public abstract class RoutesBaseScript extends groovyx.routes.RoutesBaseScript {
+public abstract class RoutesBaseScript extends groovyx.grout.routes.RoutesBaseScript {
 
     public void email  (Map<String, Object> m) {
-        addRoute(new Route(new groovyx.routes.Route("/_ah/mail/*", createRoutingRule(m.get("to")), HttpMethod.POST,  RedirectionType.FORWARD, null, false), null, 0, true, false));
+        addRoute(new Route(new groovyx.grout.routes.Route("/_ah/mail/*", createRoutingRule(m.get("to")), HttpMethod.POST,  RedirectionType.FORWARD, null, false), null, 0, true, false));
     }
     
     public void jabber(Map<String, Object> m){
@@ -39,16 +39,16 @@ public abstract class RoutesBaseScript extends groovyx.routes.RoutesBaseScript {
 
     public void jabber(Map<String, Object> m, String type) {
         if (type == "subscription") {
-            addRoute(new Route(new groovyx.routes.Route("/_ah/xmpp/subscription/@value/", createRoutingRule(m.get("to") + "?value=@value"), HttpMethod.POST,  RedirectionType.FORWARD, null, false), null, 0, false, true));
+            addRoute(new Route(new groovyx.grout.routes.Route("/_ah/xmpp/subscription/@value/", createRoutingRule(m.get("to") + "?value=@value"), HttpMethod.POST,  RedirectionType.FORWARD, null, false), null, 0, false, true));
         } else if (type == "presence") {
-            addRoute(new Route(new groovyx.routes.Route("/_ah/xmpp/presence/@value/", createRoutingRule(m.get("to") + "?value=@value"), HttpMethod.POST,  RedirectionType.FORWARD, null, false), null, 0, false, true));
+            addRoute(new Route(new groovyx.grout.routes.Route("/_ah/xmpp/presence/@value/", createRoutingRule(m.get("to") + "?value=@value"), HttpMethod.POST,  RedirectionType.FORWARD, null, false), null, 0, false, true));
         } else {
-            addRoute(new Route(new groovyx.routes.Route("/_ah/xmpp/message/chat/", createRoutingRule(m.get("to")), HttpMethod.POST,  RedirectionType.FORWARD, null, false), null, 0, false, true));
+            addRoute(new Route(new groovyx.grout.routes.Route("/_ah/xmpp/message/chat/", createRoutingRule(m.get("to")), HttpMethod.POST,  RedirectionType.FORWARD, null, false), null, 0, false, true));
         }
     }
     
     @Override
-    protected groovyx.routes.Route createRoute(Map<String, Object> m, String route, Object destination, HttpMethod method) {
+    protected groovyx.grout.routes.Route createRoute(Map<String, Object> m, String route, Object destination, HttpMethod method) {
         return new Route(super.createRoute(m, route, destination, method), (Closure<?>) m.get("namespace") , getCacheExpiration(m.get("cache")), false, false);
     }
 
@@ -60,7 +60,7 @@ public abstract class RoutesBaseScript extends groovyx.routes.RoutesBaseScript {
     }
     
     @Override
-    protected groovyx.routes.RoutingRule createRoutingRule(Object destination) {
+    protected groovyx.grout.routes.RoutingRule createRoutingRule(Object destination) {
         if(destination == null || destination instanceof String){
             return super.createRoutingRule(destination);
         }            

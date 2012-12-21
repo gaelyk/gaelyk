@@ -22,7 +22,7 @@ import groovyx.gaelyk.GaelykBindingEnhancer
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
 import groovyx.gaelyk.logging.GroovyLogger
-import groovyx.servlet.plugins.LazyBinding;
+import groovyx.grout.plugins.LazyBinding;
 
 /**
  * Configure the installed plugins.

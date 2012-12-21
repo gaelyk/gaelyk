@@ -12,8 +12,8 @@ import javax.servlet.ServletResponse
 import javax.servlet.ServletRequest
 
 import groovyx.gaelyk.cache.CachedResponse.CustomServletOutputStream
-import groovyx.routes.HttpMethod;
-import groovyx.routes.RedirectionType;
+import groovyx.grout.routes.HttpMethod;
+import groovyx.grout.routes.RedirectionType;
 
 /**
  * Cache handler tests

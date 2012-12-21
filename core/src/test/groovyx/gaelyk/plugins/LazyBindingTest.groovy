@@ -1,6 +1,6 @@
 package groovyx.gaelyk.plugins
 
-import groovyx.servlet.plugins.LazyBinding;
+import groovyx.grout.plugins.LazyBinding;
 
 /**
  * Test for the lazy binding used by the plugin mechanism

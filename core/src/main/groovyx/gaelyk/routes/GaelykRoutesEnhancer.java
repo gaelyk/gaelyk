@@ -2,7 +2,7 @@ package groovyx.gaelyk.routes;
 
 import groovy.lang.Binding;
 import groovyx.gaelyk.GaelykBindingEnhancer;
-import groovyx.routes.RoutesScriptBindingEnhancer;
+import groovyx.grout.routes.RoutesScriptBindingEnhancer;
 
 /**
  * Enhances routes script with Gaelyk specific binding.

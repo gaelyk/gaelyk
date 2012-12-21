@@ -16,7 +16,7 @@
 package groovyx.gaelyk.routes;
 
 import groovyx.gaelyk.cache.CacheHandler;
-import groovyx.routes.RouteMatch;
+import groovyx.grout.routes.RouteMatch;
 
 import java.io.IOException;
 
@@ -40,7 +40,7 @@ import com.google.appengine.api.utils.SystemProperty;
  *
  * @author Guillaume Laforge
  */
-public class RoutesFilter extends groovyx.routes.RoutesFilter {
+public class RoutesFilter extends groovyx.grout.routes.RoutesFilter {
 
     // this class is nearly compilable as java file, only PluginsHandler
     // instance is not recognized for some reason
@@ -61,7 +61,7 @@ public class RoutesFilter extends groovyx.routes.RoutesFilter {
     }
     
     @Override
-    protected void handleForward(final RouteMatch result, final groovyx.routes.Route route, 
+    protected void handleForward(final RouteMatch result, final groovyx.grout.routes.Route route, 
             final HttpServletRequest request, final HttpServletResponse response) 
                     throws ServletException, IOException {
         if(!(route instanceof Route)){

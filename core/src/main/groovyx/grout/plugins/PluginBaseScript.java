@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.servlet.plugins;
+package groovyx.grout.plugins;
 
 import groovy.lang.Closure;
 import groovy.lang.Script;
-import groovyx.routes.Route;
-import groovyx.routes.RoutesBaseScript;
+import groovyx.grout.routes.Route;
+import groovyx.grout.routes.RoutesBaseScript;
 
 import java.util.LinkedHashMap;
 import java.util.List;

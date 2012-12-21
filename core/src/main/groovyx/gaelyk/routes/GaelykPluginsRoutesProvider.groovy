@@ -1,7 +1,7 @@
 package groovyx.gaelyk.routes
 
 import groovyx.gaelyk.plugins.PluginsHandler
-import groovyx.routes.RoutesProvider;
+import groovyx.grout.routes.RoutesProvider;
 
 /**
  * Provides Gaelyk plugin routes.
@@ -9,7 +9,7 @@ import groovyx.routes.RoutesProvider;
  */
 class GaelykPluginsRoutesProvider implements RoutesProvider{
 
-    List<groovyx.routes.Route> getRoutes(){
+    List<groovyx.grout.routes.Route> getRoutes(){
         PluginsHandler.instance.routes
     }
     

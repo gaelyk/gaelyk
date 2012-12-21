@@ -33,7 +33,7 @@ import com.google.appengine.api.capabilities.CapabilitiesServiceFactory;
  *
  * @author Guillaume Laforge
  */
-public class RoutingRule extends groovyx.routes.RoutingRule {
+public class RoutingRule extends groovyx.grout.routes.RoutingRule {
     
     
     RoutingRule(String defaultDestination){

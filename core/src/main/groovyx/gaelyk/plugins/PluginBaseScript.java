@@ -15,7 +15,7 @@
  */
 package groovyx.gaelyk.plugins;
 
-import groovyx.routes.RoutesBaseScript;
+import groovyx.grout.routes.RoutesBaseScript;
 
 
 /**
@@ -23,7 +23,7 @@ import groovyx.routes.RoutesBaseScript;
  *
  * @author Guillaume Laforge
  */
-public abstract class PluginBaseScript extends groovyx.servlet.plugins.PluginBaseScript {
+public abstract class PluginBaseScript extends groovyx.grout.plugins.PluginBaseScript {
 
     
     @Override protected RoutesBaseScript createRoutesScript() {

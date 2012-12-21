@@ -1,4 +1,4 @@
-package groovyx.routes;
+package groovyx.grout.routes;
 
 import groovy.lang.Binding;
 

@@ -1,6 +1,6 @@
 package groovyx.gaelyk.routes
 
-import groovyx.routes.OptionalRoutesHelper;
+import groovyx.grout.routes.OptionalRoutesHelper;
 import spock.lang.Specification
 import spock.lang.Unroll
 

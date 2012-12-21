@@ -18,9 +18,9 @@ package groovyx.gaelyk.routes;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovyx.gaelyk.GaelykBindingEnhancer;
-import groovyx.routes.HttpMethod;
-import groovyx.routes.RedirectionType;
-import groovyx.routes.RouteMatch;
+import groovyx.grout.routes.HttpMethod;
+import groovyx.grout.routes.RedirectionType;
+import groovyx.grout.routes.RouteMatch;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Guillaume Laforge
  * @author Vladimir Orany
  */
-public class Route extends groovyx.routes.Route {
+public class Route extends groovyx.grout.routes.Route {
 
     /** Closure defining a namespace for the scope of the request */
     private final Closure<?> namespace;
@@ -47,7 +47,7 @@ public class Route extends groovyx.routes.Route {
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
      * and a closure for validating the variables against regular expression patterns.
      */
-    public Route(groovyx.routes.Route original, Closure<?> namespace, int cacheExpiration, boolean email, boolean jabber) {
+    public Route(groovyx.grout.routes.Route original, Closure<?> namespace, int cacheExpiration, boolean email, boolean jabber) {
         super(original);
         this.namespace = namespace;
         this.cacheExpiration = cacheExpiration;
@@ -59,14 +59,14 @@ public class Route extends groovyx.routes.Route {
      * Simple forwarding rule for all methods.
      */
     public Route(String route, String destination){
-        this(new groovyx.routes.Route(route, destination));
+        this(new groovyx.grout.routes.Route(route, destination));
     }
     
     /**
      * Simple forwarding rule for all methods.
      */
     public Route(String route, Closure<?> destination){
-        this(new groovyx.routes.Route(route, RoutingRuleBuilder.buildRoutingRule(destination)));
+        this(new groovyx.grout.routes.Route(route, RoutingRuleBuilder.buildRoutingRule(destination)));
     }
     
     /**
@@ -76,7 +76,7 @@ public class Route extends groovyx.routes.Route {
             RedirectionType redirectionType, Closure<?> validator,
             Closure<?> namespace, int cacheExpiration, boolean ignore,
             boolean email, boolean jabber){
-        this(new groovyx.routes.Route(route, new RoutingRule(destination), method, redirectionType, validator, ignore), namespace, cacheExpiration, email, jabber);
+        this(new groovyx.grout.routes.Route(route, new RoutingRule(destination), method, redirectionType, validator, ignore), namespace, cacheExpiration, email, jabber);
     }
     
     /**
@@ -86,7 +86,7 @@ public class Route extends groovyx.routes.Route {
             RedirectionType redirectionType, Closure<?> validator,
             Closure<?> namespace, int cacheExpiration, boolean ignore,
             boolean email, boolean jabber){
-        this(new groovyx.routes.Route(route, RoutingRuleBuilder.buildRoutingRule(destination), method, redirectionType, validator, ignore), namespace, cacheExpiration, email, jabber);
+        this(new groovyx.grout.routes.Route(route, RoutingRuleBuilder.buildRoutingRule(destination), method, redirectionType, validator, ignore), namespace, cacheExpiration, email, jabber);
     }
     
     /**
@@ -95,7 +95,7 @@ public class Route extends groovyx.routes.Route {
     public Route(String route, String destination, HttpMethod method,
             RedirectionType redirectionType, Closure<?> validator,
             Closure<?> namespace, int cacheExpiration){
-        this(new groovyx.routes.Route(route, new RoutingRule(destination), method, redirectionType, validator, false), namespace, cacheExpiration, false, false);
+        this(new groovyx.grout.routes.Route(route, new RoutingRule(destination), method, redirectionType, validator, false), namespace, cacheExpiration, false, false);
     }
     
     /**
@@ -104,14 +104,14 @@ public class Route extends groovyx.routes.Route {
     public Route(String route, Closure<?> destination, HttpMethod method,
             RedirectionType redirectionType, Closure<?> validator,
             Closure<?> namespace, int cacheExpiration){
-        this(new groovyx.routes.Route(route, RoutingRuleBuilder.buildRoutingRule(destination), method, redirectionType, validator, false), namespace, cacheExpiration, false, false);
+        this(new groovyx.grout.routes.Route(route, RoutingRuleBuilder.buildRoutingRule(destination), method, redirectionType, validator, false), namespace, cacheExpiration, false, false);
     }
     
     /**
      * Creates route wrapping original route.
      * @param original route wrapping original route
      */
-    public Route(groovyx.routes.Route original){
+    public Route(groovyx.grout.routes.Route original){
         this(original, null, 0, false, false);
     }
 

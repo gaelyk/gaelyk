@@ -163,6 +163,7 @@ till a new version of <b>Gaelyk</b> is released with the newer paths.
 <p>
 You can use a single and a double star as wildcards in your routes, similarly to the Ant globing patterns.
 A single star matches at least one character up to a slash (<code>/[^\\/]+/</code>), where as a double start matches an arbitrary path.
+To match all files by extension, use <code>/**/*.fileext</code>.
 For instance, if you want to show information about the blog authors,
 you may forward all URLs starting with <code>/author</code> to the same Groovlet:
 </p>
@@ -275,8 +276,13 @@ once the path variable matching is done.
 </p>
 
 <blockquote>
-<b>Note: </b> If you want to have optional path variables, you should define as many routes as options.
-So you would define the following routes to display all the articles published on some year, month, or day:
+<b>Note: </b> If you want to have optional path variables, you can append questionmark <code>?</code> to the end of the path variable.
+
+<pre class="brush:groovy">
+    get "/article/@year?/@month?/@day?/@title?", forward: "/article.groovy"
+</pre>
+
+The definition above is the same like if you write following routes to display all the articles published on some year, month, or day:
 <pre class="brush:groovy">
     get "/article/@year/@month/@day/@title", forward: "/article.groovy?year=@year&month=@month&day=@day&title=@title"
     get "/article/@year/@month/@day",        forward: "/article.groovy?year=@year&month=@month&day=@day"
@@ -284,6 +290,27 @@ So you would define the following routes to display all the articles published o
     get "/article/@year",                    forward: "/article.groovy?year=@year"
     get "/article",                          forward: "/article.groovy"
 </pre>
+
+If you want to create <em>sticky</em> optional variable at the end of the route, use distinguished prefix such as <code>page-</code> in
+following example.
+
+<pre class="brush:groovy">
+    get "/article/@category?/@subcategory?/page-@page?", forward: "/article.groovy"
+</pre>
+
+This will produce following routes:
+
+<pre class="brush:groovy">
+    get "/article/@category/@subcategory/page-@page", forward: "/article.groovy?page=@page&subcategory=@subcategory&category=@category"
+    get "/article/@category/page-@page",              forward: "/article.groovy?page=@page&category=@category"
+    get "/article/page-@page",                        forward: "/article.groovy?page=@page"
+    get "/article/@category/@subcategory",            forward: "/article.groovy?subcategory=@subcategory&category=@category"
+    get "/article/@category",                         forward: "/article.groovy?category=@category"
+    get "/article",                                   forward: "/article.groovy"
+</pre>
+Optinonal parameters currently only works for destinations defined as String.
+</blockquote>
+<blockquote>
 Also, note that routes are matched in order of appearance.
 So if you have several routes which map an incoming request URI, the first one encountered in the route definition file will win.
 </blockquote>

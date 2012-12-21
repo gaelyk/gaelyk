@@ -19,12 +19,13 @@ import groovy.transform.CompileStatic
 import com.google.appengine.api.search.SearchService
 import com.google.appengine.api.search.SearchServiceFactory
 import com.google.appengine.api.search.Index
-import com.google.appengine.api.search.Consistency
 import com.google.appengine.api.search.IndexSpec
 import com.google.appengine.api.search.AddResponse
+import com.google.appengine.api.search.PutResponse
 import groovyx.gaelyk.search.DocumentDefinitions
 import com.google.appengine.api.search.Document
 import com.google.appengine.api.search.Field
+import java.util.concurrent.Future
 
 /**
  * Search service method extensions
@@ -51,17 +52,16 @@ class SearchExtensions {
     /**
      * Shortcut notation to easily get an index from the search service.
      * <pre><code>
-     *     def index = search.index("books", Consistency.PER_DOCUMENT)
+     *     def index = search.index("books")
      * </code></pre>
      *
      * @param search the search service
      * @param indexName the name of the index
-     * @param consistency the consistency
      * @return an index
      */
     @CompileStatic
-    static Index index(SearchService search, String indexName, Consistency consistency) {
-        search.getIndex(IndexSpec.newBuilder().setName(indexName).setConsistency(consistency).build())
+    static Index index(SearchService search, String indexName) {
+        search.getIndex(IndexSpec.newBuilder().setName(indexName).build())
     }
 
     /**
@@ -91,6 +91,7 @@ class SearchExtensions {
      * @param closure the closure defining the documents to be added to the index
      * @return an instance of AddResponse
      */
+    @Deprecated
     @CompileStatic
     static AddResponse add(Index index, Closure closure) {
         def docDefClosure = (Closure)closure.clone()
@@ -100,7 +101,83 @@ class SearchExtensions {
         docDefClosure()
 
         index.add(definitions.docs)
-    }
+    }    
+    
+    /**
+     * Put a new document to the index.
+     *
+     * <pre><code>
+     *     index.put {
+     *         document(id: "1234", locale: US, rank: 3) {
+     *             title text: "Big bad wolf", locale: ENGLISH
+     *             published date: new Date()
+     *             numberOfCopies number: 35
+     *             summary html: "<p>super story</p>", locale: ENGLISH
+     *             description text: "a book for children"
+     *             category atom: "children"
+     *             keyword text: "wolf"
+     *             keyword text: "red hook"
+     *         }
+     *     }
+     * </code></pre>
+     *
+     * The named arguments are restricted to id, locale and rank.
+     * The calls inside the closure correspond to the field name, its type thanks to a named argument
+     * of the form <code>type: value</code>, and optionally a locale.
+     * You can have several times the same field name, for multi-valued fields.
+     *
+     * @param index the index to which to put the documents
+     * @param closure the closure defining the documents to be added to the index
+     * @return an instance of PutResponse
+     */
+    @CompileStatic
+    static PutResponse put(Index index, Closure closure) {
+        def docDefClosure = (Closure)closure.clone()
+        docDefClosure.resolveStrategy = Closure.DELEGATE_FIRST
+        def definitions = new DocumentDefinitions()
+        docDefClosure.delegate = definitions
+        docDefClosure()
+
+        index.put(definitions.docs)
+    }    
+    
+    /**
+     * Put a new document to the index.
+     *
+     * <pre><code>
+     *     index.putAsync {
+     *         document(id: "1234", locale: US, rank: 3) {
+     *             title text: "Big bad wolf", locale: ENGLISH
+     *             published date: new Date()
+     *             numberOfCopies number: 35
+     *             summary html: "<p>super story</p>", locale: ENGLISH
+     *             description text: "a book for children"
+     *             category atom: "children"
+     *             keyword text: "wolf"
+     *             keyword text: "red hook"
+     *         }
+     *     }
+     * </code></pre>
+     *
+     * The named arguments are restricted to id, locale and rank.
+     * The calls inside the closure correspond to the field name, its type thanks to a named argument
+     * of the form <code>type: value</code>, and optionally a locale.
+     * You can have several times the same field name, for multi-valued fields.
+     *
+     * @param index the index to which to put the documents
+     * @param closure the closure defining the documents to be added to the index
+     * @return an instance of PutResponse
+     */
+    @CompileStatic
+    static Future<PutResponse> putAsync(Index index, Closure closure) {
+        def docDefClosure = (Closure)closure.clone()
+        docDefClosure.resolveStrategy = Closure.DELEGATE_FIRST
+        def definitions = new DocumentDefinitions()
+        docDefClosure.delegate = definitions
+        docDefClosure()
+
+        index.putAsync(definitions.docs)
+    }    
 
     /**
      * Get a document field raw value or list of raw values.
@@ -119,7 +196,7 @@ class SearchExtensions {
 
         switch (fields.size()) {
             case 0:
-                throw new GroovyRuntimeException("No such field '$fieldName' for document '$document'")
+                return null
             case 1:
                 return getFieldRawValue(fields[0])
             default:

@@ -1,13 +1,5 @@
 apply from: '../common.gradle'
 
-/**
- * http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
- */
-ext.codenarcPriority1Violations = 0     // Work
-ext.codenarcPriority2Violations = 300   // in
-ext.codenarcPriority3Violations = 999   // progress ..
-apply from: '../common-codenarc-ci.gradle'
-
 apply plugin: 'maven'
 
 defaultTasks 'clean', 'codenarc', 'build'
@@ -47,13 +39,17 @@ sourceSets {
 dependencies {
     def groovyVersion = ext.gaelykGroovyVersion
     // groovy eclipse + spock bug - only 2.0.4 available in this moment
-    if(project.hasProperty('groovyEclipseCompilerVersion')){
+    if(project.hasProperty('groovyEclipseCompilerVersion')) {
         groovyVersion = groovyEclipseCompilerVersion
     }
-    groovy "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    
+    groovy "org.codehaus.groovy:groovy-all:$groovyVersion", {
+        force = true
+    }
     compile "com.google.appengine:appengine-api-1.0-sdk:${ext.gaelykAppEngineVersion}"
     compile "com.google.appengine:appengine-api-labs:${ext.gaelykAppEngineVersion}"
     compile 'javax.servlet:servlet-api:2.5'
+//    groovy "org.codehaus.groovy:groovy-test:${ext.gaelykGroovyVersion}" // for tests only   
     testCompile 'javax.servlet.jsp:jsp-api:2.2'
     testCompile 'junit:junit:4.8.2'
     testCompile "com.google.appengine:appengine-testing:${ext.gaelykAppEngineVersion}"

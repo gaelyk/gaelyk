@@ -1,11 +1,10 @@
 package groovyx.gaelyk
 
+import com.google.appengine.api.mail.dev.LocalMailService
 import com.google.appengine.tools.development.testing.LocalMailServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.api.mail.MailServiceFactory
-import java.util.logging.Logger
-import java.util.logging.Filter
-import java.util.logging.LogRecord
+import com.google.apphosting.api.ApiProxy
 
 /**
  * Test the mail service enhancements.
@@ -16,21 +15,13 @@ class MailSupportTest extends GroovyTestCase {
 
     // setup the local environment with a mail service stub
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-            new LocalMailServiceTestConfig().setLogMailBody(true)//.setLogMailLevel(Level.INFO)
+            new LocalMailServiceTestConfig()
     )
-
-    private String logResult = ""
 
     protected void setUp() {
         super.setUp()
         // setting up the local environment
         helper.setUp()
-
-        Logger log = Logger.getLogger("com.google.appengine.api.mail.dev.LocalMailService")
-        log.filter = { LogRecord logRecord ->
-            logResult += logRecord.message + '\n'
-            return false
-        } as Filter
     }
 
     protected void tearDown() {
@@ -48,11 +39,13 @@ class MailSupportTest extends GroovyTestCase {
                 subject: "new message",
                 attachment: [fileName: 'report.csv', data: '1234'.bytes]
 
-        println logResult
+        def stubMailService = (LocalMailService) ApiProxy.delegate.getService(LocalMailService.PACKAGE)
+        def sentMessage = stubMailService.sentMessages[0]
 
-        assert logResult.contains("glaforge@gmail.com")
-        assert logResult.contains("someone@gmail.com")
-        assert logResult.contains("new message")
-        assert logResult.contains("hello you")
+        assert sentMessage.sender == "glaforge@gmail.com"
+        assert sentMessage.getTo(0) == "someone@gmail.com"
+
+        assert sentMessage.textBody == "hello you"
+        assert sentMessage.subject == "new message"
     }
 }

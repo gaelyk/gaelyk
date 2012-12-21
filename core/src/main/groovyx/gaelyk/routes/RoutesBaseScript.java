@@ -48,8 +48,8 @@ public abstract class RoutesBaseScript extends groovyx.routes.RoutesBaseScript {
     }
     
     @Override
-    protected groovyx.routes.Route createRoute(Map<String, Object> m, String route, HttpMethod method) {
-        return new Route(super.createRoute(m, route, method), (Closure<?>) m.get("namespace") , getCacheExpiration(m.get("cache")), false, false);
+    protected groovyx.routes.Route createRoute(Map<String, Object> m, String route, Object destination, HttpMethod method) {
+        return new Route(super.createRoute(m, route, destination, method), (Closure<?>) m.get("namespace") , getCacheExpiration(m.get("cache")), false, false);
     }
 
     private int getCacheExpiration(Object object) {

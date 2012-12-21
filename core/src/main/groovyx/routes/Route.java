@@ -214,6 +214,12 @@ public class Route {
      * Transform a route pattern into a proper regex pattern.
      */
     private static String transformRouteIntoRegex(String route) {
+        if(route.matches("\\/\\*\\*\\/\\*\\.(\\w+)$")){
+            return route.replace("**/*.", ".*\\.") + "$";
+        }
+        if(route.matches("\\/\\*\\*(\\/\\*\\.\\*)?$")){
+            return ".*";
+        }
         return route.replaceAll("\\.", "\\\\.")
                     .replaceAll("\\*\\*", "(?:.+\\/?){0,}")
                     .replaceAll("\\*", "[^\\/]+")

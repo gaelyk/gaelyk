@@ -35,8 +35,8 @@ class GaelykServletContextListener implements ServletContextListener {
      * @param servletContextEvent
      */
     void contextInitialized(ServletContextEvent servletContextEvent) {
-        PluginsHandler.instance.initPlugins()
         verifyGroovyVersion()
+        PluginsHandler.instance.initPlugins()
     }
 
     void contextDestroyed(ServletContextEvent servletContextEvent) {
@@ -55,7 +55,7 @@ class GaelykServletContextListener implements ServletContextListener {
     }
     
     private static boolean verifyGroovyVersionInternal(String version){
-        version ==~ /2\.\d+(\.[\d+])?/
+        version.startsWith('2.')
     }
             
 }

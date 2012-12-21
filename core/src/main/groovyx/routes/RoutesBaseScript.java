@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Base script class used for evaluating the routes.
@@ -49,7 +50,15 @@ public abstract class RoutesBaseScript extends Script {
      * like /_ah/* special URLs.
      */
     protected final void handle(Map<String, Object> m, String route, HttpMethod method) {
-        routes.add(createRoute(m, route, method));
+        Object dest = extractDestination(m);
+        if(dest instanceof String){
+            for(Entry<String, String> e : OptionalRoutesHelper.generateRoutes(route, (String) dest).entrySet()){
+                routes.add(createRoute(m, e.getKey(), e.getValue(), method));            
+            }
+        } else {
+            routes.add(createRoute(m, route, dest, method)); 
+        }
+
     }
     
     /**
@@ -68,21 +77,42 @@ public abstract class RoutesBaseScript extends Script {
      * a definition of a caching duration, and the ability to ignore certain paths
      * like /_ah/* special URLs.
      */
-    protected Route createRoute(Map<String, Object> m, String route, HttpMethod method) {
-        RedirectionType redirectionType =  RedirectionType.REDIRECT;
-        Object destination = m.get("redirect");
-        if(m.containsKey("forward")){
-            redirectionType = RedirectionType.FORWARD;
-            destination = m.get("forward");
-        } else if(m.containsKey("redirect301")){
-            redirectionType = RedirectionType.REDIRECT301;
-            destination = m.get("redirect301");
-        }
-
+    protected Route createRoute(Map<String, Object> m, String route, Object destination, HttpMethod method) {
         Closure<?> validator = (Closure<?>) m.get("validate");
         boolean ignore = m.get("ignore") == Boolean.TRUE;
 
-        return new Route(route, createRoutingRule(destination), method, redirectionType, validator, ignore);
+        return new Route(route, createRoutingRule(destination), method, extractRedirectionType(m), validator, ignore);
+    }
+    /**
+     * Extract redirection type from the route parameters map 
+     * @param m routes parameter map
+     * @return redirection type from routes parameters map
+     */
+    protected RedirectionType extractRedirectionType(Map<String, Object> m) {
+        RedirectionType redirectionType =  RedirectionType.REDIRECT;
+        if(m.containsKey("forward")){
+            redirectionType = RedirectionType.FORWARD;
+        } else if(m.containsKey("redirect301")){
+            redirectionType = RedirectionType.REDIRECT301;
+        }
+        return redirectionType;
+    }
+    
+    /**
+     * Extract destination from the route parameters map
+     * @param m routes parameter map
+     * @return destination from routes parameters map
+     */
+    protected Object extractDestination(Map<String, Object> m) {
+        Object destination = m.get("redirect");
+        if(m.containsKey("forward")){
+            //redirectionType = RedirectionType.FORWARD;
+            destination = m.get("forward");
+        } else if(m.containsKey("redirect301")){
+            //redirectionType = RedirectionType.REDIRECT301;
+            destination = m.get("redirect301");
+        }
+        return destination;
     }
     
     /**

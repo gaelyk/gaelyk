@@ -3,7 +3,7 @@ apply plugin: 'gae-geb'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-def compatibilityVersion = 1.5
+def compatibilityVersion = 1.6
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
@@ -13,7 +13,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.4'
+        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.4.1'
         classpath 'org.gradle.api.plugins:gradle-gae-geb-plugin:0.3'
     }
 }
@@ -23,9 +23,24 @@ repositories {
     mavenLocal()
 }
 
+/*
+configurations {
+    precompile
+}
+
+gaelykPrecompileGroovlet.runtimeClasspath += project.configurations.precompile
+gaelykPrecompileTemplate.runtimeClasspath += project.configurations.precompile
+*/
+
 dependencies {
-    def gaeVersion = '1.7.2'
-    groovy 'org.codehaus.groovy:groovy-all:2.0.4'
+    def gaeVersion = '1.7.4'
+    def groovyVersion = '2.0.5'
+    groovy "org.codehaus.groovy:groovy-all:${groovyVersion}" 
+//    precompile "org.codehaus.groovy:groovy-ant:${groovyVersion}"     
+//    precompile "org.ow2.asm:asm:4.0" 
+//    precompile "commons-cli:commons-cli:1.2"  
+    compile "org.codehaus.groovy:groovy-json:${groovyVersion}"
+    compile "org.codehaus.groovy:groovy-servlet:${groovyVersion}"    
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion"
     compile 'org.gaelyk:gaelyk:2.0-SNAPSHOT'
@@ -38,12 +53,12 @@ dependencies {
     // compile 'org.codehaus.gpars:gpars-appengine:0.1'
     
     testCompile 'org.gaelyk:gaelyk-spock:0.3.0.1'
-    testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion",
-                "com.google.appengine:appengine-testing:$appEngineVersion"
+    testCompile "com.google.appengine:appengine-api-stubs:$gaeVersion",
+                "com.google.appengine:appengine-testing:$gaeVersion"
                 
     functionalTestCompile 'org.codehaus.geb:geb-spock:0.7.0',
                           'org.seleniumhq.selenium:selenium-firefox-driver:2.22.0'
-    gaeSdk "com.google.appengine:appengine-java-sdk:$appEngineVersion"
+    gaeSdk "com.google.appengine:appengine-java-sdk:$gaeVersion"
 }
 
 idea {

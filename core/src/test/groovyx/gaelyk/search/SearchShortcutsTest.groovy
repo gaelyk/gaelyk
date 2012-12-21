@@ -1,13 +1,11 @@
 package groovyx.gaelyk.search
 
 import static java.util.Locale.*
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig
-import com.google.appengine.api.search.SearchServiceFactory
-import static com.google.appengine.api.search.Consistency.*
 
-import static com.google.appengine.api.search.Consistency.PER_DOCUMENT
 import com.google.appengine.api.search.ScoredDocument
+import com.google.appengine.api.search.SearchServiceFactory
+import com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 
 class SearchShortcutsTest extends GroovyTestCase {
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
@@ -27,7 +25,7 @@ class SearchShortcutsTest extends GroovyTestCase {
     void testDocumentBuilding() {
         def search = SearchServiceFactory.searchService
 
-        def index = search.index("books", PER_DOCUMENT)
+        def index = search.index("books")
 
         def response = index.add {
             document(id: "1234", locale: US, rank: 3) {
@@ -39,6 +37,8 @@ class SearchShortcutsTest extends GroovyTestCase {
                 category atom: "children"
                 keyword text: "wolf"
                 keyword text: "red hook"
+                nothing text: null
+                emptyList text: []
             }
         }
 
@@ -58,6 +58,27 @@ class SearchShortcutsTest extends GroovyTestCase {
             assert doc.keyword.size() == 2
             assert "wolf" in doc.keyword
             assert "red hook" in doc.keyword
+            assert !('nothing' in doc.fieldNames)
+            assert !('emptyList' in doc.fieldNames)
+            assert !doc.noSuchField
         }
+    }
+    
+    void testListFieldsChecks() {
+        def search = SearchServiceFactory.searchService
+
+        def index = search.index("books")
+
+        try {
+            def response = index.add {
+                document(id: "1234", locale: US, rank: 3) {
+                    keyword text: ["red hook", "grandma"], locale: [Locale.ENGLISH, Locale.CHINESE]
+                }
+            }
+            fail("Cannot have more than one list parameter in builder!")   
+        } catch(IllegalArgumentException e){
+            assert e.message == ("Cannot have more than one list parameter in builder!")
+        }
+
     }
 }

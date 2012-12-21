@@ -74,7 +74,6 @@ public abstract class PluginBaseScript extends Script {
      */
     public void routes(Closure<?> c) {
         // use the RoutesBaseScript class logic to define the rules
-        c.call();
         Closure<?> clonedClosure = (Closure<?>)c.clone();
 
         // puts the new binding variables into the map directly through closure delegation

@@ -15,17 +15,24 @@
  */
 package groovyx.gaelyk.plugins;
 
-import groovyx.gaelyk.routes.RoutesBaseScript;
-import groovyx.gaelyk.GaelykBindingEnhancer;
-import groovy.transform.CompileStatic;
+import groovyx.routes.RoutesBaseScript;
+
 
 /**
  * Base script class used for evaluating the plugin descriptors.
  *
  * @author Guillaume Laforge
  */
-@CompileStatic
-abstract class PluginBaseScript extends groovyx.servlet.plugins.PluginBaseScript {
+public abstract class PluginBaseScript extends groovyx.servlet.plugins.PluginBaseScript {
 
+    
+    @Override protected RoutesBaseScript createRoutesScript() {
+        return new groovyx.gaelyk.routes.RoutesBaseScript() {
+            @Override public Object run() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+        };
+    }
     
 }

@@ -52,8 +52,8 @@ class CacheHandler {
 
         // should be 
         // def requestURI = RoutesFilter.getIncludeAwareUri(request)
-        def requestURI = request.requestURI
-        def uri = requestURI + (request.queryString ? "?$request.queryString" : "")
+        String requestURI = request.requestURI
+        String uri = requestURI + (request.queryString ? "?$request.queryString" : "")
 
         log.config "Request URI to cache: $uri"
 

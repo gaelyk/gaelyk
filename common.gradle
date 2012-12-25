@@ -1,4 +1,4 @@
-ext.gaelykGroovyVersion = '2.0.6-SNAPSHOT'
+ext.gaelykGroovyVersion = '2.0.6'
 ext.gaelykSpockVersion = '0.7-groovy-2.0'
 ext.gaelykAppEngineVersion = '1.7.3'
 ext.gaelykLatestVersion = '2.0-SNAPSHOT'

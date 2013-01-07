@@ -393,12 +393,14 @@ class DatastoreExtensions {
         } catch (e) {
             // rollback on error
             if (transaction.get().isActive()) {
-                return transaction.get().rollback()
+                try {
+                    transaction.get().rollback()
+                } catch (IllegalArgumentException iae) { }
             }
             // rethrow the exception
             throw e
         }
-        return transaction
+        transaction
     }
 
     /**

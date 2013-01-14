@@ -79,7 +79,7 @@ class GaelykServletTest extends GroovyTestCase {
                     if (p.contains('index'))
                         tempFile.absolutePath
                     else
-                        "."
+                        p
                 },
                 getResource: { String p -> println "getResource($p)"; tempFile.toURL() }
         ] as ServletContext

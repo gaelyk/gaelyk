@@ -81,7 +81,13 @@ class GaelykServletTest extends GroovyTestCase {
                     else
                         p
                 },
-                getResource: { String p -> println "getResource($p)"; tempFile.toURL() }
+                getResource: { String p ->
+                    println "getResource($p)"
+                    if (p.contains('BeanInfo'))
+                        return null
+                    else
+                        tempFile.toURI().toURL()
+                }
         ] as ServletContext
 
         def config = [

@@ -79,9 +79,15 @@ class GaelykServletTest extends GroovyTestCase {
                     if (p.contains('index'))
                         tempFile.absolutePath
                     else
-                        "."
+                        p
                 },
-                getResource: { String p -> println "getResource($p)"; tempFile.toURL() }
+                getResource: { String p ->
+                    println "getResource($p)"
+                    if (p.contains('BeanInfo'))
+                        return null
+                    else
+                        tempFile.toURI().toURL()
+                }
         ] as ServletContext
 
         def config = [

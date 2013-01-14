@@ -48,6 +48,7 @@ class MemcacheExtensionMethodsTest extends GroovyTestCase {
         assert memcache.get("lastname-of-${'Guillaume'}-is") == 'Laforge'
 
         memcache.put("age-of-${name}", 33, Expiration.byDeltaMillis(1000))
+        sleep 100
         assert memcache['age-of-Guillaume'] == 33
 
         assert 'age-of-Guillaume' in memcache

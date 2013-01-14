@@ -1,5 +1,6 @@
 package groovyx.gaelyk
 
+import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.api.memcache.MemcacheServiceFactory
@@ -53,7 +54,7 @@ class ClosureMemoizationTest extends GroovyTestCase {
         def called = 0
         def countEntities = memcache.memoize { String kind ->
             called++
-            datastore.prepare(new Query(kind)).countEntities()
+            datastore.prepare(new Query(kind)).countEntities(FetchOptions.Builder.withDefaults())
         }
 
         def nbPics = countEntities('photo')

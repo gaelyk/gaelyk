@@ -60,6 +60,7 @@ class RoutesFilter implements Filter {
     private String routesFileLocation
     private long lastRoutesFileModification = 0
     private List<Route> routes = []
+    private List<Route> routesFromRoutesFile = []
     private FilterConfig filterConfig
     private GroovyLogger log
 
@@ -70,6 +71,7 @@ class RoutesFilter implements Filter {
         this.log = new GroovyLogger('gaelyk.routesfilter')
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
             routes = new CopyOnWriteArrayList<Route>()
+            routesFromRoutesFile =  new CopyOnWriteArrayList<Route>()
         }
         loadRoutes()
     }
@@ -79,7 +81,7 @@ class RoutesFilter implements Filter {
      */
     synchronized void loadRoutes() {
         log.config "Loading routes configuration"
-
+        routes.clear()
         def routesFile = new File(this.routesFileLocation)
 
         if (routesFile.exists()) {
@@ -105,11 +107,15 @@ class RoutesFilter implements Filter {
 
                 script.run()
 
-                routes.clear()
-                routes.addAll script.routes
+                List<Route> scriptRoutes = script.routes
+                routes.addAll scriptRoutes
+                routesFromRoutesFile.clear()
+                routesFromRoutesFile.addAll scriptRoutes
 
                 // update the last modified flag
                 lastRoutesFileModification = lastModified
+            } else {
+                routes.addAll routesFromRoutesFile
             }
         }
         // add the routes defined by the plugins

@@ -58,6 +58,7 @@ class EntityTransformationSpec extends Specification {
 
     def "Delete by key works"(){
         def obj = newShell().evaluate '''
+                    @groovy.transform.CompileStatic
                     @groovyx.gaelyk.datastore.Entity
                     class MyPogo {}
 
@@ -79,6 +80,7 @@ class EntityTransformationSpec extends Specification {
 
     def "Test find all with closure"(){
         def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
             class MyPogo {
                 @groovyx.gaelyk.datastore.Indexed String test
@@ -103,6 +105,7 @@ class EntityTransformationSpec extends Specification {
 
     def "Test count "(){
         def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
             class MyPogo {
                 @groovyx.gaelyk.datastore.Indexed String test
@@ -126,6 +129,7 @@ class EntityTransformationSpec extends Specification {
 
     def "Test iterate "(){
         def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
             class MyPogo {
                 @groovyx.gaelyk.datastore.Indexed String test
@@ -149,6 +153,7 @@ class EntityTransformationSpec extends Specification {
 
     def "Test find "(){
         def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
             class MyPogo {
                 @groovyx.gaelyk.datastore.Indexed String test
@@ -166,6 +171,7 @@ class EntityTransformationSpec extends Specification {
 
     def "Test key"(){
         def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
             class MyPogo {
                 @groovyx.gaelyk.datastore.Key String name

@@ -93,7 +93,7 @@ class SearchExtensions {
      */
     @Deprecated
     @CompileStatic
-    static AddResponse add(Index index, /*@DelegatesTo(value=DocumentDefinitions, strategy=Closure.DELEGATE_FIRST)*/ Closure closure) {
+    static AddResponse add(Index index, @DelegatesTo(value=DocumentDefinitions, strategy=Closure.DELEGATE_FIRST) Closure closure) {
         def docDefClosure = (Closure)closure.clone()
         docDefClosure.resolveStrategy = Closure.DELEGATE_FIRST
         def definitions = new DocumentDefinitions()

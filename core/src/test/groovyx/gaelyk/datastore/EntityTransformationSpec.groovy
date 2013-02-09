@@ -1,18 +1,19 @@
 package groovyx.gaelyk.datastore
 
+import groovyx.gaelyk.query.QueryDslTransformation
+
 import java.lang.reflect.Field
 
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer
 
-import groovyx.gaelyk.query.QueryDslTransformation
+import spock.lang.Specification
 
 import com.google.appengine.api.datastore.EntityNotFoundException
 import com.google.appengine.api.datastore.Key
+import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-
-import spock.lang.Specification
 
 class EntityTransformationSpec extends Specification {
 
@@ -25,9 +26,9 @@ class EntityTransformationSpec extends Specification {
         def obj = newShell().evaluate '''
             @groovyx.gaelyk.datastore.Entity
             @groovy.transform.CompileStatic
-            class MyPogo {}
+            class MyPogo1 {}
 
-            new MyPogo()
+            new MyPogo1()
         '''
 
         expect:
@@ -41,7 +42,7 @@ class EntityTransformationSpec extends Specification {
 
         then:
         key
-        key.kind == 'MyPogo'
+        key.kind == 'MyPogo1'
         key.get()
         obj.getClass().getMethod('get', long).invoke(null, key.id)
         obj.getClass().getMethod('count').invoke(null) == 1
@@ -60,9 +61,9 @@ class EntityTransformationSpec extends Specification {
         def obj = newShell().evaluate '''
                     @groovy.transform.CompileStatic
                     @groovyx.gaelyk.datastore.Entity
-                    class MyPogo {}
+                    class MyPogo2 {}
 
-                    new MyPogo()
+                    new MyPogo2()
             '''
         when:
         Key key = obj.save()
@@ -82,15 +83,15 @@ class EntityTransformationSpec extends Specification {
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
-            class MyPogo {
+            class MyPogo3 {
                 @groovyx.gaelyk.datastore.Indexed String test
             }
 
-            new MyPogo(test: "foo").save()
-            new MyPogo(test: "foo").save()
-            new MyPogo(test: "bar").save()
+            new MyPogo3(test: "foo").save()
+            new MyPogo3(test: "foo").save()
+            new MyPogo3(test: "bar").save()
 
-            MyPogo.findAll''' + argument
+            MyPogo3.findAll''' + argument
 
         expect:
         obj.size() == result
@@ -107,15 +108,15 @@ class EntityTransformationSpec extends Specification {
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
-            class MyPogo {
+            class MyPogo4 {
                 @groovyx.gaelyk.datastore.Indexed String test
             }
 
-            new MyPogo(test: "foo").save()
-            new MyPogo(test: "foo").save()
-            new MyPogo(test: "bar").save()
+            new MyPogo4(test: "foo").save()
+            new MyPogo4(test: "foo").save()
+            new MyPogo4(test: "bar").save()
 
-            MyPogo.count''' + argument
+            MyPogo4.count''' + argument
 
         expect:
         obj == result
@@ -131,15 +132,15 @@ class EntityTransformationSpec extends Specification {
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
-            class MyPogo {
+            class MyPogo5 {
                 @groovyx.gaelyk.datastore.Indexed String test
             }
 
-            new MyPogo(test: "foo").save()
-            new MyPogo(test: "foo").save()
-            new MyPogo(test: "bar").save()
+            new MyPogo5(test: "foo").save()
+            new MyPogo5(test: "foo").save()
+            new MyPogo5(test: "bar").save()
 
-            MyPogo.iterate''' + argument
+            MyPogo5.iterate''' + argument
 
         expect:
         obj.size() == result
@@ -155,15 +156,15 @@ class EntityTransformationSpec extends Specification {
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
-            class MyPogo {
+            class MyPogo6 {
                 @groovyx.gaelyk.datastore.Indexed String test
             }
 
-            new MyPogo(test: "foo").save()
-            new MyPogo(test: "foo").save()
-            new MyPogo(test: "bar").save()
+            new MyPogo6(test: "foo").save()
+            new MyPogo6(test: "foo").save()
+            new MyPogo6(test: "bar").save()
 
-            MyPogo.find{ where test == "bar" }'''
+            MyPogo6.find{ where test == "bar" }'''
 
         expect:
         obj
@@ -173,16 +174,40 @@ class EntityTransformationSpec extends Specification {
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
-            class MyPogo {
+            class MyPogo7 {
                 @groovyx.gaelyk.datastore.Key String name
                 @groovyx.gaelyk.datastore.Indexed String test
             }
 
-            new MyPogo(name: "name", test: "foo")'''
+            new MyPogo7(name: "name", test: "foo")'''
 
         expect:
         !obj.hasProperty('id')
     }
+	
+	
+	@spock.lang.Ignore
+	def "Test parent"(){
+		def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo8 {
+				@groovyx.gaelyk.datastore.Parent com.google.appengine.api.datastore.Key parent
+                @groovyx.gaelyk.datastore.Key String name
+                @groovyx.gaelyk.datastore.Indexed String test
+            }
+
+			com.google.appengine.api.datastore.Entity myparent = ['MyParent', 'parent']
+			myparent.save()
+
+            def mypogo = new MyPogo8(name: "name", test: "foo", parent: myparent.key)
+			mypogo.save()
+			mypogo
+'''
+
+		expect:
+		obj.parent == KeyFactory.createKey('MyParent', 'parent')
+	}
 
 
     private GroovyShell newShell() {

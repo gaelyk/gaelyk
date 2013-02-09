@@ -95,7 +95,7 @@ class ImageExtensions {
      * @param c the closure containg the various transform steps
      * @return a transformed image
      */
-    static Image transform(Image selfImage, /*@DelegatesTo(value=CompositeTransform, strategy=Closure.DELEGATE_ONLY)*/ Closure c) {
+    static Image transform(Image selfImage, @DelegatesTo(value=CompositeTransform, strategy=Closure.DELEGATE_ONLY) Closure c) {
         Closure clone = c.clone()
         clone.resolveStrategy = Closure.DELEGATE_ONLY
 

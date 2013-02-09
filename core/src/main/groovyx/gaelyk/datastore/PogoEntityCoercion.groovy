@@ -68,8 +68,8 @@ class PogoEntityCoercion {
                 [(k), [
                         ignore:    { isStatic || annos.any { it instanceof Ignore } },
                         unindexed: { isStatic || defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed } },
-                        key:       { !isStatic || annos.any { it instanceof Key } },
-                        version:   { !isStatic || annos.any { it instanceof Version } }
+                        key:       { !isStatic && annos.any { it instanceof Key } },
+                        version:   { !isStatic && annos.any { it instanceof Version } }
                 ]]
             }
         }

@@ -573,7 +573,7 @@ class DatastoreExtensions {
      * @return the results
      */
     @CompileStatic
-    static execute(DatastoreService service, /*@DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST)*/ Closure c) {
+    static execute(DatastoreService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         QueryBuilder builder = prepareAndLaunchQuery(c)
         return builder.execute()
     }
@@ -585,7 +585,7 @@ class DatastoreExtensions {
      * @return the iterator over the results
      */
     @CompileStatic
-    static iterate(DatastoreService service, /*@DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST)*/ Closure c) {
+    static iterate(DatastoreService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         QueryBuilder builder = prepareAndLaunchQuery(c)
         return builder.iterate()
     }

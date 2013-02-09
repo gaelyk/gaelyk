@@ -15,7 +15,10 @@
  */
 package groovyx.gaelyk.datastore
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Map.Entry;
 
 import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
@@ -23,6 +26,7 @@ import com.google.appengine.api.datastore.EntityNotFoundException
 
 import groovy.transform.Canonical;
 import groovy.transform.CompileStatic;
+import groovy.transform.TypeCheckingMode;
 import groovyx.gaelyk.extensions.DatastoreExtensions
 
 /**
@@ -37,6 +41,7 @@ class PogoEntityCoercion {
      * Cached information about annotations present on POGO classes
      */
     private static Map<Class, Map<String, PropertyDescriptor>> cachedProps = [:]
+	
 
     /**
      * Goes through all the properties and finds how they are annotated.
@@ -45,46 +50,56 @@ class PogoEntityCoercion {
      * and whose values are maps of ignore/unindexed/key/value keys and
      * values of closures returning booleans
      */
+	// XXX: if the static compilation is skipped, props[property] = value works good
+	// @CompileStatic(TypeCheckingMode.SKIP)
     static Map<String, PropertyDescriptor> props(Object p) {
         def clazz = p.class
-        boolean defaultIndexed = true;
+        boolean defaultIndexed = true
         if(clazz.isAnnotationPresent(groovyx.gaelyk.datastore.Entity.class)){
-            defaultIndexed = ! clazz.getAnnotation(groovyx.gaelyk.datastore.Entity).unindexed()
+            defaultIndexed = !clazz.getAnnotation(groovyx.gaelyk.datastore.Entity).unindexed()
         }
         if (!cachedProps.containsKey(clazz)) {
 			Map<String, PropertyDescriptor> props = [:]
-			p.properties
-				.findAll { String k, v -> !(k in ['class', 'metaClass']) && !(k.startsWith('$') || k.startsWith('_')) }
-                .each { String k, v ->
-	                def annos
-					def isStatic = false
-	                try {
-	                    def field = p.class.getDeclaredField(k)
-						isStatic = Modifier.isStatic(field.modifiers)
-	                    annos = field.annotations
-	                } catch (e) {
-	                	println "$k in the catch block"
-	                    try {
-	                        def method = p.class.getDeclaredMethod("get${k.capitalize()}")
-	                        annos = method.annotations
-							isStatic = Modifier.isStatic(method.modifiers)
-	                    } catch (NoSuchMethodException nsme){
-	                        return [(k), PropertyDescriptor.DEFAULT]
-	                    }
-	                }
-					println "$k ${isStatic ? 'is' : 'is not'} static"
-	                props[k] =  new PropertyDescriptor(
-	                        ignore:    isStatic || annos.any { it instanceof Ignore },
-	                        unindexed: isStatic || (defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed }),
-	                        key:       !isStatic && annos.any { it instanceof Key },
-	                        version:   !isStatic && annos.any { it instanceof Version }
-	                )
-            }
+			for(String property in p.properties.keySet()){
+				if(!(property in ['class', 'metaClass']) && !(property.startsWith('$') || property.startsWith('_'))){
+					def descriptor = getPropertyDescriptorFor(clazz, property, defaultIndexed)
+					// XXX: This does not work. If it is Groovy bug, it's really nasty!
+					// props[property] = descriptor
+					props.put property, descriptor
+				} else {
+					// XXX: This does not work. If it is Groovy bug, it's really nasty!
+					// props[property] = PropertyDescriptor.IGNORED
+					props.put property, PropertyDescriptor.IGNORED
+				}
+			}
             cachedProps[clazz] = props
         }
 
         return cachedProps[clazz]
     }
+	
+	static PropertyDescriptor getPropertyDescriptorFor(Class clazz, String property, boolean defaultIndexed){
+		def annos
+		def isStatic = false
+		try {
+			Field field = clazz.getDeclaredField(property)
+			isStatic = Modifier.isStatic(field.modifiers)
+			annos = field.annotations
+		} catch (e) {
+			try {
+				Method method = clazz.getDeclaredMethod("get${property.capitalize()}")
+				annos = method.annotations
+				isStatic = Modifier.isStatic(method.modifiers)
+			} catch (NoSuchMethodException nsme){
+				return PropertyDescriptor.IGNORED
+			}
+		}
+		if(isStatic || annos.any { it instanceof Ignore }) return PropertyDescriptor.IGNORED
+		if(annos.any { it instanceof Key }) return PropertyDescriptor.KEY
+		if(annos.any { it instanceof Version }) return PropertyDescriptor.VERSION
+		if(defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed }) return PropertyDescriptor.UNINDEXED
+		PropertyDescriptor.INDEXED
+	}
 
     /**
      * Find the key in the properties
@@ -94,7 +109,7 @@ class PogoEntityCoercion {
      */
     static String findKey(Map<String, PropertyDescriptor> props) {
         props.findResult { String prop, PropertyDescriptor m ->
-            if (m.key) return prop
+            if (m.key()) return prop
         }
     }
 
@@ -106,7 +121,7 @@ class PogoEntityCoercion {
     */
     static String findVersion(Map<String, PropertyDescriptor> props) {
         props.findResult { String prop, PropertyDescriptor m ->
-            if (m.version) return prop
+            if (m.version()) return prop
         }
     }
 
@@ -137,12 +152,7 @@ class PogoEntityCoercion {
                 if (!props[propName].ignore() && !props[propName].version()) {
                     def val = p.metaClass.getProperty(p, propName)
                     if (props[propName].unindexed()) {
-                        // TODO: decide the correct behaviour
-//                      if(!val){
-//                          entity.removeProperty(propName)
-//                      } else {
                         entity.setUnindexedProperty(propName, val)
-//                  }
                     } else {
 
                         if (val instanceof Enum) val = val as String
@@ -172,7 +182,7 @@ class PogoEntityCoercion {
             }
         }
 
-        def classProps = props(o)
+        Map<String, PropertyDescriptor> classProps = props(o)
 
         String key = findKey(classProps)
 
@@ -196,23 +206,17 @@ class PogoEntityCoercion {
     }
 }
 
-@CompileStatic @Canonical
-class PropertyDescriptor {
-	
-	static final PropertyDescriptor DEFAULT = new PropertyDescriptor(ignore: true, unindexed: false, key: false, version: false)
-	
-	boolean ignore
-	boolean unindexed
-    boolean key
-	boolean version
+@CompileStatic
+enum PropertyDescriptor {
+	//           ignore,unindex,key,    version
+	IGNORED { boolean ignore() { true } },
+	KEY		{ boolean key() { true } },
+	VERSION	{ boolean version() { true } },
+	INDEXED,
+	UNINDEXED { boolean unindexed() { true } },
 
-	boolean ignore() { ignore }
-	boolean unindexed() { unindexed }
-	boolean key() { key }
-	boolean version() { version } 
-	
-	@Override
-	public String toString() {
-		"PropertyDescriptor[ignore: $ignore, unindexed: $unindexed, key: $key, version: $version]"
-	}
+	boolean ignore() { false }
+	boolean unindexed() { false }
+	boolean key() { false }
+	boolean version() { false } 
 }

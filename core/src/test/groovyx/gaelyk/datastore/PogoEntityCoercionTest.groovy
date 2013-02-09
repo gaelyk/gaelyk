@@ -27,31 +27,36 @@ class PogoEntityCoercionTest extends GroovyTestCase {
     void testReflectionOnPogo() {
         def p1 = new P1()
         def props = PogoEntityCoercion.props(p1)
-
+		
+		assert props.s1 == PropertyDescriptor.UNINDEXED
         assert props.s1.unindexed()
         assert !props.s1.ignore()
         assert !props.s1.key()
         assert !props.s1.version()
 
+		assert props.s2 == PropertyDescriptor.IGNORED
         assert !props.s2.unindexed()
         assert props.s2.ignore()
         assert !props.s2.key()
         assert !props.s2.version()
 
+		assert props.s3 == PropertyDescriptor.KEY
         assert !props.s3.unindexed()
         assert !props.s3.ignore()
         assert props.s3.key()
         assert !props.s3.version()
 
+		assert props.s4 == PropertyDescriptor.VERSION
         assert !props.s4.unindexed()
         assert !props.s4.ignore()
         assert !props.s4.key()
         assert props.s4.version()
 		
-		assert props.s5.unindexed()
+		assert props.s5 == PropertyDescriptor.IGNORED
+		assert !props.s5.unindexed()
 		assert props.s5.ignore()
-		assert !props.s4.key()
-		assert !props.s4.version()
+		assert !props.s5.key()
+		assert !props.s5.version()
 
         assert PogoEntityCoercion.findKey(props) == 's3'
 
@@ -155,8 +160,8 @@ class PogoEntityCoercionTest extends GroovyTestCase {
     
     void testFindVersion(){
         assert PogoEntityCoercion.findVersion([:]) == null
-        assert PogoEntityCoercion.findVersion([prop: PropertyDescriptor.DEFAULT]) == null
-        assert PogoEntityCoercion.findVersion(prop: new PropertyDescriptor(version: true)) == 'prop'
+        assert PogoEntityCoercion.findVersion([prop: PropertyDescriptor.IGNORED]) == null
+        assert PogoEntityCoercion.findVersion(prop: PropertyDescriptor.VERSION) == 'prop'
     }
 }
 

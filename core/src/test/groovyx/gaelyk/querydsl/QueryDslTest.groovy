@@ -8,6 +8,7 @@ import org.codehaus.groovy.control.CompilePhase
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
+import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.datastore.RawValue
 
 import groovyx.gaelyk.query.QuerySyntaxException
@@ -178,6 +179,7 @@ class QueryDslTest extends GroovyTestCase {
         def aPerson = execute('select single from persons as Person where age == 53')
         assert aPerson.class.name == 'Person'
         assert aPerson.name == 'John'
+		
 
         def twoPersons = execute('''
             from persons as Person
@@ -192,6 +194,9 @@ class QueryDslTest extends GroovyTestCase {
 
         shouldFail(QuerySyntaxException) { execute 'from persons as Person where foo != 3' }
         shouldFail(QuerySyntaxException) { execute 'from persons as Person sort desc by bingo' }
+		
+		assert execute('from persons offset 1 limit 2') instanceof QueryResultList
+		
     }
 
     void testIncorrectArguments() {

@@ -15,19 +15,20 @@
  */
 package groovyx.gaelyk.query
 
+import groovy.transform.PackageScope
+import groovyx.gaelyk.extensions.DatastoreExtensions
+
 import java.util.Map.Entry
 
-import groovy.transform.PackageScope
-
-import com.google.appengine.api.datastore.Entity
-import com.google.appengine.api.datastore.PropertyProjection
-import com.google.appengine.api.datastore.Query
-import com.google.appengine.api.datastore.PreparedQuery
+import com.google.appengine.api.datastore.Cursor
 import com.google.appengine.api.datastore.DatastoreServiceFactory
+import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.datastore.Key
-import com.google.appengine.api.datastore.Cursor
-import groovyx.gaelyk.extensions.DatastoreExtensions
+import com.google.appengine.api.datastore.PreparedQuery
+import com.google.appengine.api.datastore.PropertyProjection
+import com.google.appengine.api.datastore.Query
+import com.google.appengine.api.datastore.QueryResultIterator
 
 /**
  * The query build is used to create a datastore <code>Query</code>
@@ -117,9 +118,9 @@ class QueryBuilder {
 
         if (coercedClass) {
             if (iterable) {
-                def entitiesIterator = preparedQuery.asIterator(options)
+                QueryResultIterator entitiesIterator = preparedQuery.asQueryResultIterator(options)
 
-                return new Iterator() {
+                return new QueryResultIterator() {
                     boolean hasNext() {
                         entitiesIterator.hasNext()
                     }
@@ -132,6 +133,14 @@ class QueryBuilder {
                     void remove() {
                         throw new UnsupportedOperationException("Forbidden to call remove() on this Query DSL results iterator")
                     }
+					
+					Cursor getCursor() {
+						entitiesIterator.cursor
+					}
+					
+					List getIndexList() {
+						entitiesIterator.indexList
+					}
                 }
             } else {
                 def entities = preparedQuery.asList(options)
@@ -143,7 +152,7 @@ class QueryBuilder {
                 return result
             }
         } else {
-            def result = iterable ? preparedQuery.asIterator(options) : preparedQuery.asList(options)
+            def result = iterable ? preparedQuery.asQueryResultIterator(options) : preparedQuery.asQueryResultList(options)
             if (queryType == QueryType.KEYS) {
                 if (iterable) {
                     return new Iterator() {

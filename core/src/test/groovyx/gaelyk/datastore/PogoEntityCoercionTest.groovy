@@ -126,6 +126,18 @@ class PogoEntityCoercionTest extends GroovyTestCase {
 
         assert e2.outcome == 'WIN'
     }
+	
+	void testEnumNullProperties() {
+		Entity e = new Entity('Match')
+		e.outcome = null
+		Match m = e as Match
+
+		assert m.outcome == null
+
+		Entity e2 = m as Entity
+
+		assert e2.outcome == null
+	}
     
     void testProblemWithInterface(){
         Entity e = new Entity('User', 10)

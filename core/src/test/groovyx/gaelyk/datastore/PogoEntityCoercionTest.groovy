@@ -155,8 +155,8 @@ class PogoEntityCoercionTest extends GroovyTestCase {
     
     void testFindVersion(){
         assert PogoEntityCoercion.findVersion([:]) == null
-        assert PogoEntityCoercion.findVersion([prop: [:]]) == null
-        assert PogoEntityCoercion.findVersion(prop: [version: { 1 }]) == 'prop'
+        assert PogoEntityCoercion.findVersion([prop: PropertyDescriptor.DEFAULT]) == null
+        assert PogoEntityCoercion.findVersion(prop: new PropertyDescriptor(version: true)) == 'prop'
     }
 }
 

@@ -15,6 +15,8 @@
  */
 package groovyx.gaelyk.datastore
 
+import java.lang.reflect.Modifier;
+
 import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.EntityNotFoundException
@@ -49,20 +51,25 @@ class PogoEntityCoercion {
             cachedProps[clazz] = p.properties.findAll { String k, v -> !(k in ['class', 'metaClass']) && !(k.startsWith('$') || k.startsWith('_')) }
                     .collectEntries { String k, v ->
                 def annos
+				def isStatic = false
                 try {
-                    annos = p.class.getDeclaredField(k).annotations
+                    def field = p.class.getDeclaredField(k)
+					isStatic = Modifier.isStatic(field.modifiers)
+                    annos = field.annotations
                 } catch (e) {
                     try {
-                        annos = p.class.getDeclaredMethod("get${k.capitalize()}").annotations
+                        def method = p.class.getDeclaredMethod("get${k.capitalize()}")
+                        annos = method.annotations
+						isStatic = Modifier.isStatic(method.modifiers)
                     } catch (NoSuchMethodException nsme){
                         return [(k), [ignore: {true}, unindexed: {false}, key: {false}, version: { false }]]
                     }
                 }
                 [(k), [
-                        ignore:    { annos.any { it instanceof Ignore } },
-                        unindexed: { defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed } },
-                        key:       { annos.any { it instanceof Key } },
-                        version:   { annos.any { it instanceof Version } }
+                        ignore:    { isStatic || annos.any { it instanceof Ignore } },
+                        unindexed: { isStatic || defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed } },
+                        key:       { !isStatic || annos.any { it instanceof Key } },
+                        version:   { !isStatic || annos.any { it instanceof Version } }
                 ]]
             }
         }

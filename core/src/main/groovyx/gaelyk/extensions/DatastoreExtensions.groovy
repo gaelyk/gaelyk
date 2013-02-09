@@ -557,7 +557,7 @@ class DatastoreExtensions {
      * @param c the closure representing the query
      * @return the query
      */
-    static Query query(DatastoreService service, Closure c) {
+    static Query query(DatastoreService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
         def builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
@@ -573,7 +573,7 @@ class DatastoreExtensions {
      * @return the results
      */
     @CompileStatic
-    static execute(DatastoreService service, Closure c) {
+    static execute(DatastoreService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         QueryBuilder builder = prepareAndLaunchQuery(c)
         return builder.execute()
     }
@@ -585,12 +585,12 @@ class DatastoreExtensions {
      * @return the iterator over the results
      */
     @CompileStatic
-    static iterate(DatastoreService service, Closure c) {
+    static iterate(DatastoreService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         QueryBuilder builder = prepareAndLaunchQuery(c)
         return builder.iterate()
     }
 
-    private static QueryBuilder prepareAndLaunchQuery(Closure c) {
+    private static QueryBuilder prepareAndLaunchQuery(@DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         Closure cQuery = c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
         def builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)

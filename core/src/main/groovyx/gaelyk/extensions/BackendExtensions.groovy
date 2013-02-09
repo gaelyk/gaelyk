@@ -36,7 +36,7 @@ class BackendExtensions {
      * @param manager the lifecycle manager
      * @param c the closure as shutdown hook
      */
-    static void shutdownHook(LifecycleManager manager, @DelegatesTo(LifecycleManager.ShutdownHook) Closure c) {
+    static void shutdownHook(LifecycleManager manager, /*@DelegatesTo(LifecycleManager.ShutdownHook)*/ Closure c) {
         manager.setShutdownHook(c as LifecycleManager.ShutdownHook)
     }
 

@@ -1,0 +1,4 @@
+moduleName=gaelyk-extension-module
+moduleVersion=2.0-SNAPSHOT
+extensionClasses=groovy.servlet.ServletCategory,groovyx.gaelyk.extensions.ServletExtensions,groovyx.gaelyk.extensions.DatastoreExtensions,groovyx.gaelyk.extensions.MemcacheExtensions,groovyx.gaelyk.extensions.BlobstoreExtensions,groovyx.gaelyk.extensions.FilesExtensions,groovyx.gaelyk.extensions.MailExtensions,groovyx.gaelyk.extensions.TaskQueueExtensions,groovyx.gaelyk.extensions.SearchExtensions,groovyx.gaelyk.extensions.UrlFetchExtensions,groovyx.gaelyk.extensions.ChannelExtensions,groovyx.gaelyk.extensions.CapabilitiesExtensions,groovyx.gaelyk.extensions.XmppExtensions,groovyx.gaelyk.extensions.ImageExtensions,groovyx.gaelyk.extensions.BackendExtensions,groovyx.gaelyk.extensions.MiscExtensions,groovyx.gaelyk.extensions.ExpirationTimeExtensionMethods
+staticExtensionClasses=groovyx.gaelyk.extensions.NamespaceStaticExtensions

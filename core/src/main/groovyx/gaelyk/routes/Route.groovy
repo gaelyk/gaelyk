@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package groovyx.gaelyk.routes
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.servlet.http.HttpServletRequest
-import groovyx.gaelyk.GaelykCategory
-import groovy.servlet.ServletCategory
 import groovyx.gaelyk.GaelykBindingEnhancer
 
 /**
@@ -63,7 +61,7 @@ class Route {
 
     /** If the route is for incoming jabber messages */
     boolean jabber
-	
+
     /**
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
      * and a closure for validating the variables against regular expression patterns.
@@ -93,7 +91,6 @@ class Route {
         this.destination = destination instanceof String || ignore == true ?
             destination :
             RoutingRule.buildRoutingRule((Closure) destination)
-			
     }
 
     /**
@@ -161,17 +158,13 @@ class Route {
                 def binding = new Binding()
                 GaelykBindingEnhancer.bind(binding)
                 def validatorDelegate = binding.variables
-
                 validatorDelegate += variableMap.clone()
                 validatorDelegate.request = request
-
                 clonedValidator.delegate = validatorDelegate
                 clonedValidator.resolveStrategy = Closure.DELEGATE_ONLY
 
                 boolean validated = false
-                use (ServletCategory, GaelykCategory) {
                     validated = clonedValidator()
-                }
                 if (!validated) {
                     return [matches: false]
                 }

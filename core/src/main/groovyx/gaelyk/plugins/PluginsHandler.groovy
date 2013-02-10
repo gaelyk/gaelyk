@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,12 @@
  */
 package groovyx.gaelyk.plugins
 
-import java.util.jar.JarEntry
-import java.util.jar.JarFile
-
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.control.CompilerConfiguration
 
-import groovyx.gaelyk.ExpirationTimeCategory
 import groovyx.gaelyk.GaelykBindingEnhancer
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
-import groovy.servlet.ServletCategory
 import groovyx.gaelyk.logging.GroovyLogger
 import javax.servlet.ServletContext
 
@@ -45,12 +41,11 @@ class PluginsHandler {
 
     Map bindingVariables = [:]
     List routes = []
-    List categories = []
     List beforeActions = []
     List afterActions = []
     List installed = []
 
-    final defaultScriptContentLoader = { String path ->
+    final Closure defaultScriptContentLoader = { String path ->
         def file = new File(path)
         if(file.exists()){
             return file.text
@@ -64,11 +59,11 @@ class PluginsHandler {
 
     GroovyLogger log = new GroovyLogger('gaelyk.pluginshandler')
 
+    @CompileStatic
     void reinit() {
         initialized = false
         bindingVariables = [:]
         routes = []
-        categories = []
         beforeActions = []
         afterActions = []
         installed = []
@@ -115,15 +110,12 @@ class PluginsHandler {
 
                 pluginScript.binding = binding
 
-                use(ExpirationTimeCategory) {
-                    pluginScript.run()
-                }
+                pluginScript.run()
 
                 // use getters directly,
                 // otherwise property access returns variables from the binding of the scripts
                 bindingVariables.putAll pluginScript.getBindingVariables()
                 routes.addAll pluginScript.getRoutes()
-                categories.addAll pluginScript.getCategories()
 
                 if (pluginScript.getBeforeAction()) beforeActions.add pluginScript.getBeforeAction()
                 if (pluginScript.getAfterAction())  afterActions .add pluginScript.getAfterAction()
@@ -178,7 +170,8 @@ class PluginsHandler {
         return []
     }
 
-    public boolean isInstalled(String pluginName){
+    @CompileStatic
+    boolean isInstalled(String pluginName){
         pluginName in installed
     }
 
@@ -187,6 +180,7 @@ class PluginsHandler {
      *
      * @param binding the binding to add the variables to
      */
+    @CompileStatic
     void enrich(Binding binding) {
         bindingVariables.each { String k, Object v -> binding.setVariable(k, v) }
     }
@@ -197,6 +191,7 @@ class PluginsHandler {
      * @param request
      * @param response
      */
+    @CompileStatic
     void executeBeforeActions(HttpServletRequest request, HttpServletResponse response) {
         beforeActions.each { Closure action ->
             cloneDelegateAndExecute action, request, response
@@ -209,6 +204,7 @@ class PluginsHandler {
      * @param request
      * @param response
      */
+    @CompileStatic
     void executeAfterActions(HttpServletRequest request, HttpServletResponse response) {
         afterActions.each { Closure action ->
             cloneDelegateAndExecute action, request, response
@@ -229,6 +225,6 @@ class PluginsHandler {
                     binding: bindingVariables
                 ]
 
-        use (ServletCategory) { cloned() }
+        cloned()
     }
 }

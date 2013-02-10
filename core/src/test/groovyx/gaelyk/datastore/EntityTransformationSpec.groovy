@@ -1,206 +1,218 @@
 package groovyx.gaelyk.datastore
 
+import groovyx.gaelyk.query.QueryDslTransformation
+
 import java.lang.reflect.Field
 
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer
 
-import groovyx.gaelyk.GaelykCategory
-import groovyx.gaelyk.query.QueryDslTransformation
+import spock.lang.Specification
 
 import com.google.appengine.api.datastore.EntityNotFoundException
 import com.google.appengine.api.datastore.Key
+import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 
-import spock.lang.Specification
-import spock.util.mop.Use
-
-@Use(GaelykCategory)
 class EntityTransformationSpec extends Specification {
 
-	LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig())
+    LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig())
 
-	def setup() { helper.setUp() }
-	def cleanup() { helper.tearDown() }
+    def setup() { helper.setUp() }
+    def cleanup() { helper.tearDown() }
 
-	def "Save and delete works"(){
-		def obj = newShell().evaluate '''
-			@groovyx.gaelyk.datastore.Entity
-			class MyPogo {}
+    def "Save and delete works"(){
+        def obj = newShell().evaluate '''
+            @groovyx.gaelyk.datastore.Entity
+            @groovy.transform.CompileStatic
+            class MyPogo1 {}
 
-			new MyPogo()
-		'''
-		expect:
-		!obj.id
-		obj.hasProperty('id')
-		obj.getClass().declaredFields.any { Field f -> f.isAnnotationPresent(groovyx.gaelyk.datastore.Key)}
+            new MyPogo1()
+        '''
 
-		when:
-		Key key = obj.save()
+        expect:
+        !obj.id
+        obj.hasProperty('id')
+        obj.getClass().declaredFields.any { Field f -> f.isAnnotationPresent(groovyx.gaelyk.datastore.Key)}
+
+        when:
+        Key key = obj.save()
 
 
-		then:
-		key
-		key.kind == 'MyPogo'
-		key.get()
-		obj.getClass().getMethod('get', Object).invoke(null, key.id)
-		obj.getClass().getMethod('count').invoke(null) == 1
-		obj.id == key.id
+        then:
+        key
+        key.kind == 'MyPogo1'
+        key.get()
+        obj.getClass().getMethod('get', long).invoke(null, key.id)
+        obj.getClass().getMethod('count').invoke(null) == 1
+        obj.id == key.id
 
-		when:
-		obj.delete()
-		obj.getClass().getMethod('count').invoke(null) == 0
-		key.get()
+        when:
+        obj.delete()
+        obj.getClass().getMethod('count').invoke(null) == 0
+        key.get()
 
-		then:
-		thrown(EntityNotFoundException)
+        then:
+        thrown(EntityNotFoundException)
+    }
 
-		where:
-		cls << [
-		'''	@groovyx.gaelyk.datastore.Entity
-			class MyPogo {}
-
-			new MyPogo()''',
-		'''	@groovyx.gaelyk.datastore.Entity
-			class MyPogo { @groovyx.gaelyk.datastore.Key long id }
-
-			new MyPogo()''',
-		'''	@groovyx.gaelyk.datastore.Entity
-		class MyPogo { @groovyx.gaelyk.datastore.Key String id }
-
-		new MyPogo(id: 'Test')'''
-		]
-
-	}
-
-        def "Delete by key works"(){
-            def obj = newShell().evaluate '''
+    def "Delete by key works"(){
+        def obj = newShell().evaluate '''
+                    @groovy.transform.CompileStatic
                     @groovyx.gaelyk.datastore.Entity
-                    class MyPogo {}
+                    class MyPogo2 {}
 
-                    new MyPogo()
+                    new MyPogo2()
             '''
-            when:
-            Key key = obj.save()
+        when:
+        Key key = obj.save()
 
 
-            then:
-            obj.count() == 1
+        then:
+        obj.count() == 1
 
-            when:
-            obj.getClass().getMethod('delete', Object).invoke(null, key.id)
+        when:
+        obj.getClass().getMethod('delete', long).invoke(null, key.id)
 
-            then:
-            obj.count() == 0
-        }
+        then:
+        obj.count() == 0
+    }
 
-	def "Test find all with closure"(){
+    def "Test find all with closure"(){
+        def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo3 {
+                @groovyx.gaelyk.datastore.Indexed String test
+            }
+
+            new MyPogo3(test: "foo").save()
+            new MyPogo3(test: "foo").save()
+            new MyPogo3(test: "bar").save()
+
+            MyPogo3.findAll''' + argument
+
+        expect:
+        obj.size() == result
+
+        where:
+        result  | argument
+        3       | '()'
+        2       | '{ where test == "foo"}'
+        1       | '{ where test == "bar"}'
+
+    }
+
+    def "Test count "(){
+        def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo4 {
+                @groovyx.gaelyk.datastore.Indexed String test
+            }
+
+            new MyPogo4(test: "foo").save()
+            new MyPogo4(test: "foo").save()
+            new MyPogo4(test: "bar").save()
+
+            MyPogo4.count''' + argument
+
+        expect:
+        obj == result
+
+        where:
+        result  | argument
+        3       | '()'
+        2       | '{ where test == "foo"}'
+        1       | '{ where test == "bar"}'
+    }
+
+    def "Test iterate "(){
+        def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo5 {
+                @groovyx.gaelyk.datastore.Indexed String test
+            }
+
+            new MyPogo5(test: "foo").save()
+            new MyPogo5(test: "foo").save()
+            new MyPogo5(test: "bar").save()
+
+            MyPogo5.iterate''' + argument
+
+        expect:
+        obj.size() == result
+
+        where:
+        result  | argument
+        3       | '()'
+        2       | '{ where test == "foo"}'
+        1       | '{ where test == "bar"}'
+    }
+
+    def "Test find "(){
+        def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo6 {
+                @groovyx.gaelyk.datastore.Indexed String test
+            }
+
+            new MyPogo6(test: "foo").save()
+            new MyPogo6(test: "foo").save()
+            new MyPogo6(test: "bar").save()
+
+            MyPogo6.find{ where test == "bar" }'''
+
+        expect:
+        obj
+    }
+
+    def "Test key"(){
+        def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo7 {
+                @groovyx.gaelyk.datastore.Key String name
+                @groovyx.gaelyk.datastore.Indexed String test
+            }
+
+            new MyPogo7(name: "name", test: "foo")'''
+
+        expect:
+        !obj.hasProperty('id')
+    }
+	
+	
+	@spock.lang.Ignore
+	def "Test parent"(){
 		def obj = newShell().evaluate '''
-			@groovyx.gaelyk.datastore.Entity
-			class MyPogo {
-				@groovyx.gaelyk.datastore.Indexed String test
-			}
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo8 {
+				@groovyx.gaelyk.datastore.Parent com.google.appengine.api.datastore.Key parent
+                @groovyx.gaelyk.datastore.Key String name
+                @groovyx.gaelyk.datastore.Indexed String test
+            }
 
-			new MyPogo(test: "foo").save()
-			new MyPogo(test: "foo").save()
-			new MyPogo(test: "bar").save()
+			com.google.appengine.api.datastore.Entity myparent = ['MyParent', 'parent']
+			myparent.save()
 
-			MyPogo.findAll''' + argument
+            def mypogo = new MyPogo8(name: "name", test: "foo", parent: myparent.key)
+			mypogo.save()
+			mypogo
+'''
 
 		expect:
-		obj.size() == result
-
-		where:
-		result 	| argument
-		3		| '()'
-		2		| '{ where test == "foo"}'
-		1		| '{ where test == "bar"}'
-
-	}
-
-	def "Test count "(){
-		def obj = newShell().evaluate '''
-			@groovyx.gaelyk.datastore.Entity
-			class MyPogo {
-				@groovyx.gaelyk.datastore.Indexed String test
-			}
-
-			new MyPogo(test: "foo").save()
-			new MyPogo(test: "foo").save()
-			new MyPogo(test: "bar").save()
-
-			MyPogo.count''' + argument
-
-		expect:
-		obj == result
-
-		where:
-		result 	| argument
-		3		| '()'
-		2		| '{ where test == "foo"}'
-		1		| '{ where test == "bar"}'
-	}
-
-	def "Test iterate "(){
-		def obj = newShell().evaluate '''
-			@groovyx.gaelyk.datastore.Entity
-			class MyPogo {
-				@groovyx.gaelyk.datastore.Indexed String test
-			}
-
-			new MyPogo(test: "foo").save()
-			new MyPogo(test: "foo").save()
-			new MyPogo(test: "bar").save()
-
-			MyPogo.iterate''' + argument
-
-		expect:
-		obj.size() == result
-
-		where:
-		result 	| argument
-		3		| '()'
-		2		| '{ where test == "foo"}'
-		1		| '{ where test == "bar"}'
-	}
-
-	def "Test find "(){
-		def obj = newShell().evaluate '''
-			@groovyx.gaelyk.datastore.Entity
-			class MyPogo {
-				@groovyx.gaelyk.datastore.Indexed String test
-			}
-
-			new MyPogo(test: "foo").save()
-			new MyPogo(test: "foo").save()
-			new MyPogo(test: "bar").save()
-
-			MyPogo.find{ where test == "bar" }'''
-
-		expect:
-		obj
-	}
-
-	def "Test key"(){
-		def obj = newShell().evaluate '''
-			@groovyx.gaelyk.datastore.Entity
-			class MyPogo {
-				@groovyx.gaelyk.datastore.Key String name
-				@groovyx.gaelyk.datastore.Indexed String test
-			}
-
-			new MyPogo(name: "name", test: "foo")'''
-
-		expect:
-		!obj.hasProperty('id')
+		obj.parent == KeyFactory.createKey('MyParent', 'parent')
 	}
 
 
-	private GroovyShell newShell(){
-		CompilerConfiguration cc = new CompilerConfiguration()
-		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new QueryDslTransformation()))
-		new GroovyShell(cc)
-	}
-
+    private GroovyShell newShell() {
+        CompilerConfiguration cc = new CompilerConfiguration()
+        cc.addCompilationCustomizers(new ASTTransformationCustomizer(new QueryDslTransformation()))
+        new GroovyShell(cc)
+    }
 }

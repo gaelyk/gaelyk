@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package groovyx.gaelyk.routes
 
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.regex.Matcher
 
 import javax.servlet.Filter
 import javax.servlet.FilterChain
@@ -29,15 +28,14 @@ import javax.servlet.http.HttpServletResponse
 import groovy.servlet.AbstractHttpServlet
 import groovyx.gaelyk.GaelykBindingEnhancer
 import groovyx.gaelyk.plugins.PluginsHandler
-import groovyx.gaelyk.ExpirationTimeCategory
 import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
-import groovyx.gaelyk.GaelykCategory
 
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.NamespaceManager
 
 import org.codehaus.groovy.control.CompilerConfiguration
+import groovy.transform.CompileStatic
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -62,15 +60,18 @@ class RoutesFilter implements Filter {
     private String routesFileLocation
     private long lastRoutesFileModification = 0
     private List<Route> routes = []
+    private List<Route> routesFromRoutesFile = []
     private FilterConfig filterConfig
     private GroovyLogger log
 
+    @CompileStatic
     void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig
         this.routesFileLocation = filterConfig.getInitParameter("routes.location") ?: "WEB-INF/routes.groovy"
         this.log = new GroovyLogger('gaelyk.routesfilter')
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
             routes = new CopyOnWriteArrayList<Route>()
+            routesFromRoutesFile =  new CopyOnWriteArrayList<Route>()
         }
         loadRoutes()
     }
@@ -80,7 +81,7 @@ class RoutesFilter implements Filter {
      */
     synchronized void loadRoutes() {
         log.config "Loading routes configuration"
-
+        routes.clear()
         def routesFile = new File(this.routesFileLocation)
 
         if (routesFile.exists()) {
@@ -97,21 +98,24 @@ class RoutesFilter implements Filter {
                 GaelykBindingEnhancer.bind(binding)
 
                 // adds three nouns for the XMPP support
-                binding.chat         = 'chat'
-                binding.presence     = 'presence'
-                binding.subscription = 'subscription'
+                binding.setVariable('chat',         'chat')
+                binding.setVariable('presence',     'presence')
+                binding.setVariable('subscription', 'subscription')
 
                 // evaluate the route definitions
                 RoutesBaseScript script = (RoutesBaseScript) new GroovyShell(binding, config).parse(routesFile)
 
-                use(ExpirationTimeCategory) {
-                    script.run()
-                }
-                routes.clear()
-                routes.addAll script.routes
+                script.run()
+
+                List<Route> scriptRoutes = script.routes
+                routes.addAll scriptRoutes
+                routesFromRoutesFile.clear()
+                routesFromRoutesFile.addAll scriptRoutes
 
                 // update the last modified flag
                 lastRoutesFileModification = lastModified
+            } else {
+                routes.addAll routesFromRoutesFile
             }
         }
         // add the routes defined by the plugins
@@ -149,7 +153,7 @@ class RoutesFilter implements Filter {
                     }
                     if (route.redirectionType == RedirectionType.FORWARD) {
                         if (route.namespace) {
-                            GaelykCategory.of(NamespaceManager, result.namespace) {
+                            NamespaceManager.of(result.namespace) {
                                 CacheHandler.serve(route, request, response)
                             }
                         } else {
@@ -173,6 +177,7 @@ class RoutesFilter implements Filter {
         }
     }
 
+    @CompileStatic
     void destroy() { }
 
     /**
@@ -182,24 +187,25 @@ class RoutesFilter implements Filter {
     * @return the include-aware uri either parsed from request attributes or
     *         hints provided by the servlet container
     */
-   protected String getIncludeAwareUri(HttpServletRequest request) {
-       String uri = null
-       String info = null
+    @CompileStatic
+    protected String getIncludeAwareUri(HttpServletRequest request) {
+        String uri = null
+        String info = null
 
-       uri = request.getAttribute(AbstractHttpServlet.INC_SERVLET_PATH)
-       if (uri != null) {
-           info = request.getAttribute(AbstractHttpServlet.INC_PATH_INFO)
-           if (info != null) {
-               uri += info
-           }
-           return uri
-       }
+        uri = request.getAttribute(AbstractHttpServlet.INC_SERVLET_PATH)
+        if (uri != null) {
+            info = request.getAttribute(AbstractHttpServlet.INC_PATH_INFO)
+            if (info != null) {
+                uri += info
+            }
+            return uri
+        }
 
-       uri = request.getServletPath()
-       info = request.getPathInfo()
-       if (info != null) {
-           uri += info
-       }
-       return uri
-   }
+        uri = request.getServletPath()
+        info = request.getPathInfo()
+        if (info != null) {
+            uri += info
+        }
+        return uri
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
 import com.google.appengine.api.xmpp.XMPPService
 import com.google.appengine.api.xmpp.XMPPServiceFactory
+import groovy.transform.CompileStatic
 import groovyx.gaelyk.logging.LoggerAccessor
 import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.AnnotationNode
@@ -75,6 +76,7 @@ import com.google.appengine.api.search.SearchServiceFactory
  * @author Guillaume Laforge
  */
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
+@CompileStatic
 class GaelykBindingsTransformation implements ASTTransformation {
 
     void visit(ASTNode[] nodes, SourceUnit unit) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 the original author or authors.
+ * Copyright 2011-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package groovyx.gaelyk
 
+import groovy.transform.CompileStatic
+
 import javax.servlet.ServletContextListener
 import javax.servlet.ServletContextEvent
 import groovyx.gaelyk.plugins.PluginsHandler
@@ -26,6 +28,7 @@ import groovyx.gaelyk.plugins.PluginsHandler
  * @author Guillaume Laforge
  * @author Marcin Erdmann
  */
+@CompileStatic
 class GaelykServletContextListener implements ServletContextListener {
 
     /**
@@ -33,10 +36,27 @@ class GaelykServletContextListener implements ServletContextListener {
      * @param servletContextEvent
      */
     void contextInitialized(ServletContextEvent servletContextEvent) {
+        verifyGroovyVersion()
         PluginsHandler.instance.initPlugins(servletContextEvent.servletContext)
     }
 
     void contextDestroyed(ServletContextEvent servletContextEvent) {
         // nothing special to be done
     }
+    
+    /**
+     * Verifies if proper version of Gaelyk is used.
+     * Currently Groovy 2.x.x versions are supported but this may change
+     * until final Gaelyk 2.0 version will be released.
+     */
+    static void verifyGroovyVersion(){
+        if(!verifyGroovyVersionInternal(GroovySystem.version)){
+            throw new IllegalStateException("You must use Groovy 2.x to run Gaelyk ${GaelykBindingEnhancer.app['gaelyk']['version']} application.")
+        }
+    }
+    
+    private static boolean verifyGroovyVersionInternal(String version){
+        version.startsWith('2.')
+    }
+            
 }

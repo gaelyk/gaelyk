@@ -1,0 +1,28 @@
+/** Add following snippet to your build script to enable nexus plugin */
+
+
+/*
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+    }
+}
+*/
+
+apply plugin: 'maven'
+apply plugin: 'nexus'
+
+tasks.withType(Upload) { // map the groovy configuration to compile in the pom
+    repositories.withType(MavenResolver) {
+        pom.scopeMappings.addMapping(1, configurations.groovy, 'compile')
+    }
+}
+
+boolean signingEnabled = !hasProperty('skipSigning') || skipSigning != 'true'
+nexus {
+    sign = signingEnabled
+}

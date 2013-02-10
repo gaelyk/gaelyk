@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package groovyx.gaelyk
 
 import com.google.appengine.api.taskqueue.QueueFactory
+import groovy.transform.CompileStatic
 
 /**
  * Holder for queues providing a Groovy map-like syntax for accessing queues.
@@ -23,6 +24,7 @@ import com.google.appengine.api.taskqueue.QueueFactory
  *
  * @author Guillaume Laforge
  */
+@CompileStatic
 class QueueAccessor {
 
     /**

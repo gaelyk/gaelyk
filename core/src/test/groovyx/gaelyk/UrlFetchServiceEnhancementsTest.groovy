@@ -38,84 +38,66 @@ class UrlFetchServiceEnhancementsTest extends GroovyTestCase {
     }
 
     void testForbiddenParameter() {
-        use (GaelykCategory) {
-            shouldFail {
-                gaelyk.get(fancyParam: true)
-            }
+        shouldFail {
+            gaelyk.get(fancyParam: true)
         }
     }
 
     void testGetGaelykHomePageWithOptions() {
-        use (GaelykCategory) {
-            HTTPResponse response = gaelyk.get(
-                    followRedirects: true, allowTruncate: false, deadline: 30,
-                    headers: ['User-Agent': 'Mozilla/5.0 (Linux; X11)'])
+        HTTPResponse response = gaelyk.get(
+                followRedirects: true, allowTruncate: false, deadline: 30,
+                headers: ['User-Agent': 'Mozilla/5.0 (Linux; X11)'])
 
-            assert response.responseCode == 200
-            assert response.text.contains('Gaelyk')
-            assert response.headers
-        }
+        assert response.responseCode == 200
+        assert response.text.contains('Gaelyk')
+        assert response.headers
     }
 
     void testGetGaelykHomePageAndCheckResponseHeaders() {
-        use (GaelykCategory) {
-            HTTPResponse response = gaelyk.get(deadline: 30, allowTruncate: true)
+        HTTPResponse response = gaelyk.get(deadline: 30, allowTruncate: true)
 
-            assert response.responseCode == 200
+        assert response.responseCode == 200
 
-            println response.headersMap.'Content-Type' == 'text/html; charset=utf-8'
-        }
-
+        println response.headersMap.'Content-Type' == 'text/html; charset=utf-8'
     }
 
     void testPostForbiddenToGoogle() {
-        use (GaelykCategory) {
-            HTTPResponse response = googleSearch.delete(followRedirects: false)
+        HTTPResponse response = googleSearch.delete(followRedirects: false)
 
-            assert response.statusCode == 405
-            assert response.text.contains('The request method <code>DELETE</code> is inappropriate for the URL')
-        }
+        assert response.statusCode == 405
+        assert response.text.contains('The request method <code>DELETE</code> is inappropriate for the URL')
     }
 
     void testGoogleWithFuture() {
-        use (GaelykCategory) {
-            Future<HTTPResponse> future = googleSearchWithGaelykQ.get(async: true)
-            HTTPResponse response = future.get()
+        Future<HTTPResponse> future = googleSearchWithGaelykQ.get(async: true)
+        HTTPResponse response = future.get()
 
-            assert response.responseCode == 200
-            assert response.text.contains('http://gaelyk.appspot.com')
-        }
+        assert response.responseCode == 200
+        assert response.text.contains('http://gaelyk.appspot.com')
     }
 
     void testGoogleSearch() {
-        use (GaelykCategory) {
-            HTTPResponse response = googleSearch.get(params: [q: 'Gaelyk'])
+        HTTPResponse response = googleSearch.get(params: [q: 'Gaelyk'])
 
-            println response.text
+        println response.text
 
-            assert response.responseCode == 200
-            assert response.text.contains('http://gaelyk.appspot.com')
-        }
+        assert response.responseCode == 200
+        assert response.text.contains('http://gaelyk.appspot.com')
     }
 
     void _testPostToFormWithPayload() {
-        use (GaelykCategory) {
-            HTTPResponse response = formPost.post(payload: 'your_name=Gaelyk&fruit=Apricot', deadline: 10)
+        HTTPResponse response = formPost.post(payload: 'your_name=Gaelyk&fruit=Apricot', deadline: 10)
 
-            assert response.responseCode == 200
-            assert response.text.contains('Gaelyk')
-            assert response.text.contains('Apricot')
-        }
+        assert response.responseCode == 200
+        assert response.text.contains('Gaelyk')
+        assert response.text.contains('Apricot')
     }
 
     void _testPostToFormWithParameters() {
-        use (GaelykCategory) {
-            HTTPResponse response = formPost.post(params: [your_name: 'Gaelyk', fruit: 'Apricot'], deadline: 10)
+        HTTPResponse response = formPost.post(params: [your_name: 'Gaelyk', fruit: 'Apricot'], deadline: 10)
 
-            assert response.responseCode == 200
-            assert response.text.contains('Gaelyk')
-            assert response.text.contains('Apricot')
-        }
+        assert response.responseCode == 200
+        assert response.text.contains('Gaelyk')
+        assert response.text.contains('Apricot')
     }
-
 }

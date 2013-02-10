@@ -60,15 +60,13 @@ class ImagesServiceTest extends GroovyTestCase {
     void testCompositeTransformDSL() {
         byte[] bytes = new File('../graphics/gaelyk-small-favicon.png').bytes
 
-        use(GaelykCategory) {
-            bytes.image.transform {
-                resize 100, 100
-                crop 0.1, 0.1, 0.9, 0.9
-                horizontal flip
-                vertical flip
-                rotate 90
-                feeling lucky
-            }
+        bytes.image.transform {
+            resize 100, 100
+            crop 0.1, 0.1, 0.9, 0.9
+            horizontal flip
+            vertical flip
+            rotate 90
+            feeling lucky
         }
     }
 
@@ -76,25 +74,23 @@ class ImagesServiceTest extends GroovyTestCase {
         def file = new File('../graphics/gaelyk-small-favicon.png')
         byte[] bytes = file.bytes
 
-        use(GaelykCategory) {
-            def image = bytes.image
+        def image = bytes.image
 
-            assert file.image == image
+        assert file.image == image
 
-            assert image.imFeelingLucky() == image.transform { feeling lucky }
+        assert image.imFeelingLucky() == image.transform { feeling lucky }
 
-            assert image.resize(100, 100) == image.transform { resize 100, 100 }
-            assert image.crop(0.1, 0.1, 0.9, 0.9) == image.transform { crop 0.1, 0.1, 0.9, 0.9 }
+        assert image.resize(100, 100) == image.transform { resize 100, 100 }
+        assert image.crop(0.1, 0.1, 0.9, 0.9) == image.transform { crop 0.1, 0.1, 0.9, 0.9 }
 
-            assert image.rotate(270) == image.transform {
-                horizontal flip
-                vertical flip
-                rotate 90
-            }
-
-            assert image.horizontalFlip().horizontalFlip() == image
-            assert image.verticalFlip().verticalFlip() == image
+        assert image.rotate(270) == image.transform {
+            horizontal flip
+            vertical flip
+            rotate 90
         }
+
+        assert image.horizontalFlip().horizontalFlip() == image
+        assert image.verticalFlip().verticalFlip() == image
     }
 
     void testComposites() {
@@ -102,8 +98,6 @@ class ImagesServiceTest extends GroovyTestCase {
         def compTransf1 = ImagesServiceFactory.makeCompositeTransform([ImagesServiceFactory.makeHorizontalFlip()])
         def compTransf2 = ImagesServiceFactory.makeCompositeTransform([ImagesServiceFactory.makeHorizontalFlip()])
 
-        use(GaelykCategory) {
-            compTransf1 << ImagesServiceFactory.makeHorizontalFlip() == compTransf2 >> ImagesServiceFactory.makeHorizontalFlip()
-        }
+        compTransf1 << ImagesServiceFactory.makeHorizontalFlip() == compTransf2 >> ImagesServiceFactory.makeHorizontalFlip()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package groovyx.gaelyk.routes
 import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
 import com.google.appengine.api.capabilities.Capability
 import com.google.appengine.api.capabilities.CapabilitiesService
+import groovy.transform.CompileStatic
 
 /**
  * A routing rule represents the forward or redirect part of a rule definition.
@@ -45,6 +46,7 @@ class RoutingRule {
     /**
      * @return the final destination, according to the routing rules and the availability of the various services
      */
+    @CompileStatic
     String getFinalDestination() {
         CapabilityAwareDestination alternate = destinations.find { CapabilityAwareDestination dest ->
             if (dest.comparison == CapabilityAwareDestination.CapabilityComparisonOperator.IS) {

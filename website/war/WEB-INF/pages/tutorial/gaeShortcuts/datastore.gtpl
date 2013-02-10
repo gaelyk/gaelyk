@@ -608,6 +608,14 @@ if your <code>where</code> and <code>and</code> clauses use properties that are 
 a <code>QuerySyntaxException</code> will be thrown.
 </blockquote>
 
+<p>
+	For <code>select all</code> queries using <code>iterate</code> method nad for the <code>select all</code> queries using <code>execute</code> which are not coerced to POGO
+	the methods return instance
+	of <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultIterator">QueryResultIterator</a> 
+	or <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultList">QueryResultList</a> from which <code>cursor</code>
+	and <code>indexList</code> properites could be read.
+</p>
+
 <a name="async-datastore"></a>
 <h3>Asynchronous datastore</h3>
 

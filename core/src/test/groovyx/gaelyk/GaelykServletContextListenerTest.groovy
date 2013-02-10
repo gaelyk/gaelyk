@@ -71,4 +71,17 @@ class GaelykServletContextListenerTest extends GroovyTestCase {
 
         assert called
     }
+    
+    void testVerifyVersion(){
+        assert !GaelykServletContextListener.verifyGroovyVersionInternal('3.0.0')
+        assert GaelykServletContextListener.verifyGroovyVersionInternal('2.1')
+        assert GaelykServletContextListener.verifyGroovyVersionInternal('2.1.0')
+        assert GaelykServletContextListener.verifyGroovyVersionInternal('2.0.0')
+        assert GaelykServletContextListener.verifyGroovyVersionInternal('2.0.5')
+        assert !GaelykServletContextListener.verifyGroovyVersionInternal('1.8.7')
+        assert !GaelykServletContextListener.verifyGroovyVersionInternal('1.7')
+        
+        // verify that we are building using good version
+        GaelykServletContextListener.verifyGroovyVersion()
+    }
 }

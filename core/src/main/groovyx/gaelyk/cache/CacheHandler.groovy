@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import groovyx.gaelyk.logging.GroovyLogger
  * 
  * @author Guillaume Laforge
  */
+@groovy.transform.CompileStatic
 class CacheHandler {
 
     // Date formatter for caching headers date creation
@@ -77,11 +78,11 @@ class CacheHandler {
                     return
                 }
             }
-            serveAndCacheOrServeFromCache(request, response, result.destination, uri, route.cacheExpiration)
+            serveAndCacheOrServeFromCache(request, response, (String)result['destination'], uri, route.cacheExpiration)
         } else {
             log.config "Route not cacheable"
 
-            request.getRequestDispatcher(result.destination).forward request, response
+            request.getRequestDispatcher((String)result['destination']).forward request, response
         }
     }
 
@@ -93,9 +94,10 @@ class CacheHandler {
         String lastModifiedKey = "last-modified-$uri"
 
         def memcache = MemcacheServiceFactory.memcacheService
+        def asyncMemcache = MemcacheServiceFactory.asyncMemcacheService
 
-        def content = memcache.get(contentKey)
-        def type = memcache.get(typeKey)
+        byte[] content = (byte[])memcache.get(contentKey)
+        String type = memcache.get(typeKey)
 
         // the resource is still present in the cache
         if (content && type) {
@@ -120,20 +122,20 @@ class CacheHandler {
             log.config "Wrapping a response for caching and forwarding to resource to be cached"
             def cachedResponse = new CachedResponse(response)
             request.getRequestDispatcher(destination).forward request, cachedResponse
-            def byteArray = cachedResponse.output.toByteArray()
-
-            log.config "Byte array of wrapped response will be put in memcache: ${new String(byteArray)}"
-
-            // put the output in memcache
-            memcache.put(contentKey, byteArray, duration)
-            memcache.put(typeKey, cachedResponse.contentType, duration)
-            memcache.put(lastModifiedKey, lastModifiedString, duration)
+            byte[] byteArray = cachedResponse.output.toByteArray()
 
             log.config "Serving content-type and byte array"
 
             // output back to the screen
             response.contentType = cachedResponse.contentType
             response.outputStream << byteArray
+
+            log.config "Byte array of wrapped response will be put in memcache: ${new String(byteArray)}"
+
+            // put the output in memcache
+            asyncMemcache.put(contentKey, byteArray as byte[], duration)
+            asyncMemcache.put(typeKey, cachedResponse.contentType, duration)
+            asyncMemcache.put(lastModifiedKey, lastModifiedString, duration)
         }
     }
 }

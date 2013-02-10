@@ -47,6 +47,13 @@ but there is also a more rapid shortcut for retrieving an image when given a blo
     def image = blobKey.image
 </pre>
 
+<blockquote>
+    <b>Note: </b> <code>blobKey.image</code> creates an image object with only the blob key set.
+    It's not retrieving the actual image right away, nor its properties like its dimensions.
+    See this Gaelyk <a href="https://github.com/glaforge/gaelyk/issues/161">issue</a> for more information,
+    or this Google App Engine <a href="http://code.google.com/p/googleappengine/issues/detail?id=5452">issue</a>.
+</blockquote>
+
 <p>
 In case you have a file or a byte array representing your image, you can also easily instanciate an <code>Image</code> with:
 </p>

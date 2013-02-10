@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@ package groovyx.gaelyk.routes
 
 import com.google.appengine.api.capabilities.Capability
 import com.google.appengine.api.capabilities.CapabilityStatus
+import groovy.transform.CompileStatic
 
 /**
  * Route destination which is aware of the GAE capabilities and their status.
  *
  * @author Guillaume Laforge
  */
+@CompileStatic
 class CapabilityAwareDestination {
     enum CapabilityComparisonOperator { IS, NOT }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,19 @@
 package groovyx.gaelyk
 
 import groovy.servlet.ServletBinding
-import groovy.servlet.ServletCategory
 import groovy.servlet.TemplateServlet
 import groovy.text.Template
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-
-import groovyx.gaelyk.plugins.PluginsHandler
 import javax.servlet.ServletConfig
 
+import org.codehaus.groovy.runtime.InvokerInvocationException;
+
+import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.logging.GroovyLogger
+
+import groovy.transform.CompileStatic
 
 /**
  * The Gaelyk template servlet extends Groovy's own template servlet 
@@ -44,19 +46,36 @@ class GaelykTemplateServlet extends TemplateServlet {
     private Closure serviceClosure = {}
 
     @Override
+    @CompileStatic
     void init(ServletConfig config) {
         if (config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true' || !GaelykBindingEnhancer.localMode)) {
             serviceClosure = { HttpServletRequest request, HttpServletResponse response, ServletBinding binding ->
                 try {
                     try {
                         runPrecompiled(getPrecompiledClassName(request), binding, response)
-                    } catch(ClassNotFoundException e){
-                        runTemplate(request, response, binding)
+                    } catch(InvokerInvocationException e){
+                        if(e.cause instanceof ClassNotFoundException){
+                            try {
+                                runTemplate(request, response, binding)                                
+                            } catch(InvokerInvocationException iie){
+                                throw iie.cause ?: iie
+                            }
+                        } else {
+                            throw e.cause ?: e
+                        }
                     }
                 } catch(FileNotFoundException te){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+                    log('Exception serving template', te)
+                    throw te
                 } catch(IllegalAccessException te){
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+                    log('Exception serving template', te)
+                    throw te
+                } catch(e){
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+                    log('Exception serving template', e)
+                    throw e
                 }
             }
         } else {
@@ -64,13 +83,21 @@ class GaelykTemplateServlet extends TemplateServlet {
                 try {
                     try {
                         runTemplate(request, response, binding)
-                    } catch(FileNotFoundException e){
-                        runPrecompiled(getPrecompiledClassName(request), binding, response)
-                    } catch(IllegalAccessException e){
-                        runPrecompiled(getPrecompiledClassName(request), binding, response)
+                    } catch(InvokerInvocationException e){
+                        if(e.cause instanceof FileNotFoundException){
+                            try {
+                                runPrecompiled(getPrecompiledClassName(request), binding, response)                                                            
+                            } catch(InvokerInvocationException iie){
+                                throw iie.cause ?: iie
+                            }
+                        } else {
+                            throw e.cause
+                        }
                     }
-                } catch(ClassNotFoundException te){
+                } catch(e){
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND)
+                    log('Exception serving template', e)
+                    throw e
                 }
             }
         }
@@ -91,24 +118,18 @@ class GaelykTemplateServlet extends TemplateServlet {
     }
 
     /**
-     * Service incoming requests applying the <code>GaelykCategory</code>
-     * and the other categories defined by the installed plugins.
+     * Service incoming requests and executing before/after actions defined by plugins
      *
      * @param request the request
      * @param response the response
      * @throws IOException when anything goes wrong
      */
     @Override
+    @CompileStatic
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        use([
-            ServletCategory,
-            GaelykCategory,
-            * PluginsHandler.instance.categories
-        ]) {
-            PluginsHandler.instance.executeBeforeActions(request, response)
-            doService(request, response)
-            PluginsHandler.instance.executeAfterActions(request, response)
-        }
+        PluginsHandler.instance.executeBeforeActions(request, response)
+        doService(request, response)
+        PluginsHandler.instance.executeAfterActions(request, response)
     }
 
     /**
@@ -125,6 +146,7 @@ class GaelykTemplateServlet extends TemplateServlet {
         serviceClosure(request, response, binding)
     }
 
+    @CompileStatic
     private runTemplate(HttpServletRequest request, HttpServletResponse response, ServletBinding binding) {
         Template template = tryFindTemplate(request)
         response.setStatus(HttpServletResponse.SC_OK)
@@ -135,6 +157,7 @@ class GaelykTemplateServlet extends TemplateServlet {
         template.make(binding.getVariables()).writeTo(out)
     }
 
+    @CompileStatic
     private Template tryFindTemplate(HttpServletRequest request) {
         String uri = getScriptUri(request)
         File file = super.getScriptUriAsFile(request)
@@ -145,7 +168,8 @@ class GaelykTemplateServlet extends TemplateServlet {
             }
             return getTemplate(file)
         }
-        throw new FileNotFoundException()
+        String message = file ? "Cannot find template: $file.absolutePath" : "Cannot find template for URI $uri"
+        throw new FileNotFoundException(message)
     }
 
     /**
@@ -167,14 +191,16 @@ class GaelykTemplateServlet extends TemplateServlet {
         ret += match[0][3]
         ret
     }
-    
+
+    @CompileStatic
     static String packageToDir(String pkg){
         return pkg.replaceAll(/[^a-zA-Z0-9\/]/, '_').replace('/', '.').toLowerCase()
     }
 
+    @CompileStatic
     private runPrecompiled(String precompiledClassName, ServletBinding binding, HttpServletResponse response) {
         try {
-            Class precompiledClass = Class.forName(precompiledClassName)
+            Class<Script> precompiledClass = Class.forName(precompiledClassName)
             Script precompiled = precompiledClass.newInstance([binding]as Object[])
             precompiled.run()
             response.setStatus(HttpServletResponse.SC_OK)
@@ -183,7 +209,7 @@ class GaelykTemplateServlet extends TemplateServlet {
                 throw e
             }
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
-            e.printStackTrace(binding.out)
+            e.printStackTrace((PrintWriter)binding.getVariable('out'))
         }
     }
 }

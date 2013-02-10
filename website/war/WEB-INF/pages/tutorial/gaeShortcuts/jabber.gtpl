@@ -55,7 +55,7 @@ Let's see what it would look like in a Groovlet for sending messages to a user:
     <li>on <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/xmpp/Message.html"><code>Message</code></a> instances
         <ul>
             <li><code>String getFrom()</code> : get the Jabber ID of the sender of this message</li>
-            <li><code>GPathResult getXml()</code> : get the XmlSlurper parsed document of the XML payload</li>
+            <li><code>GPathResult xml()</code> : get the XmlSlurper parsed document of the XML payload</li>
             <li><code>List&lt;String&gt; getRecipients()</code> : get a list of Strings representing the Jabber IDs of the recipients</li>
         </ul>
     </li>
@@ -196,7 +196,7 @@ instance, as shown below:
         message.stanza
 
         // or get a document parsed with XmlSlurper
-        message.xml
+        message.xml()
     }
 </pre>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,8 @@
  */
 package groovyx.gaelyk
 
-import java.io.IOException
-
 import groovy.servlet.GroovyServlet
 import groovy.servlet.ServletBinding
-import groovy.servlet.ServletCategory
-import groovy.util.GroovyScriptEngine
-import groovy.util.ResourceException
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -29,10 +24,10 @@ import javax.servlet.http.HttpServletResponse
 import javax.servlet.ServletConfig
 import javax.servlet.ServletRequest
 
-
-
 import groovyx.gaelyk.plugins.PluginsHandler
 import groovyx.gaelyk.logging.GroovyLogger
+
+import groovy.transform.CompileStatic
 
 /**
  * The Gaelyk servlet extends Groovy's own Groovy servlet
@@ -52,6 +47,7 @@ class GaelykServlet extends GroovyServlet {
 
 
     @Override
+    @CompileStatic
     void init(ServletConfig config) {
         super.init(config)
         // Set up the scripting engine
@@ -65,10 +61,11 @@ class GaelykServlet extends GroovyServlet {
      * @param binding the binding to enhance
      */
     @Override
+    @CompileStatic
     protected void setVariables(ServletBinding binding) {
         GaelykBindingEnhancer.bind(binding)
         PluginsHandler.instance.enrich(binding)
-        binding.setVariable("log", getLog(binding.request))
+        binding.setVariable("log", getLog((ServletRequest)binding.getVariable('request')))
     }
 
     private GroovyLogger getLog(ServletRequest request){
@@ -76,29 +73,24 @@ class GaelykServlet extends GroovyServlet {
     }
 
     /**
-     * Service incoming requests applying the <code>GaelykCategory</code>
-     * and the other categories defined by the installed plugins.
+     * Service incoming requests and executing before/after actions defined by plugins.
      *
      * @param request the request
      * @param response the response
      * @throws IOException when anything goes wrong
      */
     @Override
+    @CompileStatic
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        use([
-            ServletCategory,
-            GaelykCategory,
-            * PluginsHandler.instance.categories
-        ]) {
-            PluginsHandler.instance.executeBeforeActions(request, response)
-            doService(request, response)
-            PluginsHandler.instance.executeAfterActions(request, response)
-        }
+        PluginsHandler.instance.executeBeforeActions(request, response)
+        doService(request, response)
+        PluginsHandler.instance.executeAfterActions(request, response)
     }
 
     /**
      * Handle web requests to the GroovyServlet
      */
+    @CompileStatic
     private void doService(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Set it to HTML by default
         response.contentType = "text/html; charset="+encoding
@@ -156,12 +148,14 @@ class GaelykServlet extends GroovyServlet {
         }
     }
 
+    @CompileStatic
     private runGroovlet(String scriptUri, ServletBinding binding) {
         gse.run(scriptUri, binding)
     }
 
+    @CompileStatic
     private runPrecompiled(String precompiledClassName, ServletBinding binding) {
-        Class precompiledClass = Class.forName(precompiledClassName)
+        Class<Script> precompiledClass = Class.forName(precompiledClassName)
         Script precompiled = precompiledClass.newInstance([binding]as Object[])
         precompiled.run()
     }

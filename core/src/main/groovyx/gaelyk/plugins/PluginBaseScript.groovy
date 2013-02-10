@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,18 @@ package groovyx.gaelyk.plugins
 
 import groovyx.gaelyk.routes.RoutesBaseScript
 import groovyx.gaelyk.GaelykBindingEnhancer
+import groovy.transform.CompileStatic
 
 /**
  * Base script class used for evaluating the plugin descriptors.
  *
  * @author Guillaume Laforge
  */
+@CompileStatic
 abstract class PluginBaseScript extends RoutesBaseScript {
 
     /** contributed binding variables */
     Map bindingVariables = [:]
-
-    /** contributed categories */
-    List<Class> categories = []
 
     /** "before" request hook */
     Closure beforeAction = null
@@ -43,7 +42,7 @@ abstract class PluginBaseScript extends RoutesBaseScript {
      * @param c closure containing the new variables to add to the binding
      */
     void binding(Closure c) {
-        Closure clonedClosure = c.clone()
+        Closure clonedClosure = (Closure)c.clone()
 
         // puts the new binding variables into the map directly through closure delegation
         clonedClosure.delegate = bindingVariables
@@ -60,15 +59,6 @@ abstract class PluginBaseScript extends RoutesBaseScript {
     void routes(Closure c) {
         // use the RoutesBaseScript class logic to define the rules
         c()
-    }
-
-    /**
-     * Install new categories
-     *
-     * @param cats vararg of categories to install
-     */
-    void categories(Class... cats) {
-        categories = cats as List
     }
 
     /**

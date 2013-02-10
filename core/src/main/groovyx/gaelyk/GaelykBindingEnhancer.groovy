@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import com.google.appengine.api.prospectivesearch.ProspectiveSearchServiceFactor
 import com.google.appengine.api.log.LogServiceFactory
 import com.google.appengine.api.search.SearchServiceFactory
 import javax.servlet.http.HttpServletRequest
+import groovy.transform.CompileStatic
 
 /**
  * Class responsible for adding adding Google App Engine related services into the binding of Groovlets and Templates.
@@ -46,6 +47,7 @@ import javax.servlet.http.HttpServletRequest
  * @author Guillaume Laforge
  * @author Benjamin Muschko
  */
+@CompileStatic
 class GaelykBindingEnhancer {
 
     /**
@@ -147,7 +149,7 @@ class GaelykBindingEnhancer {
                 version: SystemProperty.version.get(),
             ],
             gaelyk: [
-                version: '1.2'
+                version: '2.0'
             ],
             id: SystemProperty.applicationId.get(),
             version: SystemProperty.applicationVersion.get()

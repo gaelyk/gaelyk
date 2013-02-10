@@ -1,0 +1,10 @@
+/**
+ * Configures codenarc for Jenkins
+ *
+ */
+
+ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
+ext.codenarcSources             = [ 'src/main', 'src/test' ]
+ext.codenarcReportType          = 'xml'
+ext.codenarcReportFile          = 'codenarc.xml'
+apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/codenarc/CodeNarc.gradle'

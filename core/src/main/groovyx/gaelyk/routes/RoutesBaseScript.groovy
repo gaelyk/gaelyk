@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package groovyx.gaelyk.routes
+
+import java.util.Map.Entry;
 
 /**
  * Base script class used for evaluating the routes.
@@ -68,7 +70,13 @@ abstract class RoutesBaseScript extends Script {
         def cacheExpiration = m.cache ?: 0
         def ignore = m.ignore ?: false
         def ns = m.namespace ?: null
-
-        routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false)
+        
+        if(destination instanceof String){
+            for(Entry<String, String> e in OptionalRoutesHelper.generateRoutes(route, destination)){
+                routes << new Route(e.key, e.value, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false)
+            }
+        } else {
+                routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false)
+        }
     }
 }

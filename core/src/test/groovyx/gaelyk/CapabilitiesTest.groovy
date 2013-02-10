@@ -34,22 +34,20 @@ class CapabilitiesTest extends GroovyTestCase {
 
     void testDatastoreAndMemcacheStatus() {
         def capabilities = CapabilitiesServiceFactory.capabilitiesService
-        use (GaelykCategory) {
-            assert capabilities[DATASTORE]          == ENABLED
-            assert capabilities[DATASTORE_WRITE]    == ENABLED
-            assert capabilities[MEMCACHE]           == ENABLED
-        }
+
+        assert capabilities[DATASTORE]          == ENABLED
+        assert capabilities[DATASTORE_WRITE]    == ENABLED
+        assert capabilities[MEMCACHE]           == ENABLED
     }
 
     void testCapabilityStatusBooleanCoercion() {
         def capabilities = CapabilitiesServiceFactory.capabilitiesService
-        use (GaelykCategory) {
-            assert capabilities[DATASTORE] && capabilities[DATASTORE_WRITE]
 
-            assert ENABLED
-            assert !DISABLED
-            assert SCHEDULED_MAINTENANCE
-            assert !UNKNOWN
-        }
+        assert capabilities[DATASTORE] && capabilities[DATASTORE_WRITE]
+
+        assert ENABLED
+        assert !DISABLED
+        assert SCHEDULED_MAINTENANCE
+        assert !UNKNOWN
     }
 }

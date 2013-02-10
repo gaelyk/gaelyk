@@ -1,0 +1,43 @@
+ext.gaelykGroovyVersion = '2.1.0'
+ext.gaelykSpockVersion = '0.7-groovy-2.0'
+ext.gaelykAppEngineVersion = '1.7.4'
+ext.gaelykLatestVersion = '2.0-SNAPSHOT'
+ext.gaelykSpockLatestVersion = '0.4-SNAPSHOT'
+ext.gaelykGradleVersion = '1.2'
+
+repositories {
+    mavenCentral()
+    maven { // for Gaelyk Snapshots
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+    maven { // for Spock Groovy 2.0 Support
+        url "http://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    maven { // for Groovy Snapshots
+        url "http://snapshots.repository.codehaus.org/"
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+task wrapper(type: Wrapper) {
+    gradleVersion = gaelykGradleVersion
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+println "Using following common Gaelyk setting:"
+
+println "Groovy Version: $ext.gaelykGroovyVersion"
+println "Spock Version: $ext.gaelykSpockVersion"
+println "App Engine Version: $ext.gaelykAppEngineVersion"
+println "Gaelyk Version: $ext.gaelykLatestVersion"
+println "Gaelyk Spock Version: $ext.gaelykSpockLatestVersion"
+println "Gradle Version: $ext.gaelykGradleVersion"

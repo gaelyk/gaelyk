@@ -1,32 +1,16 @@
-apply plugin: 'groovy'
+apply from: '../common.gradle'
+
 apply plugin: 'maven'
-apply plugin: 'eclipse'
 
-/**
- * http://evgeny-goldin.com/wiki/Gradle-CodeNarc-plugin
- */
-ext.codenarcPriority1Violations = 0     // Work
-ext.codenarcPriority2Violations = 213   // in
-ext.codenarcPriority3Violations = 985   // progress ..
-ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
-ext.codenarcSources             = [ 'src/main', 'src/test' ]
-
-// apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
-
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
 defaultTasks 'clean', 'codenarc', 'build'
 
 test {                     
   maxHeapSize = '320m'                                 
 }            
 
-
 // various directory places and file names
 final tmpProj    = '../template-project'
 final zipName    = "${buildDir}/gaelyk-template-project-${version}.zip"
-final projLib    = "${tmpProj}/src/main/webapp/WEB-INF/lib"
 
 final website    = '../website'
 final apiDir     = "${website}/war/api"
@@ -36,6 +20,9 @@ sourceSets {
     main {
         groovy {
             srcDir 'src/main'
+        }
+        resources {
+            srcDir 'src/resources'
         }
     }
 
@@ -50,14 +37,20 @@ sourceSets {
 }
 
 dependencies {
-    compile "com.google.appengine:appengine-api-1.0-sdk:$appEngineVersion"
-    compile "com.google.appengine:appengine-api-labs:$appEngineVersion"
+    groovy "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}", {
+        force = true
+    }
+//    compile "org.codehaus.groovy:groovy-servlet:${ext.gaelykGroovyVersion}"
+//    groovy "org.codehaus.groovy:groovy-ant:${ext.gaelykGroovyVersion}"  // for groovy-doc only   
+    compile "com.google.appengine:appengine-api-1.0-sdk:${ext.gaelykAppEngineVersion}"
+    compile "com.google.appengine:appengine-api-labs:${ext.gaelykAppEngineVersion}"
     compile 'javax.servlet:servlet-api:2.5'
+//    groovy "org.codehaus.groovy:groovy-test:${ext.gaelykGroovyVersion}" // for tests only   
     testCompile 'javax.servlet.jsp:jsp-api:2.2'
     testCompile 'junit:junit:4.8.2'
-    testCompile "com.google.appengine:appengine-testing:$appEngineVersion"
-    testCompile "com.google.appengine:appengine-api-stubs:$appEngineVersion"
-    testCompile 'org.spockframework:spock-core:0.7-groovy-1.8', {
+    testCompile "com.google.appengine:appengine-testing:${ext.gaelykAppEngineVersion}"
+    testCompile "com.google.appengine:appengine-api-stubs:${ext.gaelykAppEngineVersion}"
+    testCompile "org.spockframework:spock-core:${ext.gaelykSpockVersion}", {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile 'cglib:cglib-nodep:2.2.2'
@@ -127,19 +120,25 @@ tasks.withType(Upload) { // map the groovy configuration to compile in the pom
     }
 }
 
-if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
-    apply plugin: 'signing'
-    signing {
-        sign configurations.archives
+if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
+    boolean signingEnabled = !hasProperty('skipSigning') || skipSigning != 'true'
+    if(signingEnabled){
+        apply plugin: 'signing'
+        signing {
+            sign configurations.archives
+        }
     }
+        
 
     uploadArchives {
         repositories {
             mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+                if(signingEnabled){
+                    beforeDeployment { deployment -> signPom(deployment) }                    
+                }
 
                 def auth = {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                    authentication(userName: nexusUsername, password: nexusPassword)
                 }
 
                 repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/', auth)
@@ -199,19 +198,19 @@ if(hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')){
                 }
 
                 //mess with the generated pom to set the 'packaging' tag
-                pom.withXml { XmlProvider xmlProvider ->
-                    def xml = xmlProvider.asString()
-                    def pomXml = new XmlParser().parse(new ByteArrayInputStream(xml.toString().bytes))
-
-                    pomXml.version[0] + { packaging('jar') }
-
-                    def newXml = new StringWriter()
-                    def printer = new XmlNodePrinter(new PrintWriter(newXml))
-                    printer.preserveWhitespace = true
-                    printer.print(pomXml)
-                    xml.setLength(0)
-                    xml.append(newXml.toString())
-                }
+//                pom.withXml { XmlProvider xmlProvider ->
+//                    def xml = xmlProvider.asString()
+//                    def pomXml = new XmlParser().parse(xml.toString())
+//
+//                    pomXml.version[0] + { packaging('jar') }
+//
+//                    def newXml = new StringWriter()
+//                    def printer = new XmlNodePrinter(new PrintWriter(newXml))
+//                    printer.preserveWhitespace = true
+//                    printer.print(pomXml)
+//                    xml.setLength(0)
+//                    xml.append(newXml.toString())
+//                }
             }
         }
     }

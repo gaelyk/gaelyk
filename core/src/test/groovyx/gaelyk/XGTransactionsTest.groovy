@@ -22,7 +22,6 @@ class XGTransactionsTest extends GroovyTestCase {
     static LocalServiceTestHelper makeHelper() {
 			def helperConfig = new LocalDatastoreServiceTestConfig()
             helperConfig.defaultHighRepJobPolicyRandomSeed = 1L
-            // helperConfig.defaultHighRepJobPolicyUnappliedJobPercentage = 0.0f
 			helperConfig.defaultHighRepJobPolicyUnappliedJobPercentage = 100f
 			return new LocalServiceTestHelper(helperConfig)
     }
@@ -39,19 +38,16 @@ class XGTransactionsTest extends GroovyTestCase {
 
 	void testDatastoreTransactionWithBuilderOptions() {
 		def datastore = DatastoreServiceFactory.datastoreService
-		use(GaelykCategory) {
-			datastore.withTransaction(true) {
+		datastore.withTransaction(true) {
+            new Entity('foo').save()
+            new Entity('bar').save()
+		}
+		shouldFail {
+            datastore.withTransaction(false){
                 new Entity('foo').save()
                 new Entity('bar').save()
-			}
-			shouldFail {
-                datastore.withTransaction(false){
-                    new Entity('foo').save()
-                    new Entity('bar').save()
-                }
-			}
-            assert !DatastoreServiceFactory.datastoreService.activeTransactions
-			
+            }
 		}
+        assert !DatastoreServiceFactory.datastoreService.activeTransactions
 	}
 }

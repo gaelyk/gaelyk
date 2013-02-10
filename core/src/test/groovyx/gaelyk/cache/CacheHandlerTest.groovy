@@ -3,7 +3,6 @@ package groovyx.gaelyk.cache
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig
 import com.google.appengine.api.memcache.MemcacheServiceFactory
-import groovyx.gaelyk.GaelykCategory
 import groovyx.gaelyk.routes.Route
 
 import javax.servlet.http.HttpServletRequest
@@ -52,7 +51,7 @@ class CacheHandlerTest extends GroovyTestCase {
         void write(byte[] bytes, int i, int i1) { }
         void write(int i) { }
     }
-    private output = new CustomServletOutputStream(output: stream)
+    private output = new CustomServletOutputStream(out: stream)
 
     private response = [
             addHeader: { String h, String v -> recorder << "resp.addHeader" },
@@ -77,17 +76,16 @@ class CacheHandlerTest extends GroovyTestCase {
 
     void testClearCacheForUri() {
         def memcache = MemcacheServiceFactory.memcacheService
-        use(GaelykCategory) {
-            memcache['content-for-/photos'] = '1234'
-            memcache['content-type-for-/photos'] = 'text/html'
-            memcache['last-modified-/photos'] = new Date().time.toString()
 
-            memcache.clearCacheForUri('/photos')
+        memcache['content-for-/photos'] = '1234'
+        memcache['content-type-for-/photos'] = 'text/html'
+        memcache['last-modified-/photos'] = new Date().time.toString()
 
-            assert memcache['content-for-/photos'] == null
-            assert memcache['content-type-for-/photos'] == null
-            assert memcache['last-modified-/photos'] == null
-        }
+        memcache.clearCacheForUri('/photos')
+
+        assert memcache['content-for-/photos'] == null
+        assert memcache['content-type-for-/photos'] == null
+        assert memcache['last-modified-/photos'] == null
     }
 
     void testCacheServingWithoutCaching() {
@@ -103,7 +101,8 @@ class CacheHandlerTest extends GroovyTestCase {
 
         assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getHeader', 'resp.addHeader',
                 'resp.addHeader', 'resp.addHeader', 'req.getRequestDispatcher', 'reqDisp.forward',
-                'resp.getContentType', 'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream']
+                'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream', 'resp.getContentType']
+
     }
 
     void testCacheServingWithLastModified() {

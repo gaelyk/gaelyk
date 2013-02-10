@@ -24,13 +24,11 @@ class SearchServiceTest extends GroovyTestCase {
     void testGetAtNamespace() {
         def search = SearchServiceFactory.searchService
 
-        use(GaelykCategory) {
-            assert search instanceof SearchService
+        assert search instanceof SearchService
 
-            def namespacedSearch = search['aNamespace']
+        def namespacedSearch = search['aNamespace']
 
-            assert namespacedSearch instanceof SearchService
-            assert namespacedSearch.namespace == 'aNamespace'
-        }
+        assert namespacedSearch instanceof SearchService
+        assert namespacedSearch.namespace == 'aNamespace'
     }
 }

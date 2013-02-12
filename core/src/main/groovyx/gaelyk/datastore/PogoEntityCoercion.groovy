@@ -18,15 +18,12 @@ package groovyx.gaelyk.datastore
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Map.Entry;
 
 import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.EntityNotFoundException
 
-import groovy.transform.Canonical;
 import groovy.transform.CompileStatic;
-import groovy.transform.TypeCheckingMode;
 import groovyx.gaelyk.extensions.DatastoreExtensions
 
 /**
@@ -41,7 +38,6 @@ class PogoEntityCoercion {
      * Cached information about annotations present on POGO classes
      */
     private static Map<Class, Map<String, PropertyDescriptor>> cachedProps = [:]
-	
 
     /**
      * Goes through all the properties and finds how they are annotated.
@@ -50,56 +46,56 @@ class PogoEntityCoercion {
      * and whose values are maps of ignore/unindexed/key/value keys and
      * values of closures returning booleans
      */
-	// XXX: if the static compilation is skipped, props[property] = value works good
-	// @CompileStatic(TypeCheckingMode.SKIP)
+    // XXX: if the static compilation is skipped, props[property] = value works good
+    // @CompileStatic(TypeCheckingMode.SKIP)
     static Map<String, PropertyDescriptor> props(Object p) {
         def clazz = p.class
         boolean defaultIndexed = true
-        if(clazz.isAnnotationPresent(groovyx.gaelyk.datastore.Entity.class)){
+        if (clazz.isAnnotationPresent(groovyx.gaelyk.datastore.Entity.class)) {
             defaultIndexed = !clazz.getAnnotation(groovyx.gaelyk.datastore.Entity).unindexed()
         }
         if (!cachedProps.containsKey(clazz)) {
-			Map<String, PropertyDescriptor> props = [:]
-			for(String property in p.properties.keySet()){
-				if(!(property in ['class', 'metaClass']) && !(property.startsWith('$') || property.startsWith('_'))){
-					def descriptor = getPropertyDescriptorFor(clazz, property, defaultIndexed)
-					// XXX: This does not work. If it is Groovy bug, it's really nasty!
-					// props[property] = descriptor
-					props.put property, descriptor
-				} else {
-					// XXX: This does not work. If it is Groovy bug, it's really nasty!
-					// props[property] = PropertyDescriptor.IGNORED
-					props.put property, PropertyDescriptor.IGNORED
-				}
-			}
+            Map<String, PropertyDescriptor> props = [:]
+            for (String property in p.properties.keySet()) {
+                if (!(property in ['class', 'metaClass']) && !(property.startsWith('$') || property.startsWith('_'))) {
+                    def descriptor = getPropertyDescriptorFor(clazz, property, defaultIndexed)
+                    // XXX: This does not work. If it is Groovy bug, it's really nasty!
+                    // props[property] = descriptor
+                    props.put property, descriptor
+                } else {
+                    // XXX: This does not work. If it is Groovy bug, it's really nasty!
+                    // props[property] = PropertyDescriptor.IGNORED
+                    props.put property, PropertyDescriptor.IGNORED
+                }
+            }
             cachedProps[clazz] = props
         }
 
         return cachedProps[clazz]
     }
-	
-	static PropertyDescriptor getPropertyDescriptorFor(Class clazz, String property, boolean defaultIndexed){
-		def annos
-		def isStatic = false
-		try {
-			Field field = clazz.getDeclaredField(property)
-			isStatic = Modifier.isStatic(field.modifiers)
-			annos = field.annotations
-		} catch (e) {
-			try {
-				Method method = clazz.getDeclaredMethod("get${property.capitalize()}")
-				annos = method.annotations
-				isStatic = Modifier.isStatic(method.modifiers)
-			} catch (NoSuchMethodException nsme){
-				return PropertyDescriptor.IGNORED
-			}
-		}
-		if(isStatic || annos.any { it instanceof Ignore }) return PropertyDescriptor.IGNORED
-		if(annos.any { it instanceof Key }) return PropertyDescriptor.KEY
-		if(annos.any { it instanceof Version }) return PropertyDescriptor.VERSION
-		if(defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed }) return PropertyDescriptor.UNINDEXED
-		PropertyDescriptor.INDEXED
-	}
+
+    static PropertyDescriptor getPropertyDescriptorFor(Class clazz, String property, boolean defaultIndexed) {
+        def annos
+        def isStatic = false
+        try {
+            Field field = clazz.getDeclaredField(property)
+            isStatic = Modifier.isStatic(field.modifiers)
+            annos = field.annotations
+        } catch (e) {
+            try {
+                Method method = clazz.getDeclaredMethod("get${property.capitalize()}")
+                annos = method.annotations
+                isStatic = Modifier.isStatic(method.modifiers)
+            } catch (NoSuchMethodException nsme) {
+                return PropertyDescriptor.IGNORED
+            }
+        }
+        if (isStatic || annos.any { it instanceof Ignore }) return PropertyDescriptor.IGNORED
+        if (annos.any { it instanceof Key }) return PropertyDescriptor.KEY
+        if (annos.any { it instanceof Version }) return PropertyDescriptor.VERSION
+        if (defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed }) return PropertyDescriptor.UNINDEXED
+        PropertyDescriptor.INDEXED
+    }
 
     /**
      * Find the key in the properties
@@ -114,11 +110,11 @@ class PogoEntityCoercion {
     }
 
     /**
-    * Find the version in the properties
-    *
-    * @param props the properties
-    * @return the name of the key or null if none is found
-    */
+     * Find the version in the properties
+     *
+     * @param props the properties
+     * @return the name of the key or null if none is found
+     */
     static String findVersion(Map<String, PropertyDescriptor> props) {
         props.findResult { String prop, PropertyDescriptor m ->
             if (m.version()) return prop
@@ -138,10 +134,10 @@ class PogoEntityCoercion {
         String key = findKey(props)
         def value = key ? p.metaClass.getProperty(p, key) : null
         if (key && value) {
-            if(value instanceof CharSequence){
+            if (value instanceof CharSequence) {
                 entity = new Entity(p.class.simpleName, value?.toString())
             } else {
-                entity = new Entity(p.class.simpleName, ((Number)value).longValue())
+                entity = new Entity(p.class.simpleName, ((Number) value).longValue())
             }
         } else {
             entity = new Entity(p.class.simpleName)
@@ -179,9 +175,9 @@ class PogoEntityCoercion {
         if (o instanceof Map) {
             entityProps.each { k, v ->
                 o[k] = v
-            }    
-            o['id'] = e.key.name ?: e.key.id       
-        } else {        
+            }
+            o['id'] = e.key.name ?: e.key.id
+        } else {
             entityProps.each { String k, v ->
                 if (o.metaClass.hasProperty(o, k)) {
                     o[k] = v
@@ -200,10 +196,10 @@ class PogoEntityCoercion {
 
             if (version) {
                 try {
-                    if(e.key)  {
-                       o.metaClass.setProperty(o, version, Entities.getVersionProperty(DatastoreExtensions.get(Entities.createEntityGroupKey(e.key))))
+                    if (e.key) {
+                        o.metaClass.setProperty(o, version, Entities.getVersionProperty(DatastoreExtensions.get(Entities.createEntityGroupKey(e.key))))
                     }
-                } catch (EntityNotFoundException ex){
+                } catch (EntityNotFoundException ex) {
                     o.metaClass.setProperty(o, version, 0)
                 }
             }
@@ -214,15 +210,26 @@ class PogoEntityCoercion {
 
 @CompileStatic
 enum PropertyDescriptor {
-	//           ignore,unindex,key,    version
-	IGNORED { boolean ignore() { true } },
-	KEY		{ boolean key() { true } },
-	VERSION	{ boolean version() { true } },
-	INDEXED,
-	UNINDEXED { boolean unindexed() { true } },
+    //           ignore,unindex,key,    version
+    IGNORED {
+        boolean ignore() { true }
+    },
+    KEY {
+        boolean key() { true }
+    },
+    VERSION {
+        boolean version() { true }
+    },
+    INDEXED,
+    UNINDEXED {
+        boolean unindexed() { true }
+    },
 
-	boolean ignore() { false }
-	boolean unindexed() { false }
-	boolean key() { false }
-	boolean version() { false } 
+    boolean ignore() { false }
+
+    boolean unindexed() { false }
+
+    boolean key() { false }
+
+    boolean version() { false }
 }

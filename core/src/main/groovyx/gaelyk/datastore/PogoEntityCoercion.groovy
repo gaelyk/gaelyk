@@ -176,32 +176,38 @@ class PogoEntityCoercion {
         def entityProps = e.getProperties()
 
         def o = clazz.newInstance()
-        entityProps.each { String k, v ->
-            if (o.metaClass.hasProperty(o, k)) {
+        if (o instanceof Map) {
+            entityProps.each { k, v ->
                 o[k] = v
-            }
-        }
-
-        Map<String, PropertyDescriptor> classProps = props(o)
-
-        String key = findKey(classProps)
-
-        if (key) {
-            o.metaClass.setProperty(o, key, e.key.name ?: e.key.id)
-        }
-
-        String version = findVersion(classProps)
-
-        if (version) {
-            try {
-                if(e.key)  {
-                   o.metaClass.setProperty(o, version, Entities.getVersionProperty(DatastoreExtensions.get(Entities.createEntityGroupKey(e.key))))
+            }    
+            o['id'] = e.key.name ?: e.key.id       
+        } else {        
+            entityProps.each { String k, v ->
+                if (o.metaClass.hasProperty(o, k)) {
+                    o[k] = v
                 }
-            } catch (EntityNotFoundException ex){
-                o.metaClass.setProperty(o, version, 0)
+            }
+
+            Map<String, PropertyDescriptor> classProps = props(o)
+
+            String key = findKey(classProps)
+
+            if (key) {
+                o.metaClass.setProperty(o, key, e.key.name ?: e.key.id)
+            }
+
+            String version = findVersion(classProps)
+
+            if (version) {
+                try {
+                    if(e.key)  {
+                       o.metaClass.setProperty(o, version, Entities.getVersionProperty(DatastoreExtensions.get(Entities.createEntityGroupKey(e.key))))
+                    }
+                } catch (EntityNotFoundException ex){
+                    o.metaClass.setProperty(o, version, 0)
+                }
             }
         }
-
         return o
     }
 }

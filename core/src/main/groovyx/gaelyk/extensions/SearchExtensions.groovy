@@ -192,7 +192,7 @@ class SearchExtensions {
      * @return a raw value or a list of raw values if the field is multivalued
      */
     static Object get(Document document, String fieldName) {
-        List<Field> fields = document.getField(fieldName).collect()
+        List<Field> fields = document.getFields(fieldName).collect()
 
         switch (fields.size()) {
             case 0:

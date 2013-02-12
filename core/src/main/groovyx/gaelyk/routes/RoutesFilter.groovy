@@ -145,7 +145,7 @@ class RoutesFilter implements Filter {
         for (Route route in routes) {
             // first, check that the HTTP methods are compatible
             if (route.method == HttpMethod.ALL || route.method.toString() == method) {
-                def result = route.forUri(request)
+                def result = route.forUri(getIncludeAwareUri(request), request)
                 if (result.matches) {
                     if (route.ignore) {
                         // skip out completely
@@ -188,7 +188,7 @@ class RoutesFilter implements Filter {
     *         hints provided by the servlet container
     */
     @CompileStatic
-    protected String getIncludeAwareUri(HttpServletRequest request) {
+    static String getIncludeAwareUri(HttpServletRequest request) {
         String uri = null
         String info = null
 

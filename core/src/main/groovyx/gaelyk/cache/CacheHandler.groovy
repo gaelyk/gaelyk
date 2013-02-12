@@ -21,6 +21,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory
 import com.google.appengine.api.memcache.Expiration
 import java.text.SimpleDateFormat
 import groovyx.gaelyk.routes.Route
+import groovyx.gaelyk.routes.RoutesFilter;
 import groovyx.gaelyk.logging.GroovyLogger
 
 /**
@@ -50,12 +51,14 @@ class CacheHandler {
     static void serve(Route route, HttpServletRequest request, HttpServletResponse response) {
         log.config "Serving for route $route"
 
-        def requestURI = request.requestURI
+        // should be 
+        def requestURI = RoutesFilter.getIncludeAwareUri(request)
+
         def uri = requestURI + (request.queryString ? "?$request.queryString" : "")
 
         log.config "Request URI to cache: $uri"
 
-        def result = route.forUri(request)
+        def result = route.forUri(uri, request)
 
         if (route.cacheExpiration > 0) {
             log.config "Route cacheable"

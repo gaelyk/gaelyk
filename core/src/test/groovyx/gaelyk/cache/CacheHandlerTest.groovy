@@ -39,7 +39,10 @@ class CacheHandlerTest extends GroovyTestCase {
             getRequestDispatcher: { String s -> recorder << "req.getRequestDispatcher"; requestDispatcher },
             getHeader: { String h -> recorder << "req.getHeader"; dateAfter },
             toString: { -> "mock request" },
-            setAttribute: { String name, val -> }
+            setAttribute: { String name, val -> },
+			getAttribute: { String name -> },
+			getServletPath: {-> recorder << "req.getServletPath"; uri },
+			getPathInfo: {->}
     ] as HttpServletRequest
 
     private requestDispatcher = [

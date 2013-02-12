@@ -122,9 +122,7 @@ class Route {
      * @return a map with a 'matches' boolean key telling whether the route is matched
      * and a variables key containing a map of the variable key and matched value.
      */
-    def forUri(HttpServletRequest request) {
-        def uri = request.requestURI
-
+    def forUri(String uri, HttpServletRequest request) {
         // disregarding URL parts with appended ;jsessionid=xxx
         int cutoff = uri.indexOf(';')
         if (cutoff > -1) {

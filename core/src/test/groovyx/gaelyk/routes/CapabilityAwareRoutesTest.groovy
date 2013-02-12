@@ -106,12 +106,12 @@ class CapabilityAwareRoutesTest extends GroovyTestCase {
             to "/default.gtpl?var=@bar"
             to("/scheduled.gtpl?var=@bar").on(DATASTORE_WRITE).is(ENABLED)
         })
-        assert route.forUri(r("/foo/something")).destination == "/scheduled.gtpl?var=something"
+        assert route.forUri("/foo/something",r("/foo/something")).destination == "/scheduled.gtpl?var=something"
 
         route = new Route("/foo/@bar", {
             to "/default.gtpl?var=@bar"
             to("/scheduled.gtpl?var=@bar").on(DATASTORE_WRITE).not(ENABLED)
         })
-        assert route.forUri(r("/foo/baz")).destination == "/default.gtpl?var=baz"
+        assert route.forUri("/foo/baz", r("/foo/baz")).destination == "/default.gtpl?var=baz"
     }
 }

@@ -138,11 +138,11 @@ class PogoEntityCoercion {
         String key = findKey(props)
         def value = key ? p.metaClass.getProperty(p, key) : null
         if (key && value) {
-			if(value instanceof CharSequence){
-				entity = new Entity(p.class.simpleName, value?.toString())		
-			} else {
-				entity = new Entity(p.class.simpleName, ((Number)value).longValue())
-			}
+            if(value instanceof CharSequence){
+                entity = new Entity(p.class.simpleName, value?.toString())
+            } else {
+                entity = new Entity(p.class.simpleName, ((Number)value).longValue())
+            }
         } else {
             entity = new Entity(p.class.simpleName)
         }

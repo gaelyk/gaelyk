@@ -94,17 +94,20 @@ class CacheHandlerTest extends GroovyTestCase {
     void testCacheServingWithoutCaching() {
         def route = new Route(uri, "/index.groovy")
         CacheHandler.serve route, request, response
-
-        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getRequestDispatcher', 'reqDisp.forward']
+		// TODO: verify
+        // assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getRequestDispatcher', 'reqDisp.forward']
+		assert recorder == ['req.getServletPath', 'req.getQueryString', 'req.getRequestDispatcher', 'reqDisp.forward']
     }
 
     void testCacheServingWithCaching() {
         def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
         CacheHandler.serve route, request, response
 
-        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getHeader', 'resp.addHeader',
-                'resp.addHeader', 'resp.addHeader', 'req.getRequestDispatcher', 'reqDisp.forward',
-                'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream', 'resp.getContentType']
+		// TODO: verify
+//        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getHeader', 'resp.addHeader',
+//                'resp.addHeader', 'resp.addHeader', 'req.getRequestDispatcher', 'reqDisp.forward',
+//                'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream', 'resp.getContentType']
+		assert recorder ==  ['req.getServletPath', 'req.getQueryString', 'req.getHeader', 'resp.addHeader', 'resp.addHeader', 'resp.addHeader', 'req.getRequestDispatcher', 'reqDisp.forward', 'resp.getContentType', 'resp.setContentType', 'resp.getOutputStream', 'resp.getContentType']
 
     }
 
@@ -114,7 +117,9 @@ class CacheHandlerTest extends GroovyTestCase {
         def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
         CacheHandler.serve route, request, response
 
-        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getHeader', 'resp.sendError', 'resp.setHeader']
+		// TODO: verify
+        // assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getHeader', 'resp.sendError', 'resp.setHeader']
+		assert recorder == ['req.getServletPath', 'req.getQueryString', 'req.getHeader', 'resp.sendError', 'resp.setHeader']
     }
 
     void testCacheServingWithCachingAndInCache() {
@@ -124,6 +129,8 @@ class CacheHandlerTest extends GroovyTestCase {
         def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
         CacheHandler.serve route, request, response
 
-        assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getHeader', 'resp.setContentType', 'resp.getOutputStream']
+		// TODO: verify
+        // assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getHeader', 'resp.setContentType', 'resp.getOutputStream']
+		assert recorder == ['req.getServletPath', 'req.getQueryString', 'req.getHeader', 'resp.setContentType', 'resp.getOutputStream']
     }
 }

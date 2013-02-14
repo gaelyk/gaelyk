@@ -1,5 +1,7 @@
 package groovyx.gaelyk.datastore;
 
+import groovyx.gaelyk.extensions.DatastoreExtensions;
+
 import com.google.appengine.api.datastore.Entities;
 import com.google.appengine.api.datastore.Entity;
 
@@ -45,7 +47,7 @@ public class DatastoreEntityCoercion {
         }
         if (dsEntity.hasDatastoreVersion()) {
             try {
-                dsEntity.setDatastoreVersion(Entities.getVersionProperty(en));                
+                dsEntity.setDatastoreVersion(Entities.getVersionProperty(DatastoreExtensions.get(Entities.createEntityGroupKey(en.getKey()))));                
             } catch(NullPointerException npe){
                 dsEntity.setDatastoreVersion(0); 
             }

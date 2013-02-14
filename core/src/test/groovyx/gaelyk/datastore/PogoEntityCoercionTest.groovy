@@ -26,7 +26,7 @@ class PogoEntityCoercionTest extends GroovyTestCase {
 
     void testReflectionOnPogo() {
         def p1 = new P1()
-        def props = PogoEntityCoercion.props(p1)
+        def props = ReflectionEntityCoercion.props(p1)
 		
 		assert props.s1 == PropertyDescriptor.UNINDEXED
         assert props.s1.unindexed()

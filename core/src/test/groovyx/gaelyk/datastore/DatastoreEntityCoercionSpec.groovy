@@ -76,7 +76,7 @@ class DatastoreEntityCoercionSpec extends Specification {
         then:
         with(ex){
             id == 15
-            version == 0
+            version != 0
             ignored == 0
             indexed1 == 'indexed'
             indexed2 == 15

@@ -16,16 +16,17 @@
 package groovyx.gaelyk.extensions
 
 import groovy.transform.CompileStatic
-import com.google.appengine.api.search.SearchService
-import com.google.appengine.api.search.SearchServiceFactory
-import com.google.appengine.api.search.Index
-import com.google.appengine.api.search.IndexSpec
-import com.google.appengine.api.search.AddResponse
-import com.google.appengine.api.search.PutResponse
 import groovyx.gaelyk.search.DocumentDefinitions
+
+import java.util.concurrent.Future
+
 import com.google.appengine.api.search.Document
 import com.google.appengine.api.search.Field
-import java.util.concurrent.Future
+import com.google.appengine.api.search.Index
+import com.google.appengine.api.search.IndexSpec
+import com.google.appengine.api.search.PutResponse
+import com.google.appengine.api.search.SearchService
+import com.google.appengine.api.search.SearchServiceFactory
 
 /**
  * Search service method extensions
@@ -89,20 +90,15 @@ class SearchExtensions {
      *
      * @param index the index to which to add the documents
      * @param closure the closure defining the documents to be added to the index
-     * @return an instance of AddResponse
+     * @return an instance of PutResponse
+     * @deprecated use {@link #put(Index, Closure)} instead
      */
     @Deprecated
     @CompileStatic
-    static AddResponse add(Index index, @DelegatesTo(value=DocumentDefinitions, strategy=Closure.DELEGATE_FIRST) Closure closure) {
-        def docDefClosure = (Closure)closure.clone()
-        docDefClosure.resolveStrategy = Closure.DELEGATE_FIRST
-        def definitions = new DocumentDefinitions()
-        docDefClosure.delegate = definitions
-        docDefClosure()
+    static PutResponse add(Index index, @DelegatesTo(value=DocumentDefinitions, strategy=Closure.DELEGATE_FIRST) Closure closure) {
+        put(index, closure)
+    }
 
-        index.add(definitions.docs)
-    }    
-    
     /**
      * Put a new document to the index.
      *
@@ -139,8 +135,8 @@ class SearchExtensions {
         docDefClosure()
 
         index.put(definitions.docs)
-    }    
-    
+    }
+
     /**
      * Put a new document to the index.
      *
@@ -177,7 +173,7 @@ class SearchExtensions {
         docDefClosure()
 
         index.putAsync(definitions.docs)
-    }    
+    }
 
     /**
      * Get a document field raw value or list of raw values.

@@ -33,7 +33,9 @@ import groovyx.gaelyk.UnindexedEntityWrapper
 import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.datastore.PreparedQuery
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
+
 import groovyx.gaelyk.datastore.PogoEntityCoercion
+import groovyx.gaelyk.datastore.ReflectionEntityCoercion
 import com.google.appengine.api.datastore.TransactionOptions.Builder as TOB
 
 /**

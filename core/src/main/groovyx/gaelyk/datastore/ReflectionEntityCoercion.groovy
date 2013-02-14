@@ -35,7 +35,7 @@ import groovyx.gaelyk.extensions.DatastoreExtensions
  * @author Guillaume Laforge
  */
 @CompileStatic
-class PogoEntityCoercion {
+class ReflectionEntityCoercion {
 
     /**
      * Cached information about annotations present on POGO classes

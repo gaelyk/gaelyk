@@ -4,6 +4,7 @@ import groovyx.gaelyk.extensions.DatastoreExtensions;
 
 import com.google.appengine.api.datastore.Entities;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Text;
 
 public class DatastoreEntityCoercion {
 
@@ -53,12 +54,21 @@ public class DatastoreEntityCoercion {
             }
         }
         for(String propertyName : dsEntity.getIndexedProperties()){
-            dsEntity.setProperty(propertyName, en.getProperty(propertyName));
+            setEntityProperty(en, dsEntity, propertyName);
         }
         for(String propertyName : dsEntity.getUnindexedProperties()){
-            dsEntity.setProperty(propertyName, en.getProperty(propertyName));
+            setEntityProperty(en, dsEntity, propertyName);
         }
         return dsEntity;
+    }
+
+    private static <E extends DatastoreEntity<?>> void setEntityProperty(Entity en, E dsEntity, String propertyName) {
+        Object value = en.getProperty(propertyName);
+        if (value instanceof Text) {
+            dsEntity.setProperty(propertyName, ((Text) value).getValue());
+        } else {
+            dsEntity.setProperty(propertyName, value);
+        }
     }
     
 }

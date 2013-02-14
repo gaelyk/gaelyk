@@ -15,9 +15,10 @@
  */
 package groovyx.gaelyk
 
-import groovyx.gaelyk.extensions.DatastoreExtensions
-import com.google.appengine.api.datastore.Entity
 import groovy.transform.CompileStatic
+import groovyx.gaelyk.extensions.DatastoreExtensions
+
+import com.google.appengine.api.datastore.Entity
 
 /**
  * Wrapper around an entity, so as to be able to set unindexed properties, with:
@@ -58,5 +59,25 @@ class UnindexedEntityWrapper {
      */
     void setAt(String name, value) {
         entity.setUnindexedProperty(name, DatastoreExtensions.transformValueForStorage(value))
+    }
+
+    /**
+     * Get any property with the property notation: <code>def val = entity.unindexed.prop</code>
+     *
+     * @param name of the property
+     * @param value of the property
+     */
+    Object getProperty(String name) {
+        DatastoreExtensions.get(this.entity, name)
+    }
+
+    /**
+     * Get any property with the property notation: <code>def val = entity.unindexed['prop']</code>
+     *
+     * @param name of the property
+     * @param value of the property
+     */
+    void getAt(String name) {
+        DatastoreExtensions.get(this.entity, name)
     }
 }

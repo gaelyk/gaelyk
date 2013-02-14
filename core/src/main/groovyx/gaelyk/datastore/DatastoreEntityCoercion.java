@@ -1,5 +1,6 @@
 package groovyx.gaelyk.datastore;
 
+import groovy.lang.GString;
 import groovyx.gaelyk.extensions.DatastoreExtensions;
 
 import com.google.appengine.api.datastore.Entities;
@@ -28,15 +29,25 @@ public class DatastoreEntityCoercion {
         }
         
         for(String propertyName : dsEntity.getIndexedProperties()){
-            entity.setProperty(propertyName, dsEntity.getProperty(propertyName));
+            entity.setProperty(propertyName, transformValueForStorage(dsEntity.getProperty(propertyName)));
         }
         for(String propertyName : dsEntity.getUnindexedProperties()){
-            entity.setUnindexedProperty(propertyName, dsEntity.getProperty(propertyName));
+            entity.setUnindexedProperty(propertyName, transformValueForStorage(dsEntity.getProperty(propertyName)));
         }
         
         return entity;
     }
     
+    private static Object transformValueForStorage(Object value) {
+        Object newValue = value instanceof GString ? value.toString() : value;
+        // if we store a string longer than 500 characters
+        // it needs to be wrapped in a Text instance
+        if (newValue instanceof String && ((String)newValue).length() > 500) {
+            newValue = new Text((String) newValue);
+        }
+        return newValue;
+    }
+
     @SuppressWarnings("unchecked") public static <E extends DatastoreEntity<?>> E convert(Entity en, Class<E> dsEntityClass) throws InstantiationException, IllegalAccessException{
         E dsEntity = dsEntityClass.newInstance();
         if(dsEntity.hasDatastoreKey()){

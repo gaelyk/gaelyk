@@ -21,7 +21,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory
 import com.google.appengine.api.memcache.Expiration
 import java.text.SimpleDateFormat
 import groovyx.gaelyk.routes.Route
-import groovyx.gaelyk.routes.RoutesFilter;
+import groovyx.gaelyk.routes.RoutesFilter
 import groovyx.gaelyk.logging.GroovyLogger
 
 /**

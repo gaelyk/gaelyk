@@ -58,10 +58,10 @@ class PogoEntityCoercionTest extends GroovyTestCase {
 		assert !props.s5.key()
 		assert !props.s5.version()
 
-        assert PogoEntityCoercion.findKey(props) == 's3'
+        assert ReflectionEntityCoercion.findKey(props) == 's3'
 
         def p2 = new P2()
-        def props2 = PogoEntityCoercion.props(p2)
+        def props2 = ReflectionEntityCoercion.props(p2)
         assert props.s1.unindexed()
         assert !props.s2.unindexed()
     }
@@ -159,9 +159,9 @@ class PogoEntityCoercionTest extends GroovyTestCase {
     }
     
     void testFindVersion(){
-        assert PogoEntityCoercion.findVersion([:]) == null
-        assert PogoEntityCoercion.findVersion([prop: PropertyDescriptor.IGNORED]) == null
-        assert PogoEntityCoercion.findVersion(prop: PropertyDescriptor.VERSION) == 'prop'
+        assert ReflectionEntityCoercion.findVersion([:]) == null
+        assert ReflectionEntityCoercion.findVersion([prop: PropertyDescriptor.IGNORED]) == null
+        assert ReflectionEntityCoercion.findVersion(prop: PropertyDescriptor.VERSION) == 'prop'
     }
 }
 

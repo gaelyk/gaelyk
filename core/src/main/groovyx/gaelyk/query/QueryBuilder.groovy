@@ -133,14 +133,14 @@ class QueryBuilder {
                     void remove() {
                         throw new UnsupportedOperationException("Forbidden to call remove() on this Query DSL results iterator")
                     }
-					
-					Cursor getCursor() {
-						entitiesIterator.cursor
-					}
-					
-					List getIndexList() {
-						entitiesIterator.indexList
-					}
+
+                    Cursor getCursor() {
+                        entitiesIterator.cursor
+                    }
+
+                    List getIndexList() {
+                        entitiesIterator.indexList
+                    }
                 }
             } else {
                 def entities = preparedQuery.asList(options)

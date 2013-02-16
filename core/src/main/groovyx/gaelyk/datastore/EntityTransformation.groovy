@@ -61,15 +61,20 @@ class EntityTransformation extends AbstractASTTransformation {
         ClassNode keyCN = ClassHelper.makeWithoutCaching(Key).plainNodeReference
 
         handleVersion(parent, source)
-        handleParent(parent, source, keyCN)
+        boolean hasParent = handleParent(parent, source, keyCN)
         handleEntityProperties(anno, parent, source)
 
         addDatastoreEntityInterface(keyType, parent)
 
         parent.addMethod(addDelegatedMethod('save', keyCN))
         parent.addMethod(addDelegatedMethod('delete'))
-        parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: keyType], parent.plainNodeReference))
-        parent.addMethod(addStaticDelegatedMethod(parent, "delete", [key: keyType]))
+        if(hasParent){
+            parent.addMethod(addStaticDelegatedMethod(parent, "get", [parentKey: keyCN, key: keyType], parent.plainNodeReference))
+            parent.addMethod(addStaticDelegatedMethod(parent, "delete", [parentKey: keyCN, key: keyType]))
+        } else {
+            parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: keyType], parent.plainNodeReference))
+            parent.addMethod(addStaticDelegatedMethod(parent, "delete", [key: keyType]))
+        }
         parent.addMethod(addStaticDelegatedMethod(parent, "find", [key: Closure], parent.plainNodeReference))
         parent.addMethod(addStaticDelegatedMethod(parent, "count", [:], ClassHelper.int_TYPE))
         parent.addMethod(addStaticDelegatedMethod(parent, "count", [query: Closure], ClassHelper.int_TYPE))
@@ -231,7 +236,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 )
     }
 
-    private void handleParent(ClassNode parent, SourceUnit source, ClassNode keyCN) {
+    private boolean handleParent(ClassNode parent, SourceUnit source, ClassNode keyCN) {
         ClassNode parentAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Parent)
 
         PropertyNode existingParentProperty = findPropertyIncludingSuper(parent) { PropertyNode prop ->
@@ -242,10 +247,7 @@ class EntityTransformation extends AbstractASTTransformation {
 
         if(existingParentProperty && existingParentProperty.type != keyCN){
             source.addError(new SyntaxException("Only Key is allowed as a version property! Found ${existingParentProperty.type.name} ${existingParentProperty.declaringClass.name}.${existingParentProperty.name}.", existingParentProperty.lineNumber, existingParentProperty.columnNumber))
-            return
-        }
-
-        if (!existingParentProperty) {
+            return false
         }
 
         parent.addMethod new MethodNode(
@@ -288,6 +290,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
                 )
+        existingParentProperty
     }
 
     private void handleEntityProperties(AnnotationNode anno, ClassNode parent, SourceUnit source) {

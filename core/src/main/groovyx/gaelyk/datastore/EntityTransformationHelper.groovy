@@ -6,6 +6,7 @@ import groovyx.gaelyk.query.QueryType
 
 import com.google.appengine.api.datastore.DatastoreService
 import com.google.appengine.api.datastore.DatastoreServiceFactory
+import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.EntityNotFoundException
 import com.google.appengine.api.datastore.FetchOptions
@@ -27,6 +28,16 @@ class EntityTransformationHelper {
             pogo.setDatastoreKey(key.id)
         } else {
             pogo.setDatastoreKey(key.name)
+        }
+        if(pogo.hasDatastoreParent()){
+            pogo.setDatastoreParent(key.parent)
+        }
+        if(pogo.hasDatastoreVersion()){
+            try {
+                pogo.setDatastoreVersion(Entities.getVersionProperty(DatastoreExtensions.get(Entities.createEntityGroupKey(key))))
+            } catch (Exception e) {
+                pogo.setDatastoreVersion(0)
+            }
         }
         key
     }
@@ -51,8 +62,28 @@ class EntityTransformationHelper {
         }
     }
 
+    static <P> P get(Class<P> pogoClass, Key parentKey, long key) {
+        try {
+            return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(parentKey, pogoClass.simpleName, key)), pogoClass)
+        } catch (EntityNotFoundException e) {
+            return null
+        }
+    }
+
+    static <P> P get(Class<P> pogoClass, Key parentKey, String key) {
+        try {
+            return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(parentKey, pogoClass.simpleName, key)), pogoClass)
+        } catch (EntityNotFoundException e) {
+            return null
+        }
+    }
+
     static <P> void delete(Class<P> pogoClass, key) {
         DatastoreExtensions.delete(KeyFactory.createKey(pogoClass.simpleName, key))
+    }
+
+    static <P> void delete(Class<P> pogoClass, Key parentKey,  key) {
+        DatastoreExtensions.delete(KeyFactory.createKey(parentKey, pogoClass.simpleName, key))
     }
 
     static int count(Class<?> pogoClass) {

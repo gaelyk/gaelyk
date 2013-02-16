@@ -188,11 +188,11 @@ class EntityTransformationSpec extends Specification {
         !obj.hasProperty('id')
     }
 
-    @spock.lang.Ignore
     def "Test parent"(){
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
+            @groovy.transform.Canonical
             class MyPogo8 {
 				@groovyx.gaelyk.datastore.Parent com.google.appengine.api.datastore.Key parent
                 @groovyx.gaelyk.datastore.Key String name
@@ -204,6 +204,16 @@ class EntityTransformationSpec extends Specification {
 
             def mypogo = new MyPogo8(name: "name", test: "foo", parent: myparent.key)
 			mypogo.save()
+
+            assert MyPogo8.get(myparent.key, 'name') == mypogo
+            
+            try {
+                MyPogo8.get('name')
+                
+                throw new RuntimeException('Method get(name) should not be present!')
+            } catch (e) {
+                // ok
+            }
 			mypogo
 '''
 

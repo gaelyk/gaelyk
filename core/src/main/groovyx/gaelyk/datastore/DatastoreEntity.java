@@ -1,5 +1,7 @@
 package groovyx.gaelyk.datastore;
 
+import java.util.List;
+
 /**
  * Helper interface to speed up Object to Entity coercion skipping unnecessary reflection which
  * is extremely expensive on Google App Engine.
@@ -69,22 +71,20 @@ public interface DatastoreEntity<K> {
     void setDatastoreVersion(long version);
 
     /**
-     * Returns array of the names of properties which should be saved in the data store with the index.
-     * 
+     * Returns list of the names of properties which should be saved in the data store with the index.
      * This method should return same values for each instance. It cannot be static because of Java interface restrictions.
      * 
-     * @return array of the names of properties which should be saved in the data store with the index
+     * @return list of the names of properties which should be saved in the data store with the index
      */
-    String[] getIndexedProperties();
+    List<String> getDatastoreIndexedProperties();
 
     /**
-     * Returns array of the names of properties which should be saved in the data store unindexed.
-     * 
+     * Returns list of the names of properties which should be saved in the data store unindexed.
      * This method should return same values for each instance. It cannot be static because of Java interface restrictions.
      * 
-     * @return array of the names of properties which should be saved in the data store unindexed
+     * @return list of the names of properties which should be saved in the data store unindexed
      */
-    String[] getUnindexedProperties();
+    List<String> getDatastoreUnindexedProperties();
     
     // taken from GroovyObject, for java compatibility. Groovy classes has these methods
     // automagically

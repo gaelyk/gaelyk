@@ -19,8 +19,12 @@ class EntityTransformationSpec extends Specification {
 
     LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig())
 
-    def setup() { helper.setUp() }
-    def cleanup() { helper.tearDown() }
+    def setup() {
+        helper.setUp()
+    }
+    def cleanup() {
+        helper.tearDown()
+    }
 
     def "Save and delete works"(){
         def obj = newShell().evaluate '''
@@ -101,7 +105,6 @@ class EntityTransformationSpec extends Specification {
         3       | '()'
         2       | '{ where test == "foo"}'
         1       | '{ where test == "bar"}'
-
     }
 
     def "Test count "(){
@@ -184,11 +187,10 @@ class EntityTransformationSpec extends Specification {
         expect:
         !obj.hasProperty('id')
     }
-	
-	
-	@spock.lang.Ignore
-	def "Test parent"(){
-		def obj = newShell().evaluate '''
+
+    @spock.lang.Ignore
+    def "Test parent"(){
+        def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
             class MyPogo8 {
@@ -205,9 +207,41 @@ class EntityTransformationSpec extends Specification {
 			mypogo
 '''
 
-		expect:
-		obj.parent == KeyFactory.createKey('MyParent', 'parent')
-	}
+        expect:
+        obj.parent == KeyFactory.createKey('MyParent', 'parent')
+    }
+
+    def "Test DatastoreEntity implementation"(){
+        def obj = newShell().evaluate '''
+                @groovy.transform.CompileStatic
+                @groovyx.gaelyk.datastore.Entity
+                class MyPogoSuper9 {
+                    String superProp
+                }
+
+
+                @groovy.transform.CompileStatic
+                @groovyx.gaelyk.datastore.Entity
+                class MyPogo9 extends MyPogoSuper9 {
+                @groovyx.gaelyk.datastore.Key String name
+                @groovyx.gaelyk.datastore.Indexed String test1
+                @groovyx.gaelyk.datastore.Unindexed String test2
+                String test3
+                }
+                
+                new MyPogo9(name: "name", test1: "one", test2: "two", test3: "three")'''
+        expect:
+        obj.hasDatastoreKey() == true
+        obj.hasDatastoreNumericKey() == false
+        obj.getDatastoreKey() == 'name'
+        obj.hasDatastoreVersion() == true
+        obj.getDatastoreIndexedProperties() == ['test1']
+        obj.getDatastoreUnindexedProperties() == [
+            'test2',
+            'test3',
+            'superProp'
+        ]
+    }
 
 
     private GroovyShell newShell() {

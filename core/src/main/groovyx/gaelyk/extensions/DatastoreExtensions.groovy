@@ -15,27 +15,27 @@
  */
 package groovyx.gaelyk.extensions
 
-import groovy.lang.Closure;
 import groovy.transform.CompileStatic
-import com.google.appengine.api.datastore.Entity
 import groovy.transform.PackageScope
-import com.google.appengine.api.datastore.Text
-import com.google.appengine.api.datastore.Key
-import com.google.appengine.api.datastore.DatastoreServiceFactory
-import java.util.concurrent.Future
-import com.google.appengine.api.datastore.Transaction
-import com.google.appengine.api.datastore.DatastoreService
-import com.google.appengine.api.datastore.AsyncDatastoreService
-import com.google.appengine.api.datastore.KeyFactory
-import com.google.appengine.api.datastore.Query
-import groovyx.gaelyk.query.QueryBuilder
 import groovyx.gaelyk.UnindexedEntityWrapper
-import com.google.appengine.api.datastore.FetchOptions
-import com.google.appengine.api.datastore.PreparedQuery
+import groovyx.gaelyk.datastore.PogoEntityCoercion
+import groovyx.gaelyk.query.QueryBuilder
+
+import java.util.concurrent.Future
+
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
-import groovyx.gaelyk.datastore.PogoEntityCoercion
-import groovyx.gaelyk.datastore.ReflectionEntityCoercion
+import com.google.appengine.api.datastore.AsyncDatastoreService
+import com.google.appengine.api.datastore.DatastoreService
+import com.google.appengine.api.datastore.DatastoreServiceFactory
+import com.google.appengine.api.datastore.Entity
+import com.google.appengine.api.datastore.FetchOptions
+import com.google.appengine.api.datastore.Key
+import com.google.appengine.api.datastore.KeyFactory
+import com.google.appengine.api.datastore.PreparedQuery
+import com.google.appengine.api.datastore.Query
+import com.google.appengine.api.datastore.Text
+import com.google.appengine.api.datastore.Transaction
 import com.google.appengine.api.datastore.TransactionOptions.Builder as TOB
 
 /**
@@ -114,7 +114,7 @@ class DatastoreExtensions {
      */
     @CompileStatic
     static Object asType(Entity self, Class clazz) {
-//        return clazz.newInstance(self.properties)
+        //        return clazz.newInstance(self.properties)
         return PogoEntityCoercion.convert(self, clazz)
     }
 
@@ -128,7 +128,7 @@ class DatastoreExtensions {
     @CompileStatic
     static Object getAt(Entity entity, String name) {
         if(!entity.hasProperty(name)){
-            return null;
+            return null
         }
         transformValueForRetrieval(entity.getProperty(name))
     }
@@ -143,7 +143,7 @@ class DatastoreExtensions {
     @CompileStatic
     static Object get(Entity entity, String name) {
         if(!entity.hasProperty(name)){
-            return null;
+            return null
         }
         transformValueForRetrieval(entity.getProperty(name))
     }
@@ -164,11 +164,11 @@ class DatastoreExtensions {
      */
     @CompileStatic
     static void setAt(Entity entity, String name, Object value) {
-// TODO: decide the correct behaviour
-//      if(!value){
-//          entity.removeProperty(name)
-//          return
-//      }
+        // TODO: decide the correct behaviour
+        //      if(!value){
+        //          entity.removeProperty(name)
+        //          return
+        //      }
         entity.setProperty(name, transformValueForStorage(value))
     }
 
@@ -181,11 +181,11 @@ class DatastoreExtensions {
      */
     @CompileStatic
     static void set(Entity entity, String name, Object value) {
-// TODO: decide the correct behaviour
-//      if(!value){
-//          entity.removeProperty(name)
-//          return
-//      }
+        // TODO: decide the correct behaviour
+        //      if(!value){
+        //          entity.removeProperty(name)
+        //          return
+        //      }
         entity.setProperty(name, transformValueForStorage(value))
     }
 
@@ -317,14 +317,14 @@ class DatastoreExtensions {
     static Transaction withTransaction(DatastoreService service, Closure c) {
         return withTransaction(service, false, c)
     }
-    
+
     /**
      * With this method, transaction handling is done transparently.
      * The transaction is committed if the closure executed properly.
      * The transaction is rollbacked if anything went wrong.
-         * If you want to use cross-group transactions, pass {@literal true}
-         * as an argument.
-         * <p />
+     * If you want to use cross-group transactions, pass {@literal true}
+     * as an argument.
+     * <p />
      * You can use this method as follows:
      * <code>
      * datastore.withTransaction(true) { transaction ->
@@ -372,9 +372,9 @@ class DatastoreExtensions {
      * With this method, transaction handling is done transparently.
      * The transaction is committed if the closure executed properly.
      * The transaction is rollbacked if anything went wrong.
-         * If you want to use cross-group transactions, pass {@literal true}
-         * as an argument.
-         * <p />
+     * If you want to use cross-group transactions, pass {@literal true}
+     * as an argument.
+     * <p />
      * You can use this method as follows:
      * <code>
      * datastore.withTransaction(true) { transactionFuture ->

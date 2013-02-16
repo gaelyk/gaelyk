@@ -2,6 +2,9 @@ package groovyx.gaelyk.datastore;
 
 import groovy.lang.MissingPropertyException;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
 
     private long id;
@@ -40,12 +43,12 @@ public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
         this.version = version;
     }
 
-    @Override public String[] getIndexedProperties() {
-        return new String[] { "indexed1", "indexed2" };
+    @Override public List<String> getDatastoreIndexedProperties() {
+        return Arrays.asList("indexed1", "indexed2");
     }
 
-    @Override public String[] getUnindexedProperties() {
-        return new String[] { "unindexed1", "unindexed2" };
+    @Override public List<String> getDatastoreUnindexedProperties() {
+        return Arrays.asList("unindexed1", "unindexed2");
     }
 
     public long getId() {

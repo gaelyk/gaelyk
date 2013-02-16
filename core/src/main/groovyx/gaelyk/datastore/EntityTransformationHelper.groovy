@@ -1,5 +1,6 @@
 package groovyx.gaelyk.datastore
 
+import groovyx.gaelyk.extensions.DatastoreExtensions
 import groovyx.gaelyk.query.QueryBuilder
 import groovyx.gaelyk.query.QueryType
 
@@ -11,7 +12,6 @@ import com.google.appengine.api.datastore.FetchOptions
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.api.datastore.Query
-import groovyx.gaelyk.extensions.DatastoreExtensions
 
 /**
  * Utility class used for delegating on from classes annotated with {@link groovyx.gaelyk.datastore.Entity}.
@@ -21,12 +21,12 @@ import groovyx.gaelyk.extensions.DatastoreExtensions
  */
 class EntityTransformationHelper {
 
-    static Key save(Object pogo) {
+    static Key save(DatastoreEntity<?> pogo) {
         Key key = DatastoreExtensions.save(DatastoreExtensions.asType(pogo, Entity))
-        if (CharSequence.class.isAssignableFrom(pogo.getClass().getMethod('get$key').returnType)) {
-            pogo.set$key(key.name)
+        if (pogo.hasDatastoreNumericKey()) {
+            pogo.setDatastoreKey(key.id)
         } else {
-            pogo.set$key(key.id)
+            pogo.setDatastoreKey(key.name)
         }
         key
     }
@@ -37,27 +37,27 @@ class EntityTransformationHelper {
 
     static <P> P get(Class<P> pogoClass, long key) {
         try {
-           return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
+            return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
         } catch (EntityNotFoundException e) {
-           return null;
+            return null
         }
     }
 
     static <P> P get(Class<P> pogoClass, String key) {
         try {
-           return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
+            return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
         } catch (EntityNotFoundException e) {
-           return null;
+            return null
         }
     }
-    
+
     static <P> void delete(Class<P> pogoClass, key) {
         DatastoreExtensions.delete(KeyFactory.createKey(pogoClass.simpleName, key))
     }
 
     static int count(Class<?> pogoClass) {
         DatastoreService ds = DatastoreServiceFactory.datastoreService
-        Query q = new Query(pogoClass.simpleName);
+        Query q = new Query(pogoClass.simpleName)
         ds.prepare(q).countEntities(FetchOptions.Builder.withDefaults())
     }
 
@@ -105,17 +105,22 @@ class EntityTransformationHelper {
         if (builder == null) throw new IllegalArgumentException("Query builder cannot be null!")
         builder.select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).iterate()
     }
-
 }
 
 class HelperDatastore {
     QueryBuilder builder
 
-    QueryBuilder query(Closure c) { prepareAndLaunchQuery c }
+    QueryBuilder query(Closure c) {
+        prepareAndLaunchQuery c
+    }
 
-    QueryBuilder execute(Closure c) { prepareAndLaunchQuery c }
+    QueryBuilder execute(Closure c) {
+        prepareAndLaunchQuery c
+    }
 
-    QueryBuilder iterate(Closure c) { prepareAndLaunchQuery c }
+    QueryBuilder iterate(Closure c) {
+        prepareAndLaunchQuery c
+    }
 
     private QueryBuilder prepareAndLaunchQuery(Closure c) {
         Closure cQuery = c.clone()

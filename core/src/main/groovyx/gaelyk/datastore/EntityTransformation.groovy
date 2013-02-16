@@ -31,6 +31,8 @@ import org.codehaus.groovy.ast.PropertyNode
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.Expression
+import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
@@ -38,14 +40,14 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
-import org.codehaus.groovy.syntax.SyntaxException;
-import org.codehaus.groovy.transform.ASTTransformation
+import org.codehaus.groovy.syntax.SyntaxException
+import org.codehaus.groovy.transform.AbstractASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
 import com.google.appengine.api.datastore.Key
 
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
-class EntityTransformation implements ASTTransformation {
+class EntityTransformation extends AbstractASTTransformation {
 
     public void visit(ASTNode[] nodes, SourceUnit source) {
         if (nodes.length != 2 || !(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
@@ -55,6 +57,12 @@ class EntityTransformation implements ASTTransformation {
         AnnotationNode anno = (AnnotationNode) nodes[0]
         ClassNode parent = (ClassNode) nodes[1]
         ClassNode keyType = handleKey(parent, source)
+
+        handleVersion(parent, source)
+        handleEntityProperties(anno, parent, source)
+
+        addDatastoreEntityInterface(keyType, parent)
+
         parent.addMethod(addDelegatedMethod('save', ClassHelper.makeWithoutCaching(Key).plainNodeReference))
         parent.addMethod(addDelegatedMethod('delete'))
         parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: keyType], parent.plainNodeReference))
@@ -64,13 +72,19 @@ class EntityTransformation implements ASTTransformation {
         parent.addMethod(addStaticDelegatedMethod(parent, "count", [query: Closure], ClassHelper.int_TYPE))
         parent.addMethod(addStaticDelegatedMethod(parent, "count", [query: QueryBuilder], ClassHelper.int_TYPE))
 
-        parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [:], getPogoListNode(parent)))
-        parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: Closure], getPogoListNode(parent)))
-        parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: QueryBuilder], getPogoListNode(parent)))
+        parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [:], getBoundListNode(parent)))
+        parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: Closure], getBoundListNode(parent)))
+        parent.addMethod(addStaticDelegatedMethod(parent, "findAll", [query: QueryBuilder], getBoundListNode(parent)))
 
         parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [:], getPogoIteratorNode(parent)))
         parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: Closure], getPogoIteratorNode(parent)))
         parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: QueryBuilder], getPogoIteratorNode(parent)))
+    }
+
+    private addDatastoreEntityInterface(ClassNode keyType, ClassNode parent) {
+        ClassNode datastoreEntityInterface = ClassHelper.makeWithoutCaching(DatastoreEntity).plainNodeReference
+        datastoreEntityInterface.setGenericsTypes([new GenericsType(keyType)] as GenericsType[])
+        parent.addInterface(datastoreEntityInterface)
     }
 
     private ClassNode getPogoIteratorNode(ClassNode parent) {
@@ -79,7 +93,7 @@ class EntityTransformation implements ASTTransformation {
         return pogoIteratorNode
     }
 
-    private ClassNode getPogoListNode(ClassNode parent) {
+    private ClassNode getBoundListNode(ClassNode parent) {
         ClassNode pogoListNode = ClassHelper.makeWithoutCaching(List).plainNodeReference
         pogoListNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
         return pogoListNode
@@ -88,14 +102,17 @@ class EntityTransformation implements ASTTransformation {
     private ClassNode handleKey(ClassNode parent, SourceUnit source) {
         ClassNode keyAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Key)
 
-        PropertyNode existingKeyProperty = parent.properties.find { PropertyNode prop ->
+        PropertyNode existingKeyProperty = findPropertyIncludingSuper(parent) { PropertyNode prop ->
             prop.field.annotations.any { AnnotationNode anno ->
                 anno.classNode == keyAnnoClassNode
             }
         }
-        
-        if(existingKeyProperty && !(existingKeyProperty.type in [ClassHelper.long_TYPE, ClassHelper.STRING_TYPE])){
-            source.addError(new SyntaxException("Only long or String are allowed as a key properties!", existingKeyProperty.lineNumber, existingKeyProperty.columnNumber))
+
+        if(existingKeyProperty && !(existingKeyProperty.type in [
+            ClassHelper.long_TYPE,
+            ClassHelper.STRING_TYPE
+        ])){
+            source.addError(new SyntaxException("Only long or String are allowed as a key property! Found ${existingKeyProperty.type.name} ${existingKeyProperty.declaringClass.name}.${existingKeyProperty.name}.", existingKeyProperty.lineNumber, existingKeyProperty.columnNumber))
             return
         }
 
@@ -105,31 +122,200 @@ class EntityTransformation implements ASTTransformation {
             parent.addProperty existingKeyProperty
         }
 
+        boolean hasNumericKey = existingKeyProperty.type == ClassHelper.long_TYPE
+
+        parent.addMethod new MethodNode(
+                'hasDatastoreNumericKey',
+                Modifier.PUBLIC,
+                ClassHelper.boolean_TYPE,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(hasNumericKey ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE)
+                )
+
         BlockStatement getKeyBlock = new BlockStatement()
         getKeyBlock.addStatement(new ExpressionStatement(new VariableExpression(existingKeyProperty)))
 
         parent.addMethod new MethodNode(
-                'get$key',
+                'hasDatastoreKey',
                 Modifier.PUBLIC,
-                existingKeyProperty.type,
+                ClassHelper.boolean_TYPE,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(ConstantExpression.PRIM_TRUE)
+                )
+
+        parent.addMethod new MethodNode(
+                'getDatastoreKey',
+                Modifier.PUBLIC,
+                // XXX: can't bound yet
+                // hasNumericKey ? ClassHelper.Long_TYPE : ClassHelper.STRING_TYPE,
+                ClassHelper.OBJECT_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 getKeyBlock
-        )
+                )
 
         def mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingKeyProperty.name), new VariableExpression(existingKeyProperty)))
         BlockStatement setKeyBlock = new BlockStatement()
         setKeyBlock.addStatement(new ExpressionStatement(mce))
 
         parent.addMethod new MethodNode(
-                'set$key',
+                'setDatastoreKey',
                 Modifier.PUBLIC,
-                ClassHelper.void_WRAPPER_TYPE,
-                [new Parameter(existingKeyProperty.type, existingKeyProperty.name)] as Parameter[],
+                ClassHelper.VOID_TYPE,
+                [
+                    new Parameter(/* hasNumericKey ? ClassHelper.Long_TYPE : ClassHelper.STRING_TYPE*/ ClassHelper.OBJECT_TYPE, existingKeyProperty.name)] as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
-        )
+                )
         existingKeyProperty.type
+    }
+
+    private void handleVersion(ClassNode parent, SourceUnit source) {
+        ClassNode versionAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Version)
+
+        PropertyNode existingVersionProperty = findPropertyIncludingSuper(parent) { PropertyNode prop ->
+            prop.field.annotations.any { AnnotationNode anno ->
+                anno.classNode == versionAnnoClassNode
+            }
+        }
+
+        if(existingVersionProperty && existingVersionProperty.type != ClassHelper.long_TYPE){
+            source.addError(new SyntaxException("Only long is allowed as a version property! Found ${existingVersionProperty.type.name} ${existingVersionProperty.declaringClass.name}.${existingVersionProperty.name}.", existingVersionProperty.lineNumber, existingVersionProperty.columnNumber))
+            return
+        }
+
+        if (!existingVersionProperty) {
+            existingVersionProperty = new PropertyNode(new FieldNode('version', Modifier.PUBLIC, ClassHelper.long_TYPE, parent, null), Modifier.PUBLIC, null, null)
+            existingVersionProperty.field.addAnnotation(new AnnotationNode(versionAnnoClassNode))
+            parent.addProperty existingVersionProperty
+        }
+
+        BlockStatement getVersionBlock = new BlockStatement()
+        getVersionBlock.addStatement(new ExpressionStatement(new VariableExpression(existingVersionProperty)))
+
+        parent.addMethod new MethodNode(
+                'hasDatastoreVersion',
+                Modifier.PUBLIC,
+                ClassHelper.boolean_TYPE,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(ConstantExpression.PRIM_TRUE)
+                )
+
+        parent.addMethod new MethodNode(
+                'getDatastoreVersion',
+                Modifier.PUBLIC,
+                existingVersionProperty.type,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                getVersionBlock
+                )
+
+        def mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingVersionProperty.name), new VariableExpression(existingVersionProperty)))
+        BlockStatement setKeyBlock = new BlockStatement()
+        setKeyBlock.addStatement(new ExpressionStatement(mce))
+
+        parent.addMethod new MethodNode(
+                'setDatastoreVersion',
+                Modifier.PUBLIC,
+                ClassHelper.VOID_TYPE,
+                [
+                    new Parameter(existingVersionProperty.type, existingVersionProperty.name)] as Parameter[],
+                ClassNode.EMPTY_ARRAY,
+                setKeyBlock
+                )
+        existingVersionProperty.type
+    }
+
+    private void handleEntityProperties(AnnotationNode anno, ClassNode parent, SourceUnit source) {
+        ClassNode indexedAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Indexed)
+        ClassNode unindexedAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Unindexed)
+        ClassNode ignoreAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Ignore)
+        ClassNode versionAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Version)
+        ClassNode keyAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Key)
+
+        boolean defaultIndexed = memberHasValue(anno, 'unindexed', false)
+
+        List<String> indexed = []
+        List<String> unindexed = []
+
+        eachPropertyIncludingSuper(parent) { PropertyNode prop ->
+            if(Modifier.isStatic(prop.modifiers)) {
+                return
+            }
+            boolean ignored = prop.field.annotations.any { AnnotationNode a ->
+                a.classNode == ignoreAnnoClassNode || a.classNode == versionAnnoClassNode || a.classNode == keyAnnoClassNode
+            }
+            if(ignored){
+                return
+            }
+            boolean hasUnindexedAnno = prop.field.annotations.any { AnnotationNode a ->
+                a.classNode == unindexedAnnoClassNode
+            }
+            if(hasUnindexedAnno){
+                unindexed << prop.name
+                return
+            }
+            boolean hasIndexedAnno = prop.field.annotations.any { AnnotationNode a ->
+                a.classNode == indexedAnnoClassNode
+            }
+            if(hasIndexedAnno){
+                indexed << prop.name
+                return
+            }
+            if(defaultIndexed){
+                indexed << prop.name
+            } else {
+                unindexed << prop.name
+            }
+        }
+
+        parent.addMethod new MethodNode(
+                'getDatastoreIndexedProperties',
+                Modifier.PUBLIC,
+                getBoundListNode(ClassHelper.STRING_TYPE),
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(buildList(indexed))
+                )
+        parent.addMethod new MethodNode(
+                'getDatastoreUnindexedProperties',
+                Modifier.PUBLIC,
+                getBoundListNode(ClassHelper.STRING_TYPE),
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(buildList(unindexed))
+                )
+    }
+
+    private void eachPropertyIncludingSuper(ClassNode parent, Closure iterator){
+        parent.properties.each iterator
+        ClassNode superNode = parent.superClass
+        if(superNode && superNode != ClassHelper.OBJECT_TYPE){
+            eachPropertyIncludingSuper(superNode, iterator)
+        }
+    }
+
+    private PropertyNode findPropertyIncludingSuper(ClassNode parent, Closure filter){
+        PropertyNode prop = parent.properties.find filter
+        if(prop){
+            return prop
+        }
+        ClassNode superNode = parent.superClass
+        if(superNode && superNode != ClassHelper.OBJECT_TYPE){
+            return findPropertyIncludingSuper(superNode, filter)
+        }
+        null
+    }
+
+    private Expression buildList(List<String> values) {
+        ListExpression list = new ListExpression()
+        for (String value in values) {
+            list.addExpression(new ConstantExpression(value))
+        }
+        list
     }
 
     private MethodNode addDelegatedMethod(String name, ClassNode returnType = ClassHelper.DYNAMIC_TYPE) {
@@ -138,7 +324,7 @@ class EntityTransformation implements ASTTransformation {
         BlockStatement block = new BlockStatement()
         block.addStatement(new ReturnStatement(new MethodCallExpression(
                 new ClassExpression(helper), name, new ArgumentListExpression(new VariableExpression('this'))
-        )))
+                )))
 
         new MethodNode(
                 name,
@@ -147,27 +333,24 @@ class EntityTransformation implements ASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 block
-        )
+                )
     }
 
     private MethodNode addStaticDelegatedMethod(ClassNode parent, String name, Map<String, Class> parameters, ClassNode returnType = ClassHelper.DYNAMIC_TYPE) {
         def helper = ClassHelper.makeWithoutCaching(EntityTransformationHelper).plainNodeReference
 
-        def methodParams = parameters.collect { String n, cls -> 
+        def methodParams = parameters.collect { String n, cls ->
             ClassNode clsNode = cls instanceof ClassNode ? cls : ClassHelper.makeWithoutCaching(cls)
             new Parameter(clsNode.plainNodeReference, n)
-         
         }
-        def variables = methodParams.collect {
-           new VariableExpression(it)
-        }
-        
+        def variables = methodParams.collect { new VariableExpression(it) }
+
         BlockStatement block = new BlockStatement()
         block.addStatement(new ReturnStatement(new MethodCallExpression(
                 new ClassExpression(helper), name,
                 new ArgumentListExpression(
-                        new ClassExpression(parent),
-                        * variables
+                new ClassExpression(parent),
+                * variables
                 ))))
 
         new MethodNode(
@@ -177,7 +360,6 @@ class EntityTransformation implements ASTTransformation {
                 methodParams as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 block
-        )
+                )
     }
-
 }

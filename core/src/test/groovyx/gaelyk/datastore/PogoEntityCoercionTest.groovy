@@ -1,9 +1,10 @@
 package groovyx.gaelyk.datastore
 
+import groovy.transform.Canonical
+
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import groovy.transform.Canonical
 
 /**
  * @author Guillaume Laforge
@@ -11,7 +12,7 @@ import groovy.transform.Canonical
 class PogoEntityCoercionTest extends GroovyTestCase {
     // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-            new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100)
+    new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100)
     )
 
     protected void setUp() {
@@ -27,43 +28,43 @@ class PogoEntityCoercionTest extends GroovyTestCase {
     void testReflectionOnPogo() {
         def p1 = new P1()
         def props = ReflectionEntityCoercion.props(p1)
-		
-		assert props.s1 == PropertyDescriptor.UNINDEXED
+
+        assert props.s1 == PropertyDescriptor.UNINDEXED
         assert props.s1.unindexed()
         assert !props.s1.ignore()
         assert !props.s1.key()
         assert !props.s1.version()
 
-		assert props.s2 == PropertyDescriptor.IGNORED
+        assert props.s2 == PropertyDescriptor.IGNORED
         assert !props.s2.unindexed()
         assert props.s2.ignore()
         assert !props.s2.key()
         assert !props.s2.version()
 
-		assert props.s3 == PropertyDescriptor.KEY
+        assert props.s3 == PropertyDescriptor.KEY
         assert !props.s3.unindexed()
         assert !props.s3.ignore()
         assert props.s3.key()
         assert !props.s3.version()
 
-		assert props.s4 == PropertyDescriptor.VERSION
+        assert props.s4 == PropertyDescriptor.VERSION
         assert !props.s4.unindexed()
         assert !props.s4.ignore()
         assert !props.s4.key()
         assert props.s4.version()
-		
-		assert props.s5 == PropertyDescriptor.IGNORED
-		assert !props.s5.unindexed()
-		assert props.s5.ignore()
-		assert !props.s5.key()
-		assert !props.s5.version()
+
+        assert props.s5 == PropertyDescriptor.IGNORED
+        assert !props.s5.unindexed()
+        assert props.s5.ignore()
+        assert !props.s5.key()
+        assert !props.s5.version()
 
         assert ReflectionEntityCoercion.findKey(props) == 's3'
 
-        def p2 = new P2()
-        def props2 = ReflectionEntityCoercion.props(p2)
-        assert props.s1.unindexed()
-        assert !props.s2.unindexed()
+        //        def p2 = new P2()
+        //        def props2 = ReflectionEntityCoercion.props(p2)
+        //        assert props.s1.unindexed()
+        //        assert !props.s2.unindexed()
     }
 
     void testObjectToEntityConversion() {
@@ -136,28 +137,28 @@ class PogoEntityCoercionTest extends GroovyTestCase {
 
         assert e2.outcome == 'WIN'
     }
-	
-	void testEnumNullProperties() {
-		Entity e = new Entity('Match')
-		e.outcome = null
-		Match m = e as Match
 
-		assert m.outcome == null
+    void testEnumNullProperties() {
+        Entity e = new Entity('Match')
+        e.outcome = null
+        Match m = e as Match
 
-		Entity e2 = m as Entity
+        assert m.outcome == null
 
-		assert e2.outcome == null
-	}
-    
+        Entity e2 = m as Entity
+
+        assert e2.outcome == null
+    }
+
     void testProblemWithInterface(){
         Entity e = new Entity('User', 10)
         e.firstName = 'Vladimir'
         e.lastName = 'Orany'
-        
+
         def user = e as User
         assert user.id == 10
     }
-    
+
     void testFindVersion(){
         assert ReflectionEntityCoercion.findVersion([:]) == null
         assert ReflectionEntityCoercion.findVersion([prop: PropertyDescriptor.IGNORED]) == null
@@ -173,11 +174,11 @@ class P1 {
     static String s5
 }
 
-@groovyx.gaelyk.datastore.Entity(unindexed = false)
-class P2 {
-    String s1
-    @Indexed s2
-}
+//@groovyx.gaelyk.datastore.Entity(unindexed = false)
+//class P2 {
+//    String s1
+//    @Indexed s2
+//}
 
 @Canonical
 class Person {

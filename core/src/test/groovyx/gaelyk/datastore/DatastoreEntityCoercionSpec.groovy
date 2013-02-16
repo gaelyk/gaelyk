@@ -43,8 +43,8 @@ class DatastoreEntityCoercionSpec extends Specification {
         ex.datastoreVersion      == 1
         ex.hasDatastoreKey()     == true
         ex.datastoreKey          == 15
-        ex.unindexedProperties   == ['unindexed1', 'unindexed2'] as String[]
-        ex.indexedProperties     == ['indexed1', 'indexed2'] as String[]
+        ex.datastoreUnindexedProperties   == ['unindexed1', 'unindexed2'] as String[]
+        ex.datastoreIndexedProperties     == ['indexed1', 'indexed2'] as String[]
         
         when:
         Entity entity = DatastoreEntityCoercion.convert(ex)

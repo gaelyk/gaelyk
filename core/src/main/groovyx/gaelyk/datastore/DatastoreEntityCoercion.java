@@ -19,7 +19,7 @@ public class DatastoreEntityCoercion {
             Object key = dsEntity.getDatastoreKey();
             if(key instanceof CharSequence && key != null){
                 entity = new Entity(kind, key.toString());
-            } else if(key instanceof Number && key != null){
+            } else if (key instanceof Number && key != null && ((Number) key).longValue() != 0) {
                 entity = new Entity(kind, ((Number)key).longValue());
             }
         }
@@ -28,10 +28,10 @@ public class DatastoreEntityCoercion {
             entity = new Entity(kind);
         }
         
-        for(String propertyName : dsEntity.getIndexedProperties()){
+        for(String propertyName : dsEntity.getDatastoreIndexedProperties()){
             entity.setProperty(propertyName, transformValueForStorage(dsEntity.getProperty(propertyName)));
         }
-        for(String propertyName : dsEntity.getUnindexedProperties()){
+        for(String propertyName : dsEntity.getDatastoreUnindexedProperties()){
             entity.setUnindexedProperty(propertyName, transformValueForStorage(dsEntity.getProperty(propertyName)));
         }
         
@@ -60,14 +60,14 @@ public class DatastoreEntityCoercion {
         if (dsEntity.hasDatastoreVersion()) {
             try {
                 dsEntity.setDatastoreVersion(Entities.getVersionProperty(DatastoreExtensions.get(Entities.createEntityGroupKey(en.getKey()))));                
-            } catch(NullPointerException npe){
+            } catch (Exception e) {
                 dsEntity.setDatastoreVersion(0); 
             }
         }
-        for(String propertyName : dsEntity.getIndexedProperties()){
+        for(String propertyName : dsEntity.getDatastoreIndexedProperties()){
             setEntityProperty(en, dsEntity, propertyName);
         }
-        for(String propertyName : dsEntity.getUnindexedProperties()){
+        for(String propertyName : dsEntity.getDatastoreUnindexedProperties()){
             setEntityProperty(en, dsEntity, propertyName);
         }
         return dsEntity;

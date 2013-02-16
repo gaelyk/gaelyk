@@ -34,37 +34,44 @@ class PogoEntityCoercionTest extends GroovyTestCase {
         assert !props.s1.ignore()
         assert !props.s1.key()
         assert !props.s1.version()
+        assert !props.s1.parent()
 
         assert props.s2 == PropertyDescriptor.IGNORED
         assert !props.s2.unindexed()
         assert props.s2.ignore()
         assert !props.s2.key()
         assert !props.s2.version()
+        assert !props.s2.parent()
 
         assert props.s3 == PropertyDescriptor.KEY
         assert !props.s3.unindexed()
         assert !props.s3.ignore()
         assert props.s3.key()
         assert !props.s3.version()
+        assert !props.s3.parent()
 
         assert props.s4 == PropertyDescriptor.VERSION
         assert !props.s4.unindexed()
         assert !props.s4.ignore()
         assert !props.s4.key()
         assert props.s4.version()
+        assert !props.s4.parent()
 
         assert props.s5 == PropertyDescriptor.IGNORED
         assert !props.s5.unindexed()
         assert props.s5.ignore()
         assert !props.s5.key()
         assert !props.s5.version()
+        assert !props.s5.parent()
+
+        assert props.s6 == PropertyDescriptor.PARENT
+        assert !props.s6.unindexed()
+        assert !props.s6.ignore()
+        assert !props.s6.key()
+        assert !props.s6.version()
+        assert props.s6.parent()
 
         assert ReflectionEntityCoercion.findKey(props) == 's3'
-
-        //        def p2 = new P2()
-        //        def props2 = ReflectionEntityCoercion.props(p2)
-        //        assert props.s1.unindexed()
-        //        assert !props.s2.unindexed()
     }
 
     void testObjectToEntityConversion() {
@@ -172,6 +179,7 @@ class P1 {
     @Key String s3
     @Version long s4
     static String s5
+    @Parent com.google.appengine.api.datastore.Key s6
 }
 
 //@groovyx.gaelyk.datastore.Entity(unindexed = false)

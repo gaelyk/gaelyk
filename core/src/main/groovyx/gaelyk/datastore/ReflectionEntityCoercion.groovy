@@ -15,16 +15,16 @@
  */
 package groovyx.gaelyk.datastore
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import groovy.transform.CompileStatic
+import groovyx.gaelyk.extensions.DatastoreExtensions
+
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+import java.lang.reflect.Modifier
 
 import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.EntityNotFoundException
-
-import groovy.transform.CompileStatic;
-import groovyx.gaelyk.extensions.DatastoreExtensions
 
 /**
  * Utility class handling the POGO to Entity coercion, and Entity to POGO coercion as well.
@@ -75,24 +75,23 @@ class ReflectionEntityCoercion {
     }
 
     static PropertyDescriptor getPropertyDescriptorFor(Class clazz, String property, boolean defaultIndexed) {
-        def annos
-        def isStatic = false
+        Field f = null
+        Method m = null
         try {
-            Field field = clazz.getDeclaredField(property)
-            isStatic = Modifier.isStatic(field.modifiers)
-            annos = field.annotations
+            f = clazz.getDeclaredField(property)
         } catch (e) {
             try {
-                Method method = clazz.getDeclaredMethod("get${property.capitalize()}")
-                annos = method.annotations
-                isStatic = Modifier.isStatic(method.modifiers)
+                m = clazz.getDeclaredMethod("get${property.capitalize()}")
             } catch (NoSuchMethodException nsme) {
                 return PropertyDescriptor.IGNORED
             }
         }
+        boolean isStatic = f ? Modifier.isStatic(f.getModifiers()) : Modifier.isStatic(m.getModifiers())
+        def annos = f ? f.annotations : m.annotations
         if (isStatic || annos.any { it instanceof Ignore }) return PropertyDescriptor.IGNORED
         if (annos.any { it instanceof Key }) return PropertyDescriptor.KEY
         if (annos.any { it instanceof Version }) return PropertyDescriptor.VERSION
+        if (annos.any { it instanceof Parent }) return PropertyDescriptor.PARENT
         if (defaultIndexed ? annos.any { it instanceof Unindexed } : !annos.any { it instanceof Indexed }) return PropertyDescriptor.UNINDEXED
         PropertyDescriptor.INDEXED
     }
@@ -106,6 +105,18 @@ class ReflectionEntityCoercion {
     static String findKey(Map<String, PropertyDescriptor> props) {
         props.findResult { String prop, PropertyDescriptor m ->
             if (m.key()) return prop
+        }
+    }
+
+    /**
+     * Find the parent in the properties
+     *
+     * @param props the properties
+     * @return the name of the key or null if none is found
+     */
+    static String findParent(Map<String, PropertyDescriptor> props) {
+        props.findResult { String prop, PropertyDescriptor m ->
+            if (m.parent()) return prop
         }
     }
 
@@ -132,20 +143,30 @@ class ReflectionEntityCoercion {
 
         Map<String, PropertyDescriptor> props = props(p)
         String key = findKey(props)
+        String parent = findParent(props)
         def value = key ? p.metaClass.getProperty(p, key) : null
+        com.google.appengine.api.datastore.Key parentKey = parent ? p.metaClass.getProperty(p, parent) : null
         if (key && value) {
             if (value instanceof CharSequence) {
-                entity = new Entity(p.class.simpleName, value?.toString())
+                if(parentKey){
+                    entity = new Entity(p.class.simpleName, value?.toString(), parentKey)
+                } else {
+                    entity = new Entity(p.class.simpleName, value?.toString())
+                }
             } else {
-                entity = new Entity(p.class.simpleName, ((Number) value).longValue())
+                if(parentKey){
+                    entity = new Entity(p.class.simpleName, ((Number) value).longValue(), parentKey)
+                } else {
+                    entity = new Entity(p.class.simpleName, ((Number) value).longValue())
+                }
             }
         } else {
             entity = new Entity(p.class.simpleName)
         }
 
         props.each { String propName, PropertyDescriptor m ->
-            if (propName != key) {
-                if (!props[propName].ignore() && !props[propName].version()) {
+            if (propName != key && propName != parent) {
+                if (!props[propName].ignore() && !props[propName].version() && !props[propName].parent()) {
                     def val = p.metaClass.getProperty(p, propName)
                     if (props[propName].unindexed()) {
                         entity.setUnindexedProperty(propName, val)
@@ -177,6 +198,9 @@ class ReflectionEntityCoercion {
                 o[k] = v
             }
             o['id'] = e.key.name ?: e.key.id
+            if(e.key.parent){
+                o['parent'] = e.key.parent
+            }
         } else {
             entityProps.each { String k, v ->
                 if (o.metaClass.hasProperty(o, k)) {
@@ -203,6 +227,10 @@ class ReflectionEntityCoercion {
                     o.metaClass.setProperty(o, version, 0)
                 }
             }
+            String parent = findParent(classProps)
+            if(parent){
+                o.metaClass.setProperty(o, parent, e.key.parent)
+            }
         }
         return o
     }
@@ -224,6 +252,9 @@ enum PropertyDescriptor {
     UNINDEXED {
         boolean unindexed() { true }
     },
+    PARENT {
+        boolean parent() { true }
+    }
 
     boolean ignore() { false }
 
@@ -232,4 +263,6 @@ enum PropertyDescriptor {
     boolean key() { false }
 
     boolean version() { false }
+
+    boolean parent() { false }
 }

@@ -18,9 +18,17 @@ public class DatastoreEntityCoercion {
         if(dsEntity.hasDatastoreKey()){
             Object key = dsEntity.getDatastoreKey();
             if(key instanceof CharSequence && key != null){
-                entity = new Entity(kind, key.toString());
+                if (dsEntity.hasDatastoreParent()) {
+                    entity = new Entity(kind, key.toString(), dsEntity.getDatastoreParent());
+                } else {
+                    entity = new Entity(kind, key.toString());
+                }
             } else if (key instanceof Number && key != null && ((Number) key).longValue() != 0) {
-                entity = new Entity(kind, ((Number)key).longValue());
+                if (dsEntity.hasDatastoreParent()) {
+                    entity = new Entity(kind, ((Number) key).longValue(), dsEntity.getDatastoreParent());
+                } else {
+                    entity = new Entity(kind, ((Number) key).longValue());
+                }
             }
         }
         
@@ -56,6 +64,9 @@ public class DatastoreEntityCoercion {
             } else {
                 ((DatastoreEntity<String>)dsEntity).setDatastoreKey(en.getKey().getName());
             }
+        }
+        if (dsEntity.hasDatastoreParent()) {
+            dsEntity.setDatastoreParent(en.getKey().getParent());
         }
         if (dsEntity.hasDatastoreVersion()) {
             try {

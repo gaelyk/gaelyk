@@ -241,6 +241,8 @@ class EntityTransformationSpec extends Specification {
             'test3',
             'superProp'
         ]
+        obj.hasDatastoreParent() == false
+        obj.getDatastoreParent() == null
     }
 
 

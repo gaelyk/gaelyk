@@ -71,6 +71,28 @@ public interface DatastoreEntity<K> {
     void setDatastoreVersion(long version);
 
     /**
+     * Returns <code>true</code> if the entity has parent property.
+     * 
+     * @return <code>true</code> if the entity has parent property
+     */
+    boolean hasDatastoreParent();
+
+    /**
+     * Returns parent key of the entity if present and <code>null</code> otherwise.
+     * 
+     * @return parent key of the entity if present and <code>null</code> otherwise
+     */
+    com.google.appengine.api.datastore.Key getDatastoreParent();
+
+    /**
+     * Sets the parent key of the entity, do nothing if the entity does not have parent key property.
+     * 
+     * @param version
+     *            the id of the entity to be set
+     */
+    void setDatastoreParent(com.google.appengine.api.datastore.Key parent);
+
+    /**
      * Returns list of the names of properties which should be saved in the data store with the index.
      * This method should return same values for each instance. It cannot be static because of Java interface restrictions.
      * 

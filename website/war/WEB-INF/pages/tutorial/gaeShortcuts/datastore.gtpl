@@ -181,6 +181,7 @@ Further customization of the coercion can be achieved by using annotations on yo
             <li><code>iterate{...query...}</code> to iterate over the objects which satisfies given <a href="query">query</a></li>            
         </ul>
     If there is no property annotated with <code>@Key</code> annotation it also adds <code>@Key long id</code> property to the POGO class.<br/>
+    If there is no property annotated with <code>@Version</code> annotation it also adds <code>@Version long version</code> property to the POGO class.<br/>
     You can set default behavior from unindexed to indexed setting <code>unidexed</code> property of the annotations to <code>false</code>.
       
     </li>
@@ -189,6 +190,7 @@ Further customization of the coercion can be achieved by using annotations on yo
     <li><code>@Indexed</code> for properties or getter methods that should be indexed (ie. can be used in queries)</li>
     <li><code>@Unindexed</code> for properties or getter methods that should be set as unindexed (ie. on which no queries can be done)</li>
     <li><code>@Ignore</code> for properties or getter methods that should be ignored and not persisted</li>
+    <li><code>@Parent</code>to specify entity's parent entity</li>
 </ul>
 
 <p>

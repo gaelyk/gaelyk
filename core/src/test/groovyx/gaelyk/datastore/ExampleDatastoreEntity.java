@@ -5,6 +5,8 @@ import groovy.lang.MissingPropertyException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.appengine.api.datastore.Key;
+
 public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
 
     private long id;
@@ -164,6 +166,16 @@ public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
         }
         throw new MissingPropertyException("No such property " + propertyName);
     }
+
+    @Override public boolean hasDatastoreParent() {
+        return false;
+    }
+
+    @Override public Key getDatastoreParent() {
+        return null;
+    }
+
+    @Override public void setDatastoreParent(Key parent) {}
     
 
 }

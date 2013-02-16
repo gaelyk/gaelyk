@@ -58,12 +58,15 @@ class EntityTransformation extends AbstractASTTransformation {
         ClassNode parent = (ClassNode) nodes[1]
         ClassNode keyType = handleKey(parent, source)
 
+        ClassNode keyCN = ClassHelper.makeWithoutCaching(Key).plainNodeReference
+
         handleVersion(parent, source)
+        handleParent(parent, source, keyCN)
         handleEntityProperties(anno, parent, source)
 
         addDatastoreEntityInterface(keyType, parent)
 
-        parent.addMethod(addDelegatedMethod('save', ClassHelper.makeWithoutCaching(Key).plainNodeReference))
+        parent.addMethod(addDelegatedMethod('save', keyCN))
         parent.addMethod(addDelegatedMethod('delete'))
         parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: keyType], parent.plainNodeReference))
         parent.addMethod(addStaticDelegatedMethod(parent, "delete", [key: keyType]))
@@ -226,7 +229,65 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
                 )
-        existingVersionProperty.type
+    }
+
+    private void handleParent(ClassNode parent, SourceUnit source, ClassNode keyCN) {
+        ClassNode parentAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Parent)
+
+        PropertyNode existingParentProperty = findPropertyIncludingSuper(parent) { PropertyNode prop ->
+            prop.field.annotations.any { AnnotationNode anno ->
+                anno.classNode == parentAnnoClassNode
+            }
+        }
+
+        if(existingParentProperty && existingParentProperty.type != keyCN){
+            source.addError(new SyntaxException("Only Key is allowed as a version property! Found ${existingParentProperty.type.name} ${existingParentProperty.declaringClass.name}.${existingParentProperty.name}.", existingParentProperty.lineNumber, existingParentProperty.columnNumber))
+            return
+        }
+
+        if (!existingParentProperty) {
+        }
+
+        parent.addMethod new MethodNode(
+                'hasDatastoreParent',
+                Modifier.PUBLIC,
+                ClassHelper.boolean_TYPE,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(existingParentProperty ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE)
+                )
+
+        BlockStatement getParentBlock = new BlockStatement()
+        getParentBlock.addStatement(existingParentProperty ? new ExpressionStatement(new VariableExpression(existingParentProperty)) : new ReturnStatement(ConstantExpression.NULL))
+
+
+
+        parent.addMethod new MethodNode(
+                'getDatastoreParent',
+                Modifier.PUBLIC,
+                keyCN,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                getParentBlock
+                )
+
+        BlockStatement setKeyBlock = new BlockStatement()
+        if(existingParentProperty){
+            def mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingParentProperty.name), new VariableExpression(existingParentProperty)))
+            setKeyBlock.addStatement(new ExpressionStatement(mce))
+        } else {
+            setKeyBlock.addStatement(new ReturnStatement(ConstantExpression.NULL))
+        }
+
+        parent.addMethod new MethodNode(
+                'setDatastoreParent',
+                Modifier.PUBLIC,
+                ClassHelper.VOID_TYPE,
+                [
+                    new Parameter(keyCN, existingParentProperty?.name ?: 'parent')] as Parameter[],
+                ClassNode.EMPTY_ARRAY,
+                setKeyBlock
+                )
     }
 
     private void handleEntityProperties(AnnotationNode anno, ClassNode parent, SourceUnit source) {
@@ -235,6 +296,7 @@ class EntityTransformation extends AbstractASTTransformation {
         ClassNode ignoreAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Ignore)
         ClassNode versionAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Version)
         ClassNode keyAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Key)
+        ClassNode parentAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Parent)
 
         boolean defaultIndexed = memberHasValue(anno, 'unindexed', false)
 
@@ -246,7 +308,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 return
             }
             boolean ignored = prop.field.annotations.any { AnnotationNode a ->
-                a.classNode == ignoreAnnoClassNode || a.classNode == versionAnnoClassNode || a.classNode == keyAnnoClassNode
+                a.classNode == ignoreAnnoClassNode || a.classNode == versionAnnoClassNode || a.classNode == keyAnnoClassNode || a.classNode == parentAnnoClassNode
             }
             if(ignored){
                 return

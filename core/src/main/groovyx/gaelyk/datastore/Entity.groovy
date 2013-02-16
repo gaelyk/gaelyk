@@ -31,9 +31,15 @@ import org.codehaus.groovy.transform.GroovyASTTransformationClass
  * <br/>
  *
  * Property <code>id</code> of the type <code>long</code> is added to the class if annotation <code>Key</code>
- * is not present on any field. Properties of the class annotated with this annotation are unindexed by default.
+ * is not present on any field. 
+ * Property <code>version</code> of the type <code>long</code> is added to the class if annotation <code>Version</code>
+ * is not present on any field. 
+ * 
+ * Properties of the class annotated with this annotation are unindexed by default.
  * Set {link #unidexed()} to <code>false</code> to change the default behavior. Use <code>Indexed</code>
  * annotation on property you want index.
+ * 
+ * All classes annotated by this annotation will implement {@link DatastoreEntity} interface.
  *
  * @author Vladimir Orany
  */
@@ -43,5 +49,5 @@ import org.codehaus.groovy.transform.GroovyASTTransformationClass
 @Target(ElementType.TYPE)
 @GroovyASTTransformationClass(classes = [EntityTransformation])
 @interface Entity {
-    boolean unindexed() default true;
+    boolean unindexed() default true
 }

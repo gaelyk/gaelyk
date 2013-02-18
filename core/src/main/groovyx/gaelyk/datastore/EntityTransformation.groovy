@@ -198,34 +198,33 @@ class EntityTransformation extends AbstractASTTransformation {
             return
         }
 
-        if (!existingVersionProperty) {
-            existingVersionProperty = new PropertyNode(new FieldNode('version', Modifier.PUBLIC, ClassHelper.long_TYPE, parent, null), Modifier.PUBLIC, null, null)
-            existingVersionProperty.field.addAnnotation(new AnnotationNode(versionAnnoClassNode))
-            parent.addProperty existingVersionProperty
-        }
-
-        BlockStatement getVersionBlock = new BlockStatement()
-        getVersionBlock.addStatement(new ExpressionStatement(new VariableExpression(existingVersionProperty)))
-
         parent.addMethod new MethodNode(
                 'hasDatastoreVersion',
                 Modifier.PUBLIC,
                 ClassHelper.boolean_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                new ReturnStatement(ConstantExpression.PRIM_TRUE)
+                new ReturnStatement(existingVersionProperty ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE)
                 )
+
+        BlockStatement getVersionBlock = new BlockStatement()
+        getVersionBlock.addStatement(new ExpressionStatement(existingVersionProperty ? new VariableExpression(existingVersionProperty) : new ConstantExpression(0)))
 
         parent.addMethod new MethodNode(
                 'getDatastoreVersion',
                 Modifier.PUBLIC,
-                existingVersionProperty.type,
+                ClassHelper.long_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 getVersionBlock
                 )
 
-        def mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingVersionProperty.name), new VariableExpression(existingVersionProperty)))
+        def mce
+        if(existingVersionProperty){
+            mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingVersionProperty.name), new VariableExpression(existingVersionProperty)))
+        } else {
+            mce = ConstantExpression.NULL
+        }
         BlockStatement setKeyBlock = new BlockStatement()
         setKeyBlock.addStatement(new ExpressionStatement(mce))
 
@@ -234,7 +233,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 Modifier.PUBLIC,
                 ClassHelper.VOID_TYPE,
                 [
-                    new Parameter(existingVersionProperty.type, existingVersionProperty.name)] as Parameter[],
+                    new Parameter(ClassHelper.long_TYPE, existingVersionProperty?.name ?: 'version')] as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
                 )

@@ -244,7 +244,7 @@ class EntityTransformationSpec extends Specification {
         obj.hasDatastoreKey() == true
         obj.hasDatastoreNumericKey() == false
         obj.getDatastoreKey() == 'name'
-        obj.hasDatastoreVersion() == true
+        obj.hasDatastoreVersion() == false
         obj.getDatastoreIndexedProperties() == ['test1']
         obj.getDatastoreUnindexedProperties() == [
             'test2',

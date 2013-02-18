@@ -181,7 +181,6 @@ Further customization of the coercion can be achieved by using annotations on yo
             <li><code>iterate{...query...}</code> to iterate over the objects which satisfies given <a href="query">query</a></li>            
         </ul>
     If there is no property annotated with <code>@Key</code> annotation it also adds <code>@Key long id</code> property to the POGO class.<br/>
-    If there is no property annotated with <code>@Version</code> annotation it also adds <code>@Version long version</code> property to the POGO class.<br/>
     You can set default behavior from unindexed to indexed setting <code>unidexed</code> property of the annotations to <code>false</code>.
       
     </li>

@@ -44,6 +44,7 @@ dependencies {
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion"
     compile 'org.gaelyk:gaelyk:2.0-SNAPSHOT'
+    compile 'org.gaelyk:gaelyk-console:2.0-SNAPSHOT'
 
     /** 
      * To add binary plugin just declare it as a dependency. For example,

@@ -255,6 +255,24 @@ class EntityTransformationSpec extends Specification {
         obj.getDatastoreParent() == null
     }
 
+    def "Test DatastoreEntity implementation 2"(){
+        def obj = newShell().evaluate '''
+            import groovyx.gaelyk.datastore.Key
+            import groovyx.gaelyk.datastore.Entity as GE
+            import groovy.transform.Canonical
+            
+            @Canonical @GE
+            class Person {
+              @Key long id
+              String name
+            }
+
+            new Person(id: 15, name: 'test')'''
+        expect:
+        obj
+    }
+
+
 
     private GroovyShell newShell() {
         CompilerConfiguration cc = new CompilerConfiguration()

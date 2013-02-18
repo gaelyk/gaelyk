@@ -58,6 +58,10 @@ class EntityTransformation extends AbstractASTTransformation {
         ClassNode parent = (ClassNode) nodes[1]
         ClassNode keyType = handleKey(parent, source)
 
+        if(!keyType) {
+            return
+        }
+
         ClassNode keyCN = ClassHelper.makeWithoutCaching(Key).plainNodeReference
 
         handleVersion(parent, source)
@@ -337,21 +341,25 @@ class EntityTransformation extends AbstractASTTransformation {
             }
         }
 
+        parent.addField new FieldNode('DATASTORE_INDEXED_PROPERTIES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(ClassHelper.STRING_TYPE), parent, buildList(indexed))
+
         parent.addMethod new MethodNode(
                 'getDatastoreIndexedProperties',
                 Modifier.PUBLIC,
                 getBoundListNode(ClassHelper.STRING_TYPE),
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                new ReturnStatement(buildList(indexed))
+                new ReturnStatement(new VariableExpression('DATASTORE_INDEXED_PROPERTIES'))
                 )
+
+        parent.addField new FieldNode('DATASTORE_UNINDEXED_PROPERTIES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(ClassHelper.STRING_TYPE), parent, buildList(unindexed))
         parent.addMethod new MethodNode(
                 'getDatastoreUnindexedProperties',
                 Modifier.PUBLIC,
                 getBoundListNode(ClassHelper.STRING_TYPE),
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                new ReturnStatement(buildList(unindexed))
+                new ReturnStatement(new VariableExpression('DATASTORE_UNINDEXED_PROPERTIES'))
                 )
     }
 

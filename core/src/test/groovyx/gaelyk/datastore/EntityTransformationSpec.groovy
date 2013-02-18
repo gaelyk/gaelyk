@@ -194,16 +194,16 @@ class EntityTransformationSpec extends Specification {
             @groovyx.gaelyk.datastore.Entity
             @groovy.transform.Canonical
             class MyPogo8 {
-				@groovyx.gaelyk.datastore.Parent com.google.appengine.api.datastore.Key parent
+                @groovyx.gaelyk.datastore.Parent com.google.appengine.api.datastore.Key parent
                 @groovyx.gaelyk.datastore.Key String name
                 @groovyx.gaelyk.datastore.Indexed String test
             }
 
-			com.google.appengine.api.datastore.Entity myparent = ['MyParent', 'parent']
-			myparent.save()
+            com.google.appengine.api.datastore.Entity myparent = ['MyParent', 'parent']
+            myparent.save()
 
             def mypogo = new MyPogo8(name: "name", test: "foo", parent: myparent.key)
-			mypogo.save()
+            mypogo.save()
 
             assert MyPogo8.get(myparent.key, 'name') == mypogo
             
@@ -214,8 +214,8 @@ class EntityTransformationSpec extends Specification {
             } catch (e) {
                 // ok
             }
-			mypogo
-'''
+            mypogo
+        '''
 
         expect:
         obj.parent == KeyFactory.createKey('MyParent', 'parent')

@@ -18,17 +18,15 @@ package groovyx.gaelyk
 import groovy.servlet.ServletBinding
 import groovy.servlet.TemplateServlet
 import groovy.text.Template
+import groovy.transform.CompileStatic
+import groovyx.gaelyk.logging.GroovyLogger
+import groovyx.gaelyk.plugins.PluginsHandler
 
+import javax.servlet.ServletConfig
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.servlet.ServletConfig
 
-import org.codehaus.groovy.runtime.InvokerInvocationException;
-
-import groovyx.gaelyk.plugins.PluginsHandler
-import groovyx.gaelyk.logging.GroovyLogger
-
-import groovy.transform.CompileStatic
+import org.codehaus.groovy.runtime.InvokerInvocationException
 
 /**
  * The Gaelyk template servlet extends Groovy's own template servlet 
@@ -56,7 +54,7 @@ class GaelykTemplateServlet extends TemplateServlet {
                     } catch(InvokerInvocationException e){
                         if(e.cause instanceof ClassNotFoundException){
                             try {
-                                runTemplate(request, response, binding)                                
+                                runTemplate(request, response, binding)
                             } catch(InvokerInvocationException iie){
                                 throw iie.cause ?: iie
                             }
@@ -86,7 +84,7 @@ class GaelykTemplateServlet extends TemplateServlet {
                     } catch(InvokerInvocationException e){
                         if(e.cause instanceof FileNotFoundException){
                             try {
-                                runPrecompiled(getPrecompiledClassName(request), binding, response)                                                            
+                                runPrecompiled(getPrecompiledClassName(request), binding, response)
                             } catch(InvokerInvocationException iie){
                                 throw iie.cause ?: iie
                             }
@@ -129,6 +127,7 @@ class GaelykTemplateServlet extends TemplateServlet {
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PluginsHandler.instance.executeBeforeActions(request, response)
         doService(request, response)
+        // there is no result for temlates
         PluginsHandler.instance.executeAfterActions(request, response)
     }
 
@@ -178,7 +177,7 @@ class GaelykTemplateServlet extends TemplateServlet {
     static String getPrecompiledClassName(HttpServletRequest request){
         String incServletPath = (String) request.getAttribute(INC_SERVLET_PATH)
         String servletPath = incServletPath ?: request.servletPath
-        
+
         def match = servletPath =~ "/((.+?/)*)(.+)\\.gtpl"
         if(!match){
             throw new ClassNotFoundException('No class found for servlet path ' + servletPath)

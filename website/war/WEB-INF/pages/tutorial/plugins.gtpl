@@ -251,6 +251,7 @@ before {
 
 after {
     log.info "Exiting \${request.requestURI}"
+    log.info "groovlet returned $result from its exection"
 }
 
 // any other initialization code you'd need
@@ -289,6 +290,7 @@ you can access the <code>request</code>, <code>response</code>, <code>log</code>
 The logger name is of the form <code>gaelyk.plugins.myPluginName</code>.
 The <code>binding</code> variables allows you to update the variables
 that are put in the binding of Groovlets and templates.
+In <code>after</code> block you can access the result of groovlet execution as <code>result</code> variable.
 </p>
 
 <p>

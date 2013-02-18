@@ -16,13 +16,14 @@
 package groovyx.gaelyk.plugins
 
 import groovy.transform.CompileStatic
-import org.codehaus.groovy.control.CompilerConfiguration
-
 import groovyx.gaelyk.GaelykBindingEnhancer
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpServletRequest
 import groovyx.gaelyk.logging.GroovyLogger
+
 import javax.servlet.ServletContext
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+
+import org.codehaus.groovy.control.CompilerConfiguration
 
 /**
  * Configure the installed plugins.
@@ -77,7 +78,7 @@ class PluginsHandler {
         if (!initialized) {
             log.config "Loading plugin descriptors"
 
-            Iterable<PluginBaseScript> loader = ignoreBinary ? [] : ServiceLoader.load(PluginBaseScript)
+            Iterable<PluginBaseScript> loader = ignoreBinary ? []: ServiceLoader.load(PluginBaseScript)
 
             Iterable<PluginBaseScript> loadedPlugins = loadPluginsList().collect { String pluginName ->
                 def pluginPath = "WEB-INF/plugins/${pluginName}.groovy"
@@ -205,25 +206,31 @@ class PluginsHandler {
      * @param response
      */
     @CompileStatic
-    void executeAfterActions(HttpServletRequest request, HttpServletResponse response) {
+    void executeAfterActions(HttpServletRequest request, HttpServletResponse response, Object executionResult = null) {
         afterActions.each { Closure action ->
-            cloneDelegateAndExecute action, request, response
+            cloneDelegateAndExecute action, request, response, executionResult
         }
     }
 
-    private void cloneDelegateAndExecute(Closure action, HttpServletRequest request, HttpServletResponse response) {
+    private void cloneDelegateAndExecute(Closure action, HttpServletRequest request, HttpServletResponse response, result = null) {
         Binding binding = new Binding()
         GaelykBindingEnhancer.bind(binding)
 
+        def delegate = [
+            *:bindingVariables,
+            request: request,
+            response: response,
+            log: action.owner.log,
+            binding: bindingVariables
+        ]
+
+        if(result){
+            delegate.result = result
+        }
+
         Closure cloned = action.clone()
         cloned.resolveStrategy = Closure.DELEGATE_FIRST
-        cloned.delegate = [
-                    *:bindingVariables,
-                    request: request,
-                    response: response,
-                    log: action.owner.log,
-                    binding: bindingVariables
-                ]
+        cloned.delegate = delegate
 
         cloned()
     }

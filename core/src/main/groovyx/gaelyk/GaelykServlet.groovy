@@ -17,17 +17,14 @@ package groovyx.gaelyk
 
 import groovy.servlet.GroovyServlet
 import groovy.servlet.ServletBinding
-
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import groovy.transform.CompileStatic
+import groovyx.gaelyk.logging.GroovyLogger
+import groovyx.gaelyk.plugins.PluginsHandler
 
 import javax.servlet.ServletConfig
 import javax.servlet.ServletRequest
-
-import groovyx.gaelyk.plugins.PluginsHandler
-import groovyx.gaelyk.logging.GroovyLogger
-
-import groovy.transform.CompileStatic
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /**
  * The Gaelyk servlet extends Groovy's own Groovy servlet
@@ -82,18 +79,19 @@ class GaelykServlet extends GroovyServlet {
     @Override
     @CompileStatic
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // Set it to HTML by default
+        response.contentType = "text/html; charset="+encoding
+        // but plugin handler can change that easily!
         PluginsHandler.instance.executeBeforeActions(request, response)
-        doService(request, response)
-        PluginsHandler.instance.executeAfterActions(request, response)
+        def result = doService(request, response)
+        PluginsHandler.instance.executeAfterActions(request, response, result)
     }
 
     /**
      * Handle web requests to the GroovyServlet
      */
     @CompileStatic
-    private void doService(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Set it to HTML by default
-        response.contentType = "text/html; charset="+encoding
+    private doService(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Set up the script context
         final ServletBinding binding = [
@@ -105,24 +103,24 @@ class GaelykServlet extends GroovyServlet {
 
         // Get the script path from the request - include aware (GROOVY-815)
         String scriptUri = getScriptUri(request)
-
+        def result = null
         // Run the script
         try {
             if(GaelykBindingEnhancer.localMode){
                 try {
-                    runGroovlet(scriptUri, binding)
+                    result = runGroovlet(scriptUri, binding)
                 } catch(ResourceException re){
                     try {
-                        runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
+                        result = runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
                     } catch(ClassNotFoundException e){
                         throw re
                     }
                 }
             } else {
                 try {
-                    runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
+                    result = runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
                 } catch(ClassNotFoundException e){
-                    runGroovlet(scriptUri, binding)
+                    result = runGroovlet(scriptUri, binding)
                 }
             }
         } catch (e) {
@@ -144,8 +142,9 @@ class GaelykServlet extends GroovyServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
             }
-            throw e // Let propogate out the filter chain and container handle the exception. 
+            throw e // Let propogate out the filter chain and container handle the exception.
         }
+        result
     }
 
     @CompileStatic

@@ -1,23 +1,24 @@
 package groovyx.gaelyk.plugins
 
-import com.google.appengine.api.utils.SystemProperty
-import groovyx.gaelyk.GaelykBindingEnhancer
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalMailServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
-import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
+import groovy.mock.interceptor.MockFor
+
+import javax.servlet.ServletContext
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import com.google.appengine.api.memcache.MemcacheService
+
 import com.google.appengine.api.datastore.DatastoreService
-import groovy.mock.interceptor.MockFor
-import javax.servlet.ServletContext
+import com.google.appengine.api.memcache.MemcacheService
+import com.google.appengine.api.utils.SystemProperty
+import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalMailServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper
+import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
+import com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
 
 /**
  * 
@@ -27,15 +28,15 @@ class PluginsHandlerTest extends GroovyTestCase {
 
     // setup the local environment stub services
     private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-            new LocalDatastoreServiceTestConfig(),
-            new LocalMemcacheServiceTestConfig(),
-            new LocalURLFetchServiceTestConfig(),
-            new LocalMailServiceTestConfig(),
-            new LocalImagesServiceTestConfig(),
-            new LocalUserServiceTestConfig(),
-            new LocalTaskQueueTestConfig(),
-            new LocalXMPPServiceTestConfig(),
-            new LocalBlobstoreServiceTestConfig()
+    new LocalDatastoreServiceTestConfig(),
+    new LocalMemcacheServiceTestConfig(),
+    new LocalURLFetchServiceTestConfig(),
+    new LocalMailServiceTestConfig(),
+    new LocalImagesServiceTestConfig(),
+    new LocalUserServiceTestConfig(),
+    new LocalTaskQueueTestConfig(),
+    new LocalXMPPServiceTestConfig(),
+    new LocalBlobstoreServiceTestConfig()
     )
 
     private Binding binding
@@ -131,7 +132,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 } else ""
             }
-			
+
             initPlugins(servletContextMock, true)
             servletContextControl.verify(servletContextMock)
             assert bindingVariables.version == "1.2.3"
@@ -147,8 +148,9 @@ class PluginsHandlerTest extends GroovyTestCase {
         def output = new StringBuilder()
 
         def request  = [
-                getAttribute: { String key -> output },
-                setAttribute: { String attrName, String attrValue -> output << attrValue }
+            getAttribute: { String key -> output },
+            setAttribute: { String attrName, String attrValue ->
+                output << attrValue }
         ] as HttpServletRequest
 
         def response = [:] as HttpServletResponse
@@ -178,14 +180,14 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 }
             }
-			
+
             initPlugins(null, true)
 
             assert beforeActions.size() == 3
             assert afterActions.size()  == 3
 
             executeBeforeActions request, response
-            executeAfterActions  request, response
+            executeAfterActions  request, response, 'THE RESULT'
 
             assert output.toString() == '135642'
         }
@@ -210,7 +212,7 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 } else ""
             }
-			
+
             initPlugins(null, true)
 
             def values = [:]
@@ -224,11 +226,11 @@ class PluginsHandlerTest extends GroovyTestCase {
         }
 
     }
-    
+
     void testServiceLoader(){
         ServiceLoader<PluginBaseScript> loader = ServiceLoader.load(PluginBaseScript)
         assert loader.inject(0) { acc, val -> ++acc } == 1
-        
+
     }
 }
 

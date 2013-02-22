@@ -313,6 +313,9 @@ Optinonal parameters currently only works for destinations defined as String.
 <blockquote>
 Also, note that routes are matched in order of appearance.
 So if you have several routes which map an incoming request URI, the first one encountered in the route definition file will win.
+This can be changed by passing <code>index</code> parameter to the route definition. Index parameter lesser than zero will be matched
+before all the other routes defined in the routes script. Be sure the index is unique. Do not assing index between zero and number of your
+routes in the routes file
 </blockquote>
 
 <a name="path-variable-validation"></a>

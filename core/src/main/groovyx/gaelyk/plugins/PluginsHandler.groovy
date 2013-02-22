@@ -98,7 +98,10 @@ class PluginsHandler {
                 }
             }.grep()
 
+            int counter = 0
+            int routesStep = 330
             Closure init = { PluginBaseScript pluginScript ->
+                
                 String pluginName = pluginScript.getClass().getSimpleName()
                 log.config "Initializing plugin $pluginName"
                 // creates a binding for the plugin descriptor file
@@ -110,7 +113,12 @@ class PluginsHandler {
                 binding.setVariable("servletContext", servletContext)
 
                 pluginScript.binding = binding
-
+                
+                // resolve the routes index conflict
+                if(pluginScript.firstRouteIndex == 0){
+                    pluginScript.firstRouteIndex = (++counter) * routesStep
+                }
+                
                 pluginScript.run()
 
                 // use getters directly,

@@ -120,7 +120,8 @@ class PluginsHandlerTest extends GroovyTestCase {
                     }
 
                     routes {
-                        firstRouteIndex = 10
+                        startRoutingAt 10
+
                         get "/index", forward: "/index.groovy"
                         post "/upload", forward: "/upload.groovy"
                         all "/something", forward: "/something.groovy", index: 15

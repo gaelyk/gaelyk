@@ -30,7 +30,22 @@ abstract class RoutesBaseScript extends Script {
      * The order of the first route in this script, the following routes will have
      * order number {@link #firstRouteOrder} + {@link #routes#size()}
      */
-    int firstRouteIndex = 0
+    protected int firstRouteIndex = 0
+    
+    void setFirstRouteIndex(int index){
+        throw new UnsupportedOperationException("Use startRoutingAt(index) instead!")
+    }
+    
+    /**
+     * The first route will start with the provided index.
+     * 
+     * Following routes will have index one higher unless they specify index property itself.
+     * 
+     * @param index index for the first route in this script
+     */
+    void startRoutingAt(int index){
+        this.@firstRouteIndex = index
+    }
 
     def all    (Map m, String route) { handle m, route, HttpMethod.ALL }
     def get    (Map m, String route) { handle m, route, HttpMethod.GET }

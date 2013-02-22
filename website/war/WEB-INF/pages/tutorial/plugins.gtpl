@@ -243,7 +243,7 @@ routes {
     // always specify the first route index to prevent routes conflict
     // by setting the value to negative number the routes from this plugin
     // will have precedence before the ones in routes.groovy script
-    firstRouteIndex = -1500
+    startRoutingAt -1500
     get "/json", forward: "/json.groovy"
 }
 

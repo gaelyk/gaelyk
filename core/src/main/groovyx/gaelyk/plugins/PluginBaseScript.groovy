@@ -15,9 +15,8 @@
  */
 package groovyx.gaelyk.plugins
 
-import groovyx.gaelyk.routes.RoutesBaseScript
-import groovyx.gaelyk.GaelykBindingEnhancer
 import groovy.transform.CompileStatic
+import groovyx.gaelyk.routes.RoutesBaseScript
 
 /**
  * Base script class used for evaluating the plugin descriptors.

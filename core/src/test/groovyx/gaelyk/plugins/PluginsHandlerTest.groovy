@@ -120,8 +120,10 @@ class PluginsHandlerTest extends GroovyTestCase {
                     }
 
                     routes {
+                        firstRouteIndex = 10
                         get "/index", forward: "/index.groovy"
                         post "/upload", forward: "/upload.groovy"
+                        all "/something", forward: "/something.groovy", index: 15
                     }
 
                     before { 'before' }
@@ -136,7 +138,10 @@ class PluginsHandlerTest extends GroovyTestCase {
             initPlugins(servletContextMock, true)
             servletContextControl.verify(servletContextMock)
             assert bindingVariables.version == "1.2.3"
-            assert routes.size() == 2
+            assert routes.size() == 3
+            assert routes[2].index == 15
+            assert routes[0].index == 10
+            assert routes[1].index == 11
             assert beforeActions.size() == 1
             assert beforeActions[0]() == 'before'
             assert afterActions.size() == 1

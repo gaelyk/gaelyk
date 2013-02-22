@@ -112,7 +112,7 @@ class RoutesFilter implements Filter {
                 for(Route r in scriptRoutes){
                     log.config "Adding route $r from routes file"
                     routes.add r
-                    routesFromRoutesFile r
+                    routesFromRoutesFile.add r
                 }
 
                 // update the last modified flag
@@ -122,7 +122,6 @@ class RoutesFilter implements Filter {
                     log.config "Adding route $r from routes file"
                     routes.add r
                 }
-                routes.addAll routesFromRoutesFile
             }
         }
         // add the routes defined by the plugins

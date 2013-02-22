@@ -107,19 +107,29 @@ class RoutesFilter implements Filter {
 
                 script.run()
 
-                List<Route> scriptRoutes = script.routes
-                routes.addAll scriptRoutes
                 routesFromRoutesFile.clear()
-                routesFromRoutesFile.addAll scriptRoutes
+                List<Route> scriptRoutes = script.routes
+                for(Route r in scriptRoutes){
+                    log.config "Adding route $r from routes file"
+                    routes.add r
+                    routesFromRoutesFile r
+                }
 
                 // update the last modified flag
                 lastRoutesFileModification = lastModified
             } else {
+                for(Route r in routesFromRoutesFile){
+                    log.config "Adding route $r from routes file"
+                    routes.add r
+                }
                 routes.addAll routesFromRoutesFile
             }
         }
         // add the routes defined by the plugins
-        routes.addAll PluginsHandler.instance.routes
+        for(Route r in PluginsHandler.instance.routes){
+            log.config "Adding route $r from plugins"
+            routes.add r            
+        }
     }
 
     /**

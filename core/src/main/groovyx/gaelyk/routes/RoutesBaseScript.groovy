@@ -48,15 +48,15 @@ abstract class RoutesBaseScript extends Script {
         if (type == "subscription") {
             routes << new Route("/_ah/xmpp/subscription/@value/", m.to + "?value=@value",
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true, m.index ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
+                    null, null, 0, false, false, true, m.containsKey('index') ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
         } else if (type == "presence") {
             routes << new Route("/_ah/xmpp/presence/@value/", m.to + "?value=@value",
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true, m.index ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
+                    null, null, 0, false, false, true, m.containsKey('index') ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
         } else {
             routes << new Route("/_ah/xmpp/message/chat/", m.to,
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true, m.index ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
+                    null, null, 0, false, false, true, m.containsKey('index') ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
         }
     }
 

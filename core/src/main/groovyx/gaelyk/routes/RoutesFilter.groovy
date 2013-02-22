@@ -15,27 +15,27 @@
  */
 package groovyx.gaelyk.routes
 
-import java.util.concurrent.CopyOnWriteArrayList
+import groovy.servlet.AbstractHttpServlet
+import groovy.transform.CompileStatic
+import groovyx.gaelyk.GaelykBindingEnhancer
+import groovyx.gaelyk.cache.CacheHandler
+import groovyx.gaelyk.logging.GroovyLogger
+import groovyx.gaelyk.plugins.PluginsHandler
+
+import java.util.concurrent.ConcurrentSkipListSet
 
 import javax.servlet.Filter
 import javax.servlet.FilterChain
-import javax.servlet.ServletResponse
-import javax.servlet.ServletRequest
 import javax.servlet.FilterConfig
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-import groovy.servlet.AbstractHttpServlet
-import groovyx.gaelyk.GaelykBindingEnhancer
-import groovyx.gaelyk.plugins.PluginsHandler
-import groovyx.gaelyk.cache.CacheHandler
-import groovyx.gaelyk.logging.GroovyLogger
-
-import com.google.appengine.api.utils.SystemProperty
-import com.google.appengine.api.NamespaceManager
-
 import org.codehaus.groovy.control.CompilerConfiguration
-import groovy.transform.CompileStatic
+
+import com.google.appengine.api.NamespaceManager
+import com.google.appengine.api.utils.SystemProperty
 
 /**
  * <code>RoutesFilter</code> is a Servlet Filter whose responsability is to define URL mappings for your
@@ -59,8 +59,8 @@ class RoutesFilter implements Filter {
      */
     private String routesFileLocation
     private long lastRoutesFileModification = 0
-    private List<Route> routes = []
-    private List<Route> routesFromRoutesFile = []
+    private SortedSet<Route> routes = new TreeSet<Route>()
+    private SortedSet<Route> routesFromRoutesFile = new TreeSet<Route>()
     private FilterConfig filterConfig
     private GroovyLogger log
 
@@ -70,8 +70,8 @@ class RoutesFilter implements Filter {
         this.routesFileLocation = filterConfig.getInitParameter("routes.location") ?: "WEB-INF/routes.groovy"
         this.log = new GroovyLogger('gaelyk.routesfilter')
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
-            routes = new CopyOnWriteArrayList<Route>()
-            routesFromRoutesFile =  new CopyOnWriteArrayList<Route>()
+            routes = new ConcurrentSkipListSet<Route>()
+            routesFromRoutesFile =  new ConcurrentSkipListSet<Route>()
         }
         loadRoutes()
     }

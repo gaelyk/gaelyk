@@ -1,19 +1,19 @@
 package groovyx.gaelyk.cache
 
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig
-import com.google.appengine.api.memcache.MemcacheServiceFactory
-import groovyx.gaelyk.routes.Route
-
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.RequestDispatcher
-import javax.servlet.ServletResponse
-import javax.servlet.ServletRequest
+import groovyx.gaelyk.cache.CachedResponse.CustomServletOutputStream
 import groovyx.gaelyk.routes.HttpMethod
 import groovyx.gaelyk.routes.RedirectionType
+import groovyx.gaelyk.routes.Route
 
-import groovyx.gaelyk.cache.CachedResponse.CustomServletOutputStream
+import javax.servlet.RequestDispatcher
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+
+import com.google.appengine.api.memcache.MemcacheServiceFactory
+import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 
 /**
  * Cache handler tests
@@ -92,7 +92,7 @@ class CacheHandlerTest extends GroovyTestCase {
     }
 
     void testCacheServingWithoutCaching() {
-        def route = new Route(uri, "/index.groovy")
+        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, false, false, false, 0)
         CacheHandler.serve route, request, response
 		// TODO: verify
         // assert recorder == ['req.getRequestURI', 'req.getQueryString', 'req.getRequestURI', 'req.getRequestDispatcher', 'reqDisp.forward']
@@ -100,7 +100,7 @@ class CacheHandlerTest extends GroovyTestCase {
     }
 
     void testCacheServingWithCaching() {
-        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
+        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100, false, false, false, 0)
         CacheHandler.serve route, request, response
 
 		// TODO: verify
@@ -114,7 +114,7 @@ class CacheHandlerTest extends GroovyTestCase {
     void testCacheServingWithLastModified() {
         def memcache = MemcacheServiceFactory.memcacheService
         memcache.put("last-modified-$uri".toString(), dateBefore)
-        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
+        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100, false, false, false, 0)
         CacheHandler.serve route, request, response
 
 		// TODO: verify
@@ -126,7 +126,7 @@ class CacheHandlerTest extends GroovyTestCase {
         def memcache = MemcacheServiceFactory.memcacheService
         memcache.put("content-for-$uri".toString(), "Hello")
         memcache.put("content-type-for-$uri".toString(), "text/html")
-        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100)
+        def route = new Route(uri, "/index.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 100, false, false, false, 0)
         CacheHandler.serve route, request, response
 
 		// TODO: verify

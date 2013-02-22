@@ -15,7 +15,7 @@
  */
 package groovyx.gaelyk.routes
 
-import java.util.Map.Entry;
+import java.util.Map.Entry
 
 /**
  * Base script class used for evaluating the routes.
@@ -25,6 +25,12 @@ import java.util.Map.Entry;
 abstract class RoutesBaseScript extends Script {
     /** The list of routes available */
     List<Route> routes = []
+    
+    /**
+     * The order of the first route in this script, the following routes will have
+     * order number {@link #firstRouteOrder} + {@link #routes#size()}
+     */
+    int firstRouteIndex = 0
 
     def all    (Map m, String route) { handle m, route, HttpMethod.ALL }
     def get    (Map m, String route) { handle m, route, HttpMethod.GET }
@@ -35,22 +41,22 @@ abstract class RoutesBaseScript extends Script {
     def email  (Map m) {
         routes << new Route("/_ah/mail/*", m.to,
                 HttpMethod.POST, RedirectionType.FORWARD,
-                null, null, 0, false, true, false)
+                null, null, 0, false, true, false, m.index ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
     }
 
     def jabber (Map m, String type = "chat") {
         if (type == "subscription") {
             routes << new Route("/_ah/xmpp/subscription/@value/", m.to + "?value=@value",
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true)
+                    null, null, 0, false, false, true, m.index ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
         } else if (type == "presence") {
             routes << new Route("/_ah/xmpp/presence/@value/", m.to + "?value=@value",
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true)
+                    null, null, 0, false, false, true, m.index ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
         } else {
             routes << new Route("/_ah/xmpp/message/chat/", m.to,
                     HttpMethod.POST, RedirectionType.FORWARD,
-                    null, null, 0, false, false, true)
+                    null, null, 0, false, false, true, m.index ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
         }
     }
 
@@ -72,11 +78,13 @@ abstract class RoutesBaseScript extends Script {
         def ns = m.namespace ?: null
         
         if(destination instanceof String){
+            int counter = 0
             for(Entry<String, String> e in OptionalRoutesHelper.generateRoutes(route, destination)){
-                routes << new Route(e.key, e.value, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false)
+                routes << new Route(e.key, e.value, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false, m.containsKey('index') ? (Integer.valueOf(m.index) + counter) : (firstRouteIndex + routes.size()))
+                counter++
             }
         } else {
-                routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false)
+                routes << new Route(route, destination, method, redirectionType, validator, ns, cacheExpiration, ignore, false, false, m.containsKey('index') ? Integer.valueOf(m.index) : (firstRouteIndex + routes.size()))
         }
     }
 }

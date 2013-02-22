@@ -17,13 +17,14 @@ package groovyx.gaelyk.routes
 
 import static com.google.appengine.api.capabilities.Capability.*
 import static com.google.appengine.api.capabilities.CapabilityStatus.*
+import static groovyx.gaelyk.TestUtil.request as r
 import static groovyx.gaelyk.routes.CapabilityAwareDestination.CapabilityComparisonOperator.*
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
+
 import com.google.appengine.api.capabilities.CapabilitiesService
 import com.google.appengine.api.capabilities.Capability
 import com.google.appengine.api.capabilities.CapabilityState
-import static groovyx.gaelyk.TestUtil.request as r
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 
 /**
  * @author Guillaume Laforge
@@ -105,13 +106,13 @@ class CapabilityAwareRoutesTest extends GroovyTestCase {
         def route = new Route("/foo/@bar", {
             to "/default.gtpl?var=@bar"
             to("/scheduled.gtpl?var=@bar").on(DATASTORE_WRITE).is(ENABLED)
-        })
+        }, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, false, false, false, 0)
         assert route.forUri("/foo/something",r("/foo/something")).destination == "/scheduled.gtpl?var=something"
 
         route = new Route("/foo/@bar", {
             to "/default.gtpl?var=@bar"
             to("/scheduled.gtpl?var=@bar").on(DATASTORE_WRITE).not(ENABLED)
-        })
+        }, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, false, false, false, 0)
         assert route.forUri("/foo/baz", r("/foo/baz")).destination == "/default.gtpl?var=baz"
     }
 }

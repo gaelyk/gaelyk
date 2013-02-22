@@ -195,7 +195,7 @@ class ReflectionEntityCoercion {
         def o = clazz.newInstance()
         if (o instanceof Map) {
             entityProps.each { k, v ->
-                o[k] = v
+                (o as Map)[k] = v
             }
             o['id'] = e.key.name ?: e.key.id
             if(e.key.parent){

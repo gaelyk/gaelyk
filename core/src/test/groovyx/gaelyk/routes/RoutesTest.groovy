@@ -16,6 +16,7 @@
 package groovyx.gaelyk.routes
 
 import static groovyx.gaelyk.TestUtil.request as r
+
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 
@@ -105,7 +106,7 @@ class RoutesTest extends GroovyTestCase {
 
         routeAndMatchingPaths.each { String route, Map urisVariables ->
             urisVariables.each { String uri, Map variables ->
-                def rt = new Route(route, "/destination")
+                def rt = new Route(route, "/destination", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, false, false, false, 0)
                 def result = rt.forUri(uri, r(uri))
                 assert result.matches
                 assert result.variables == variables
@@ -120,7 +121,7 @@ class RoutesTest extends GroovyTestCase {
         ]
 
         routeAndNonMatchingPaths.each { String route, String uri ->
-            def rt = new Route(route, "/somewhere.groovy")
+            def rt = new Route(route, "/somewhere.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, false, false, false, 0)
             assert !rt.forUri(uri, r(uri)).matches
         }
     }
@@ -130,29 +131,29 @@ class RoutesTest extends GroovyTestCase {
         def m = HttpMethod.GET
         def rt = RedirectionType.FORWARD
 
-        assert new Route("/blog/@year", d, m, rt, { year.isNumber() }).forUri("/blog/2004",r("/blog/2004")).matches
-        assert !new Route("/blog/@year", d, m, rt, { year.isNumber() }).forUri("/blog/2004xxx",r("/blog/2004xxx")).matches
+        assert new Route("/blog/@year", d, m, rt, { year.isNumber() }, null, 0, false, false, false, 0).forUri("/blog/2004",r("/blog/2004")).matches
+        assert !new Route("/blog/@year", d, m, rt, { year.isNumber() }, null, 0, false, false, false, 0).forUri("/blog/2004xxx",r("/blog/2004xxx")).matches
 
-        assert new Route("/isbn/@isbn/toc", d, m, rt, { isbn ==~ /\d{9}(\d|X)/ }).forUri("/isbn/012345678X/toc",r("/isbn/012345678X/toc")).matches
-        assert !new Route("/isbn/@isbn/toc", d, m, rt, { isbn =~ /\d{9}(\d|X)/ }).forUri("/isbn/XYZ/toc",r("/isbn/XYZ/toc")).matches
+        assert new Route("/isbn/@isbn/toc", d, m, rt, { isbn ==~ /\d{9}(\d|X)/ }, null, 0, false, false, false, 0).forUri("/isbn/012345678X/toc",r("/isbn/012345678X/toc")).matches
+        assert !new Route("/isbn/@isbn/toc", d, m, rt, { isbn =~ /\d{9}(\d|X)/ }, null, 0, false, false, false, 0).forUri("/isbn/XYZ/toc",r("/isbn/XYZ/toc")).matches
 
-        assert new Route("/admin", d, m, rt, { request.user == 'USER' }).forUri("/admin",r("/admin")).matches
-        assert !new Route("/admin", d, m, rt, { request.user == 'dummy' }).forUri("/admin",r("/admin")).matches
+        assert new Route("/admin", d, m, rt, { request.user == 'USER' }, null, 0, false, false, false, 0).forUri("/admin",r("/admin")).matches
+        assert !new Route("/admin", d, m, rt, { request.user == 'dummy' }, null, 0, false, false, false, 0).forUri("/admin",r("/admin")).matches
     }
 
     void testIgnoreRoute() {
-        assert new Route("/ignore", null, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, true).forUri("/ignore",r("/ignore")).matches
+        assert new Route("/ignore", null, HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, true, false, false, 0).forUri("/ignore",r("/ignore")).matches
     }
 
     void testNamespacedRoute() {
-        def route = new Route("/@cust/show", "/showCust.groovy?ns=@cust", HttpMethod.ALL, RedirectionType.FORWARD, null, { cust }).forUri("/acme/show",r("/acme/show"))
+        def route = new Route("/@cust/show", "/showCust.groovy?ns=@cust", HttpMethod.ALL, RedirectionType.FORWARD, null, { cust }, 0, false, false, false, 0).forUri("/acme/show",r("/acme/show"))
 
         assert route.matches
         assert route.namespace == "acme"
     }
 
     void testRoutesWithParametersAndJSessionID() {
-        def rt = new Route("/signup-user", "/signupUser.groovy")
+        def rt = new Route("/signup-user", "/signupUser.groovy", HttpMethod.ALL, RedirectionType.FORWARD, null, null, 0, false, false, false, 0)
         
         assert rt.forUri("/signup-user", r("/signup-user")).matches
         assert rt.forUri("/signup-user?login=failed", r("/signup-user?login=failed")).matches

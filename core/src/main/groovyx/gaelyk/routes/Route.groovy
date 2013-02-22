@@ -15,17 +15,21 @@
  */
 package groovyx.gaelyk.routes
 
+import groovy.transform.Canonical
+import groovyx.gaelyk.GaelykBindingEnhancer
+
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+
 import javax.servlet.http.HttpServletRequest
-import groovyx.gaelyk.GaelykBindingEnhancer
 
 /**
  * Representation of a route URL mapping.
  *
  * @author Guillaume Laforge
  */
-class Route {
+@Canonical
+class Route implements Comparable<Route>{
     /** The route pattern */
     String route
 
@@ -61,15 +65,18 @@ class Route {
 
     /** If the route is for incoming jabber messages */
     boolean jabber
+    
+    /** Can change the order of the routes in routes filter. Routes with lesser number will be evaluated first. Could be negative. */
+    int index
 
     /**
      * Constructor taking a route, a destination, an HTTP method (optional), a redirection type (optional),
      * and a closure for validating the variables against regular expression patterns.
      */
-    Route(String route, /* String or Closure */ destination, HttpMethod method = HttpMethod.ALL,
-          RedirectionType redirectionType = RedirectionType.FORWARD, Closure validator = null,
-          Closure namespace = null, int cacheExpiration = 0, boolean ignore = false,
-          boolean email = false, boolean jabber = false) {
+    Route(String route, /* String or Closure */ destination, HttpMethod method,
+          RedirectionType redirectionType, Closure validator,
+          Closure namespace, int cacheExpiration, boolean ignore,
+          boolean email, boolean jabber, int index) {
         this.route = route
         this.method = method
         this.redirectionType = redirectionType
@@ -79,6 +86,7 @@ class Route {
         this.ignore = ignore
         this.email = email
         this.jabber = jabber
+        this.index = index
 
         // extract the path variables from the route
         this.variables = extractParameters(route)
@@ -191,5 +199,12 @@ class Route {
         } else {
             [matches: false]
         }
+    }
+
+    @Override public int compareTo(Route o) {
+        if(o == null) {
+            return 0
+        }
+        this.index <=> o.index
     }
 }

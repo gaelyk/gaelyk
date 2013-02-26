@@ -271,6 +271,28 @@ class EntityTransformationSpec extends Specification {
         expect:
         obj
     }
+    
+    def "Count entities"(){
+        def obj = newShell().evaluate '''
+            import groovyx.gaelyk.datastore.Key
+            import groovyx.gaelyk.datastore.Entity as GE
+            import groovy.transform.Canonical
+            import groovyx.gaelyk.datastore.Indexed
+            
+            @Canonical @GE
+            class Person {
+              @Key long id
+              @Indexed String name
+            }
+
+            new Person(id: 15, name: 'test').save()
+            new Person(id: 16, name: 'tset').save()
+
+            Person.count { where name == 'test' }
+        '''
+        expect:
+        obj == 1
+    }
 
 
 

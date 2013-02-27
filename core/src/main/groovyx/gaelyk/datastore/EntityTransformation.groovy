@@ -28,7 +28,9 @@ import org.codehaus.groovy.ast.GenericsType
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.PropertyNode
+import org.codehaus.groovy.ast.builder.AstBuilder
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
+import org.codehaus.groovy.ast.expr.BinaryExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.Expression
@@ -122,6 +124,7 @@ class EntityTransformation extends AbstractASTTransformation {
 
         if(existingKeyProperty && !(existingKeyProperty.type in [
             ClassHelper.long_TYPE,
+            ClassHelper.Long_TYPE,
             ClassHelper.STRING_TYPE
         ])){
             source.addError(new SyntaxException("Only long or String are allowed as a key property! Found ${existingKeyProperty.type.name} ${existingKeyProperty.declaringClass.name}.${existingKeyProperty.name}.", existingKeyProperty.lineNumber, existingKeyProperty.columnNumber))
@@ -134,7 +137,7 @@ class EntityTransformation extends AbstractASTTransformation {
             parent.addProperty existingKeyProperty
         }
 
-        boolean hasNumericKey = existingKeyProperty.type == ClassHelper.long_TYPE
+        boolean hasNumericKey = existingKeyProperty.type in [ClassHelper.long_TYPE, ClassHelper.Long_TYPE]
 
         parent.addMethod new MethodNode(
                 'hasDatastoreNumericKey',
@@ -144,9 +147,6 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(hasNumericKey ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE)
                 )
-
-        BlockStatement getKeyBlock = new BlockStatement()
-        getKeyBlock.addStatement(new ExpressionStatement(new VariableExpression(existingKeyProperty)))
 
         parent.addMethod new MethodNode(
                 'hasDatastoreKey',
@@ -165,19 +165,24 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassHelper.OBJECT_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                getKeyBlock
+                new ReturnStatement(new VariableExpression(existingKeyProperty))
                 )
+        
+        BinaryExpression bes = new AstBuilder().buildFromString("this.${existingKeyProperty.name} = ${existingKeyProperty.name}")[0].statements[0].expression
 
-        def mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingKeyProperty.name), new VariableExpression(existingKeyProperty)))
+        Parameter setKeyParameter = new Parameter(/* hasNumericKey ? ClassHelper.Long_TYPE : ClassHelper.STRING_TYPE*/ ClassHelper.OBJECT_TYPE, existingKeyProperty.name)
         BlockStatement setKeyBlock = new BlockStatement()
-        setKeyBlock.addStatement(new ExpressionStatement(mce))
+        setKeyBlock.addStatement(new ExpressionStatement(
+                bes
+            )
+        )
+        
 
         parent.addMethod new MethodNode(
                 'setDatastoreKey',
                 Modifier.PUBLIC,
                 ClassHelper.VOID_TYPE,
-                [
-                    new Parameter(/* hasNumericKey ? ClassHelper.Long_TYPE : ClassHelper.STRING_TYPE*/ ClassHelper.OBJECT_TYPE, existingKeyProperty.name)] as Parameter[],
+                [setKeyParameter] as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
                 )
@@ -221,7 +226,7 @@ class EntityTransformation extends AbstractASTTransformation {
 
         def mce
         if(existingVersionProperty){
-            mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingVersionProperty.name), new VariableExpression(existingVersionProperty)))
+            mce = new AstBuilder().buildFromString("this.${existingVersionProperty.name} = ${existingVersionProperty.name}")[0].statements[0].expression
         } else {
             mce = ConstantExpression.NULL
         }
@@ -278,8 +283,7 @@ class EntityTransformation extends AbstractASTTransformation {
 
         BlockStatement setKeyBlock = new BlockStatement()
         if(existingParentProperty){
-            def mce = new MethodCallExpression(new VariableExpression('this'), 'setProperty', new ArgumentListExpression(new ConstantExpression(existingParentProperty.name), new VariableExpression(existingParentProperty)))
-            setKeyBlock.addStatement(new ExpressionStatement(mce))
+            setKeyBlock.addStatement(new ExpressionStatement(new AstBuilder().buildFromString("this.${existingParentProperty.name} = ${existingParentProperty.name}")[0].statements[0].expression))
         } else {
             setKeyBlock.addStatement(new ReturnStatement(ConstantExpression.NULL))
         }
@@ -371,7 +375,7 @@ class EntityTransformation extends AbstractASTTransformation {
     }
 
     private PropertyNode findPropertyIncludingSuper(ClassNode parent, Closure filter){
-        PropertyNode prop = parent.properties.find filter
+        PropertyNode prop = parent.getProperties().find filter
         if(prop){
             return prop
         }
@@ -434,4 +438,8 @@ class EntityTransformation extends AbstractASTTransformation {
                 block
                 )
     }
+    
+//    private void tester(Object id){
+//        this.id = id
+//    }
 }

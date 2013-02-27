@@ -293,6 +293,51 @@ class EntityTransformationSpec extends Specification {
         expect:
         obj == 1
     }
+    
+    def "Id is set"(){
+        def obj = newShell().evaluate '''
+            import groovyx.gaelyk.datastore.Key
+            import groovyx.gaelyk.datastore.Entity as GE
+            import groovyx.gaelyk.datastore.Indexed
+            import com.google.appengine.api.datastore.*
+            
+            @GE @groovy.transform.CompileStatic
+            class Person {
+              @Key long id
+              @Indexed String name
+            }
+
+            def key = new Person(name: 'test').save()
+
+            Entity entity = DatastoreServiceFactory.datastoreService.get('Person', key.id)
+            Person pogo = entity as Person
+            [key: key, entity: entity, pogo: pogo]
+        '''
+        expect:
+        obj.pogo.id == obj.key.id
+    }
+    
+    /*@spock.lang.Ignore*/
+    def "Id is set 2"(){
+        DatastoreEntity obj = new Order()
+        
+        expect:
+        obj.hasDatastoreKey()
+        obj.hasDatastoreNumericKey()
+        
+        when:
+        obj.setDatastoreKey(15)
+        
+        then:
+        obj.getDatastoreKey() == 15
+        obj.id == 15
+        
+        when:
+        obj.setDatastoreVersion(20)
+        
+        then:
+        obj.getDatastoreVersion() == 20
+    }
 
 
 

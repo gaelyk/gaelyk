@@ -198,7 +198,7 @@ class EntityTransformation extends AbstractASTTransformation {
             }
         }
 
-        if(existingVersionProperty && existingVersionProperty.type != ClassHelper.long_TYPE){
+        if(existingVersionProperty && !(existingVersionProperty.type in [ClassHelper.long_TYPE, ClassHelper.Long_TYPE])){
             source.addError(new SyntaxException("Only long is allowed as a version property! Found ${existingVersionProperty.type.name} ${existingVersionProperty.declaringClass.name}.${existingVersionProperty.name}.", existingVersionProperty.lineNumber, existingVersionProperty.columnNumber))
             return
         }

@@ -83,12 +83,17 @@ class EntityTransformationSpec extends Specification {
         obj.count() == 0
     }
 
+	@spock.lang.Ignore
     def "Test find all with closure"(){
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
             class MyPogo3 {
                 @groovyx.gaelyk.datastore.Indexed String test
+
+                static findAllByTest(String t){
+                    MyPogo3.findAll{ where test == t }
+                }
             }
 
             new MyPogo3(test: "foo").save()
@@ -172,6 +177,26 @@ class EntityTransformationSpec extends Specification {
         expect:
         obj
     }
+	
+//	@spock.lang.Ignore
+	def "Test find with generic"(){
+		def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo6 {
+                @groovyx.gaelyk.datastore.Indexed String test
+				List<String> something = new ArrayList<String>()
+            }
+
+            new MyPogo6(test: "foo").save()
+            new MyPogo6(test: "foo").save()
+            new MyPogo6(test: "bar").save()
+
+            MyPogo6.find{ where test == "bar" }'''
+
+		expect:
+		obj
+	}
 
     def "Test key"(){
         def obj = newShell().evaluate '''

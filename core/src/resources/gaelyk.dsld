@@ -89,7 +89,7 @@ def queryDslSupport = {
 ).accept queryDslSupport
 
 def shortcutFor = { type ->
-    bind(clazz: currentType(type)) & enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy'))
+    bind(clazz: currentType(type))
 }
 
 (sourceFolderOfCurrentType('src/main/webapp/WEB-INF/groovy') & enclosingScript()).accept {

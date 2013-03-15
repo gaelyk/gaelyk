@@ -83,7 +83,6 @@ class EntityTransformationSpec extends Specification {
         obj.count() == 0
     }
 
-	@spock.lang.Ignore
     def "Test find all with closure"(){
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
@@ -91,6 +90,8 @@ class EntityTransformationSpec extends Specification {
             class MyPogo3 {
                 @groovyx.gaelyk.datastore.Indexed String test
 
+                // this method must be compiled dynamic, before DelegatesTo method is fixed
+                @groovy.transform.CompileStatic(groovy.transform.TypeCheckingMode.SKIP)
                 static findAllByTest(String t){
                     MyPogo3.findAll{ where test == t }
                 }
@@ -177,10 +178,10 @@ class EntityTransformationSpec extends Specification {
         expect:
         obj
     }
-	
-	@spock.lang.Ignore
-	def "Test find with generic"(){
-		def obj = newShell().evaluate '''
+
+    @spock.lang.Ignore
+    def "Test find with generic"(){
+        def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
             @groovyx.gaelyk.datastore.Entity
             class MyPogo6 {
@@ -194,9 +195,9 @@ class EntityTransformationSpec extends Specification {
 
             MyPogo6.find{ where test == "bar" }'''
 
-		expect:
-		obj
-	}
+        expect:
+        obj
+    }
 
     def "Test key"(){
         def obj = newShell().evaluate '''
@@ -296,7 +297,7 @@ class EntityTransformationSpec extends Specification {
         expect:
         obj
     }
-    
+
     def "Count entities"(){
         def obj = newShell().evaluate '''
             import groovyx.gaelyk.datastore.Key
@@ -318,7 +319,7 @@ class EntityTransformationSpec extends Specification {
         expect:
         obj == 1
     }
-    
+
     def "Id is set"(){
         def obj = newShell().evaluate '''
             import groovyx.gaelyk.datastore.Key
@@ -341,25 +342,25 @@ class EntityTransformationSpec extends Specification {
         expect:
         obj.pogo.id == obj.key.id
     }
-    
+
     /*@spock.lang.Ignore*/
     def "Id is set 2"(){
         DatastoreEntity obj = new Order()
-        
+
         expect:
         obj.hasDatastoreKey()
         obj.hasDatastoreNumericKey()
-        
+
         when:
         obj.setDatastoreKey(15)
-        
+
         then:
         obj.getDatastoreKey() == 15
         obj.id == 15
-        
+
         when:
         obj.setDatastoreVersion(20)
-        
+
         then:
         obj.getDatastoreVersion() == 20
     }

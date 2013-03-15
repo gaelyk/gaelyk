@@ -178,7 +178,7 @@ class EntityTransformationSpec extends Specification {
         obj
     }
 	
-//	@spock.lang.Ignore
+	@spock.lang.Ignore
 	def "Test find with generic"(){
 		def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic

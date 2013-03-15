@@ -55,4 +55,8 @@ class MiscExtensionMethodsTest extends GroovyTestCase {
     void testIntRangeToByteRangeCoercion() {
         assert 300..400 as ByteRange == new ByteRange(300, 400)
     }
+	
+	void testStringArrayConversion(){
+		assert (['1', '2'] as String[]) as int == 1
+	}
 }

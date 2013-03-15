@@ -187,7 +187,25 @@ class MiscExtensions {
             new ByteRange(range.fromInt, range.toInt)
         else DefaultGroovyMethods.asType(range, byteRangeClass)
     }
-
+	
+	/**
+	 * Perform cast on last item of String array if expected
+	 * class is not array or collection.
+	 *
+	 * This method should handle situation when multiple params are submitted but
+	 * only one value is expected. The first value is used for this purpose.
+	 *
+	 * @param multipleParams	usually multiple values in params map
+	 * @param cls				desired class e.g. int
+	 * @return first value cast to desired type if the desired type is not array or collection
+	 */
+	static asType(String[] multipleParams, Class cls){
+		if(!cls.isArray() && !Collection.class.isAssignableFrom(cls)){
+			return DefaultGroovyMethods.asType(multipleParams.first(), cls)
+		}
+		DefaultGroovyMethods.asType(multipleParams, cls)
+	}
+	
     // ----------------------------------------------------------------
     // Miscellaneous methods
     // ----------------------------------------------------------------

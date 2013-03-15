@@ -66,7 +66,12 @@ A special servlet binding gives you direct access to some implicit variables tha
         <tt>logger</tt> : a logger accessor can be used to get access to any logger (more on <a href="#logging">logging</a>)
     </li>
 </ul>
-
+<blockquote>
+    <b>Note: </b>
+    The <tt>params</tt> map always contains values of type String (for single parameter) or String[] (for multiple parameters).
+    To cast them to expected type, use <tt>as</tt> keyword. If single value is expected (e.g. <tt>params.limit as int</tt>) but multiple parameters are submitted
+    the first one is used.
+</blockquote>
 <a name="lazy"></a>
 <h3>Lazy variables</h3>
 <ul>

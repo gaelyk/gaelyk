@@ -70,7 +70,7 @@ A special servlet binding gives you direct access to some implicit variables tha
     <b>Note: </b>
     The <tt>params</tt> map always contains values of type String (for single parameter) or String[] (for multiple parameters).
     To cast them to expected type, use <tt>as</tt> keyword. If single value is expected (e.g. <tt>params.limit as int</tt>) but multiple parameters are submitted
-    the first one is used.
+    the first one is used. If multiple values are expected, use <tt>params.tags as String[]</tt> to guarantee you obtain String array instead of single String.
 </blockquote>
 <a name="lazy"></a>
 <h3>Lazy variables</h3>

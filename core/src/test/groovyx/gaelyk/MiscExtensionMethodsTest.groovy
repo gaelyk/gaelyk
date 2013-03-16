@@ -58,5 +58,6 @@ class MiscExtensionMethodsTest extends GroovyTestCase {
 	
 	void testStringArrayConversion(){
 		assert (['1', '2'] as String[]) as int == 1
+        assert 'one' as String[] == ['one'].toArray()
 	}
 }

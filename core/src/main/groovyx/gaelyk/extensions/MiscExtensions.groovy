@@ -76,6 +76,8 @@ class MiscExtensions {
      *  "foo@gmail.com" as JID
      *  "agR0ZXN0cg8LEgdwZXJzb25zIgJtZQw" as Key
      * </code></pre>
+     * 
+     * Also converts single String to String array with one element
      */
     static Object asType(String self, Class clazz) {
         if (clazz == Email)
@@ -98,6 +100,8 @@ class MiscExtensions {
             new JID(self)
         else if (clazz == Key)
             KeyFactory.stringToKey(self)
+        else if (clazz == String[])
+            [self] as String[]
         else DefaultGroovyMethods.asType(self, clazz)
     }
 

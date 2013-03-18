@@ -203,11 +203,12 @@ class SearchExtensions {
     @CompileStatic
     private static getFieldRawValue(Field field) {
         switch(field.getType()) {
-            case Field.FieldType.ATOM:   return field.atom
-            case Field.FieldType.DATE:   return field.date
-            case Field.FieldType.HTML:   return field.HTML
-            case Field.FieldType.NUMBER: return field.number
-            case Field.FieldType.TEXT:   return field.text
+            case Field.FieldType.ATOM:      return field.atom
+            case Field.FieldType.DATE:      return field.date
+            case Field.FieldType.HTML:      return field.HTML
+            case Field.FieldType.NUMBER:    return field.number
+            case Field.FieldType.TEXT:      return field.text
+            case Field.FieldType.GEO_POINT: return field.geoPoint
         }
     }
 }

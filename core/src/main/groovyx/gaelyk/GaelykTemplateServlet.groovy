@@ -126,7 +126,6 @@ class GaelykTemplateServlet extends TemplateServlet {
             if (e instanceof ResourceException) {
                 pw.print(" Template not found, sending 404.")
                 servletContext.log(sw.toString())
-                getLog(request).warning(sw.toString())
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
             }

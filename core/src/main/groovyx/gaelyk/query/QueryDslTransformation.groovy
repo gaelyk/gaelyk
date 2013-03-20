@@ -167,7 +167,7 @@ class QueryDslTransformation implements ASTTransformation {
                 call.objectExpression instanceof VariableExpression && call.objectExpression.variable == 'datastore' &&
                         // 'query' or 'execute' or 'iterate' method
                         call.method instanceof ConstantExpression &&
-                        (call.method.value == 'query' || call.method.value == 'execute' || call.method.value == 'iterate') &&
+                        (call.method.value == 'build' || call.method.value == 'query' || call.method.value == 'execute' || call.method.value == 'iterate') &&
                         // closure single argument
                         call.arguments.expressions.size() == 1 && call.arguments.expressions[0] instanceof ClosureExpression
             }

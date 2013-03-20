@@ -461,9 +461,12 @@ Here's what it looks like with the query DSL:
 
 <p>
 Let's have a closer look at the syntax supported by the DSL.
-There are two methods added dynamically to the datastore: <code>query{}</code> and <code>execute{}</code>.
-The former allow you to create a <code>Query</code> that you can use then to prepare a <code>PreparedQuery</code>.
-The latter is going further as it executes the query to return a single entity, a list, a count, etc.
+There are four methods added dynamically to the datastore: 
+<code>query{}</code>,<code>iterate{}</code>, <code>execute{}</code> and <code>build{}</code>.
+<code>query{}</code> allow you to create a <code>Query</code> that you can use then to prepare a <code>PreparedQuery</code>.
+<code>iterate{}</code> and <code>execute{}</code> is going further as it executes the query to return a single entity, a list, a count, etc.
+<code>build{}</code> allow you to create a <code>QueryBuilder</code> you can modify later and call <code>iterate{}</code> and <code>execute{}</code>
+on it.
 </p>
 
 <h4>Creating queries</h4>

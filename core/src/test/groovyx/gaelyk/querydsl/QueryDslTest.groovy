@@ -3,6 +3,8 @@ package groovyx.gaelyk.querydsl
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
 import org.codehaus.groovy.tools.ast.TransformTestHelper
+
+import groovyx.gaelyk.query.QueryBuilder;
 import groovyx.gaelyk.query.QueryDslTransformation
 import org.codehaus.groovy.control.CompilePhase
 import com.google.appengine.api.datastore.Entity
@@ -514,5 +516,22 @@ class QueryDslTest extends GroovyTestCase {
 
         assert r4 instanceof List
         assert r4[0] instanceof Key
+    }
+    
+    void testBuild() {
+        TransformTestHelper th = new TransformTestHelper(new QueryDslTransformation(), CompilePhase.CANONICALIZATION)
+
+        Class<QueryBuilder> clazz = th.parse """
+                import com.google.appengine.api.datastore.*
+
+                def datastore = DatastoreServiceFactory.datastoreService
+
+                datastore.build {
+                    from Kind
+                }
+        """
+
+        QueryBuilder builder = clazz.newInstance().run()
+        assert builder.createQuery().kind == 'Kind'
     }
 }

@@ -567,6 +567,21 @@ class DatastoreExtensions {
         cQuery()
         return builder.createQuery()
     }
+    
+    /**
+     * Prepares {@link QueryBuilder} to be executed later.
+     *
+     * @param c the closure representing the query
+     * @return the query builder
+     */
+    static QueryBuilder build(DatastoreService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
+        Closure cQuery = c.clone()
+        cQuery.resolveStrategy = Closure.DELEGATE_FIRST
+        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
+        cQuery.delegate = builder
+        cQuery()
+        return builder
+    }
 
     /**
      * Create and executes a prepared query to retrieve entities from the datastore.

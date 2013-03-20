@@ -100,6 +100,9 @@ class QueryBuilder {
      * @return the result of the execution of a prepared query
      */
     def execute(boolean iterable = false) {
+        if(!iterable && restartAutomatically){
+            throw new IllegalArgumentException("Only iterator can be restarted automatically at the moment. Remove 'restart automatically' from the .")
+        }
         Query query = createQuery()
 
         PreparedQuery preparedQuery = DatastoreServiceFactory.datastoreService.prepare(query)

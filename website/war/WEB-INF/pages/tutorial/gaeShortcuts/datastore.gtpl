@@ -547,7 +547,8 @@ The <code>select</code> verb also provides additional values.
 The <code>from</code> verb allows to specify a class to coerce the results to a POGO.
 In addition, you can specify the <code>FetchOptions</code> with additional verbs like:
 <code>limit</code>, <code>offset</code>, <code>range</code>, <code>chunkSize</code>, <code>fetchSize</code>
-<code>startAt</code>, <code>endAt</code>. If your are facing queries that expires, use <code>restart automatically</code>
+<code>startAt</code>, <code>endAt</code>. If your are facing queries that expires, use <code>restart automatically</code>.
+This option only works with <code>iterator</code> methdod
 to for flawless iteration.
 </p>
 

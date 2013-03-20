@@ -66,13 +66,6 @@ class FieldDefinitions {
 			fieldDefMap.remove('html')
 		}
 
-
-
-		// special case for dates, as the time must be erased
-		if (fieldDefMap.containsKey('date') && fieldDefMap.date) {
-			fieldDefMap.date = Field.date(fieldDefMap.date)
-		}
-        
         def skipped = []
         
 		fieldDefMap.each { String key, value ->

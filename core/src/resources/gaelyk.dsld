@@ -55,7 +55,7 @@ contribute(annotatedBy('groovyx.gaelyk.datastore.Entity')) {
 def queryDslSupport = {
     delegatesTo type: 'groovyx.gaelyk.query.QueryBuilder'
 
-    for(String kwd in ['all', 'keys', 'single', 'count', 'asc', 'desc'] ){
+    for(String kwd in ['all', 'keys', 'single', 'count', 'asc', 'desc', 'automatically'] ){
         property name: kwd, type: String, doc: "The " + kwd + " keyword"
     }
 }

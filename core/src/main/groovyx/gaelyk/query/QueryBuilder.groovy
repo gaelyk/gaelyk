@@ -16,6 +16,7 @@
 package groovyx.gaelyk.query
 
 import groovy.transform.PackageScope
+import groovyx.gaelyk.datastore.SelfRestartingQueryResultIterator;
 import groovyx.gaelyk.extensions.DatastoreExtensions
 
 import java.util.Map.Entry
@@ -48,6 +49,7 @@ class QueryBuilder {
     private FetchOptions options = FetchOptions.Builder.withDefaults()
     private Binding binding
     private Map<String, Class<?>> projections = [:]
+    private boolean restartAutomatically
 
     static QueryBuilder builder(){
         new QueryBuilder(null)
@@ -118,6 +120,9 @@ class QueryBuilder {
 
         if (coercedClass) {
             if (iterable) {
+                if(restartAutomatically){
+                    return SelfRestartingQueryResultIterator.from(this)
+                }
                 QueryResultIterator entitiesIterator = preparedQuery.asQueryResultIterator(options)
 
                 return new QueryResultIterator() {
@@ -152,6 +157,9 @@ class QueryBuilder {
                 return result
             }
         } else {
+            if(restartAutomatically && iterable){
+                return SelfRestartingQueryResultIterator.from(this)
+            }
             def result = iterable ? preparedQuery.asQueryResultIterator(options) : preparedQuery.asQueryResultList(options)
             if (queryType == QueryType.KEYS) {
                 if (iterable) {
@@ -542,4 +550,22 @@ class QueryBuilder {
     QueryBuilder endAt(String cursorString) {
         return endAt(Cursor.fromWebSafeString(cursorString))
     }
+    
+    /**
+     * Defines an end cursor fetch option for the <code>PreparedQuery</code>
+     * using a string representation of the cursor
+     *
+     * Possible syntax:
+     * <pre><code>
+     *  endAt cursorString
+     * </code></pre>
+     *
+     * @param cursor the end cursor
+     * @return the query builder for chaining calls
+     */
+    QueryBuilder restart(String auto) {
+        restartAutomatically = 'automatically' == auto
+        return this
+    }
+    
 }

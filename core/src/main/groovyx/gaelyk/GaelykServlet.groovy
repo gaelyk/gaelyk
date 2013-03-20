@@ -41,11 +41,12 @@ class GaelykServlet extends GroovyServlet {
      * The script engine executing the Groovy scripts for this servlet
      */
     private GroovyScriptEngine gse
-
+    private boolean preferPrecompiled
 
     @Override
     @CompileStatic
     void init(ServletConfig config) {
+        preferPrecompiled = !GaelykBindingEnhancer.localMode || config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true')
         super.init(config)
         // Set up the scripting engine
         gse = createGroovyScriptEngine()
@@ -106,7 +107,7 @@ class GaelykServlet extends GroovyServlet {
         def result = null
         // Run the script
         try {
-            if(!GaelykBindingEnhancer.localMode || config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true')){
+            if(preferPrecompiled){
                 try {
                     result = runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
                 } catch(ClassNotFoundException e){

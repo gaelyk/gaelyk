@@ -41,10 +41,13 @@ import org.codehaus.groovy.runtime.InvokerInvocationException
 class GaelykTemplateServlet extends TemplateServlet {
 
     private static final String PRECOMPILED_TEMPLATE_PREFIX = '$gtpl$'
+    
+    private boolean preferPrecompiled = false
 
     @Override
     @CompileStatic
     void init(ServletConfig config) {
+        preferPrecompiled = !GaelykBindingEnhancer.localMode || config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true')
         super.init(config)
     }
 
@@ -90,7 +93,7 @@ class GaelykTemplateServlet extends TemplateServlet {
         ServletBinding binding = new ServletBinding(request, response, servletContext)
         setVariables(binding)
         try {
-            if(!GaelykBindingEnhancer.localMode || config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true')){
+            if(preferPrecompiled){
                 try {
                     runPrecompiled(getPrecompiledClassName(request), binding, response)
                 } catch(ClassNotFoundException e){

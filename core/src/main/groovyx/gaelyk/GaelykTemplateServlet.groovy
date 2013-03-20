@@ -117,19 +117,20 @@ class GaelykTemplateServlet extends TemplateServlet {
             pw.print("GaelykTemplateServlet Error: ")
             pw.print(" template: '")
             pw.print(getScriptUri(request))
-            pw.print("': ")
+            pw.println("': ")
+            e.printStackTrace(pw)
+            
             getLog(request).warning(sw.toString())
     
             /*
              * Resource not found.
              */
             if (e instanceof ResourceException) {
-                pw.print(" Template not found, sending 404.")
                 servletContext.log(sw.toString())
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
             }
-            throw e // Let propogate out the filter chain and container handle the exception.
+            throw e // Let propagate out the filter chain and container handle the exception.
         }
 
     }

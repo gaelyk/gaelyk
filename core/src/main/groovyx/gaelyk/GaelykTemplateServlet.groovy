@@ -23,6 +23,7 @@ import groovyx.gaelyk.logging.GroovyLogger
 import groovyx.gaelyk.plugins.PluginsHandler
 
 import javax.servlet.ServletConfig
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -41,64 +42,9 @@ class GaelykTemplateServlet extends TemplateServlet {
 
     private static final String PRECOMPILED_TEMPLATE_PREFIX = '$gtpl$'
 
-    private Closure serviceClosure = {}
-
     @Override
     @CompileStatic
     void init(ServletConfig config) {
-        if (config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true' || !GaelykBindingEnhancer.localMode)) {
-            serviceClosure = { HttpServletRequest request, HttpServletResponse response, ServletBinding binding ->
-                try {
-                    try {
-                        runPrecompiled(getPrecompiledClassName(request), binding, response)
-                    } catch(InvokerInvocationException e){
-                        if(e.cause instanceof ClassNotFoundException){
-                            try {
-                                runTemplate(request, response, binding)
-                            } catch(InvokerInvocationException iie){
-                                throw iie.cause ?: iie
-                            }
-                        } else {
-                            throw e.cause ?: e
-                        }
-                    }
-                } catch(FileNotFoundException te){
-                    response.setStatus(HttpServletResponse.SC_NOT_FOUND)
-                    log('Exception serving template', te)
-                    throw te
-                } catch(IllegalAccessException te){
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN)
-                    log('Exception serving template', te)
-                    throw te
-                } catch(e){
-                    response.setStatus(HttpServletResponse.SC_NOT_FOUND)
-                    log('Exception serving template', e)
-                    throw e
-                }
-            }
-        } else {
-            serviceClosure = { HttpServletRequest request, HttpServletResponse response, ServletBinding binding ->
-                try {
-                    try {
-                        runTemplate(request, response, binding)
-                    } catch(InvokerInvocationException e){
-                        if(e.cause instanceof FileNotFoundException){
-                            try {
-                                runPrecompiled(getPrecompiledClassName(request), binding, response)
-                            } catch(InvokerInvocationException iie){
-                                throw iie.cause ?: iie
-                            }
-                        } else {
-                            throw e.cause
-                        }
-                    }
-                } catch(e){
-                    response.setStatus(HttpServletResponse.SC_NOT_FOUND)
-                    log('Exception serving template', e)
-                    throw e
-                }
-            }
-        }
         super.init(config)
     }
 
@@ -138,11 +84,51 @@ class GaelykTemplateServlet extends TemplateServlet {
      * @param request http request
      * @param response http response
      */
+    @CompileStatic
     private void doService(HttpServletRequest request, HttpServletResponse response){
         response.setContentType(CONTENT_TYPE_TEXT_HTML + "; charset=" + encoding)
         ServletBinding binding = new ServletBinding(request, response, servletContext)
         setVariables(binding)
-        serviceClosure(request, response, binding)
+        try {
+            if(!GaelykBindingEnhancer.localMode || config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true')){
+                try {
+                    runPrecompiled(getPrecompiledClassName(request), binding, response)
+                } catch(ClassNotFoundException e){
+                    runTemplate(request, response, binding)
+                }
+            } else {
+                try {
+                    runTemplate(request, response, binding)
+                } catch(ResourceException re){
+                    try {
+                        runPrecompiled(getPrecompiledClassName(request), binding, response)
+                    } catch(ClassNotFoundException e){
+                        throw re
+                    }
+                }
+            }
+        } catch(e){
+            StringWriter sw = []
+            PrintWriter pw  = [sw]
+    
+            pw.print("GaelykTemplateServlet Error: ")
+            pw.print(" template: '")
+            pw.print(getScriptUri(request))
+            pw.print("': ")
+    
+            /*
+             * Resource not found.
+             */
+            if (e instanceof ResourceException) {
+                pw.print(" Template not found, sending 404.")
+                servletContext.log(sw.toString())
+                getLog(request).warning(sw.toString())
+                response.sendError(HttpServletResponse.SC_NOT_FOUND)
+                return
+            }
+            throw e // Let propogate out the filter chain and container handle the exception.
+        }
+
     }
 
     @CompileStatic
@@ -210,5 +196,9 @@ class GaelykTemplateServlet extends TemplateServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
             e.printStackTrace((PrintWriter)binding.getVariable('out'))
         }
+    }
+    
+    private GroovyLogger getLog(ServletRequest request){
+        GroovyLogger.forTemplateUri(super.getScriptUri(request))
     }
 }

@@ -106,7 +106,13 @@ class GaelykServlet extends GroovyServlet {
         def result = null
         // Run the script
         try {
-            if(GaelykBindingEnhancer.localMode){
+            if(!GaelykBindingEnhancer.localMode || config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true')){
+                try {
+                    result = runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
+                } catch(ClassNotFoundException e){
+                    result = runGroovlet(scriptUri, binding)
+                }
+            } else {
                 try {
                     result = runGroovlet(scriptUri, binding)
                 } catch(ResourceException re){
@@ -116,18 +122,12 @@ class GaelykServlet extends GroovyServlet {
                         throw re
                     }
                 }
-            } else {
-                try {
-                    result = runPrecompiled(getPrecompiledClassName(request.servletPath), binding)
-                } catch(ClassNotFoundException e){
-                    result = runGroovlet(scriptUri, binding)
-                }
             }
         } catch (e) {
             StringWriter sw = []
             PrintWriter pw  = [sw]
 
-            pw.print("GroovyServlet Error: ")
+            pw.print("GaelykServlet Error: ")
             pw.print(" script: '")
             pw.print(scriptUri)
             pw.print("': ")

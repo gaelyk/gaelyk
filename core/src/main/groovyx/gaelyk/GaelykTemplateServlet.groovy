@@ -118,6 +118,7 @@ class GaelykTemplateServlet extends TemplateServlet {
             pw.print(" template: '")
             pw.print(getScriptUri(request))
             pw.print("': ")
+            getLog(request).warning(sw.toString())
     
             /*
              * Resource not found.

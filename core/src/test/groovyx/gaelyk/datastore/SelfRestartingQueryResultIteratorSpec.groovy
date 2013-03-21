@@ -70,6 +70,24 @@ class SelfRestartingQueryResultIteratorSpec extends Specification {
         count == COUNT
     }
     
+    def "Test usage with datastore and keys"(){
+        when:
+        int count = 0
+        // the name datastore is required!
+        DatastoreService datastore = DatastoreServiceFactory.datastoreService
+        def keys = datastore.iterate {
+            select keys
+            from Test
+            restart automatically
+        }
+        for(key in keys){
+            count++
+        }
+        
+        then:
+        count == COUNT
+    }
+    
     
     
     LocalServiceTestHelper services = new LocalServiceTestHelper(

@@ -16,7 +16,7 @@
 package groovyx.gaelyk.query
 
 import groovy.transform.PackageScope
-import groovyx.gaelyk.datastore.SelfRestartingQueryResultIterator;
+import groovyx.gaelyk.datastore.SelfRestartingQueryResultIterator
 import groovyx.gaelyk.extensions.DatastoreExtensions
 
 import java.util.Map.Entry
@@ -160,13 +160,13 @@ class QueryBuilder {
                 return result
             }
         } else {
-            if(restartAutomatically && iterable){
+            if(restartAutomatically && iterable && queryType == QueryType.ALL){
                 return SelfRestartingQueryResultIterator.from(this)
             }
             def result = iterable ? preparedQuery.asQueryResultIterator(options) : preparedQuery.asQueryResultList(options)
             if (queryType == QueryType.KEYS) {
                 if (iterable) {
-                    return new Iterator() {
+                    QueryResultIterator iter = new QueryResultIterator() {
                         boolean hasNext() {
                             result.hasNext()
                         }
@@ -178,7 +178,16 @@ class QueryBuilder {
                         void remove() {
                             throw new UnsupportedOperationException("Forbidden to call remove() on this Query DSL results iterator")
                         }
+                        
+                        Cursor getCursor() {
+                            result.cursor
+                        }
+                        
+                        List getIndexList() {
+                            result.indexList
+                        }
                     }
+                    return restartAutomatically ? SelfRestartingQueryResultIterator.from(this) : iter
                 } else {
                     return result.collect { it.key }
                 }

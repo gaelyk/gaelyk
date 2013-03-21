@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.query
+package groovyx.gaelyk.query;
 
-import groovy.transform.InheritConstructors
 
 /**
  * Exception thrown when there is a syntax problem in your datastore queries using the datastore query DSL.
@@ -24,5 +23,27 @@ import groovy.transform.InheritConstructors
  *
  * @since 1.0
  */
-@InheritConstructors
-class QuerySyntaxException extends RuntimeException { }
+public class QuerySyntaxException extends RuntimeException {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public QuerySyntaxException() {
+        super();
+    }
+
+    public QuerySyntaxException(String message) {
+        super(message);
+    }
+
+    public QuerySyntaxException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public QuerySyntaxException(Throwable cause) {
+        super(cause);
+    }
+
+}

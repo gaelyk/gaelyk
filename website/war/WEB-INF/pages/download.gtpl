@@ -24,8 +24,8 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and 
 </p>
 
 <p>
-The latest version was tested with Groovy 2.0.1,
-and with the 1.7.0 version of the App Engine SDK.
+The latest version was tested with Groovy 2.1.2,
+and with the 1.7.6 version of the App Engine SDK.
 </p>
 
 <p>
@@ -36,9 +36,9 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
-    <li>Migration to GAE SDK 1.7.0 and Groovy 2.0.1</li>
+    <li>Migration to GAE SDK 1.7.6 and Groovy 2.1.2</li>
     <li>
-        Several key classes of the Gaelyk code base are now statically compiled thanks to Groovy 2.0,
+        Several key classes of the Gaelyk code base are now statically compiled thanks to Groovy 2,
         which should bring some performance improvements.
         But a major change is the usage of Groovy 2.0's extension module mechanism
         for all the added nice shortcuts decorating the GAE SDK.

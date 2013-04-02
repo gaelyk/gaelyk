@@ -102,11 +102,11 @@ class GaelykTemplateServlet extends TemplateServlet {
             } else {
                 try {
                     runTemplate(request, response, binding)
-                } catch(ResourceException re){
+                } catch(ResourceException | FileNotFoundException e){
                     try {
                         runPrecompiled(getPrecompiledClassName(request), binding, response)
-                    } catch(ClassNotFoundException e){
-                        throw re
+                    } catch(ClassNotFoundException cnfe){
+                        throw e
                     }
                 }
             }

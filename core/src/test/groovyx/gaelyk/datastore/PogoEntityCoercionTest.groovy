@@ -171,6 +171,11 @@ class PogoEntityCoercionTest extends GroovyTestCase {
         assert ReflectionEntityCoercion.findVersion([prop: PropertyDescriptor.IGNORED]) == null
         assert ReflectionEntityCoercion.findVersion(prop: PropertyDescriptor.VERSION) == 'prop'
     }
+    
+    void testEntityIsCoercedToEntity(){
+       Entity en = new Entity('Anything')
+       assert PogoEntityCoercion.convert(en, Entity) == en
+    }
 }
 
 class P1 {

@@ -12,6 +12,9 @@ public class PogoEntityCoercion {
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" }) public static <E> E convert(Entity en, Class<E> cls) throws InstantiationException, IllegalAccessException{
+        if(Entity.class == cls){
+            return (E) en;
+        }
         if(DatastoreEntity.class.isAssignableFrom(cls)){
             return (E) DatastoreEntityCoercion.convert(en,(Class<? extends DatastoreEntity>) cls);
         }

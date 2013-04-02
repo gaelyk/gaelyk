@@ -186,7 +186,7 @@ class EntityTransformationSpec extends Specification {
             @groovyx.gaelyk.datastore.Entity
             class MyPogo6 {
                 @groovyx.gaelyk.datastore.Indexed String test
-				List<String> something = new ArrayList<String>()
+                List<String> something = new ArrayList<String>()
             }
 
             new MyPogo6(test: "foo").save()
@@ -329,8 +329,8 @@ class EntityTransformationSpec extends Specification {
             
             @GE @groovy.transform.CompileStatic
             class Person {
-              @Key long id
-              @Indexed String name
+                @Key long id
+                @Indexed String name
             }
 
             def key = new Person(name: 'test').save()

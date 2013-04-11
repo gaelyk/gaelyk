@@ -95,32 +95,21 @@ class ImageExtensions {
      * @param c the closure containg the various transform steps
      * @return a transformed image
      */
-    static Image transform(Image selfImage, @DelegatesTo(value=CompositeTransform, strategy=Closure.DELEGATE_ONLY) Closure c) {
+    static Image transform(Image selfImage, @DelegatesTo(value=ImageTransformationsBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         Closure clone = c.clone()
-        clone.resolveStrategy = Closure.DELEGATE_ONLY
+        clone.resolveStrategy = Closure.DELEGATE_FIRST
 
         // create an empty composite transform
-        CompositeTransform compTransf = ImagesServiceFactory.makeCompositeTransform()
+        
+        ImageTransformationsBuilder builder = new ImageTransformationsBuilder()
 
-        clone.delegate = new Expando([
-                // methods
-                resize:     { width, height ->                compTransf << ImagesServiceFactory.makeResize(width, height) },
-                crop:       { leftX, topY, rightX, bottomY -> compTransf << ImagesServiceFactory.makeCrop(leftX, topY, rightX, bottomY) },
-                horizontal: { flip ->                         compTransf << ImagesServiceFactory.makeHorizontalFlip() },
-                vertical:   { flip ->                         compTransf << ImagesServiceFactory.makeVerticalFlip() },
-                rotate:     { degrees ->                      compTransf << ImagesServiceFactory.makeRotate(degrees) },
-                feeling:    { luck ->                         compTransf << ImagesServiceFactory.makeImFeelingLucky() },
-
-                // variables
-                lucky:          true,
-                flip:           true
-        ])
+        clone.delegate = builder
 
         // calculate a combined transform
         clone()
 
         // apply the composite transform and generate the resulting image
-        return ImagesServiceFactory.imagesService.applyTransform(compTransf, selfImage)
+        return ImagesServiceFactory.imagesService.applyTransform(builder.compTransf, selfImage)
     }
 
     /**
@@ -230,4 +219,19 @@ class ImageExtensions {
     static Image getImage(File f) {
         ImagesServiceFactory.makeImage((byte[])f.bytes)
     }
+}
+
+
+class ImageTransformationsBuilder {
+    final CompositeTransform compTransf = ImagesServiceFactory.makeCompositeTransform()
+    final boolean lucky                 = true
+    final boolean flip                  = true
+    
+    CompositeTransform resize(int width, int height)                                    { compTransf << ImagesServiceFactory.makeResize(width, height) }
+    CompositeTransform crop(double leftX, double topY, double rightX, double bottomY)   { compTransf << ImagesServiceFactory.makeCrop(leftX, topY, rightX, bottomY) }
+    CompositeTransform horizontal(boolean flip)                                         { compTransf << ImagesServiceFactory.makeHorizontalFlip() }
+    CompositeTransform vertical(boolean flip)                                           { compTransf << ImagesServiceFactory.makeVerticalFlip() }
+    CompositeTransform rotate(int degrees)                                              { compTransf << ImagesServiceFactory.makeRotate(degrees) }
+    CompositeTransform feeling(boolean lucky)                                           { compTransf << ImagesServiceFactory.makeImFeelingLucky() }
+    
 }

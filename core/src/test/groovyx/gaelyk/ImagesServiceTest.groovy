@@ -69,6 +69,24 @@ class ImagesServiceTest extends GroovyTestCase {
             feeling lucky
         }
     }
+    
+    void testCompositeTransformDSLWithVariables() {
+        byte[] bytes = new File('../graphics/gaelyk-small-favicon.png').bytes
+
+        int square      = 100
+        double crop01   = 0.1
+        double crop09   = 0.9
+        int rotation    = 90
+        
+        bytes.image.transform {
+            resize square, square
+            crop crop01, crop01, crop09, crop09
+            horizontal flip
+            vertical flip
+            rotate rotation
+            feeling lucky
+        }
+    }
 
     void testIndividualTransformMethods() {
         def file = new File('../graphics/gaelyk-small-favicon.png')

@@ -26,6 +26,7 @@ import com.google.appengine.api.images.ImagesServiceFactory
  *
  * @author Guillaume Laforge
  */
+@CompileStatic
 class ImageExtensions {
     /**
      * Use the leftShift operator, <<, to concatenate a transform to the composite transform.
@@ -39,7 +40,6 @@ class ImageExtensions {
      * @param rightTransform another transform
      * @return a composite transform
      */
-    @CompileStatic
     static CompositeTransform leftShift(CompositeTransform leftTransform, Transform rightTransform) {
         leftTransform.concatenate(rightTransform)
     }
@@ -56,7 +56,6 @@ class ImageExtensions {
      * @param rightTransform another transform
      * @return a composite transform
      */
-    @CompileStatic
     static CompositeTransform rightShift(CompositeTransform leftTransform, Transform rightTransform) {
         leftTransform.preConcatenate(rightTransform)
     }
@@ -72,7 +71,6 @@ class ImageExtensions {
      * @param byteArray a byte array
      * @return an Image
      */
-    @CompileStatic
     static Image getImage(byte[] byteArray) {
         ImagesServiceFactory.makeImage(byteArray)
     }
@@ -96,7 +94,7 @@ class ImageExtensions {
      * @return a transformed image
      */
     static Image transform(Image selfImage, @DelegatesTo(value=ImageTransformationsBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
-        Closure clone = c.clone()
+        Closure clone = c.clone() as Closure
         clone.resolveStrategy = Closure.DELEGATE_FIRST
 
         // create an empty composite transform
@@ -124,7 +122,6 @@ class ImageExtensions {
      * @param height new height
      * @return a resized image
      */
-    @CompileStatic
     static Image resize(Image selfImage, int width, int height) {
         ImagesServiceFactory.imagesService.applyTransform(ImagesServiceFactory.makeResize(width, height), selfImage)
     }
@@ -143,7 +140,6 @@ class ImageExtensions {
      * @param bottomY
      * @return a cropped image
      */
-    @CompileStatic
     static Image crop(Image selfImage, double leftX, double topY, double rightX, double bottomY) {
         ImagesServiceFactory.imagesService.applyTransform(ImagesServiceFactory.makeCrop(leftX, topY, rightX, bottomY), selfImage)
     }
@@ -158,7 +154,6 @@ class ImageExtensions {
      * @param selfImage image to flip horizontally
      * @return a flipped image
      */
-    @CompileStatic
     static Image horizontalFlip(Image selfImage) {
         ImagesServiceFactory.imagesService.applyTransform(ImagesServiceFactory.makeHorizontalFlip(), selfImage)
     }
@@ -173,7 +168,6 @@ class ImageExtensions {
      * @param selfImage image to flip vertically
      * @return a flipped image
      */
-    @CompileStatic
     static Image verticalFlip(Image selfImage) {
         ImagesServiceFactory.imagesService.applyTransform(ImagesServiceFactory.makeVerticalFlip(), selfImage)
     }
@@ -189,7 +183,6 @@ class ImageExtensions {
      * @param degrees number of degrees to rotate (must be a multiple of 90)
      * @return a rotated image
      */
-    @CompileStatic
     static Image rotate(Image selfImage, int degrees) {
         ImagesServiceFactory.imagesService.applyTransform(ImagesServiceFactory.makeRotate(degrees), selfImage)
     }
@@ -204,7 +197,6 @@ class ImageExtensions {
      * @param selfImage image to adjust
      * @return an adjusted image
      */
-    @CompileStatic
     static Image imFeelingLucky(Image selfImage) {
         ImagesServiceFactory.imagesService.applyTransform(ImagesServiceFactory.makeImFeelingLucky(), selfImage)
     }
@@ -215,23 +207,23 @@ class ImageExtensions {
      * @param f PNG or JPEG file
      * @return an instance of <code>Image</code>
      */
-    @CompileStatic
     static Image getImage(File f) {
         ImagesServiceFactory.makeImage((byte[])f.bytes)
     }
 }
 
 
+@CompileStatic
 class ImageTransformationsBuilder {
     final CompositeTransform compTransf = ImagesServiceFactory.makeCompositeTransform()
     final boolean lucky                 = true
     final boolean flip                  = true
     
-    CompositeTransform resize(int width, int height)                                    { compTransf << ImagesServiceFactory.makeResize(width, height) }
-    CompositeTransform crop(double leftX, double topY, double rightX, double bottomY)   { compTransf << ImagesServiceFactory.makeCrop(leftX, topY, rightX, bottomY) }
-    CompositeTransform horizontal(boolean flip)                                         { compTransf << ImagesServiceFactory.makeHorizontalFlip() }
-    CompositeTransform vertical(boolean flip)                                           { compTransf << ImagesServiceFactory.makeVerticalFlip() }
-    CompositeTransform rotate(int degrees)                                              { compTransf << ImagesServiceFactory.makeRotate(degrees) }
-    CompositeTransform feeling(boolean lucky)                                           { compTransf << ImagesServiceFactory.makeImFeelingLucky() }
+    CompositeTransform resize(int width, int height)                                    { ImageExtensions.leftShift(compTransf, ImagesServiceFactory.makeResize(width, height)) }
+    CompositeTransform crop(double leftX, double topY, double rightX, double bottomY)   { ImageExtensions.leftShift(compTransf, ImagesServiceFactory.makeCrop(leftX, topY, rightX, bottomY)) }
+    CompositeTransform horizontal(boolean flip)                                         { ImageExtensions.leftShift(compTransf, ImagesServiceFactory.makeHorizontalFlip()) }
+    CompositeTransform vertical(boolean flip)                                           { ImageExtensions.leftShift(compTransf, ImagesServiceFactory.makeVerticalFlip()) }
+    CompositeTransform rotate(int degrees)                                              { ImageExtensions.leftShift(compTransf, ImagesServiceFactory.makeRotate(degrees)) }
+    CompositeTransform feeling(boolean lucky)                                           { ImageExtensions.leftShift(compTransf, ImagesServiceFactory.makeImFeelingLucky()) }
     
 }

@@ -131,8 +131,6 @@ class GaelykServlet extends GroovyServlet {
             pw.print("GaelykServlet Error: ")
             pw.print(" script: '")
             pw.print(scriptUri)
-            pw.println("': ")
-            e.printStackTrace(pw)
             
             getLog(request).warning(sw.toString())
 
@@ -140,6 +138,8 @@ class GaelykServlet extends GroovyServlet {
              * Resource not found.
              */
             if (e instanceof ResourceException) {
+                pw.println("': ")
+                e.printStackTrace(pw)                
                 servletContext.log(sw.toString())
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return

@@ -88,21 +88,21 @@ class GaelykTemplateServlet extends TemplateServlet {
      * @param response http response
      */
     @CompileStatic
-    private void doService(HttpServletRequest request, HttpServletResponse response){
+    private void doService(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType(CONTENT_TYPE_TEXT_HTML + "; charset=" + encoding)
         ServletBinding binding = new ServletBinding(request, response, servletContext)
         setVariables(binding)
         try {
-            if(preferPrecompiled){
+            if(preferPrecompiled) {
                 try {
                     runPrecompiled(getPrecompiledClassName(request), binding, response)
-                } catch(ClassNotFoundException e){
+                } catch(ClassNotFoundException e) {
                     runTemplate(request, response, binding)
                 }
             } else {
                 try {
                     runTemplate(request, response, binding)
-                } catch(ResourceException | FileNotFoundException e){
+                } catch(ResourceException | FileNotFoundException e) {
                     try {
                         runPrecompiled(getPrecompiledClassName(request), binding, response)
                     } catch(ClassNotFoundException cnfe){
@@ -110,22 +110,21 @@ class GaelykTemplateServlet extends TemplateServlet {
                     }
                 }
             }
-        } catch(e){
+        } catch(e) {
             StringWriter sw = []
             PrintWriter pw  = [sw]
     
             pw.print("GaelykTemplateServlet Error: ")
             pw.print(" template: '")
             pw.print(getScriptUri(request))
-            pw.println("': ")
-            e.printStackTrace(pw)
-            
             getLog(request).warning(sw.toString())
     
             /*
              * Resource not found.
              */
             if (e instanceof ResourceException) {
+                pw.println("': ")
+                e.printStackTrace(pw)                
                 servletContext.log(sw.toString())
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
@@ -164,16 +163,16 @@ class GaelykTemplateServlet extends TemplateServlet {
     /**
      * @return name of the precompiled script class
      */
-    static String getPrecompiledClassName(HttpServletRequest request){
+    static String getPrecompiledClassName(HttpServletRequest request) {
         String incServletPath = (String) request.getAttribute(INC_SERVLET_PATH)
         String servletPath = incServletPath ?: request.servletPath
 
         def match = servletPath =~ "/((.+?/)*)(.+)\\.gtpl"
-        if(!match){
+        if (!match) {
             throw new ClassNotFoundException('No class found for servlet path ' + servletPath)
         }
         String ret = ''
-        if(match[0][1]){
+        if (match[0][1]) {
             ret += packageToDir(match[0][1])
         }
         ret += PRECOMPILED_TEMPLATE_PREFIX
@@ -182,24 +181,16 @@ class GaelykTemplateServlet extends TemplateServlet {
     }
 
     @CompileStatic
-    static String packageToDir(String pkg){
+    static String packageToDir(String pkg) {
         return pkg.replaceAll(/[^a-zA-Z0-9\/]/, '_').replace('/', '.').toLowerCase()
     }
 
     @CompileStatic
     private runPrecompiled(String precompiledClassName, ServletBinding binding, HttpServletResponse response) {
-        try {
-            Class<Script> precompiledClass = Class.forName(precompiledClassName)
-            Script precompiled = precompiledClass.newInstance([binding]as Object[])
-            precompiled.run()
-            response.setStatus(HttpServletResponse.SC_OK)
-        } catch(e){
-            if(e instanceof ClassNotFoundException){
-                throw e
-            }
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
-            e.printStackTrace((PrintWriter)binding.getVariable('out'))
-        }
+        Class<Script> precompiledClass = Class.forName(precompiledClassName)
+        Script precompiled = precompiledClass.newInstance([binding]as Object[])
+        precompiled.run()
+        response.setStatus(HttpServletResponse.SC_OK)
     }
     
     private GroovyLogger getLog(ServletRequest request){

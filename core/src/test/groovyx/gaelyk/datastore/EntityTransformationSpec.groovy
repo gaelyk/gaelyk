@@ -91,7 +91,7 @@ class EntityTransformationSpec extends Specification {
                 @groovyx.gaelyk.datastore.Indexed String test
                 
                 // this method must be compiled dynamic, before DelegatesTo method is fixed
-                // @groovy.transform.CompileStatic(groovy.transform.TypeCheckingMode.SKIP)
+                @groovy.transform.CompileStatic(groovy.transform.TypeCheckingMode.SKIP)
                 static findAllByTest(String t){
                     MyPogo3.findAll{ where 'test' == t }
                 }

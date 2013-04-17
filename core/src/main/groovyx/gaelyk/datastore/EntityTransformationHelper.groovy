@@ -102,7 +102,7 @@ class EntityTransformationHelper {
         ds.prepare(q).countEntities(FetchOptions.Builder.withDefaults())
     }
 
-    static int count(Class<?> pogoClass, Closure c) {
+    static int count(Class<?> pogoClass, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         HelperDatastore datastore = new HelperDatastore(builder: builder)
         (int)datastore.execute(c).select(QueryType.COUNT).from(pogoClass.simpleName, pogoClass).execute()
@@ -113,7 +113,7 @@ class EntityTransformationHelper {
         (int)builder.select(QueryType.COUNT).from(pogoClass.simpleName, pogoClass).execute()
     }
 
-    static <P> P find(Class<P> pogoClass, Closure c = {}) {
+    static <P> P find(Class<P> pogoClass, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c = {}) {
         QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         HelperDatastore datastore = new HelperDatastore(builder: builder)
         datastore.execute(c).select(QueryType.SINGLE).from(pogoClass.simpleName, pogoClass).execute()
@@ -124,7 +124,7 @@ class EntityTransformationHelper {
         builder.select(QueryType.SINGLE).from(pogoClass.simpleName, pogoClass).execute()
     }
 
-    static <P> List<P> findAll(Class<P> pogoClass, Closure c = {}) {
+    static <P> List<P> findAll(Class<P> pogoClass, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c = {}) {
         QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         HelperDatastore datastore = new HelperDatastore(builder: builder)
         (List<P>) datastore.execute(c).select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).execute()
@@ -135,7 +135,7 @@ class EntityTransformationHelper {
         (List<P>) builder.select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).execute()
     }
 
-    static <P> Iterator<P> iterate(Class<P> pogoClass, Closure c = {}) {
+    static <P> Iterator<P> iterate(Class<P> pogoClass, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c = {}) {
         QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         HelperDatastore datastore = new HelperDatastore(builder: builder)
         (Iterator<P>) datastore.execute(c).select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).iterate()
@@ -152,22 +152,22 @@ class EntityTransformationHelper {
 class HelperDatastore {
     QueryBuilder builder
 
-    QueryBuilder query(Closure c) {
+    QueryBuilder query(@DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         prepareAndLaunchQuery c
     }
 
-    QueryBuilder execute(Closure c) {
+    QueryBuilder execute(@DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         prepareAndLaunchQuery c
     }
 
-    QueryBuilder iterate(Closure c) {
+    QueryBuilder iterate(@DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         prepareAndLaunchQuery c
     }
 
-    private QueryBuilder prepareAndLaunchQuery(Closure c) {
+    private QueryBuilder prepareAndLaunchQuery(@DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
         Closure cQuery = (Closure) c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
-        cQuery.delegate = builder
+        cQuery.setDelegate(builder)
         cQuery()
         return builder
     }

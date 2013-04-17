@@ -406,8 +406,8 @@ class EntityTransformation extends AbstractASTTransformation {
 
         BlockStatement block = new BlockStatement()
         block.addStatement(new ReturnStatement(new MethodCallExpression(
-                new ClassExpression(helper), name, new ArgumentListExpression(new VariableExpression('this'))
-                )))
+                new ClassExpression(helper), name, new ArgumentListExpression(VariableExpression.THIS_EXPRESSION)
+        )))
 
         new MethodNode(
                 name,

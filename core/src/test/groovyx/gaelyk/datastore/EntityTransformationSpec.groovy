@@ -93,13 +93,16 @@ class EntityTransformationSpec extends Specification {
                 // this method must be compiled dynamic, before DelegatesTo method is fixed
                 @groovy.transform.CompileStatic(groovy.transform.TypeCheckingMode.SKIP)
                 static findAllByTest(String t){
-                    MyPogo3.findAll{ where 'test' == t }
+                    MyPogo3.findAll{ 
+                        // where 'test' == t 
+                        where new groovyx.gaelyk.query.WhereClause(column: 'test', operation: com.google.appengine.api.datastore.Query.FilterOperator.EQUAL, comparedValue: t)
+                    }
                 }
             }
 
-            new MyPogo3(test: "foo").save()
-            new MyPogo3(test: "foo").save()
-            new MyPogo3(test: "bar").save()
+             new MyPogo3(test: "foo").save()
+             new MyPogo3(test: "foo").save()
+             new MyPogo3(test: "bar").save()
 
             MyPogo3.findAllByTest''' + argument
 

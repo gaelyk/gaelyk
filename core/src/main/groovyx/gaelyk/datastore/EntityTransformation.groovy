@@ -64,7 +64,7 @@ class EntityTransformation extends AbstractASTTransformation {
             return
         }
 
-        ClassNode keyCN = ClassHelper.makeWithoutCaching(Key).plainNodeReference
+        ClassNode keyCN = ClassHelper.make(Key).plainNodeReference
 
         handleVersion(parent, source)
         boolean hasParent = handleParent(parent, source, keyCN)
@@ -75,11 +75,11 @@ class EntityTransformation extends AbstractASTTransformation {
         parent.addMethod(addDelegatedMethod('save', keyCN))
         parent.addMethod(addDelegatedMethod('delete'))
         if(hasParent){
-            parent.addMethod(addStaticDelegatedMethod(parent, "get", [parentKey: keyCN, key: keyType], parent.plainNodeReference))
-            parent.addMethod(addStaticDelegatedMethod(parent, "delete", [parentKey: keyCN, key: keyType]))
+            parent.addMethod(addStaticDelegatedMethod(parent, "get", [parentKey: keyCN, key: keyType == ClassHelper.Long_TYPE ? ClassHelper.long_TYPE : ClassHelper.STRING_TYPE], parent.plainNodeReference))
+            parent.addMethod(addStaticDelegatedMethod(parent, "delete", [parentKey: keyCN, key: keyType == ClassHelper.Long_TYPE ? ClassHelper.long_TYPE : ClassHelper.STRING_TYPE]))
         } else {
-            parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: keyType], parent.plainNodeReference))
-            parent.addMethod(addStaticDelegatedMethod(parent, "delete", [key: keyType]))
+            parent.addMethod(addStaticDelegatedMethod(parent, "get", [key: keyType == ClassHelper.Long_TYPE ? ClassHelper.long_TYPE : ClassHelper.STRING_TYPE], parent.plainNodeReference))
+            parent.addMethod(addStaticDelegatedMethod(parent, "delete", [key: keyType == ClassHelper.Long_TYPE ? ClassHelper.long_TYPE : ClassHelper.STRING_TYPE]))
         }
         parent.addMethod(addStaticDelegatedMethod(parent, "find", [key: Closure], parent.plainNodeReference, [key: makeDelegatesToAnno(QueryBuilder, Closure.DELEGATE_FIRST)]))
         parent.addMethod(addStaticDelegatedMethod(parent, "count", [:], ClassHelper.int_TYPE))
@@ -96,32 +96,32 @@ class EntityTransformation extends AbstractASTTransformation {
     }
     
     private AnnotationNode makeDelegatesToAnno(Class cls, int strategy){
-        AnnotationNode anno = new AnnotationNode(ClassHelper.makeWithoutCaching(DelegatesTo).plainNodeReference)
-        anno.addMember('value', new ClassExpression(ClassHelper.makeWithoutCaching(cls).plainNodeReference))
+        AnnotationNode anno = new AnnotationNode(ClassHelper.make(DelegatesTo).plainNodeReference)
+        anno.addMember('value', new ClassExpression(ClassHelper.make(cls).plainNodeReference))
         anno.addMember('strategy', new ConstantExpression(strategy, true))
         anno
     }
 
     private addDatastoreEntityInterface(ClassNode keyType, ClassNode parent) {
-        ClassNode datastoreEntityInterface = ClassHelper.makeWithoutCaching(DatastoreEntity).plainNodeReference
+        ClassNode datastoreEntityInterface = ClassHelper.make(DatastoreEntity).plainNodeReference
         datastoreEntityInterface.setGenericsTypes([new GenericsType(keyType)] as GenericsType[])
         parent.addInterface(datastoreEntityInterface)
     }
 
     private ClassNode getPogoIteratorNode(ClassNode parent) {
-        ClassNode pogoIteratorNode = ClassHelper.makeWithoutCaching(Iterator).plainNodeReference
+        ClassNode pogoIteratorNode = ClassHelper.make(Iterator).plainNodeReference
         pogoIteratorNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
         return pogoIteratorNode
     }
 
     private ClassNode getBoundListNode(ClassNode parent) {
-        ClassNode pogoListNode = ClassHelper.makeWithoutCaching(List).plainNodeReference
+        ClassNode pogoListNode = ClassHelper.make(List).plainNodeReference
         pogoListNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
         return pogoListNode
     }
 
     private ClassNode handleKey(ClassNode parent, SourceUnit source) {
-        ClassNode keyAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Key).plainNodeReference
+        ClassNode keyAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Key).plainNodeReference
 
         PropertyNode existingKeyProperty = findPropertyIncludingSuper(parent) { PropertyNode prop ->
             prop.field.annotations.any { AnnotationNode anno ->
@@ -137,7 +137,7 @@ class EntityTransformation extends AbstractASTTransformation {
             source.addError(new SyntaxException("Only long or String are allowed as a key property! Found ${existingKeyProperty.type.name} ${existingKeyProperty.declaringClass.name}.${existingKeyProperty.name}.", existingKeyProperty.lineNumber, existingKeyProperty.columnNumber))
             return
         }
-
+        
         if (!existingKeyProperty) {
             existingKeyProperty = new PropertyNode(new FieldNode('id', Modifier.PUBLIC, ClassHelper.long_TYPE, parent, null), Modifier.PUBLIC, null, null)
             existingKeyProperty.field.addAnnotation(new AnnotationNode(keyAnnoClassNode))
@@ -193,11 +193,15 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
                 )
+        
+        if(existingKeyProperty.type == ClassHelper.long_TYPE){
+            return ClassHelper.Long_TYPE
+        }
         existingKeyProperty.type
     }
 
     private void handleVersion(ClassNode parent, SourceUnit source) {
-        ClassNode versionAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Version).plainNodeReference
+        ClassNode versionAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Version).plainNodeReference
 
         PropertyNode existingVersionProperty = findPropertyIncludingSuper(parent) { PropertyNode prop ->
             prop.field.annotations.any { AnnotationNode anno ->
@@ -252,7 +256,7 @@ class EntityTransformation extends AbstractASTTransformation {
     }
 
     private boolean handleParent(ClassNode parent, SourceUnit source, ClassNode keyCN) {
-        ClassNode parentAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Parent).plainNodeReference
+        ClassNode parentAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Parent).plainNodeReference
 
         PropertyNode existingParentProperty = findPropertyIncludingSuper(parent) { PropertyNode prop ->
             prop.field.annotations.any { AnnotationNode anno ->
@@ -308,12 +312,12 @@ class EntityTransformation extends AbstractASTTransformation {
     }
 
     private void handleEntityProperties(AnnotationNode anno, ClassNode parent, SourceUnit source) {
-        ClassNode indexedAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Indexed).plainNodeReference
-        ClassNode unindexedAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Unindexed).plainNodeReference
-        ClassNode ignoreAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Ignore).plainNodeReference
-        ClassNode versionAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Version).plainNodeReference
-        ClassNode keyAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Key).plainNodeReference
-        ClassNode parentAnnoClassNode = ClassHelper.makeWithoutCaching(groovyx.gaelyk.datastore.Parent).plainNodeReference
+        ClassNode indexedAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Indexed).plainNodeReference
+        ClassNode unindexedAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Unindexed).plainNodeReference
+        ClassNode ignoreAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Ignore).plainNodeReference
+        ClassNode versionAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Version).plainNodeReference
+        ClassNode keyAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Key).plainNodeReference
+        ClassNode parentAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Parent).plainNodeReference
 
         boolean defaultIndexed = memberHasValue(anno, 'unindexed', false)
 
@@ -402,7 +406,7 @@ class EntityTransformation extends AbstractASTTransformation {
     }
 
     private MethodNode addDelegatedMethod(String name, ClassNode returnType = ClassHelper.DYNAMIC_TYPE) {
-        def helper = ClassHelper.makeWithoutCaching(EntityTransformationHelper).plainNodeReference
+        def helper = ClassHelper.make(EntityTransformationHelper).plainNodeReference
 
         BlockStatement block = new BlockStatement()
         block.addStatement(new ReturnStatement(new MethodCallExpression(
@@ -420,10 +424,10 @@ class EntityTransformation extends AbstractASTTransformation {
     }
 
     private MethodNode addStaticDelegatedMethod(ClassNode parent, String name, Map<String, Class> parameters, ClassNode returnType = ClassHelper.DYNAMIC_TYPE, Map<String, List<AnnotationNode>> paramAnnos = [:]) {
-        def helper = ClassHelper.makeWithoutCaching(EntityTransformationHelper).plainNodeReference
+        def helper = ClassHelper.make(EntityTransformationHelper).plainNodeReference
 
         def methodParams = parameters.collect { String n, cls ->
-            ClassNode clsNode = cls instanceof ClassNode ? cls : ClassHelper.makeWithoutCaching(cls).plainNodeReference
+            ClassNode clsNode = cls instanceof ClassNode ? cls : ClassHelper.make(cls).plainNodeReference
             Parameter param = new Parameter(clsNode.plainNodeReference, n)
             if(paramAnnos[n]){
                 paramAnnos[n].each {

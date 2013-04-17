@@ -1,5 +1,6 @@
 package groovyx.gaelyk.datastore
 
+import groovy.transform.CompileStatic;
 import groovyx.gaelyk.extensions.DatastoreExtensions
 import groovyx.gaelyk.query.QueryBuilder
 import groovyx.gaelyk.query.QueryType
@@ -20,10 +21,11 @@ import com.google.appengine.api.datastore.Query
  * @author Vladimir Orany
  * @deprecated Do not use this class directly. It's supposed to be used only from POGO methods.
  */
+@CompileStatic
 class EntityTransformationHelper {
 
     static Key save(DatastoreEntity<?> pogo) {
-        Key key = DatastoreExtensions.save(DatastoreExtensions.asType(pogo, Entity))
+        Key key = DatastoreExtensions.save((Entity)DatastoreExtensions.asType(pogo, Entity))
         if (pogo.hasDatastoreNumericKey()) {
             pogo.setDatastoreKey(key.id)
         } else {
@@ -43,7 +45,7 @@ class EntityTransformationHelper {
     }
 
     static void delete(Object pogo) {
-        DatastoreExtensions.delete(DatastoreExtensions.asType(pogo, Entity))
+        DatastoreExtensions.delete((Entity)DatastoreExtensions.asType(pogo, Entity))
     }
 
     static <P> P get(Class<P> pogoClass, long key) {
@@ -78,11 +80,19 @@ class EntityTransformationHelper {
         }
     }
 
-    static <P> void delete(Class<P> pogoClass, key) {
+    static <P> void delete(Class<P> pogoClass, long key) {
+        DatastoreExtensions.delete(KeyFactory.createKey(pogoClass.simpleName, key))
+    }
+    
+    static <P> void delete(Class<P> pogoClass, String key) {
         DatastoreExtensions.delete(KeyFactory.createKey(pogoClass.simpleName, key))
     }
 
-    static <P> void delete(Class<P> pogoClass, Key parentKey,  key) {
+    static <P> void delete(Class<P> pogoClass, Key parentKey,  long key) {
+        DatastoreExtensions.delete(KeyFactory.createKey(parentKey, pogoClass.simpleName, key))
+    }
+    
+    static <P> void delete(Class<P> pogoClass, Key parentKey, String key) {
         DatastoreExtensions.delete(KeyFactory.createKey(parentKey, pogoClass.simpleName, key))
     }
 
@@ -93,18 +103,18 @@ class EntityTransformationHelper {
     }
 
     static int count(Class<?> pogoClass, Closure c) {
-        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
+        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         HelperDatastore datastore = new HelperDatastore(builder: builder)
-        datastore.execute(c).select(QueryType.COUNT).from(pogoClass.simpleName, pogoClass).execute()
+        (int)datastore.execute(c).select(QueryType.COUNT).from(pogoClass.simpleName, pogoClass).execute()
     }
 
     static int count(Class<?> pogoClass, QueryBuilder builder) {
         if (builder == null) throw new IllegalArgumentException("Query builder cannot be null!")
-        builder.select(QueryType.COUNT).from(pogoClass.simpleName, pogoClass).execute()
+        (int)builder.select(QueryType.COUNT).from(pogoClass.simpleName, pogoClass).execute()
     }
 
     static <P> P find(Class<P> pogoClass, Closure c = {}) {
-        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
+        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         HelperDatastore datastore = new HelperDatastore(builder: builder)
         datastore.execute(c).select(QueryType.SINGLE).from(pogoClass.simpleName, pogoClass).execute()
     }
@@ -115,29 +125,30 @@ class EntityTransformationHelper {
     }
 
     static <P> List<P> findAll(Class<P> pogoClass, Closure c = {}) {
-        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
+        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         HelperDatastore datastore = new HelperDatastore(builder: builder)
-        datastore.execute(c).select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).execute()
+        (List<P>) datastore.execute(c).select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).execute()
     }
 
     static <P> List<P> findAll(Class<P> pogoClass, QueryBuilder builder) {
         if (builder == null) throw new IllegalArgumentException("Query builder cannot be null!")
-        builder.select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).execute()
+        (List<P>) builder.select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).execute()
     }
 
     static <P> Iterator<P> iterate(Class<P> pogoClass, Closure c = {}) {
-        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
+        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         HelperDatastore datastore = new HelperDatastore(builder: builder)
-        datastore.execute(c).select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).iterate()
+        (Iterator<P>) datastore.execute(c).select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).iterate()
     }
 
 
     static <P> Iterator<P> iterate(Class<P> pogoClass, QueryBuilder builder) {
         if (builder == null) throw new IllegalArgumentException("Query builder cannot be null!")
-        builder.select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).iterate()
+        (Iterator<P>) builder.select(QueryType.ALL).from(pogoClass.simpleName, pogoClass).iterate()
     }
 }
 
+@CompileStatic
 class HelperDatastore {
     QueryBuilder builder
 
@@ -154,7 +165,7 @@ class HelperDatastore {
     }
 
     private QueryBuilder prepareAndLaunchQuery(Closure c) {
-        Closure cQuery = c.clone()
+        Closure cQuery = (Closure) c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
         cQuery.delegate = builder
         cQuery()

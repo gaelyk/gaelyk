@@ -45,6 +45,7 @@ import com.google.appengine.api.datastore.TransactionOptions.Builder as TOB
  * @author Scott Murphy
  * @author Benjamin Muschko
  */
+//@CompileStatic
 class DatastoreExtensions {
 
     /**
@@ -440,8 +441,8 @@ class DatastoreExtensions {
      * using the leftshift operator as follows:
      * <code>entity &lt;&lt; params</code>
      */
-    static Entity leftShift(Entity entity, Map params) {
-        params.each { k, v -> entity[k] = v }
+    static Entity leftShift(Entity entity, Map<String, Object> params) {
+        params.each { String k, Object v -> entity[k] = v }
         return entity
     }
 
@@ -560,9 +561,9 @@ class DatastoreExtensions {
      * @return the query
      */
     static Query query(DatastoreService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
-        Closure cQuery = c.clone()
+        Closure cQuery = (Closure) c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
-        def builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
+        def builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         cQuery.delegate = builder
         cQuery()
         return builder.createQuery()
@@ -575,9 +576,9 @@ class DatastoreExtensions {
      * @return the query builder
      */
     static QueryBuilder build(DatastoreService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
-        Closure cQuery = c.clone()
+        Closure cQuery = (Closure) c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
-        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
+        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         cQuery.delegate = builder
         cQuery()
         return builder
@@ -608,9 +609,9 @@ class DatastoreExtensions {
     }
 
     private static QueryBuilder prepareAndLaunchQuery(@DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c) {
-        Closure cQuery = c.clone()
+        Closure cQuery = (Closure) c.clone()
         cQuery.resolveStrategy = Closure.DELEGATE_FIRST
-        def builder = new QueryBuilder(c.thisObject instanceof Script ? c.thisObject.binding : null)
+        def builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : null)
         cQuery.delegate = builder
         cQuery()
         return builder

@@ -15,6 +15,7 @@
  */
 package groovyx.gaelyk.query
 
+import groovy.transform.CompileStatic;
 import groovy.transform.PackageScope
 import groovyx.gaelyk.datastore.SelfRestartingQueryResultIterator
 import groovyx.gaelyk.extensions.DatastoreExtensions
@@ -30,6 +31,7 @@ import com.google.appengine.api.datastore.PreparedQuery
 import com.google.appengine.api.datastore.PropertyProjection
 import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.QueryResultIterator
+import com.google.appengine.api.datastore.QueryResultList;
 
 /**
  * The query build is used to create a datastore <code>Query</code>
@@ -40,6 +42,7 @@ import com.google.appengine.api.datastore.QueryResultIterator
  *
  * @since 1.0
  */
+//@CompileStatic
 class QueryBuilder {
     private QueryType queryType = QueryType.ALL
     private String fromKind
@@ -79,17 +82,17 @@ class QueryBuilder {
             query.setAncestor(ancestor)
 
         if(projections){
-            for(Entry<String, Class> entry in projections){
+            for(Entry<String, Class> entry in projections.entrySet()){
                 query.addProjection(new PropertyProjection(entry.key, entry.value))
             }
         }
 
         for (clause in clauses) {
             if (clause instanceof WhereClause) {
-                WhereClause whereClause = clause
+                WhereClause whereClause = clause as WhereClause
                 query.addFilter(whereClause.column, whereClause.operation, whereClause.comparedValue)
             } else if (clause instanceof SortClause) {
-                SortClause sortClause = clause
+                SortClause sortClause = clause as SortClause
                 query.addSort(sortClause.column, sortClause.direction)
             }
         }
@@ -168,11 +171,11 @@ class QueryBuilder {
                 if (iterable) {
                     QueryResultIterator iter = new QueryResultIterator() {
                         boolean hasNext() {
-                            result.hasNext()
+                            ((QueryResultIterator)result).hasNext()
                         }
 
                         Object next() {
-                            result.next().key
+                            ((Entity)((QueryResultIterator)result).next()).key
                         }
 
                         void remove() {
@@ -180,16 +183,16 @@ class QueryBuilder {
                         }
                         
                         Cursor getCursor() {
-                            result.cursor
+                            ((QueryResultIterator)result).cursor
                         }
                         
                         List getIndexList() {
-                            result.indexList
+                            ((QueryResultIterator)result).indexList
                         }
                     }
                     return restartAutomatically ? SelfRestartingQueryResultIterator.from(this) : iter
                 } else {
-                    return result.collect { it.key }
+                    return result.collect { Entity it -> it.key }
                 }
             } else {
                 return result
@@ -392,7 +395,7 @@ class QueryBuilder {
      */
     QueryBuilder where(WhereClause clause) {
         if (coercedClass) {
-            if (!coercedClass.metaClass.properties.name.contains(clause.column)) {
+            if (!coercedClass.metaClass.properties['name'].contains(clause.column)) {
                 throw new QuerySyntaxException("Your where clause on '${clause.column}' is not possible as ${coercedClass.name} doesn't contain that property")
             }
         }

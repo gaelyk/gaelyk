@@ -89,11 +89,11 @@ class EntityTransformationSpec extends Specification {
             @groovyx.gaelyk.datastore.Entity
             class MyPogo3 {
                 @groovyx.gaelyk.datastore.Indexed String test
-
+                
                 // this method must be compiled dynamic, before DelegatesTo method is fixed
-                @groovy.transform.CompileStatic(groovy.transform.TypeCheckingMode.SKIP)
+                // @groovy.transform.CompileStatic(groovy.transform.TypeCheckingMode.SKIP)
                 static findAllByTest(String t){
-                    MyPogo3.findAll{ where test == t }
+                    MyPogo3.findAll{ where 'test' == t }
                 }
             }
 
@@ -101,16 +101,15 @@ class EntityTransformationSpec extends Specification {
             new MyPogo3(test: "foo").save()
             new MyPogo3(test: "bar").save()
 
-            MyPogo3.findAll''' + argument
+            MyPogo3.findAllByTest''' + argument
 
         expect:
         obj.size() == result
 
         where:
         result  | argument
-        3       | '()'
-        2       | '{ where test == "foo"}'
-        1       | '{ where test == "bar"}'
+        2       | '("foo")'
+        1       | '("bar")'
     }
 
     def "Test count "(){

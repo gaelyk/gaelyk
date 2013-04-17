@@ -152,7 +152,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassHelper.boolean_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                new ReturnStatement(hasNumericKey ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE)
+                new ReturnStatement(hasNumericKey ? new ConstantExpression(Boolean.TRUE, true) : new ConstantExpression(Boolean.FALSE, true))
                 )
 
         parent.addMethod new MethodNode(
@@ -161,7 +161,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassHelper.boolean_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                new ReturnStatement(ConstantExpression.PRIM_TRUE)
+                new ReturnStatement(new ConstantExpression(Boolean.TRUE, true))
                 )
 
         parent.addMethod new MethodNode(
@@ -216,7 +216,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassHelper.boolean_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                new ReturnStatement(existingVersionProperty ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE)
+                new ReturnStatement(existingVersionProperty ? new ConstantExpression(Boolean.TRUE, true) : new ConstantExpression(Boolean.FALSE, true))
                 )
 
         BlockStatement getVersionBlock = new BlockStatement()
@@ -235,7 +235,7 @@ class EntityTransformation extends AbstractASTTransformation {
         if(existingVersionProperty){
             mce = new AstBuilder().buildFromString("this.${existingVersionProperty.name} = ${existingVersionProperty.name}")[0].statements[0].expression
         } else {
-            mce = ConstantExpression.NULL
+            mce = new ConstantExpression(null)
         }
         BlockStatement setKeyBlock = new BlockStatement()
         setKeyBlock.addStatement(new ExpressionStatement(mce))
@@ -271,11 +271,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassHelper.boolean_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                new ReturnStatement(existingParentProperty ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE)
+                new ReturnStatement(existingParentProperty ? new ConstantExpression(Boolean.TRUE, true) : new ConstantExpression(Boolean.FALSE, true))
                 )
 
         BlockStatement getParentBlock = new BlockStatement()
-        getParentBlock.addStatement(existingParentProperty ? new ExpressionStatement(new VariableExpression(existingParentProperty)) : new ReturnStatement(ConstantExpression.NULL))
+        getParentBlock.addStatement(existingParentProperty ? new ExpressionStatement(new VariableExpression(existingParentProperty)) : new ReturnStatement(new ConstantExpression(null)))
 
 
 
@@ -292,7 +292,7 @@ class EntityTransformation extends AbstractASTTransformation {
         if(existingParentProperty){
             setKeyBlock.addStatement(new ExpressionStatement(new AstBuilder().buildFromString("this.${existingParentProperty.name} = ${existingParentProperty.name}")[0].statements[0].expression))
         } else {
-            setKeyBlock.addStatement(new ReturnStatement(ConstantExpression.NULL))
+            setKeyBlock.addStatement(new ReturnStatement(new ConstantExpression(null)))
         }
 
         parent.addMethod new MethodNode(
@@ -406,7 +406,7 @@ class EntityTransformation extends AbstractASTTransformation {
 
         BlockStatement block = new BlockStatement()
         block.addStatement(new ReturnStatement(new MethodCallExpression(
-                new ClassExpression(helper), name, new ArgumentListExpression(VariableExpression.THIS_EXPRESSION)
+                new ClassExpression(helper), name, new ArgumentListExpression(new VariableExpression('this'))
         )))
 
         new MethodNode(

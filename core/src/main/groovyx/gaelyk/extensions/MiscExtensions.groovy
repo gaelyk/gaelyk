@@ -16,6 +16,8 @@
 package groovyx.gaelyk.extensions
 
 import groovy.transform.CompileStatic
+import groovyx.gaelyk.RetryingFuture;
+
 import com.google.appengine.api.datastore.Email
 import com.google.appengine.api.datastore.Text
 import com.google.appengine.api.blobstore.BlobKey
@@ -235,4 +237,25 @@ class MiscExtensions {
     static void set(Future future, String name, Object value) {
         future.get().setProperty(name, DatastoreExtensions.transformValueForStorage(value))
     }
+    
+    /**
+     * Creates {@link RetryingFuture} from the closure.
+     * 
+     * <p>Allows following notation to create retrying closure:</p>
+     * 
+     * <code>
+     *  Future result = 3 * { index.searchAsync('a=b') }
+     * </code>
+     * 
+     * Closure must return {@link Future}.
+     * 
+     * @param factory closure to construct new {@link Future}
+     * @param retries number of retries before failing
+     * @return future which will first retries for particular times before throwing the exception
+     */
+    static <R> Future<R> multiply(Number retries, Closure<Future<R>> factory){
+        RetryingFuture.retry(retries.intValue(), factory)
+    }
+    
+    
 }

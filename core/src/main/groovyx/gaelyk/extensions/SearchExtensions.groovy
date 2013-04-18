@@ -16,6 +16,8 @@
 package groovyx.gaelyk.extensions
 
 import groovy.transform.CompileStatic
+import groovy.transform.NotYetImplemented
+import groovyx.gaelyk.RetryingFuture;
 import groovyx.gaelyk.search.DocumentDefinitions
 
 import java.util.concurrent.Future
@@ -25,6 +27,9 @@ import com.google.appengine.api.search.Field
 import com.google.appengine.api.search.Index
 import com.google.appengine.api.search.IndexSpec
 import com.google.appengine.api.search.PutResponse
+import com.google.appengine.api.search.Query
+import com.google.appengine.api.search.Results
+import com.google.appengine.api.search.ScoredDocument
 import com.google.appengine.api.search.SearchService
 import com.google.appengine.api.search.SearchServiceFactory
 
@@ -197,6 +202,19 @@ class SearchExtensions {
                 return getFieldRawValue(fields[0])
             default:
                 return fields.collect{ Field field -> getFieldRawValue(field) }
+        }
+    }
+    
+    static Future<Results<ScoredDocument>> searchAsync(Index index, String query, int retries){
+       RetryingFuture.retry(retries) {
+           index.searchAsync(query)
+       }
+    }
+    
+    
+    static Future<Results<ScoredDocument>> searchAsync(Index index, Query query, int retries){
+        RetryingFuture.retry(retries) {
+            index.searchAsync(query)
         }
     }
 

@@ -89,3 +89,20 @@
     When a field is multivalued, the <code>doc.field</code> property access actually returns a list of values.
 </p>
 
+
+<p>
+    Because search API is sometimes too much faulty, you can specify number of retries used by <code>index.searchAsync</code>.
+    Following code will attempt to search books related to wolfs three times before failing
+</p>
+
+<pre class="brush:groovy">
+    def results = index.searchAsync("wolf", 3).get()
+</pre>
+
+<blockquote>
+	<b>Note: </b> You can make any closure returning <a href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Future.html">Future</a>
+	retrying by using <code>numberOfRetries * { future }</code> notation. For example <code>3 * { index.searchAsync("wolf") }</code>
+	will behave the same way as described above. Keep the code inside the closure reasonable small because the closure
+	is called at the beginning of each attempt.
+</blockquote>
+

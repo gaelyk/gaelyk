@@ -137,7 +137,6 @@ class GaelykTemplateServlet extends TemplateServlet {
     @CompileStatic
     private runTemplate(HttpServletRequest request, HttpServletResponse response, ServletBinding binding) {
         Template template = tryFindTemplate(request)
-        response.setStatus(HttpServletResponse.SC_OK)
         Writer out = (Writer) binding.getVariable("out")
         if (out == null) {
             out = response.getWriter()
@@ -190,7 +189,6 @@ class GaelykTemplateServlet extends TemplateServlet {
         Class<Script> precompiledClass = Class.forName(precompiledClassName)
         Script precompiled = precompiledClass.newInstance([binding]as Object[])
         precompiled.run()
-        response.setStatus(HttpServletResponse.SC_OK)
     }
     
     private GroovyLogger getLog(ServletRequest request){

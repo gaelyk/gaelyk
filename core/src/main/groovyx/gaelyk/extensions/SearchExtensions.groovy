@@ -19,6 +19,7 @@ import groovy.transform.CompileStatic
 import groovy.transform.NotYetImplemented
 import groovyx.gaelyk.RetryingFuture;
 import groovyx.gaelyk.search.DocumentDefinitions
+import groovyx.gaelyk.search.QueryBuilder;
 
 import java.util.concurrent.Future
 
@@ -217,7 +218,25 @@ class SearchExtensions {
             index.searchAsync(query)
         }
     }
-
+    
+    static QueryBuilder prepare(SearchService service, @DelegatesTo(QueryBuilder) Closure c){
+        QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : new Binding())
+        
+        Closure closure = c.clone()
+        c.delegate = builder
+        c.resolveStrategy = Closure.DELEGATE_FIRST
+        c()
+        
+        assert builder.indexName
+        assert builder.queryString
+        
+        builder
+    }
+    
+    static Query query(SearchService service, @DelegatesTo(QueryBuilder) Closure c){
+        prepare(service,c).build()
+    }
+    
     @CompileStatic
     private static getFieldRawValue(Field field) {
         switch(field.getType()) {

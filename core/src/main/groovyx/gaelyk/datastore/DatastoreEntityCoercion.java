@@ -29,6 +29,8 @@ public class DatastoreEntityCoercion {
                 } else {
                     entity = new Entity(kind, ((Number) key).longValue());
                 }
+            } else if(dsEntity.hasDatastoreParent()){
+                entity = new Entity(kind, dsEntity.getDatastoreParent());
             }
         }
         

@@ -147,18 +147,20 @@ class ReflectionEntityCoercion {
         def value = key ? p.metaClass.getProperty(p, key) : null
         com.google.appengine.api.datastore.Key parentKey = parent ? p.metaClass.getProperty(p, parent) : null
         if (key && value) {
-            if (value instanceof CharSequence) {
+            if (value instanceof CharSequence && value) {
                 if(parentKey){
                     entity = new Entity(p.class.simpleName, value?.toString(), parentKey)
                 } else {
                     entity = new Entity(p.class.simpleName, value?.toString())
                 }
-            } else {
+            } else if(value instanceof Number && value) {
                 if(parentKey){
                     entity = new Entity(p.class.simpleName, ((Number) value).longValue(), parentKey)
                 } else {
                     entity = new Entity(p.class.simpleName, ((Number) value).longValue())
                 }
+            } else if(parentKey) {
+                entity = new Entity(p.class.simpleName, parentKey)
             }
         } else {
             entity = new Entity(p.class.simpleName)

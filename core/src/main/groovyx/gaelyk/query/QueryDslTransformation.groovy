@@ -152,7 +152,7 @@ class QueryDslTransformation implements ASTTransformation {
                 if(statement.expression instanceof BinaryExpression){
                     BinaryExpression be = statement.expression
                     if(be.operation.text != '='){
-                        addError("Missing where keyword! Use 'where ${statement.text}' instead!", statement)                        
+                        addError("Missing where keyword!", statement)                        
                     }
                 }
                 super.visitExpressionStatement(statement)

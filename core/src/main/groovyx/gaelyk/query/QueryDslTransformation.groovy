@@ -40,6 +40,7 @@ import org.codehaus.groovy.ast.expr.ClassExpression
 import com.google.appengine.api.datastore.Query.FilterOperator
 import org.codehaus.groovy.ast.expr.CastExpression
 import org.codehaus.groovy.ast.expr.NotExpression
+import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.syntax.SyntaxException
 
 /**
@@ -145,6 +146,16 @@ class QueryDslTransformation implements ASTTransformation {
 
             void visitClosureExpression(ClosureExpression expression) {
                 super.visitClosureExpression(expression)
+            }
+            
+            @Override public void visitExpressionStatement(ExpressionStatement statement) {
+                if(statement.expression instanceof BinaryExpression){
+                    BinaryExpression be = statement.expression
+                    if(be.operation.text != '='){
+                        addError("Missing where keyword! Use 'where ${statement.text}' instead!", statement)                        
+                    }
+                }
+                super.visitExpressionStatement(statement)
             }
 
             protected SourceUnit getSourceUnit() { source }

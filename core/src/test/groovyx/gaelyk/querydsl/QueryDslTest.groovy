@@ -125,6 +125,7 @@ class QueryDslTest extends GroovyTestCase {
         shouldFail(QuerySyntaxException) { queryFor 'from persons where 123' }
 
         shouldFail { queryFor 'from persons where name = "Guillaume"' }
+        shouldFail { queryFor 'from persons \n name == "Guillaume"' }
     }
 
 

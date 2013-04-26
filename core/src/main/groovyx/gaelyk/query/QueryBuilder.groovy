@@ -129,7 +129,7 @@ class QueryBuilder {
                 if(restartAutomatically){
                     return SelfRestartingQueryResultIterator.from(this)
                 }
-                QueryResultIterator entitiesIterator = preparedQuery.asQueryResultIterator(options)
+                QueryResultIterator<Entity> entitiesIterator = preparedQuery.asQueryResultIterator(options)
 
                 return new QueryResultIterator() {
                     boolean hasNext() {
@@ -154,13 +154,7 @@ class QueryBuilder {
                     }
                 }
             } else {
-                def entities = preparedQuery.asList(options)
-                // use "manual" collect{} as in the context of the query{} call
-                // the delegation transforms the class into a string expression
-                def result = []
-                for (entity in entities) result << DatastoreExtensions.asType(entity, coercedClass)
-
-                return result
+                return CoercedQueryResultList.coerce(preparedQuery.asQueryResultList(options), coercedClass)
             }
         } else {
             if(restartAutomatically && iterable && queryType == QueryType.ALL){

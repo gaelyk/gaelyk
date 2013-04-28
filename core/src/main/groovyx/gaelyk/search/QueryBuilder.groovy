@@ -1,5 +1,7 @@
 package groovyx.gaelyk.search
 
+import groovyx.gaelyk.extensions.SearchExtensions;
+
 import com.google.appengine.api.search.Cursor
 import com.google.appengine.api.search.FieldExpression
 import com.google.appengine.api.search.GeoPoint
@@ -9,8 +11,21 @@ import com.google.appengine.api.search.SortExpression
 import com.google.appengine.api.search.SortOptions
 import com.google.appengine.api.search.SortExpression.SortDirection
 
+/**
+ * Query builder for full text search.
+ * 
+ * @author Vladimir Orany
+ * @see SearchExtensions#query(com.google.appengine.api.search.SearchService, groovy.lang.Closure)
+ * @see SearchExtensions#prepare(com.google.appengine.api.search.SearchService, groovy.lang.Closure)
+ */
 class QueryBuilder {
     
+    /**
+     * Keywords <code>all</code> and <code>ids</code> used in select clause.
+     * @author Vladimir Orany
+     * @see QueryBuilder#getAll()
+     * @see QueryBuilder#getIds()
+     */
     static enum SelectKeyword { 
         
         IDS {
@@ -27,6 +42,12 @@ class QueryBuilder {
         void handleQueryOptions(QueryOptions queryOptions){}
     }
     
+    /**
+     * Keyword <code>found</code> used in <code>number found accuracy x</code> statements.
+     * @author Vladimir Orany
+     * @see QueryBuilder#number(FoundKeyword)
+     * @see QueryBuilder#getFound()
+     */
     static enum FoundKeyword {
         FOUND
     }
@@ -79,6 +100,10 @@ class QueryBuilder {
     private QueryOptions.Builder queryOptions = QueryOptions.newBuilder()
     private SortOptions.Builder sortOptions = SortOptions.newBuilder()
     
+    QueryBuilder(){}
+    
+    QueryBuilder(Binding b){ binding = b }
+    
     QueryBuilder from(String name){
         this.indexName = name
         this
@@ -99,7 +124,7 @@ class QueryBuilder {
         this
     }
     
-    QueryBuilder select(Map<String, Object> expressions){
+    QueryBuilder select(Map expressions){
         expressions.each { name, exp ->
             assert name
             assert exp
@@ -204,10 +229,23 @@ class QueryBuilder {
         SortDirection.DESCENDING
     }
     
-    def propertyMissing(String name) {
+    def getProperty(String name) {
         if (binding && binding.variables.containsKey(name))
             return binding.variables[name]
 
+        if(name == 'desc')          return getDesc()
+        if(name == 'asc')           return getAsc()
+        if(name == '_rank')         return get_rank()
+        if(name == '_score')        return get_score()
+        if(name == 'all')           return getAll()
+        if(name == 'found')         return getFound()
+        if(name == 'ids')           return getIds()
+        if(name == 'sort')          return getSort()
+        if(name == 'queryOptions')  return this.@queryOptions
+        if(name == 'sortOptions')   return this.@sortOptions
+        if(name == 'indexName')     return this.@indexName
+        if(name == 'queryString')   return this.@queryString
+        
         return name
     }
     
@@ -238,34 +276,24 @@ class QueryBuilder {
         _appendQueryString(keyword, field.collect{ field, exp -> "$field: $exp" }.join(' '))
     }
     
-    QueryBuilder OR(Map<String, Object> fields){
-        _appendQueryString('OR', fields)
-    }
-    
-    QueryBuilder OR(String query){
-        _appendQueryString('OR', query)
-    }
-    
-    QueryBuilder NOT(Map<String, Object> fields){
-        _appendQueryString('NOT', fields)
-    }
-    
-    QueryBuilder NOT(String query){
-        _appendQueryString('NOT', query)
-    }
-    
-    QueryBuilder AND(String query){
+    QueryBuilder and(String query){
         where(query)
     }
     
-    QueryBuilder AND(Map<String, Object> fields){
+    QueryBuilder and(Map<String, Object> fields){
         where(fields)
     }
     
     Query build(){
         Query.Builder query = Query.newBuilder()
-        queryOptions.sortOptions = sortOptions
-        query.options = queryOptions
+        queryOptions.setSortOptions(sortOptions)
+        query.setOptions(queryOptions)
         query.build(queryString.toString())
+    }
+    
+    Object with(Closure c){
+        use(SearchQueryStringCategory){
+            super.with c
+        }
     }
 }

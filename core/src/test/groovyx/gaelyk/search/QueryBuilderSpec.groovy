@@ -199,15 +199,8 @@ class QueryBuilderSpec extends Specification {
         '(test)' |
             { where test }
         '(test) AND (tset)' |
-            { where test AND tset }
-        '(test) OR (tset)' |
-            { where test OR tset }
-        '(test) NOT (tset)' |
-            { where test NOT tset }
+            { where test and tset }
     }
 }
 
-class Image {
-
-    
-}
+class Image {}

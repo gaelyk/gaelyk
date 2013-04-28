@@ -20,6 +20,7 @@ import groovy.transform.NotYetImplemented
 import groovyx.gaelyk.RetryingFuture;
 import groovyx.gaelyk.search.DocumentDefinitions
 import groovyx.gaelyk.search.QueryBuilder;
+import groovyx.gaelyk.search.SearchQueryStringCategory;
 
 import java.util.concurrent.Future
 
@@ -219,22 +220,50 @@ class SearchExtensions {
         }
     }
     
-    static QueryBuilder prepare(SearchService service, @DelegatesTo(QueryBuilder) Closure c){
+    static QueryBuilder prepare(SearchService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c){
         QueryBuilder builder = new QueryBuilder(c.thisObject instanceof Script ? ((Script)c.thisObject).binding : new Binding())
-        
-        Closure closure = c.clone()
-        c.delegate = builder
-        c.resolveStrategy = Closure.DELEGATE_FIRST
-        c()
+        builder.with c
+        builder
+    }
+    
+    static Results<ScoredDocument> search(SearchService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c){
+        QueryBuilder builder = prepare(service,c)
         
         assert builder.indexName
         assert builder.queryString
         
-        builder
+        Query query = builder.build()
+        index(service, builder.indexName).search(query)
     }
     
-    static Query query(SearchService service, @DelegatesTo(QueryBuilder) Closure c){
-        prepare(service,c).build()
+    static Results<ScoredDocument> search(SearchService service, int retries, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c){
+        QueryBuilder builder = prepare(service,c)
+        
+        assert builder.indexName
+        assert builder.queryString
+        
+        Query query = builder.build()
+        searchAsync(index(service, builder.indexName), query, retries).get()
+    }
+    
+    static Future<Results<ScoredDocument>> searchAsync(SearchService service, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c){
+        QueryBuilder builder = prepare(service,c)
+        
+        assert builder.indexName
+        assert builder.queryString
+        
+        Query query = builder.build()
+        index(service, builder.indexName).searchAsync(query)
+    }
+    
+    static Future<Results<ScoredDocument>> searchAsync(SearchService service, int retries, @DelegatesTo(value=QueryBuilder, strategy=Closure.DELEGATE_FIRST) Closure c){
+        QueryBuilder builder = prepare(service,c)
+        
+        assert builder.indexName
+        assert builder.queryString
+        
+        Query query = builder.build()
+        searchAsync(index(service, builder.indexName), query, retries)
     }
     
     @CompileStatic

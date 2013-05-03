@@ -16,11 +16,14 @@
 package groovyx.gaelyk.extensions
 
 import groovy.transform.CompileStatic
+
+import java.util.concurrent.Future
+
+import com.google.appengine.api.taskqueue.DeferredTask
 import com.google.appengine.api.taskqueue.Queue
+import com.google.appengine.api.taskqueue.RetryOptions
 import com.google.appengine.api.taskqueue.TaskHandle
 import com.google.appengine.api.taskqueue.TaskOptions
-import com.google.appengine.api.taskqueue.RetryOptions
-import com.google.appengine.api.taskqueue.DeferredTask
 
 /**
  * Taks queue extension methods
@@ -59,6 +62,31 @@ class TaskQueueExtensions {
      * @return a TaskHandle instance
      */
     static TaskHandle add(Queue selfQueue, Map params) {
+        return selfQueue.add(buildTaskOptions(params))
+    }
+    
+    /**
+     * Adds a new task on the queue asynchronously using a map for holding the task attributes instead of a TaskOptions builder object.
+     * <p>
+     * Allowed keys are: <ul>
+     * <li><code>countdownMillis</code></li>
+     * <li><code>etaMillis</code></li>
+     * <li><code>headers</code> (a map of key/value pairs)</li>
+     * <li><code>method</code> (can be 'GET', 'POST', 'PUT', 'DELETE', 'HEAD' or an enum of TaskOptions.Method)</li>
+     * <li><code>params</code> (a map of key/value parameters)</li>
+     * <li><code>payload</code></li>
+     * <li><code>taskName</code></li>
+     * <li><code>url</code></li>
+     * </ul>
+     *
+     * @param params the map of task attributes
+     * @return a future TaskHandle instance
+     */
+    static Future<TaskHandle> addAsync(Queue selfQueue, Map params) {
+        return selfQueue.addAsync(buildTaskOptions(params))
+    }
+
+    private static TaskOptions buildTaskOptions(Map params) {
         TaskOptions options = TaskOptions.Builder.withDefaults()
         params.each { key, value ->
             if (key in ['countdownMillis', 'etaMillis', 'taskName', 'url']) {
@@ -76,7 +104,7 @@ class TaskQueueExtensions {
                     def retryOptions = RetryOptions.Builder.withDefaults()
                     value.each { retryKey, retryValue ->
                         if (retryKey in ['taskRetryLimit', 'taskAgeLimitSeconds',
-                                'minBackoffSeconds', 'maxBackoffSeconds', 'maxDoublings']) {
+                            'minBackoffSeconds', 'maxBackoffSeconds', 'maxDoublings']) {
                             retryOptions."${retryKey}"(retryValue)
                         } else {
                             throw new RuntimeException("'$retryKey' is not a valid retry option parameter.")
@@ -118,10 +146,10 @@ class TaskQueueExtensions {
                 }
             } else {
                 throw new RuntimeException("$key is not a valid task option.\n" +
-                        "Allowed: countdownMillis, etaMillis, taskName, url, headers, methods, params and payload")
+                "Allowed: countdownMillis, etaMillis, taskName, url, headers, methods, params and payload")
             }
         }
-        return selfQueue.add(options)
+        return options
     }
 
     /**

@@ -52,15 +52,21 @@ In addition to this builder approach, <b>Gaelyk</b> provides a shortcut notation
 </p>
 
 <pre class="brush:groovy">
-    // add a task to the queue
-    queue.add countdownMillis: 1000, url: "/task/dailyEmail",
+    // add a task to the queue synchronously
+    TaskHandle handle = queue.add countdownMillis: 1000, url: "/task/dailyEmail",
+        taskName: "dailyNewsletter",
+        method: 'PUT', params: [date: '20101214'],
+        payload: content, retryOptions: RetryOptions.Builder.withDefaults()
+        
+    // add a task to the queue asynchronously
+    Future&lt;TaskHandle&gt; future = queue.addAsync countdownMillis: 1000, url: "/task/dailyEmail",
         taskName: "dailyNewsletter",
         method: 'PUT', params: [date: '20101214'],
         payload: content, retryOptions: RetryOptions.Builder.withDefaults()
 </pre>
 
 <p>
-There is also a variant with an overloaded <code>&lt;&lt;</code> operator:
+There is also a variant with an overloaded <code>&lt;&lt;</code> operator for the second one:
 </p>
 
 <pre class="brush:groovy">

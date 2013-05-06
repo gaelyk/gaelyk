@@ -171,7 +171,7 @@ class TaskQueueExtensions {
      * @return a TaskHandle instance
      */
     @CompileStatic
-    static TaskHandle leftShift(Queue selfQueue, Map params) {
-        add(selfQueue, params)
+    static Future<TaskHandle> leftShift(Queue selfQueue, Map params) {
+        addAsync(selfQueue, params)
     }
 }

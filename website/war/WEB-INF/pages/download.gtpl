@@ -64,6 +64,10 @@ But to get you started quickly, you may use a ready-made template project which 
         On XMPP messages, you must now call the <code>message.xml()</code> method to get the parsed XML payload
         instead of calling the <code>message.xml</code> property.
     </li>
+    <li>
+    	Adding task to the queue using the left shift operator <code>&lt;&lt;</code> now makes asynchronous call instead of synchronous
+    	returning <code>Future&lt;TaskHandle&gt;</code>
+    </li>
 </ul>
 
 <h2>Version 1.2</h2>

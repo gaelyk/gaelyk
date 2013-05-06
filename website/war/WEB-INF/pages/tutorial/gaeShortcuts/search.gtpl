@@ -132,9 +132,9 @@ Let's have a closer look at the syntax supported by the DSL:
 </p>
 
 <pre class="brush:groovy">
-    // select the full document with all its properties
+    // select the full document with all its fields
     select all
-    // return just the ids of the entities matched by the query
+    // return just the ids of the documents matched by the query
     select ids
     // return just a few document's fields
     select name, age

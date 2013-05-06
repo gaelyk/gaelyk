@@ -45,6 +45,9 @@ But to get you started quickly, you may use a ready-made template project which 
         This also means Groovy categories have been abandoned in favor of that mechanism,
         as they were disabling certain optimizations of Groovy (such as efficient primitive arithmetic).
     </li>
+    <li>
+    	New search DSL.
+    </li>
 </ul>
 
 <h4>Breaking changes</h4>

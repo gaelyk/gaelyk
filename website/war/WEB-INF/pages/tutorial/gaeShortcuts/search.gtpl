@@ -106,3 +106,113 @@
 	is called at the beginning of each attempt.
 </blockquote>
 
+<a name="advanced_fultext_search"></a>
+<h3>Advanced Full Text Search</h3>
+
+<p>
+App Engine Search API is very unfriendly. It overuses builders in any possible way. 
+Fortunately, <b>Gaelyk</b> provides a search DSL for simplifying the way you running full text queries.
+The DSL is very close to the datastore query DSL:
+</p>
+
+
+<pre class="brush:groovy">
+    def documents = search.search {
+        select all from books
+        sort desc by published, SearchApiLimits.MINIMUM_DATE_VALUE
+        where title =~ params.title
+        and keyword = params.keyword
+        limit 10
+    }
+</pre>
+
+<p>
+The query DSL could be used with two methods on search service object: <code>search</code> and <code>searchAsync</code>.
+Let's have a closer look at the syntax supported by the DSL:
+</p>
+
+<pre class="brush:groovy">
+    // select the full document with all its properties
+    select all
+    // return just the ids of the entities matched by the query
+    select ids
+    // return just a few document's fields
+    select name, age
+    // return just a few expresions, see https://developers.google.com/appengine/docs/java/search/overview#Expressions
+    // methods like distance or geopoint are also supported
+    select numberOfCopies: numberOfCopies - 10, body: snippet(params.body, body), rating: max(rating, 10)
+
+
+    // specify the index to search into
+    from books
+
+    // add a filter operation
+    // operators allowed are: &lt;, &lt;=, ==, !=, &gt;, &gt;=, =~, ~
+    // date values are properly handled for you
+    where propertyName &lt;  expression
+    where propertyName &lt;= expression
+    where propertyName == expression
+    where propertyName != expression
+    where propertyName &gt;= expression
+    where propertyName &gt;  expression
+    
+    // instead of query operator ':' use Groovy matches operator "=~""
+    where propertyName =~ value
+    
+    // to search for singular and plural form of the word you can use "~" operator 
+    where propertyName == ~value
+
+    // you can use "and" instead of "where" to add more where clauses
+    // to use logical disjunction ("or"), you can use "||" logical operator
+    // you can use "&amp;&amp;" as well for "and"
+    where propertyName == value || propertyName == other
+    
+    // you can also use built-in methods such as distance, geopoint, max, min, count
+    where distance(geopoint(10, 50), locality) < 10
+
+    // ascending sorting, the default value is mandatory
+    sort asc  by propertyName, defaultValue
+    // descending sorting, the default value is mandatory
+    sort desc by propertyName, defaultValue
+     
+    // limit to only 10 results
+    limit 10
+    // return the results starting from a certain offset
+    offset 100
+
+    // cursor handling
+    startAt cursorVariable
+    startAt cursorWebSafeStringRepresentation
+    
+    // limits sorting
+    limit sort to 1000
+    
+    // sets number found accuracy to 150
+    number found accuracy 150
+</pre>
+
+<blockquote>
+<b>Notes: </b>
+<ul>
+    <li>
+        The expressions are actually mere strings, but you don't need to quote them.
+    </li>
+    <li>
+        Also, for the <code>where</code> clause, be sure to put the property name on the left-hand-side of the comparison,
+        and the compared value on the right-hand-side of the operator.
+    </li>
+    <li>
+        When you need more than one <code>where</code> clause, you can use <code>and</code>
+        which is a synonym of <code>where</code>.
+    </li>
+    <li>
+        You can omit the <code>select</code> part of the query if you wish:
+        by default, it will be equivalent to <code>select all</code>.
+    </li>
+    <li>
+        It is possible to put all the verbs of the DSL on a single line (thanks to Groovy 1.8 command chains notation),
+        or split across several lines as you see fit for readability or compactness.
+    </li>
+</ul>
+</blockquote>
+

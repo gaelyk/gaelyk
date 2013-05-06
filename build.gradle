@@ -1,30 +1,16 @@
 defaultTasks 'clean', 'build', 'templateProjectZip'
 
-final groovyVersion = '1.8.9-SNAPSHOT'
-
 allprojects {
+    apply plugin: 'groovy'
     apply plugin: 'idea'
-
-    ext.groovyVersion = '2.1.0'
-    ext.appEngineVersion =  '1.7.4'
+    
+    repositories {
+        mavenCentral()
+    }
+    
 
     version = '2.0-SNAPSHOT'
     group = 'org.gaelyk'
-}
-
-subprojects {
-    ext.appEngineVersion = '1.7.3'
-
-    apply plugin: 'groovy'
-
-    repositories {
-        mavenCentral()
-        mavenRepo urls: ["http://snapshots.repository.codehaus.org/"]
-    }
-
-    dependencies {
-        groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-    }
 }
 
 ext.templateProjectDir = 'template-project'

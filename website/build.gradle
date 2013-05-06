@@ -15,7 +15,7 @@ buildscript {
 dependencies {
     compile project(':core')
 	groovy "org.codehaus.groovy:groovy-all:$ext.gaelykGroovyVersion"
-    gaeSdk "com.google.appengine:appengine-java-sdk:$ext.appEngineVersion"
+    gaeSdk "com.google.appengine:appengine-java-sdk:$ext.gaelykAppEngineVersion"
     compile 'com.ocpsoft:ocpsoft-pretty-time:1.0.2',
             'opensymphony:sitemesh:2.4.2'
 }

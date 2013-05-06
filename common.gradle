@@ -13,9 +13,6 @@ repositories {
     maven { // for Spock Groovy 2.0 Support
         url "http://oss.sonatype.org/content/repositories/snapshots/"
     }
-    maven { // for Groovy Snapshots
-        url "http://snapshots.repository.codehaus.org/"
-    }
 }
 
 apply plugin: 'groovy'

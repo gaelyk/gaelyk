@@ -106,7 +106,7 @@
 	is called at the beginning of each attempt.
 </blockquote>
 
-<a name="advanced_fultext_search"></a>
+<a name="advanced_fulltext_search"></a>
 <h3>Advanced Full Text Search</h3>
 
 <p>

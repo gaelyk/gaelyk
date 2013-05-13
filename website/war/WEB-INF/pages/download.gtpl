@@ -46,8 +46,78 @@ But to get you started quickly, you may use a ready-made template project which 
         as they were disabling certain optimizations of Groovy (such as efficient primitive arithmetic).
     </li>
     <li>
-    	New search DSL.
+    	New search DSL (<a href="https://github.com/gaelyk/gaelyk/issues/183">#183</a>).
     </li>
+	<li>
+		Optional route variables (<a href="https://github.com/gaelyk/gaelyk/issues/185">#185</a>).
+	</li>
+	<li>
+		Priorities for routes (<a href="https://github.com/gaelyk/gaelyk/issues/191">#191</a>).
+	</li>
+	<li>
+		Making asynchonous search recoverable (<a href="https://github.com/gaelyk/gaelyk/issues/196">#196</a>).
+	</li>
+	<li>
+		Returning <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultList">QueryResultList</a> and <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultIterator">QueryResultIterator</a>
+		from <code>datastore.execute{}</code> and <code>datastore.iterate{}</code> methods.
+	</li>
+	<li>
+		Using @DelegatesTo where possible.
+	</li>
+    <li>
+		Removed duplicite logging.
+	</li>
+	<li>
+		Ability to restart long running queries autotomatically.
+	</li>
+	<li>
+		<code>datastore.build{...}</code> method to create instance of <code>QueryBuilder</code> for later use.
+	</li>
+	<li>
+		Support for geopoints in search documents.
+	</li>
+	<li>
+		Better parameters conversion (handling multiple parameters gracefully).
+	</li>
+	<li>
+		<code>@Parent</code> annotation for <code>@Entity</code> classes. 
+	</li>
+	<li>
+		Better performance for <code>@Entity</code> classes coercion.
+	</li>
+	<li>
+		<code>DatastoreEntity</code> interface for speeding up the coercion manually.
+	</li>
+	<li>
+		Gracefull unindexed property (<a href="https://github.com/gaelyk/gaelyk/issues/90">#90</a>)
+	</li>
+	<li>
+		Entity to Map coercion.
+	</li>
+	<li>
+		Ignoring static properties in coercion.
+	</li>
+	<li>
+		<code>put</code> and <code>putAsync</code> methods for search index.
+	</li>
+	<li>
+		Non-existing property returns <code>null</code> for search documents.
+	</li>
+	<li>
+		Route patterns optimalizations.
+	</li>
+	<li>
+		Multivalue properties for search documents.
+	</li>
+	<li>
+		GAE services exposed in routes validation closure.
+	</li>
+	<li>
+		Servlet context is available for plugin descriptors.
+	</li>
+	<li>
+		Parameter to allow cross-group transactions.
+	</li>
 </ul>
 
 <h4>Breaking changes</h4>
@@ -71,6 +141,14 @@ But to get you started quickly, you may use a ready-made template project which 
     	Adding task to the queue using the left shift operator <code>&lt;&lt;</code> now makes asynchronous call instead of synchronous
     	returning <code>Future&lt;TaskHandle&gt;</code>
     </li>
+	<li>
+		<code>@Entity</code> classes no longer has version property automatically. You can add it manually using
+		<code>@Version</code> annotation on <code>Long</code> property, but don't do it unless you have a real reason
+		for it because obtaining the version property tooks very long time.
+	</li>
+	<li>
+		Single star in routes will match only to the closest slash.
+	</li>
 </ul>
 
 <h2>Version 1.2</h2>

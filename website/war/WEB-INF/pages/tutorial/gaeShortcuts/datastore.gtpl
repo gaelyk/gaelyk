@@ -459,7 +459,7 @@ Here's what it looks like with the query DSL:
     }
 </pre>
 
-<p>
+<p id="">
 Let's have a closer look at the syntax supported by the DSL.
 There are four methods added dynamically to the datastore: 
 <code>query{}</code>,<code>iterate{}</code>, <code>execute{}</code> and <code>build{}</code>.
@@ -538,7 +538,7 @@ Here are the various options of those verbs:
 </ul>
 </blockquote>
 
-<h4>Executing queries</h4>
+<h4 id="executing-datastore-queries">Executing queries</h4>
 
 <p>
 You can use the <code>datastore.execute{}</code> call to execute the queries,
@@ -618,9 +618,8 @@ if your <code>where</code> and <code>and</code> clauses use properties that are 
 a <code>QuerySyntaxException</code> will be thrown.
 </blockquote>
 
-<p>
-	For <code>select all</code> queries using <code>iterate</code> method nad for the <code>select all</code> queries using <code>execute</code> which are not coerced to POGO
-	the methods return instance
+<p id="queryList">
+	For <code>select all</code> queries using <code>iterate</code> or <code>execute</code> the methods return instance
 	of <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultIterator">QueryResultIterator</a> 
 	or <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultList">QueryResultList</a> from which <code>cursor</code>
 	and <code>indexList</code> properites could be read.

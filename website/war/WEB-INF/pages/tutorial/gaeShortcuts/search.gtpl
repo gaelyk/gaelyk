@@ -24,17 +24,17 @@
     def index = search.index("books")
 </pre>
 
-<p>
-    To add documents to an index, you call the <code>add()</code> method on the index,
+<p id="search-put-to-index">
+    To add documents to an index, you call the <code>put()</code> method on the index,
     which takes a closure that accepts <code>document(map) {}</code> method calls.
-    You can specify several documents in a single <code>add()</code> call,
-    by simply making several <code>document()</code> calls inside the closure passed to <code>add()</code>.
+    You can specify several documents in a single <code>put()</code> call,
+    by simply making several <code>document()</code> calls inside the closure passed to <code>put()</code>.
 </p>
 
 <pre class="brush:groovy">
     def index = search.index("books")
 
-    def response = index.add {
+    def response = index.put {
         document(id: "1234", locale: US, rank: 3) {
             title text: "Big bad wolf", locale: ENGLISH
             published date: new Date()
@@ -44,6 +44,7 @@
             category atom: "children"
             category atom: "book"
             keyword text: ["wolf", "red hook"]
+            location geoPoint: new GeoPoint(15,50)
         }
         // other documents with other document(...) {} calls
     }
@@ -90,7 +91,7 @@
 </p>
 
 
-<p>
+<p id="restartingAsync">
     Because search API is sometimes too much faulty, you can specify number of retries used by <code>index.searchAsync</code>.
     Following code will attempt to search books related to wolfs three times before failing
 </p>

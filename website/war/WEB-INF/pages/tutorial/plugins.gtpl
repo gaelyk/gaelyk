@@ -255,14 +255,14 @@ before {
 
 after {
     log.info "Exiting \${request.requestURI}"
-    log.info "groovlet returned $result from its exection"
+    log.info "groovlet returned \$result from its exection"
 }
 
 // any other initialization code you'd need
 // ...
 </pre>
 
-<p>All of the <a href="views-and-controllers#gaeSpecificVariables">GAE specific variables</a> are available in plugin descriptors as implicit variables. You can also access ServletContext instance of your application using the <code>servletContext</code> implicit variable.</p>
+<p id="context">All of the <a href="views-and-controllers#gaeSpecificVariables">GAE specific variables</a> are available in plugin descriptors as implicit variables. You can also access ServletContext instance of your application using the <code>servletContext</code> implicit variable.</p>
 
 <p>Inside the <code>binding</code> closure block, you just assign a value to a variable.
 And this variable will actually be available within your groovlets and templates as implicit variables.

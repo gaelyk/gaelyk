@@ -558,3 +558,26 @@ will be <code>namespace-acme</code>.
 <b>Note: </b> Make sure to have a look at the
 <a href="/tutorial/app-engine-shortcuts#namespace">namespace support</a> also built-in <b>Gaelyk</b>.
 </blockquote>
+
+<a name="index"></a>
+<h3>Routes indexes</h3>
+
+<p>
+Especially for writing plugins you may wont to change the default behaviour where the routes are evaluated one by one by its poisition
+in  <code>routes.groovy</code> file. Under normal circumstances the index equals the line number
+of the route but can change this by assinging it in route definition:
+</p>
+
+<pre class="brush:groovy">
+    get "/home", forward: "/home.groovy", index: -1
+</pre>
+
+<p>
+Also for plugins you can assign the first route index by calling <code>startRoutingAt</code> method so default indexes won't start at zero but the given number:
+</p>
+
+<pre class="brush:groovy">
+	startRoutingAt -1000
+	// this route will have index of -1000
+    get "/home", forward: "/home.groovy"
+</pre>

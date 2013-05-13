@@ -86,6 +86,7 @@ class SearchExtensions {
      *             category atom: "children"
      *             keyword text: "wolf"
      *             keyword text: "red hook"
+     *             location geoPoint: new GeoPoint(15,50)
      *         }
      *     }
      * </code></pre>
@@ -120,6 +121,7 @@ class SearchExtensions {
      *             category atom: "children"
      *             keyword text: "wolf"
      *             keyword text: "red hook"
+     *             location geoPoint: new GeoPoint(15,50)
      *         }
      *     }
      * </code></pre>
@@ -158,6 +160,7 @@ class SearchExtensions {
      *             category atom: "children"
      *             keyword text: "wolf"
      *             keyword text: "red hook"
+     *             location geoPoint: new GeoPoint(15,50)
      *         }
      *     }
      * </code></pre>

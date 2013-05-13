@@ -46,20 +46,20 @@ But to get you started quickly, you may use a ready-made template project which 
         as they were disabling certain optimizations of Groovy (such as efficient primitive arithmetic).
     </li>
     <li>
-    	New search DSL (<a href="https://github.com/gaelyk/gaelyk/issues/183">#183</a>)
+    	New <a href="/tutorial/app-engine-shortcuts#advanced_fulltext_search">search DSL</a> (<a href="https://github.com/gaelyk/gaelyk/issues/183">#183</a>)
     </li>
 	<li>
-		Optional route variables (<a href="https://github.com/gaelyk/gaelyk/issues/185">#185</a>)
+		Optional <a href="path-variables">route variables</a> (<a href="https://github.com/gaelyk/gaelyk/issues/185">#185</a>)
 	</li>
 	<li>
-		Priorities for routes (<a href="https://github.com/gaelyk/gaelyk/issues/191">#191</a>)
+		<a href="/tutorial/url-routing#index">Routes indexes</a> (<a href="https://github.com/gaelyk/gaelyk/issues/191">#191</a>)
 	</li>
 	<li>
-		Making asynchonous search recoverable (<a href="https://github.com/gaelyk/gaelyk/issues/196">#196</a>)
+		Making <a href="/tutorial/app-engine-shortcuts#restartingAsync">asynchronous search recoverable</a> (<a href="https://github.com/gaelyk/gaelyk/issues/196">#196</a>)
 	</li>
 	<li>
 		Returning <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultList">QueryResultList</a> and <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultIterator">QueryResultIterator</a>
-		from <code>datastore.execute {}</code> and <code>datastore.iterate {}</code> methods
+		from <code>datastore.execute {}</code> and <code>datastore.iterate {}</code> methods (<a href="/tutorial/app-engine-shortcuts#queryList">see more</a>)
 	</li>
 	<li>
 		Using @DelegatesTo where possible for better IDE support (ie. auto-completion)
@@ -68,25 +68,25 @@ But to get you started quickly, you may use a ready-made template project which 
 		Removed duplicate logging
 	</li>
 	<li>
-		Ability to restart long running queries autotomatically
+		Ability to <a href="/tutorial/app-engine-shortcuts#executing-datastore-queries"> restart long running queries automatically</a>
 	</li>
 	<li>
-		<code>datastore.build {...}</code> method to create instance of <code>QueryBuilder</code> for later use.
+		<code>datastore.build {...}</code> <a href="/tutorial/app-engine-shortcuts#query-dsl-syntax"></a>method</a> to create instance of <code>QueryBuilder</code> for later use
 	</li>
 	<li>
-		Support for geo-points in search documents
+		Support for <a href="/tutorial/app-engine-shortcuts#search-put-to-index">geo-points in search documents</a>
 	</li>
 	<li>
-		Better parameters conversion (handling multiple parameters gracefully)
+		<a href="/tutorial/views-and-controllers#better-params-handling">Better parameters conversion</a>(handling multiple parameters gracefully)
 	</li>
 	<li>
-		<code>@Parent</code> annotation for <code>@Entity</code> classes 
+		<code>@Parent</code> <a href="/tutorial/app-engine-shortcuts#pogo-entity-coercion-annotations">annotation</a> for <code>@Entity</code> classes 
 	</li>
 	<li>
-		Better performance for <code>@Entity</code> classes coercion
+		Better performance for <code>@Entity</code> classes coercion (<a href="https://github.com/gaelyk/gaelyk/issues/96">#96</a>)
 	</li>
 	<li>
-		<code>DatastoreEntity</code> interface for speeding up the coercion manually
+		<code>DatastoreEntity</code> interface for speeding up the coercion manually (<a href="https://github.com/gaelyk/gaelyk/issues/96">#96</a>)
 	</li>
 	<li>
 		Gracefull unindexed property (<a href="https://github.com/gaelyk/gaelyk/issues/90">#90</a>)
@@ -95,28 +95,28 @@ But to get you started quickly, you may use a ready-made template project which 
 		Entity to Map coercion
 	</li>
 	<li>
-		Ignoring static properties in coercion
+		Ignoring static properties in coercion (<a href="https://github.com/gaelyk/gaelyk/issues/158">#158</a>)
 	</li>
 	<li>
-		<code>put()</code> and <code>putAsync()</code> methods for search index
+		<code>put()</code> and <code>putAsync()</code> <a href="/tutorial/app-engine-shortcuts#search-put-to-index">methods for search index</a>
 	</li>
 	<li>
 		Non-existing property returns <code>null</code> for search documents
 	</li>
 	<li>
-		Route patterns optimizations
+		Route patterns optimizations (<a href="https://github.com/gaelyk/gaelyk/issues/182">#182</a>)
 	</li>
 	<li>
-		Multi-value properties for search documents
+		Multi-value properties for search documents (<a href="https://github.com/gaelyk/gaelyk/issues/178">#178</a>)
 	</li>
 	<li>
-		GAE services exposed in routes validation closure
+		GAE services exposed in <a href="/tutorial/url-routing#path-variable-validation">routes validation closure</a>
 	</li>
 	<li>
-		Servlet context is available for plugin descriptors
+		Servlet context is <a href="/tutorial/plugins#context">available for plugin descriptors</a>
 	</li>
 	<li>
-		Parameter to allow cross-group transactions
+		Parameter to allow cross-group transactions <a href="https://github.com/gaelyk/gaelyk/pull/154">#154</a>
 	</li>
 </ul>
 

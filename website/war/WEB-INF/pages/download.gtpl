@@ -36,7 +36,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
-    <li>Migration to GAE SDK 1.7.6 and Groovy 2.1.2</li>
+    <li>Migration to GAE SDK 1.8.0 and Groovy 2.1.3</li>
     <li>
         Several key classes of the Gaelyk code base are now statically compiled thanks to Groovy 2,
         which should bring some performance improvements.
@@ -46,77 +46,77 @@ But to get you started quickly, you may use a ready-made template project which 
         as they were disabling certain optimizations of Groovy (such as efficient primitive arithmetic).
     </li>
     <li>
-    	New search DSL (<a href="https://github.com/gaelyk/gaelyk/issues/183">#183</a>).
+    	New search DSL (<a href="https://github.com/gaelyk/gaelyk/issues/183">#183</a>)
     </li>
 	<li>
-		Optional route variables (<a href="https://github.com/gaelyk/gaelyk/issues/185">#185</a>).
+		Optional route variables (<a href="https://github.com/gaelyk/gaelyk/issues/185">#185</a>)
 	</li>
 	<li>
-		Priorities for routes (<a href="https://github.com/gaelyk/gaelyk/issues/191">#191</a>).
+		Priorities for routes (<a href="https://github.com/gaelyk/gaelyk/issues/191">#191</a>)
 	</li>
 	<li>
-		Making asynchonous search recoverable (<a href="https://github.com/gaelyk/gaelyk/issues/196">#196</a>).
+		Making asynchonous search recoverable (<a href="https://github.com/gaelyk/gaelyk/issues/196">#196</a>)
 	</li>
 	<li>
 		Returning <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultList">QueryResultList</a> and <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultIterator">QueryResultIterator</a>
-		from <code>datastore.execute{}</code> and <code>datastore.iterate{}</code> methods.
+		from <code>datastore.execute {}</code> and <code>datastore.iterate {}</code> methods
 	</li>
 	<li>
-		Using @DelegatesTo where possible.
+		Using @DelegatesTo where possible for better IDE support (ie. auto-completion)
 	</li>
     <li>
-		Removed duplicite logging.
+		Removed duplicate logging
 	</li>
 	<li>
-		Ability to restart long running queries autotomatically.
+		Ability to restart long running queries autotomatically
 	</li>
 	<li>
-		<code>datastore.build{...}</code> method to create instance of <code>QueryBuilder</code> for later use.
+		<code>datastore.build {...}</code> method to create instance of <code>QueryBuilder</code> for later use.
 	</li>
 	<li>
-		Support for geopoints in search documents.
+		Support for geo-points in search documents
 	</li>
 	<li>
-		Better parameters conversion (handling multiple parameters gracefully).
+		Better parameters conversion (handling multiple parameters gracefully)
 	</li>
 	<li>
-		<code>@Parent</code> annotation for <code>@Entity</code> classes. 
+		<code>@Parent</code> annotation for <code>@Entity</code> classes 
 	</li>
 	<li>
-		Better performance for <code>@Entity</code> classes coercion.
+		Better performance for <code>@Entity</code> classes coercion
 	</li>
 	<li>
-		<code>DatastoreEntity</code> interface for speeding up the coercion manually.
+		<code>DatastoreEntity</code> interface for speeding up the coercion manually
 	</li>
 	<li>
 		Gracefull unindexed property (<a href="https://github.com/gaelyk/gaelyk/issues/90">#90</a>)
 	</li>
 	<li>
-		Entity to Map coercion.
+		Entity to Map coercion
 	</li>
 	<li>
-		Ignoring static properties in coercion.
+		Ignoring static properties in coercion
 	</li>
 	<li>
-		<code>put</code> and <code>putAsync</code> methods for search index.
+		<code>put()</code> and <code>putAsync()</code> methods for search index
 	</li>
 	<li>
-		Non-existing property returns <code>null</code> for search documents.
+		Non-existing property returns <code>null</code> for search documents
 	</li>
 	<li>
-		Route patterns optimalizations.
+		Route patterns optimizations
 	</li>
 	<li>
-		Multivalue properties for search documents.
+		Multi-value properties for search documents
 	</li>
 	<li>
-		GAE services exposed in routes validation closure.
+		GAE services exposed in routes validation closure
 	</li>
 	<li>
-		Servlet context is available for plugin descriptors.
+		Servlet context is available for plugin descriptors
 	</li>
 	<li>
-		Parameter to allow cross-group transactions.
+		Parameter to allow cross-group transactions
 	</li>
 </ul>
 

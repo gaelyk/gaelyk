@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.codehaus.groovy.ast.ClassCodeVisitorSupport;
+import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
@@ -60,7 +61,7 @@ final class ConfigClosureFinder extends ClassCodeVisitorSupport {
     }
 
     private boolean isDesiredType(VariableExpression objectExp) {
-        return "search".equals(objectExp.getName()) || SearchService.class.equals(objectExp.getType().getTypeClass());
+        return "search".equals(objectExp.getName()) || ClassHelper.make(SearchService.class).equals(objectExp.getType());
     }
     
     private boolean isDesiredMethodName(Object name){

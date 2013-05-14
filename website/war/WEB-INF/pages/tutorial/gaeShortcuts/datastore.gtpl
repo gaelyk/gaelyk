@@ -619,7 +619,7 @@ a <code>QuerySyntaxException</code> will be thrown.
 </blockquote>
 
 <p id="queryList">
-	For <code>select all</code> queries using <code>iterate</code> or <code>execute</code> the methods return instance
+	For <code>select all</code> or <code>select keys</code> queries using <code>iterate</code> or <code>execute</code> the methods return instance
 	of <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultIterator">QueryResultIterator</a> 
 	or <a href="https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/QueryResultList">QueryResultList</a> from which <code>cursor</code>
 	and <code>indexList</code> properites could be read.

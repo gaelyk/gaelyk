@@ -186,7 +186,7 @@ class QueryBuilder {
                     }
                     return restartAutomatically ? SelfRestartingQueryResultIterator.from(this) : iter
                 } else {
-                    return result.collect { Entity it -> it.key }
+                    return CoercedQueryResultList.coerce(result, Key)
                 }
             } else {
                 return result

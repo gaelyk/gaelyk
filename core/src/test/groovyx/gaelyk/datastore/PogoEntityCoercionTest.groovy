@@ -176,6 +176,11 @@ class PogoEntityCoercionTest extends GroovyTestCase {
        Entity en = new Entity('Anything')
        assert PogoEntityCoercion.convert(en, Entity) == en
     }
+    
+    void testEntityIsCoercedToKey(){
+        Entity en = new Entity('Anything', 100)
+        assert PogoEntityCoercion.convert(en, com.google.appengine.api.datastore.Key) == en.key
+     }
 }
 
 class P1 {

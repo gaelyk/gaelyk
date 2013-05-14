@@ -1,6 +1,7 @@
 package groovyx.gaelyk.datastore;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
 
 public class PogoEntityCoercion {
 
@@ -12,8 +13,11 @@ public class PogoEntityCoercion {
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" }) public static <E> E convert(Entity en, Class<E> cls) throws InstantiationException, IllegalAccessException{
-        if(Entity.class == cls){
+        if(Entity.class.equals(cls)){
             return (E) en;
+        }
+        if(Key.class.equals(cls)){
+            return (E) en.getKey();
         }
         if(DatastoreEntity.class.isAssignableFrom(cls)){
             return (E) DatastoreEntityCoercion.convert(en,(Class<? extends DatastoreEntity>) cls);

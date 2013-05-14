@@ -44,7 +44,7 @@
             category atom: "children"
             category atom: "book"
             keyword text: ["wolf", "red hook"]
-            location geoPoint: new GeoPoint(15,50)
+            location geoPoint: [15,50]
         }
         // other documents with other document(...) {} calls
     }

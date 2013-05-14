@@ -34,7 +34,7 @@ class FieldDefinitions {
         Map fieldDefMap = args[0]
         
         Map listParameters = fieldDefMap.findAll{ key, value -> 
-            value instanceof Iterable 
+            value instanceof Iterable && (key != 'geoPoint' || value.first() instanceof Iterable)                         
         }
         
         if(listParameters.size() > 1){
@@ -65,6 +65,10 @@ class FieldDefinitions {
 			fieldDefMap.HTML = fieldDefMap.html
 			fieldDefMap.remove('html')
 		}
+        
+        if(fieldDefMap.containsKey('geoPoint') && fieldDefMap.geoPoint instanceof List){
+            fieldDefMap.geoPoint = fieldDefMap.geoPoint
+        }
 
         def skipped = []
         

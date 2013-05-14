@@ -201,11 +201,11 @@ class QueryBuilder {
     
     String get_score() { "_score" }
     
-    String max(String... vals){
+    String max(Object... vals){
         "max(${vals.join(', ')})"
     }
     
-    String min(String... vals){
+    String min(Object... vals){
         "min(${vals.join(', ')})"
     }
     

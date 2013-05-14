@@ -2,6 +2,7 @@ package groovyx.gaelyk.search
 
 import static java.util.Locale.*
 
+import com.google.appengine.api.search.GeoPoint;
 import com.google.appengine.api.search.ScoredDocument
 import com.google.appengine.api.search.SearchServiceFactory
 import com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig
@@ -39,6 +40,8 @@ class SearchShortcutsTest extends GroovyTestCase {
                 keyword text: "red hook"
                 nothing text: null
                 emptyList text: []
+                locality geoPoint: [10, 50]
+                geo geoPoint: new GeoPoint(30, 60)
             }
         }
 

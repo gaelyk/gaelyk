@@ -203,7 +203,14 @@ class SearchExtensions {
         switch (fields.size()) {
             case 0:
                 if(document instanceof ScoredDocument){
-                    return document.expressions.findAll{ Field exp -> exp.name == fieldName }.collect{ Field field -> getFieldRawValue(field) }
+                    def exps = document.expressions.findAll{ Field exp -> exp.name == fieldName }.collect{ Field field -> getFieldRawValue(field) }
+                    if(exps.size() == 0){
+                        return null
+                    }
+                    if(exps.size() == 1){
+                        return exps[0]
+                    }
+                    return exps
                 }
                 return null
             case 1:

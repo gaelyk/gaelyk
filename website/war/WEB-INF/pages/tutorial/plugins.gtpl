@@ -288,7 +288,7 @@ This means a plugin cannot overwrite the existing application routes, or routes 
 as well as defined a <code>WEB-INF/routes.groovy</code> script, otherwise no plugin routes will be present.
 </blockquote>
 
-<p>
+<p id="before-and-after">
 In the <code>before</code> and <code>after</code> blocks,
 you can access the <code>request</code>, <code>response</code>, <code>log</code>, and <code>binding</code> variables.
 The logger name is of the form <code>gaelyk.plugins.myPluginName</code>.

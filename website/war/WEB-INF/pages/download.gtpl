@@ -116,6 +116,9 @@ But to get you started quickly, you may use a ready-made template project which 
 		Servlet context is <a href="/tutorial/plugins#context">available for plugin descriptors</a>
 	</li>
 	<li>
+		Groovlet result can be handled by <code>after</code> closure of <a href="/tutorial/plugins#before-and-after">the plugin</a>
+	</li>
+	<li>
 		Parameter to allow cross-group transactions <a href="https://github.com/gaelyk/gaelyk/pull/154">#154</a>
 	</li>
 </ul>

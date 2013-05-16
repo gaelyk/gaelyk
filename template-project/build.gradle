@@ -3,7 +3,7 @@ apply plugin: 'gae-geb'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-def compatibilityVersion = 1.6
+def compatibilityVersion = 1.7
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
@@ -33,8 +33,8 @@ gaelykPrecompileTemplate.runtimeClasspath += project.configurations.precompile
 */
 
 dependencies {
-    def gaeVersion = '1.7.6'
-    def groovyVersion = '2.1.2'
+    def gaeVersion = '1.8.0'
+    def groovyVersion = '2.1.3'
     groovy "org.codehaus.groovy:groovy-all:${groovyVersion}" 
 //    precompile "org.codehaus.groovy:groovy-ant:${groovyVersion}"     
 //    precompile "org.ow2.asm:asm:4.0" 
@@ -43,8 +43,9 @@ dependencies {
     compile "org.codehaus.groovy:groovy-servlet:${groovyVersion}"    
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion"
-    compile 'org.gaelyk:gaelyk:2.0-SNAPSHOT'
-    compile 'org.gaelyk:gaelyk-console:2.0-SNAPSHOT'
+    compile 'org.gaelyk:gaelyk:2.0'
+    
+    
 
     /** 
      * To add binary plugin just declare it as a dependency. For example,
@@ -53,7 +54,14 @@ dependencies {
      */ 
     // compile 'org.codehaus.gpars:gpars-appengine:0.1'
     
-    testCompile 'org.gaelyk:gaelyk-spock:0.3.0.1'
+    /**
+     * Gaelyk console serves as playground or key-hole surgery tool for
+     * your application
+     * @see https://github.com/gaelyk/gaelyk-console
+     */
+    // compile 'org.gaelyk:gaelyk-console:2.0'
+    
+    testCompile 'org.gaelyk:gaelyk-spock:2.0'
     testCompile "com.google.appengine:appengine-api-stubs:$gaeVersion",
                 "com.google.appengine:appengine-testing:$gaeVersion"
                 

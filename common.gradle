@@ -3,7 +3,7 @@ ext.gaelykSpockVersion = '0.7-groovy-2.0'
 ext.gaelykAppEngineVersion = '1.8.0'
 ext.gaelykLatestVersion = '2.1-SNAPSHOT'
 ext.gaelykSpockLatestVersion = '0.5-SNAPSHOT'
-ext.gaelykGradleVersion = '1.2'
+ext.gaelykGradleVersion = '1.6'
 
 repositories {
     mavenCentral()

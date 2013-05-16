@@ -40,5 +40,5 @@ task templateProjectZip(type: Zip) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion '1.3'
+    gradleVersion = '1.6'
 }

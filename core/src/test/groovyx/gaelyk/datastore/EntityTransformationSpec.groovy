@@ -282,6 +282,44 @@ class EntityTransformationSpec extends Specification {
         obj.hasDatastoreParent() == false
         obj.getDatastoreParent() == null
     }
+    
+    def "Test inheritance"(){
+        def obj = newShell().evaluate '''
+                @groovy.transform.CompileStatic
+                abstract class MyPogoSuper10 {
+                    String superProp
+
+                    abstract boolean isLive()
+                }
+
+
+                @groovy.transform.CompileStatic
+                @groovyx.gaelyk.datastore.Entity
+                class MyPogo10 extends MyPogoSuper10 {
+                    @groovyx.gaelyk.datastore.Key long id
+                    @groovyx.gaelyk.datastore.Indexed String test1
+                    @groovyx.gaelyk.datastore.Unindexed String test2
+                    String test3
+
+                    boolean live
+                }
+                
+                new MyPogo10(id: 10, test1: "one", test2: "two", test3: "three")'''
+        expect:
+        obj.hasDatastoreKey() == true
+        obj.hasDatastoreNumericKey() == true
+        obj.getDatastoreKey() == 10
+        obj.hasDatastoreVersion() == false
+        obj.getDatastoreIndexedProperties() == ['test1']
+        obj.getDatastoreUnindexedProperties() == [
+            'test2',
+            'test3',
+            'live',
+            'superProp'
+        ]
+        obj.hasDatastoreParent() == false
+        obj.getDatastoreParent() == null
+    }
 
     def "Test DatastoreEntity implementation 2"(){
         def obj = newShell().evaluate '''

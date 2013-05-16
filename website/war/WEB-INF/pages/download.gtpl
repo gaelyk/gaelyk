@@ -49,7 +49,7 @@ But to get you started quickly, you may use a ready-made template project which 
     	New <a href="/tutorial/app-engine-shortcuts#advanced_fulltext_search">search DSL</a> (<a href="https://github.com/gaelyk/gaelyk/issues/183">#183</a>)
     </li>
 	<li>
-		Optional <a href="path-variables">route variables</a> (<a href="https://github.com/gaelyk/gaelyk/issues/185">#185</a>)
+		Optional <a href="/tutorial/url-routing#path-variables">route variables</a> (<a href="https://github.com/gaelyk/gaelyk/issues/185">#185</a>)
 	</li>
 	<li>
 		<a href="/tutorial/url-routing#index">Routes indexes</a> (<a href="https://github.com/gaelyk/gaelyk/issues/191">#191</a>)

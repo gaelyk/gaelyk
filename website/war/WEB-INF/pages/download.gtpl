@@ -9,23 +9,23 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-template-project-2.0.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-template-project-2.0.zip">Template project v2.0</a></td>
+            <td><a href="http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-2.0.zip?direct"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-2.0.zip?direct">Template project v2.0</a></td>
         </tr>
         <tr>
-            <td><a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-2.0.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="https://github.com/downloads/gaelyk/gaelyk/gaelyk-2.0.jar">Gaelyk JAR v2.0</a></td>
+            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.0/gaelyk-2.0.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.0/gaelyk-2.0.jar">Gaelyk JAR v2.0</a></td>
         </tr>
     </table>
 </div>
 
 <p>
-You can use the <b>Gaelyk</b> JAR in combination with Groovy 1.8 and beyond and with the latest Google App Engine SDK.
+You can use the <b>Gaelyk</b> JAR in combination with Groovy 2.1 and beyond and with the latest Google App Engine SDK.
 </p>
 
 <p>
-The latest version was tested with Groovy 2.1.2,
-and with the 1.7.6 version of the App Engine SDK.
+The latest version was tested with Groovy 2.1.3,
+and with the 1.8.0 version of the App Engine SDK.
 </p>
 
 <p>

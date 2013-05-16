@@ -5,7 +5,7 @@ import groovy.json.JsonSlurper
 def url = "https://api.github.com/repos/gaelyk/gaelyk/commits".toURL()
 
 def slurper = new JsonSlurper()
-def results = slurper.parseText(url.getText('UTF-8'))
+def results = slurper.parseText(url.get(headers: ['User-Agent': 'Gaelyk website']).getText('UTF-8'))
 
 def sdf = new SDF("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
 

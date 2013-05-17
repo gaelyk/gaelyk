@@ -7,10 +7,8 @@ ext.gaelykGradleVersion = '1.6'
 
 repositories {
     mavenCentral()
-    maven { // for Gaelyk Snapshots
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
     maven { // for Spock Groovy 2.0 Support
+        name "OSS Sonatype Repo"
         url "http://oss.sonatype.org/content/repositories/snapshots/"
     }
 }

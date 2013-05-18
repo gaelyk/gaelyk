@@ -9,8 +9,13 @@ as well as for using the <code>in</code> keyword to check when a key is present 
 </p>
 
 <pre class="brush:groovy">
-    class Country implements Serializable { String name }
+    // under src/main/groovy
+    class Country implements Serializable {
+        static final long serialVersionUID = 123456L;
+        String name 
+    }
 
+	// in groovlet
     def countryFr = new Country(name: 'France')
 
     // use the subscript notation to put a country object in the cache, identified by a string

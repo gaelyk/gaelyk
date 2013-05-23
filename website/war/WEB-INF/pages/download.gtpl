@@ -167,10 +167,11 @@ But to get you started quickly, you may use a ready-made template project which 
             exclude module: "gradle-fatjar-plugin"
         }
         classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
+        classpath 'org.gradle.api.plugins:gradle-gae-geb-plugin:0.3'
     }
 	</pre>
 	<p>
-	If you don't do this, the extension modules won't work and you get strange errors such as there's no method <code>hours</code>
+	If you don't do this, the extension modules won't work and you get strange errors in production such as there's no method <code>hours</code>
 	for the class <code>Integer</code> or you won't be able to access <code>request</code> attributes using simplified <code>request.attr</code> notation.
 	</p>
 </blockquote>

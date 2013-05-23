@@ -124,6 +124,7 @@ But to get you started quickly, you may use a ready-made template project which 
 </ul>
 
 <h4>Breaking changes</h4>
+	
 <ul>
     <li>
         The usage and support of Groovy categories for enriching the SDK or any third-party library has been removed.
@@ -153,6 +154,26 @@ But to get you started quickly, you may use a ready-made template project which 
 		Single star in routes will match only to the closest slash.
 	</li>
 </ul>
+
+<blockquote>
+	<p>As a result of using Groovy 2.0 you will also need to update <code>buildscript{ dependencies {...} }</code> configuration
+	closure in your <code>build.gradle</code> 
+	file with following	snippet:
+	</p>
+	<pre class="brush:groovy">
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.4.1'
+        classpath 'org.gradle.api.plugins:gradle-gae-plugin:0.8', {
+            exclude module: "gradle-fatjar-plugin"
+        }
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
+    }
+	</pre>
+	<p>
+	If you don't do this, the extension modules won't work and you get strange errors such as there's no method <code>hours</code>
+	for the class <code>Integer</code> or you won't be able to access <code>request</code> attributes using simplified <code>request.attr</code> notation.
+	</p>
+</blockquote>
 
 <h2>Version 1.2</h2>
 

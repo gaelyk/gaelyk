@@ -14,6 +14,10 @@ buildscript {
 
     dependencies {
         classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.4.1'
+        classpath 'org.gradle.api.plugins:gradle-gae-plugin:0.8', {
+            exclude module: "gradle-fatjar-plugin"
+        }
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
         classpath 'org.gradle.api.plugins:gradle-gae-geb-plugin:0.3'
     }
 }

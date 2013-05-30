@@ -81,14 +81,17 @@ class ReflectionEntityCoercion {
             f = clazz.getDeclaredField(property)
         } catch (e) {
             try {
+                if(!clazz.getDeclaredMethods().any { Method it -> it.name == "set${property.capitalize()}" && it.parameterTypes.length == 1}){
+                    return PropertyDescriptor.IGNORED
+                }
                 m = clazz.getDeclaredMethod("get${property.capitalize()}")
             } catch (NoSuchMethodException nsme) {
                 return PropertyDescriptor.IGNORED
             }
         }
-        boolean isStatic = f ? Modifier.isStatic(f.getModifiers()) : Modifier.isStatic(m.getModifiers())
+        boolean isIgnoredByDefault = f ? (Modifier.isStatic(f.getModifiers()) || Modifier.isFinal(f.getModifiers())) : Modifier.isStatic(m.getModifiers())
         def annos = f ? f.annotations : m.annotations
-        if (isStatic || annos.any { it instanceof Ignore }) return PropertyDescriptor.IGNORED
+        if (isIgnoredByDefault || annos.any { it instanceof Ignore }) return PropertyDescriptor.IGNORED
         if (annos.any { it instanceof Key }) return PropertyDescriptor.KEY
         if (annos.any { it instanceof Version }) return PropertyDescriptor.VERSION
         if (annos.any { it instanceof Parent }) return PropertyDescriptor.PARENT

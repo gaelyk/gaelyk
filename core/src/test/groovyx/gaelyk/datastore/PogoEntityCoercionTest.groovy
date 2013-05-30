@@ -205,7 +205,6 @@ class Person {
     String lastName
     @Unindexed String bio
 
-    @Ignore
     String getFullName() { "$firstName $lastName" }
 
     @Version long version

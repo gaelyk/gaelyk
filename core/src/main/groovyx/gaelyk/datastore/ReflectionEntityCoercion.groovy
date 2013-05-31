@@ -209,7 +209,11 @@ class ReflectionEntityCoercion {
         } else {
             entityProps.each { String k, v ->
                 if (o.metaClass.hasProperty(o, k)) {
-                    o[k] = v
+                    try {
+                        o[k] = v                        
+                    } catch(ReadOnlyPropertyException rope){
+                        // cannot set read only property!
+                    }
                 }
             }
 

@@ -302,6 +302,10 @@ class EntityTransformationSpec extends Specification {
                     String test3
 
                     boolean live
+
+                    String getThisMustBeIgnored(){
+                        "IGNORED"
+                    }
                 }
                 
                 new MyPogo10(id: 10, test1: "one", test2: "two", test3: "three")'''

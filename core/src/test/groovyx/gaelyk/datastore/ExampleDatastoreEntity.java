@@ -16,6 +16,7 @@ public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
     private String unindexed1;
     private String unindexed2;
     private long ignored;
+    private EDEType type;
 
     @Override public boolean hasDatastoreKey() {
         return true;
@@ -46,7 +47,7 @@ public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
     }
 
     @Override public List<String> getDatastoreIndexedProperties() {
-        return Arrays.asList("indexed1", "indexed2");
+        return Arrays.asList("indexed1", "indexed2", "type");
     }
 
     @Override public List<String> getDatastoreUnindexedProperties() {
@@ -132,6 +133,9 @@ public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
         if(propertyName == "version"){
             return this.version;
         }
+        if(propertyName == "type"){
+            return this.type;
+        }
         throw new MissingPropertyException("No such property " + propertyName);
     }
     
@@ -164,6 +168,14 @@ public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
             this.version = (Long) value;
             return;
         }
+        if(propertyName == "type"){
+            if(value instanceof EDEType){
+                this.type = (EDEType) value;                
+            } else if(value instanceof String){
+                this.type = EDEType.valueOf((String)value);
+            }
+            return;
+        }
         throw new MissingPropertyException("No such property " + propertyName);
     }
 
@@ -176,6 +188,14 @@ public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
     }
 
     @Override public void setDatastoreParent(Key parent) {}
+
+    public EDEType getType() {
+        return type;
+    }
+
+    public void setType(EDEType type) {
+        this.type = type;
+    }
     
 
 }

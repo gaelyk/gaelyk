@@ -49,7 +49,7 @@ public class DatastoreEntityCoercion {
     }
     
     private static Object transformValueForStorage(Object value) {
-        Object newValue = value instanceof GString ? value.toString() : value;
+        Object newValue = (value instanceof GString || value instanceof Enum<?>) ? value.toString() : value;
         // if we store a string longer than 500 characters
         // it needs to be wrapped in a Text instance
         if (newValue instanceof String && ((String)newValue).length() > 500) {

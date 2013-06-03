@@ -36,6 +36,7 @@ class DatastoreEntityCoercionSpec extends Specification {
             indexed2: 15,
             unindexed1: 'one',
             unindexed2: 'two',
+            type: EDEType.ONE
         )
         
         expect:
@@ -44,22 +45,24 @@ class DatastoreEntityCoercionSpec extends Specification {
         ex.hasDatastoreKey()     == true
         ex.datastoreKey          == 15
         ex.datastoreUnindexedProperties   == ['unindexed1', 'unindexed2'] as String[]
-        ex.datastoreIndexedProperties     == ['indexed1', 'indexed2'] as String[]
+        ex.datastoreIndexedProperties     == ['indexed1', 'indexed2', 'type'] as String[]
         
         when:
         Entity entity = DatastoreEntityCoercion.convert(ex)
         
         then:
         entity.key.id                       == 15
-        entity.getProperties().keySet()     == ['unindexed1', 'unindexed2', 'indexed1', 'indexed2'] as Set
+        entity.getProperties().keySet()     == ['unindexed1', 'unindexed2', 'indexed1', 'indexed2', 'type'] as Set
         entity.getProperty('unindexed1')    == 'one'
         entity.getProperty('unindexed2')    == 'two'
         entity.getProperty('indexed1')      == 'indexed'
         entity.getProperty('indexed2')      == 15
+        entity.getProperty('type')          == EDEType.ONE.toString()
         entity.isUnindexedProperty('unindexed1')
         entity.isUnindexedProperty('unindexed2')
         !entity.isUnindexedProperty('indexed1')
         !entity.isUnindexedProperty('indexed2')
+        !entity.isUnindexedProperty('type')
 	}
     
     def "Test coercion to object"(){
@@ -68,6 +71,7 @@ class DatastoreEntityCoercionSpec extends Specification {
         en.indexed2 = 15
         en.unindexed.unindexed1 = 'one'
         en.unindexed.unindexed2 = 'two'
+        en.type = EDEType.ONE as String
         en.save()
         
         when:
@@ -82,6 +86,7 @@ class DatastoreEntityCoercionSpec extends Specification {
             indexed2 == 15
             unindexed1 == 'one'
             unindexed2 == 'two'
+            type == EDEType.ONE
         }
     }
 	

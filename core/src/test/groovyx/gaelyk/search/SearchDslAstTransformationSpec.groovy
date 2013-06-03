@@ -22,7 +22,7 @@ class SearchDslAstTransformationSpec extends Specification {
         select one: one, two: rating + 10
         from Image
         where rating < 10
-        and created >= new Date(0)
+        and created >= Date.parse("yyyy-M-d", "1970-1-1")
         and ~"auto"
         and something =~ "a lovely day"
         and other =~ outer

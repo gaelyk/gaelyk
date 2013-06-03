@@ -7,7 +7,7 @@ class SearchQueryStringCategorySpec extends Specification {
 
     @Use(SearchQueryStringCategory)
     def "Methods for overloaded operators works as expected"(){
-        Date theBeginning = new Date(0)
+        Date theBeginning = Date.parse("yyyy-M-d", "1970-1-1")
         
         expect:
         

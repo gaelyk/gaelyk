@@ -96,20 +96,29 @@ class ConditionalRetryingFuture<R> implements Future<R> {
     }
     
     private R handleAfter(ret, Exception exp){
-        if(after instanceof Closure){
-            if(after.maximumNumberOfParameters == 0){
-                if(exp){
-                    throw exp
+        try {
+            if(after instanceof Closure){
+                if(after.maximumNumberOfParameters == 0){
+                    if(exp){
+                        throw exp
+                    }
+                    return after()
+                } else if(after.maximumNumberOfParameters == 1){
+                    if(exp){
+                        throw exp
+                    }
+                    return after(ret)
                 }
-                return after()
-            } else if(after.maximumNumberOfParameters == 1){
-                if(exp){
-                    throw exp
-                }
-                return after(ret)
             }
+            return after(ret, exp)
+        } catch(ExecutionException e){
+            // throw directly
+            throw e
+        } catch(e){
+            // wrap
+            throw new ExecutionException(e)
         }
-        return after(ret, exp)
+
     }
 
 }

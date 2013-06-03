@@ -1,6 +1,7 @@
 package groovyx.gaelyk.search
 
 import groovyx.gaelyk.RetryingFuture;
+import groovyx.gaelyk.datastore.Ignore;
 
 import java.util.concurrent.Future
 
@@ -16,7 +17,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 
 class SearchDslAstTransformationSpec extends Specification {
 
-    
+    @Ignore
     def "Expressions are transformed to method call properly"(){
         QueryBuilder builder = evaluate 'prepare', """
         select one: one, two: rating + 10

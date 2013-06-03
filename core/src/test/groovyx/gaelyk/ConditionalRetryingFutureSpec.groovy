@@ -24,7 +24,26 @@ class ConditionalRetryingFutureSpec extends Specification {
         
         then:
         thrown ExecutionException
-        3 * future.get() >> {throw new ExecutionException("Failed") }
+        3 * future.get() >> {throw new ExecutionException("Failed", new IllegalStateException("DID NOT SUCCEED")) }
+    }
+    
+    def "Return default value after three attemps"(){
+        Future<String> future = Mock()
+        
+        when:
+        int counter = 0
+        Future<String> retrying = asLongAs {
+            ++counter < 3
+        } tryResolve {    
+            future
+        } thenReturn { ret, exp ->
+            "Hello"
+        }
+        def result = retrying.get()
+        
+        then:
+        result == "Hello"
+        3 * future.get() >> {throw new ExecutionException("Failed", new IllegalStateException("DID NOT SUCCEED")) }
     }
     
     def "Fail after three attemps with timeout"(){
@@ -41,7 +60,7 @@ class ConditionalRetryingFutureSpec extends Specification {
         
         then:
         thrown ExecutionException
-        3 * future.get(100, TimeUnit.SECONDS) >> {throw new ExecutionException("Failed") }
+        3 * future.get(100, TimeUnit.SECONDS) >> {throw new ExecutionException("Failed", new IllegalStateException("DID NOT SUCCEED")) }
     }
     
     def "Recover from failure"(){
@@ -58,7 +77,7 @@ class ConditionalRetryingFutureSpec extends Specification {
         
         then:
         result == "Hello"
-        1 * future.get() >> {throw new ExecutionException("Failed") } 
+        1 * future.get() >> {throw new ExecutionException("Failed", new IllegalStateException("DID NOT SUCCEED")) }
         1 * future.get() >> "Hello"
     }
     

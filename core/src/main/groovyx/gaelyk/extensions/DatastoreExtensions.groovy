@@ -17,6 +17,7 @@ package groovyx.gaelyk.extensions
 
 import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
+import groovyx.gaelyk.FutureValueWrapper;
 import groovyx.gaelyk.UnindexedEntityWrapper
 import groovyx.gaelyk.datastore.PogoEntityCoercion
 import groovyx.gaelyk.query.QueryBuilder
@@ -84,12 +85,18 @@ class DatastoreExtensions {
     @CompileStatic
     static Object asType(Object self, Class clazz) {
         if (clazz == Entity) {
-            PogoEntityCoercion.convert(self)
-        } else if (self.class == Entity) {
-            asType((Entity)self, clazz)
-        } else if (self.class == String) {
-            asType((String)self, clazz)
-        } else DefaultGroovyMethods.asType(self, clazz)
+            return PogoEntityCoercion.convert(self)
+        }
+        if (clazz == Future) {
+            return FutureValueWrapper.wrap(self)
+        }
+        if (self.class == Entity) {
+            return asType((Entity)self, clazz)
+        }
+        if (self.class == String) {
+            return asType((String)self, clazz)
+        }
+        DefaultGroovyMethods.asType(self, clazz)
     }
 
     /**

@@ -13,13 +13,5 @@ class FutureValueWrapperSpec extends Specification {
         expect:
         value.is(wrapped.get())
     }
-    
-    def "Wrap value into future using as keyword and than retrieve it with get"(){
-        String value = "Hello"
-        Future<String> wrapped = value as Future
-        
-        expect:
-        value.is(wrapped.get())
-    }
 
 }

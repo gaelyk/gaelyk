@@ -87,9 +87,6 @@ class DatastoreExtensions {
         if (clazz == Entity) {
             return PogoEntityCoercion.convert(self)
         }
-        if (clazz == Future) {
-            return FutureValueWrapper.wrap(self)
-        }
         if (self.class == Entity) {
             return asType((Entity)self, clazz)
         }

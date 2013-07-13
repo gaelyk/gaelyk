@@ -58,7 +58,7 @@ class CacheHandler {
 
         log.config "Request URI to cache: $uri"
 
-        def result = route.forUri(uri, request)
+        def result = route.forUri(requestURI, request)
 
         if (route.cacheExpiration > 0) {
             log.config "Route cacheable"

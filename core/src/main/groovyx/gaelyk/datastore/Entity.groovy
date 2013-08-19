@@ -16,6 +16,7 @@
 package groovyx.gaelyk.datastore
 
 import java.lang.annotation.ElementType
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
@@ -48,6 +49,7 @@ import org.codehaus.groovy.transform.GroovyASTTransformationClass
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 @GroovyASTTransformationClass(classes = [EntityTransformation])
+@Inherited
 @interface Entity {
     boolean unindexed() default true
 }

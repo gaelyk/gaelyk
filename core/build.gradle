@@ -37,7 +37,7 @@ sourceSets {
 }
 
 dependencies {
-    groovy "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}", {
+    compile "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}", {
         force = true
     }
 //    compile "org.codehaus.groovy:groovy-servlet:${ext.gaelykGroovyVersion}"

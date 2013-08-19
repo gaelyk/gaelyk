@@ -82,10 +82,13 @@ class ReflectionEntityCoercion {
         } catch (e) {
             try {
                 if(!clazz.getDeclaredMethods().any { Method it -> it.name == "set${property.capitalize()}" && it.parameterTypes.length == 1}){
-                    return PropertyDescriptor.IGNORED
+                    throw new NoSuchMethodException("set${property.capitalize()}")
                 }
                 m = clazz.getDeclaredMethod("get${property.capitalize()}")
             } catch (NoSuchMethodException nsme) {
+                if(clazz.superclass && clazz.superclass != Object) {
+                    return getPropertyDescriptorFor(clazz.superclass, property, defaultIndexed)
+                }
                 return PropertyDescriptor.IGNORED
             }
         }

@@ -73,6 +73,55 @@ class PogoEntityCoercionTest extends GroovyTestCase {
 
         assert ReflectionEntityCoercion.findKey(props) == 's3'
     }
+    
+    void testReflectionOnPogoInheritance() {
+        def p2 = new P2()
+        def props = ReflectionEntityCoercion.props(p2)
+
+        assert props.s1 == PropertyDescriptor.UNINDEXED
+        assert props.s1.unindexed()
+        assert !props.s1.ignore()
+        assert !props.s1.key()
+        assert !props.s1.version()
+        assert !props.s1.parent()
+
+        assert props.s2 == PropertyDescriptor.IGNORED
+        assert !props.s2.unindexed()
+        assert props.s2.ignore()
+        assert !props.s2.key()
+        assert !props.s2.version()
+        assert !props.s2.parent()
+
+        assert props.s3 == PropertyDescriptor.KEY
+        assert !props.s3.unindexed()
+        assert !props.s3.ignore()
+        assert props.s3.key()
+        assert !props.s3.version()
+        assert !props.s3.parent()
+
+        assert props.s4 == PropertyDescriptor.VERSION
+        assert !props.s4.unindexed()
+        assert !props.s4.ignore()
+        assert !props.s4.key()
+        assert props.s4.version()
+        assert !props.s4.parent()
+
+        assert props.s5 == PropertyDescriptor.IGNORED
+        assert !props.s5.unindexed()
+        assert props.s5.ignore()
+        assert !props.s5.key()
+        assert !props.s5.version()
+        assert !props.s5.parent()
+
+        assert props.s6 == PropertyDescriptor.PARENT
+        assert !props.s6.unindexed()
+        assert !props.s6.ignore()
+        assert !props.s6.key()
+        assert !props.s6.version()
+        assert props.s6.parent()
+
+        assert ReflectionEntityCoercion.findKey(props) == 's3'
+    }
 
     void testObjectToEntityConversion() {
         def p1 = new Person('glaforge', 'Guillaume', 'Laforge', 'Groovy Project Manager')
@@ -192,11 +241,10 @@ class P1 {
     @Parent com.google.appengine.api.datastore.Key s6
 }
 
-//@groovyx.gaelyk.datastore.Entity(unindexed = false)
-//class P2 {
-//    String s1
-//    @Indexed s2
-//}
+class P2 extends P1{
+    String s10
+    @Unindexed s11
+}
 
 @Canonical
 class Person {

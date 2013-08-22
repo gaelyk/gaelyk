@@ -131,30 +131,9 @@ class QueryBuilder {
                 }
                 QueryResultIterator<Entity> entitiesIterator = preparedQuery.asQueryResultIterator(options)
 
-                return new QueryResultIterator() {
-                    boolean hasNext() {
-                        entitiesIterator.hasNext()
-                    }
-
-                    Object next() {
-                        def entity = entitiesIterator.next()
-                        return entity.asType(coercedClass)
-                    }
-
-                    void remove() {
-                        throw new UnsupportedOperationException("Forbidden to call remove() on this Query DSL results iterator")
-                    }
-
-                    Cursor getCursor() {
-                        entitiesIterator.cursor
-                    }
-
-                    List getIndexList() {
-                        entitiesIterator.indexList
-                    }
-                }
+                return CoercedQueryResultIterator.coerce(query, preparedQuery.asQueryResultIterator(options), coercedClass)
             } else {
-                return CoercedQueryResultList.coerce(preparedQuery.asQueryResultList(options), coercedClass)
+                return CoercedQueryResultList.coerce(query, preparedQuery.asQueryResultList(options), coercedClass)
             }
         } else {
             if(restartAutomatically && iterable && queryType == QueryType.ALL){
@@ -163,30 +142,9 @@ class QueryBuilder {
             def result = iterable ? preparedQuery.asQueryResultIterator(options) : preparedQuery.asQueryResultList(options)
             if (queryType == QueryType.KEYS) {
                 if (iterable) {
-                    QueryResultIterator iter = new QueryResultIterator() {
-                        boolean hasNext() {
-                            ((QueryResultIterator)result).hasNext()
-                        }
-
-                        Object next() {
-                            ((Entity)((QueryResultIterator)result).next()).key
-                        }
-
-                        void remove() {
-                            throw new UnsupportedOperationException("Forbidden to call remove() on this Query DSL results iterator")
-                        }
-                        
-                        Cursor getCursor() {
-                            ((QueryResultIterator)result).cursor
-                        }
-                        
-                        List getIndexList() {
-                            ((QueryResultIterator)result).indexList
-                        }
-                    }
-                    return restartAutomatically ? SelfRestartingQueryResultIterator.from(this) : iter
+                    return restartAutomatically ? SelfRestartingQueryResultIterator.from(this) : KeyQueryResultIterator.from(query, result)
                 } else {
-                    return CoercedQueryResultList.coerce(result, Key)
+                    return CoercedQueryResultList.coerce(query, result, Key)
                 }
             } else {
                 return result

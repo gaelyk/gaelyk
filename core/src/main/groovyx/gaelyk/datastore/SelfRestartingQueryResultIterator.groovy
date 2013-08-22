@@ -1,12 +1,12 @@
 package groovyx.gaelyk.datastore
 
-import java.util.List;
-
-import groovy.transform.CompileStatic;
+import groovy.transform.CompileStatic
 import groovyx.gaelyk.query.QueryBuilder
+import groovyx.gaelyk.query.QueryResultIteratorWithQuery
 
 import com.google.appengine.api.datastore.Cursor
-import com.google.appengine.api.datastore.DatastoreFailureException;
+import com.google.appengine.api.datastore.Index
+import com.google.appengine.api.datastore.Query
 import com.google.appengine.api.datastore.QueryResultIterator
 
 @CompileStatic
@@ -15,17 +15,19 @@ import com.google.appengine.api.datastore.QueryResultIterator
  * @author Vladimir Orany
  *
  */
-class SelfRestartingQueryResultIterator implements QueryResultIterator {
+class SelfRestartingQueryResultIterator<T> implements QueryResultIteratorWithQuery<T> {
 
-    final QueryBuilder query
-    private QueryResultIterator currentIterator
+    private final Query query
+    private final QueryBuilder queryBuilder
+    private QueryResultIteratorWithQuery<T> currentIterator
     private Cursor currentCursor
 
     private SelfRestartingQueryResultIterator(QueryBuilder builder){
-        query = builder
+        queryBuilder = builder
+        query = builder.createQuery()
         // disable auto restart for the builder otherwise we end up in loop
         builder.restart null
-        currentIterator = query.iterate() as QueryResultIterator
+        currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery
     }
 
     /**
@@ -44,8 +46,8 @@ class SelfRestartingQueryResultIterator implements QueryResultIterator {
             return next
         } catch(e){
             if(e.message?.contains('Please restart it with the last cursor')){
-                query.startAt(currentCursor)
-                currentIterator = query.iterate() as QueryResultIterator
+                queryBuilder.startAt(currentCursor)
+                currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery
                 return next()
             }
         }
@@ -56,8 +58,8 @@ class SelfRestartingQueryResultIterator implements QueryResultIterator {
             return currentIterator.hasNext()
         } catch(e){
             if(e.message?.contains('Please restart it with the last cursor')){
-                query.startAt(currentCursor)
-                currentIterator = query.iterate() as QueryResultIterator
+                queryBuilder.startAt(currentCursor)
+                currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery
                 return hasNext()
             }
         }
@@ -72,22 +74,26 @@ class SelfRestartingQueryResultIterator implements QueryResultIterator {
             return currentIterator.getCursor()
         } catch(e){
             if(e.message?.contains('Please restart it with the last cursor')){
-                query.startAt(currentCursor)
-                currentIterator = query.iterate() as QueryResultIterator
+                queryBuilder.startAt(currentCursor)
+                currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery
                 return getCursor()
             }
         }
     }
 
-    @Override public List getIndexList() {
+    @Override public List<Index> getIndexList() {
         try {
             return currentIterator.getIndexList()
         } catch(e){
             if(e.message?.contains('Please restart it with the last cursor')){
-                query.startAt(currentCursor)
-                currentIterator = query.iterate() as QueryResultIterator
+                queryBuilder.startAt(currentCursor)
+                currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery
                 return getIndexList()
             }
         }
+    }
+    
+    @Override public Query getQuery() {
+        return query;
     }
 }

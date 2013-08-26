@@ -142,7 +142,7 @@ class QueryBuilder {
             def result = iterable ? preparedQuery.asQueryResultIterator(options) : preparedQuery.asQueryResultList(options)
             if (queryType == QueryType.KEYS) {
                 if (iterable) {
-                    return restartAutomatically ? SelfRestartingQueryResultIterator.from(this) : KeyQueryResultIterator.from(query, result)
+                    return restartAutomatically ? SelfRestartingQueryResultIterator.from(this) : CoercedQueryResultIterator.coerce(query, result, Key)
                 } else {
                     return CoercedQueryResultList.coerce(query, result, Key)
                 }

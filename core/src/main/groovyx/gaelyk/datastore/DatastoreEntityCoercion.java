@@ -89,10 +89,14 @@ public class DatastoreEntityCoercion {
     private static <E extends DatastoreEntity<?>> void setEntityProperty(Entity en, E dsEntity, String propertyName) {
         Object value = en.getProperty(propertyName);
         if (value instanceof Text) {
-            dsEntity.setProperty(propertyName, ((Text) value).getValue());
-        } else {
+            value = ((Text) value).getValue();
+        } 
+        try {
             dsEntity.setProperty(propertyName, value);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Problem setting value '" + value + "' to property '" + propertyName + "' of entity " + dsEntity.getClass().getSimpleName(), e);
         }
+
     }
     
 }

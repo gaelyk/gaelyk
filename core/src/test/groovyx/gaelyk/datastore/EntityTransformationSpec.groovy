@@ -61,6 +61,40 @@ class EntityTransformationSpec extends Specification {
         then:
         thrown(EntityNotFoundException)
     }
+    
+    @IgnoreRest
+    def "Null safe setters"(){
+        def obj = newShell().evaluate '''
+            @groovyx.gaelyk.datastore.Entity
+            @groovy.transform.CompileStatic
+            class SomePOGO {
+                @groovyx.gaelyk.datastore.Indexed double val = 15
+            }
+
+            new SomePOGO()
+        '''
+
+        expect:
+        obj.val == 15
+
+        when:
+        obj.val = null
+        
+        then:
+        obj.val == 15
+        
+        when:
+        obj.val = 10D
+
+        then:
+        obj.val == 10D
+        
+        when:
+        obj.val = Double.valueOf(12)
+        
+        then:
+        obj.val == 12
+    }
 
     def "Delete by key works"(){
         def obj = newShell().evaluate '''
@@ -284,7 +318,6 @@ class EntityTransformationSpec extends Specification {
         obj.getDatastoreParent() == null
     }
     
-    @IgnoreRest
     def "Test inheritance"(){
         def obj = newShell().evaluate '''
                 @groovy.transform.CompileStatic

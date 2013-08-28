@@ -31,6 +31,7 @@ import org.codehaus.groovy.ast.PropertyNode
 import org.codehaus.groovy.ast.builder.AstBuilder
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.BinaryExpression
+import org.codehaus.groovy.ast.expr.BooleanExpression;
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.Expression
@@ -38,11 +39,15 @@ import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
+import org.codehaus.groovy.ast.stmt.EmptyStatement;
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
+import org.codehaus.groovy.ast.stmt.IfStatement;
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.syntax.SyntaxException
+import org.codehaus.groovy.syntax.Token;
+import org.codehaus.groovy.syntax.Types;
 import org.codehaus.groovy.transform.AbstractASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
@@ -337,6 +342,11 @@ class EntityTransformation extends AbstractASTTransformation {
             if(ignored){
                 return
             }
+            
+            if(ClassHelper.isPrimitiveType(prop.type)) {
+                generateNullSafeSetter(parent, prop)
+            }
+            
             boolean hasUnindexedAnno = annos.any { AnnotationNode a ->
                 a.classNode == unindexedAnnoClassNode
             }
@@ -378,6 +388,28 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(new VariableExpression('DATASTORE_UNINDEXED_PROPERTIES'))
                 )
+    }
+    
+    private void generateNullSafeSetter(ClassNode parent, PropertyNode property) {
+        String name = "set${property.name.capitalize()}"
+        Parameter[] parameters = [new Parameter(ClassHelper.getWrapper(property.type), property.name)] as Parameter[]
+        if(parent.hasMethod(name, parameters)) {
+            // method already exist
+            return
+        }
+        
+        parent.addMethod new MethodNode(
+            name,
+            Modifier.PUBLIC,
+            ClassHelper.VOID_TYPE,
+            parameters,
+            ClassNode.EMPTY_ARRAY,
+            new IfStatement(
+                new BooleanExpression(new AstBuilder().buildFromString("${property.name} != null")[0].statements[0].expression),
+                new ExpressionStatement(new AstBuilder().buildFromString("this.${property.name} = ${property.name}")[0].statements[0].expression), 
+                EmptyStatement.INSTANCE
+           )
+        )
     }
 
     private void eachPropertyIncludingSuper(ClassNode parent, Closure iterator, List<String> alreadyProcessed = []){

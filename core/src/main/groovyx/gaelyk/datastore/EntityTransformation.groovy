@@ -45,6 +45,7 @@ import org.codehaus.groovy.ast.stmt.IfStatement;
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
+import org.codehaus.groovy.control.messages.WarningMessage;
 import org.codehaus.groovy.syntax.SyntaxException
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
@@ -395,6 +396,11 @@ class EntityTransformation extends AbstractASTTransformation {
         Parameter[] parameters = [new Parameter(ClassHelper.getWrapper(property.type), property.name)] as Parameter[]
         if(parent.hasMethod(name, parameters)) {
             // method already exist
+            return
+        }
+        
+        if(parent != property.declaringClass) {
+            // it needs to be property of the declaring class
             return
         }
         

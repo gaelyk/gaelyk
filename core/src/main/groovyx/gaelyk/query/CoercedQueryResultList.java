@@ -1,9 +1,12 @@
 package groovyx.gaelyk.query;
 
+import groovy.lang.Closure;
 import groovyx.gaelyk.extensions.DatastoreExtensions;
 
 import java.io.Serializable;
 import java.util.AbstractList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
@@ -23,6 +26,7 @@ import com.google.appengine.api.datastore.QueryResultList;
  */
 class CoercedQueryResultList<T> extends AbstractList<T> implements QueryResultListWithQuery<T>, Serializable {
 
+    private static final String ERROR_MESSAGE = "You cannot modify this list. Copy the list by calling .collect() method first or use non-mutating version if you want do so";
     private static final long               serialVersionUID = 7330407587796412338L;
     private final Query                     query;
     private final QueryResultList<Entity>   originalList;
@@ -68,18 +72,15 @@ class CoercedQueryResultList<T> extends AbstractList<T> implements QueryResultLi
     }
     
     @Override public T set(int index, T element) {
-        throw new UnsupportedOperationException("You cannot modify this list. " +
-        		"Copy the list by calling .collect() method first if you want do so"); 
+        throw new UnsupportedOperationException(ERROR_MESSAGE); 
     }
     
     @Override public void add(int index, T element) {
-        throw new UnsupportedOperationException("You cannot modify this list. " +
-                "Copy the list by calling .collect() method first if you want do so"); 
+        throw new UnsupportedOperationException(ERROR_MESSAGE); 
     }
     
     @Override public T remove(int index) {
-        throw new UnsupportedOperationException("You cannot modify this list. " +
-                "Copy the list by calling .collect() method first if you want do so"); 
+        throw new UnsupportedOperationException(ERROR_MESSAGE); 
     }
     
     public List<T> collect() {
@@ -87,7 +88,32 @@ class CoercedQueryResultList<T> extends AbstractList<T> implements QueryResultLi
     }
     
     
+    public Collection<T> unique() {
+        return DefaultGroovyMethods.unique(this, false);
+    }
     
+    public Collection<T> unique(Closure closure) {
+        return DefaultGroovyMethods.unique(this, false, closure);
+    }
     
+    public Collection<T> unique(Comparator<T> comparator) {
+        return DefaultGroovyMethods.unique(this, false, comparator);
+    }
+    
+    public List<T> sort() {
+        return DefaultGroovyMethods.sort(this, false);
+    }
+    
+    public List<T> sort(Closure closure) {
+        return DefaultGroovyMethods.sort(this, false, closure);
+    }
+    
+    public List<T> sort(Comparator<T> comparator) {
+        return DefaultGroovyMethods.sort(this, false, comparator);
+    }
+    
+    public List<T> reverse() {
+        return DefaultGroovyMethods.reverse(this, false);
+    } 
 
 }

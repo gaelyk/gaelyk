@@ -7,6 +7,7 @@ import java.lang.reflect.Field
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer
 
+import spock.lang.IgnoreRest;
 import spock.lang.Specification
 
 import com.google.appengine.api.datastore.EntityNotFoundException
@@ -283,11 +284,13 @@ class EntityTransformationSpec extends Specification {
         obj.getDatastoreParent() == null
     }
     
+    @IgnoreRest
     def "Test inheritance"(){
         def obj = newShell().evaluate '''
                 @groovy.transform.CompileStatic
                 abstract class MyPogoSuper10 {
                     String superProp
+                    String ignoredInChild
 
                     abstract boolean isLive()
                 }
@@ -302,10 +305,15 @@ class EntityTransformationSpec extends Specification {
                     String test3
 
                     boolean live
+                    @groovyx.gaelyk.datastore.Ignore String ignoredInChild
 
                     String getThisMustBeIgnored(){
                         "IGNORED"
                     }
+
+                    String getVirtualProperty() {}
+                    void   setVirtualProperty(String s) {}
+
                 }
                 
                 new MyPogo10(id: 10, test1: "one", test2: "two", test3: "three")'''

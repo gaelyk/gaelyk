@@ -380,11 +380,12 @@ class EntityTransformation extends AbstractASTTransformation {
                 )
     }
 
-    private void eachPropertyIncludingSuper(ClassNode parent, Closure iterator){
-        parent.properties.each iterator
+    private void eachPropertyIncludingSuper(ClassNode parent, Closure iterator, List<String> alreadyProcessed = []){
+        parent.properties.findAll{ !(it.name in alreadyProcessed) }.each iterator
+        alreadyProcessed.addAll(parent.properties*.name)
         ClassNode superNode = parent.superClass
         if(superNode && superNode != ClassHelper.OBJECT_TYPE){
-            eachPropertyIncludingSuper(superNode, iterator)
+            eachPropertyIncludingSuper(superNode, iterator, alreadyProcessed)
         }
     }
 

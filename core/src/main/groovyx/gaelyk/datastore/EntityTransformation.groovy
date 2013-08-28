@@ -344,10 +344,6 @@ class EntityTransformation extends AbstractASTTransformation {
                 return
             }
             
-            if(ClassHelper.isPrimitiveType(prop.type)) {
-                generateNullSafeSetter(parent, prop)
-            }
-            
             boolean hasUnindexedAnno = annos.any { AnnotationNode a ->
                 a.classNode == unindexedAnnoClassNode
             }
@@ -389,33 +385,6 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(new VariableExpression('DATASTORE_UNINDEXED_PROPERTIES'))
                 )
-    }
-    
-    private void generateNullSafeSetter(ClassNode parent, PropertyNode property) {
-        String name = "set${property.name.capitalize()}"
-        Parameter[] parameters = [new Parameter(ClassHelper.getWrapper(property.type), property.name)] as Parameter[]
-        if(parent.hasMethod(name, parameters)) {
-            // method already exist
-            return
-        }
-        
-        if(parent != property.declaringClass) {
-            // it needs to be property of the declaring class
-            return
-        }
-        
-        parent.addMethod new MethodNode(
-            name,
-            Modifier.PUBLIC,
-            ClassHelper.VOID_TYPE,
-            parameters,
-            ClassNode.EMPTY_ARRAY,
-            new IfStatement(
-                new BooleanExpression(new AstBuilder().buildFromString("${property.name} != null")[0].statements[0].expression),
-                new ExpressionStatement(new AstBuilder().buildFromString("this.${property.name} = ${property.name}")[0].statements[0].expression), 
-                EmptyStatement.INSTANCE
-           )
-        )
     }
 
     private void eachPropertyIncludingSuper(ClassNode parent, Closure iterator, List<String> alreadyProcessed = []){

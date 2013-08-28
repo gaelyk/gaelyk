@@ -87,6 +87,11 @@ public class DatastoreEntityCoercion {
     }
 
     private static <E extends DatastoreEntity<?>> void setEntityProperty(Entity en, E dsEntity, String propertyName) {
+        if (!en.hasProperty(propertyName)) {
+            // the property doesn't have the property set so let it blank
+            // this is important for keeping default values
+            return;
+        }
         Object value = en.getProperty(propertyName);
         if (value instanceof Text) {
             value = ((Text) value).getValue();

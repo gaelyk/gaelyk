@@ -62,7 +62,6 @@ class EntityTransformationSpec extends Specification {
         thrown(EntityNotFoundException)
     }
     
-    @IgnoreRest
     def "Null safe setters"(){
         def obj = newShell().evaluate '''
             @groovyx.gaelyk.datastore.Entity

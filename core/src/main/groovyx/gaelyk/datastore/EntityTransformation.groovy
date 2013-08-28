@@ -325,23 +325,26 @@ class EntityTransformation extends AbstractASTTransformation {
         List<String> unindexed = []
 
         eachPropertyIncludingSuper(parent) { PropertyNode prop ->
-            if(Modifier.isStatic(prop.modifiers)) {
+            if(Modifier.isStatic(prop.modifiers) || Modifier.isFinal(prop.modifiers)) {
                 return
             }
-            boolean ignored = prop.field.annotations.any { AnnotationNode a ->
+            
+            def annos = [prop.annotations, prop.field.annotations].flatten()
+            
+            boolean ignored = annos.any { AnnotationNode a ->
                 a.classNode == ignoreAnnoClassNode || a.classNode == versionAnnoClassNode || a.classNode == keyAnnoClassNode || a.classNode == parentAnnoClassNode
-            }
+            } 
             if(ignored){
                 return
             }
-            boolean hasUnindexedAnno = prop.field.annotations.any { AnnotationNode a ->
+            boolean hasUnindexedAnno = annos.any { AnnotationNode a ->
                 a.classNode == unindexedAnnoClassNode
             }
             if(hasUnindexedAnno){
                 unindexed << prop.name
                 return
             }
-            boolean hasIndexedAnno = prop.field.annotations.any { AnnotationNode a ->
+            boolean hasIndexedAnno = annos.any { AnnotationNode a ->
                 a.classNode == indexedAnnoClassNode
             }
             if(hasIndexedAnno){

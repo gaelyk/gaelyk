@@ -2,8 +2,11 @@ package groovyx.gaelyk.query;
 
 import groovyx.gaelyk.extensions.DatastoreExtensions;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.AbstractList;
 import java.util.List;
+
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.Entity;
@@ -18,21 +21,20 @@ import com.google.appengine.api.datastore.QueryResultList;
  * 
  * @param <T> coerced class
  */
-class CoercedQueryResultList<T> extends ArrayList<T> implements QueryResultListWithQuery<T> {
+class CoercedQueryResultList<T> extends AbstractList<T> implements QueryResultListWithQuery<T>, Serializable {
 
-    private static final long serialVersionUID = 7330407587796412338L;
-    private final Cursor      cursor;
-    private final List<Index> indexList;
-    private final Query       query;
+    private static final long               serialVersionUID = 7330407587796412338L;
+    private final Query                     query;
+    private final QueryResultList<Entity>   originalList;
+    private final Class<T>                  coercedClass;
 
     private CoercedQueryResultList(Query query, QueryResultList<Entity> originalList, Class<T> coercedClass){
-        super(originalList.size());
-        for (Entity entity : originalList){
-             add(coercedClass.cast(DatastoreExtensions.asType(entity, coercedClass)));
+        if(originalList == null) {
+            throw new IllegalArgumentException("Original list cannot be null!");
         }
-        this.cursor = originalList.getCursor();
-        this.indexList = originalList.getIndexList();
-        this.query = query;
+        this.query          = query;
+        this.originalList   = originalList;
+        this.coercedClass   = coercedClass;
     }
 
     /**
@@ -46,15 +48,46 @@ class CoercedQueryResultList<T> extends ArrayList<T> implements QueryResultListW
     }
 
     @Override public Cursor getCursor() {
-        return cursor;
+        return originalList.getCursor();
     }
 
     @Override public List<Index> getIndexList() {
-        return indexList;
+        return originalList.getIndexList();
     }
     
     @Override public Query getQuery() {
         return query;
     }
+
+    @Override public T get(int index) {
+        return coercedClass.cast(DatastoreExtensions.asType(originalList.get(index), coercedClass));
+    }
+
+    @Override public int size() {
+        return originalList.size();
+    }
+    
+    @Override public T set(int index, T element) {
+        throw new UnsupportedOperationException("You cannot modify this list. " +
+        		"Copy the list by calling .collect() method first if you want do so"); 
+    }
+    
+    @Override public void add(int index, T element) {
+        throw new UnsupportedOperationException("You cannot modify this list. " +
+                "Copy the list by calling .collect() method first if you want do so"); 
+    }
+    
+    @Override public T remove(int index) {
+        throw new UnsupportedOperationException("You cannot modify this list. " +
+                "Copy the list by calling .collect() method first if you want do so"); 
+    }
+    
+    public List<T> collect() {
+        return DefaultGroovyMethods.collect(this);
+    }
+    
+    
+    
+    
 
 }

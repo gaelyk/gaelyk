@@ -17,6 +17,8 @@ public interface Coercable<T> {
      * 
      * Usually called on empty new object.
      * 
+     * Calling this method shouldn't change its owner anyway.
+     * 
      * Never use {@link PogoEntityCoercion} directly in this class but 
      * you can use {@link DatastoreEntityCoercion} for classes implementing
      * {@link DatastoreEntity} or {@link ReflectionEntityCoercion} for the rest.
@@ -30,12 +32,16 @@ public interface Coercable<T> {
     /**
      * Coerce self to the Entity.
      * 
+     * Calling this method shouldn't change its owner anyway.
+     * 
      * Never use {@link PogoEntityCoercion} directly in this class but 
      * you can use {@link DatastoreEntityCoercion} for classes implementing
      * {@link DatastoreEntity} or {@link ReflectionEntityCoercion} for the rest.
      * 
+     * @param t source object
+     * 
      * @return entity filled with using this object
      */
-    com.google.appengine.api.datastore.Entity coerce();
+    com.google.appengine.api.datastore.Entity coerce(T t);
 
 }

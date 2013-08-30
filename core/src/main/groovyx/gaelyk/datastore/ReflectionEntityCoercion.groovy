@@ -197,10 +197,9 @@ class ReflectionEntityCoercion {
      * @param clazz the class of the object to return
      * @return an instance of the class parameter
      */
-    static Object convert(Entity e, Class clazz) {
+    static convert(Entity e, Class clazz, o = clazz.newInstance()) {
         def entityProps = e.getProperties()
-
-        def o = clazz.newInstance()
+        
         if (o instanceof Map) {
             entityProps.each { k, v ->
                 (o as Map)[k] = v

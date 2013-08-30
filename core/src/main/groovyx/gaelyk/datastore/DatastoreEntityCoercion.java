@@ -57,9 +57,13 @@ public class DatastoreEntityCoercion {
         }
         return newValue;
     }
-
+    
     @SuppressWarnings("unchecked") public static <E extends DatastoreEntity<?>> E convert(Entity en, Class<E> dsEntityClass) throws InstantiationException, IllegalAccessException{
-        E dsEntity = dsEntityClass.newInstance();
+        return convert(en, dsEntityClass, dsEntityClass.newInstance());
+    }
+
+    @SuppressWarnings("unchecked") public static <E extends DatastoreEntity<?>> E convert(Entity en, Class<E> dsEntityClass, E dsEntity) throws InstantiationException, IllegalAccessException{
+        
         if(dsEntity.hasDatastoreKey()){
             if(dsEntity.hasDatastoreNumericKey()){
                 ((DatastoreEntity<Long>)dsEntity).setDatastoreKey(en.getKey().getId());

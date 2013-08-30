@@ -27,7 +27,7 @@ import com.google.appengine.api.datastore.QueryResultList;
 class CoercedQueryResultList<T> extends AbstractList<T> implements QueryResultListWithQuery<T>, Serializable {
 
     private static final String ERROR_MESSAGE = "You cannot modify this list. Copy the list by calling .collect() method first or use non-mutating version if you want do so";
-    private static final long               serialVersionUID = 7330407587796412338L;
+    private static final long serialVersionUID = 3169182603336643619L;
     private final Query                     query;
     private final QueryResultList<Entity>   originalList;
     private final Class<T>                  coercedClass;

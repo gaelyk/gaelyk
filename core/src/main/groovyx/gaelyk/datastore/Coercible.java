@@ -10,7 +10,7 @@ package groovyx.gaelyk.datastore;
  *
  * @param <T> implememnting type
  */
-public interface Coercable<T> {
+public interface Coercible<T> {
     
     /**
      * Coerce self from the given entity.

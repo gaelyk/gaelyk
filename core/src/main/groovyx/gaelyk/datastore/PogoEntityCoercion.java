@@ -6,8 +6,8 @@ import com.google.appengine.api.datastore.Key;
 public class PogoEntityCoercion {
 
     public static <T> Entity convert(T dsEntity){
-        if (dsEntity instanceof Coercable<?>){
-            return ((Coercable<T>) dsEntity).coerce(dsEntity); 
+        if (dsEntity instanceof Coercible<?>){
+            return ((Coercible<T>) dsEntity).coerce(dsEntity); 
         }
         if (dsEntity instanceof DatastoreEntity<?>){
             return DatastoreEntityCoercion.convert((DatastoreEntity<?>) dsEntity);
@@ -22,8 +22,8 @@ public class PogoEntityCoercion {
         if (Key.class.equals(cls)){
             return (E) en.getKey();
         }
-        if (Coercable.class.isAssignableFrom(cls)) {
-            return ((Coercable<E>)cls.newInstance()).coerce(en);
+        if (Coercible.class.isAssignableFrom(cls)) {
+            return ((Coercible<E>)cls.newInstance()).coerce(en);
         }
         if (DatastoreEntity.class.isAssignableFrom(cls)){
             return (E) DatastoreEntityCoercion.convert(en,(Class<? extends DatastoreEntity>) cls);

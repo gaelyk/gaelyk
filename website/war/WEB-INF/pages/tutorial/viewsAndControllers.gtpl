@@ -50,8 +50,7 @@ A special servlet binding gives you direct access to some implicit variables tha
         <tt>application</tt> : same as <code>context</code>
     </li>
     <li>
-        <tt>session</tt> : shorthand for <code>request.getSession(false)</code> (can be null) which returns an
-        <a href="http://java.sun.com/javaee/5/docs/api/javax/servlet/http/HttpSession.html"><code>HttpSession</code></a>
+        <tt>session</tt> : the lazy <a href="http://java.sun.com/javaee/5/docs/api/javax/servlet/http/HttpSession.html"><code>HttpSession</code></a> which is never <code>null</code>
     </li>
     <li>
         <tt>params</tt> : map of all form parameters (can be empty)

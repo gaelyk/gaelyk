@@ -137,6 +137,13 @@ class BindingEnhancerTest extends GroovyTestCase {
         assert binding.logService        instanceof LogService
         assert binding.search            instanceof SearchService
     }
+    
+    /**
+     * Lazy session is the default session.
+     */
+    void testLazySessionPresent() {
+        assert binding.session           instanceof LazySession
+    }
 
     void testGaelykVersionPresent() {
         assert binding.app.gaelyk.version ==~ /\d+\.\d+(\.\d+)?/

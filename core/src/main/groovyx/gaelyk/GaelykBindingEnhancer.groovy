@@ -127,6 +127,9 @@ class GaelykBindingEnhancer {
                         longitude: latlong[1],
                 ])
             }
+            if (!binding.hasVariable('session') || binding.hasVariable('session') && !binding.getVariable('session')) {
+                binding.setVariable('session', new LazySession(req as HttpServletRequest));
+            }
         }
     }
 

@@ -38,11 +38,23 @@ public class DatastoreEntityCoercion {
             entity = new Entity(kind);
         }
         
-        for(String propertyName : dsEntity.getDatastoreIndexedProperties()){
-            entity.setProperty(propertyName, transformValueForStorage(dsEntity.getProperty(propertyName)));
+        for (String propertyName : dsEntity.getDatastoreIndexedProperties()) {
+            Object value = dsEntity.getProperty(propertyName);
+            try {
+                entity.setProperty(propertyName, transformValueForStorage(dsEntity.getProperty(propertyName)));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Problem setting value '" + value + "' to indexed property '" + propertyName + "' of entity "
+                        + dsEntity.getClass().getSimpleName(), e);
+            }
         }
-        for(String propertyName : dsEntity.getDatastoreUnindexedProperties()){
-            entity.setUnindexedProperty(propertyName, transformValueForStorage(dsEntity.getProperty(propertyName)));
+        for (String propertyName : dsEntity.getDatastoreUnindexedProperties()) {
+            Object value = dsEntity.getProperty(propertyName);
+            try {
+                entity.setUnindexedProperty(propertyName, transformValueForStorage(value));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Problem setting value '" + value + "' to unindexed property '" + propertyName + "' of entity "
+                        + dsEntity.getClass().getSimpleName(), e);
+            }
         }
         
         return entity;

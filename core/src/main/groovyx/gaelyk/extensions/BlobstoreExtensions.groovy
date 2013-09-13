@@ -26,6 +26,7 @@ import com.google.appengine.api.blobstore.ByteRange
 import com.google.appengine.api.images.Image
 import com.google.appengine.api.images.ImagesServiceFactory
 import com.google.appengine.api.images.ImagesService
+import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.apphosting.api.ApiProxy
 import com.google.appengine.api.images.ImagesServiceFailureException
 import com.google.appengine.api.blobstore.BlobstoreService
@@ -270,7 +271,7 @@ class BlobstoreExtensions {
         while (true) {
             Exception ex = null
             try {
-                return images.getServingUrl(blobKey)
+                return images.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey))
             } catch (ApiProxy.ApiDeadlineExceededException adee) {
                 ex = adee
             } catch (IllegalArgumentException iae) {

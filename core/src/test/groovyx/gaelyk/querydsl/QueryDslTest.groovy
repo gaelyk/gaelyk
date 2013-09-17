@@ -7,6 +7,8 @@ import org.codehaus.groovy.tools.ast.TransformTestHelper
 import groovyx.gaelyk.query.QueryBuilder;
 import groovyx.gaelyk.query.QueryDslTransformation
 import org.codehaus.groovy.control.CompilePhase
+
+import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
@@ -113,6 +115,7 @@ class QueryDslTest extends GroovyTestCase {
                             select all from persons where alive
                         ''') ==
                 'SELECT * FROM persons WHERE alive = true'
+        
 
 
     }
@@ -534,5 +537,50 @@ class QueryDslTest extends GroovyTestCase {
 
         QueryBuilder builder = clazz.newInstance().run()
         assert builder.createQuery().kind == 'Kind'
+    }
+    
+    void testPaginate() {
+        QueryBuilder query = new QueryBuilder()
+        
+        assert !query.@options.limit
+        assert !query.@options.offset
+        assert !query.@options.chunkSize
+        assert !query.@options.startCursor
+        
+        query = new QueryBuilder().paginate([:])
+        
+        assert  query.@options.limit     == 100
+        assert !query.@options.offset
+        assert !query.@options.chunkSize
+        assert !query.@options.startCursor
+        
+        query = new QueryBuilder().paginate(limit: "10")
+        
+        assert  query.@options.limit     == 10
+        assert !query.@options.offset
+        assert  query.@options.chunkSize == 10
+        assert !query.@options.startCursor
+        
+        query = new QueryBuilder().paginate(limit: "10", offset: "20")
+        
+        assert  query.@options.limit     == 10
+        assert  query.@options.offset    == 20
+        assert  query.@options.chunkSize == 10
+        assert !query.@options.startCursor
+        
+        query = new QueryBuilder().paginate(limit: "10", cursor: "ExQ")
+        
+        assert  query.@options.limit     == 10
+        assert !query.@options.offset
+        assert  query.@options.chunkSize == 10
+        assert  query.@options.startCursor.toWebSafeString() == "ExQ"
+        
+        query = new QueryBuilder().paginate(limit: "10", cursor: "ExQ", offset: 20)
+        
+        assert  query.@options.limit         == 10
+        assert !query.@options.offset
+        assert  query.@options.chunkSize     == 10
+        assert  query.@options.startCursor.toWebSafeString() == "ExQ"
+        
     }
 }

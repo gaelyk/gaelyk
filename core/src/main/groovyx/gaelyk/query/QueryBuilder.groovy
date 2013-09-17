@@ -535,4 +535,42 @@ class QueryBuilder {
         return this
     }
     
+    /**
+     * Uses usually user supplied parameter map.
+     * 
+     * <pre><code>
+     *  if (params.limit) {
+     *          limit (params.limit as int)
+     *          chunkSize (params.limit as int)
+     *      }
+     *      
+     *      if (params.cursor) {
+     *          startAt (params.cursor as String)
+     *      } else if (params.offset) {
+     *          offset (params.offset as int)
+     *      }
+     * </code></pre>
+     * It also sets the max page to 100 to prevent DDoS
+     * or any other user supplied value.
+     * 
+     * @param params map containing one of more of following keys: limit, offset, cursor
+     * @param maxPage maximum (or default) limit 
+     */
+    QueryBuilder paginate(Map params, int maxPage = 100) {
+        if (params.limit) {
+            int theLimit = Math.min(params.limit as int, maxPage)
+            limit theLimit
+            chunkSize theLimit
+        } else {
+            limit maxPage
+        }
+        
+        if (params.cursor) {
+            startAt (params.cursor as String)
+        } else if (params.offset) {
+            offset (params.offset as int)
+        }
+        this
+    }
+    
 }

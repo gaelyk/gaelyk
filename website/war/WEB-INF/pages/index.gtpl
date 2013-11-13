@@ -200,6 +200,12 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
         Custom Twitter frontend
         </a>
     </div>
+    <div class="pic-frame">
+        <a href="http://www.mintyduds.com/">
+        <img src="/images/sightings/small/mintyduds.png" alt="Minty Duds" ><br/>
+        Men's Fashion Startup
+        </a>
+    </div>
 </div>
 
 <script type="text/javascript">

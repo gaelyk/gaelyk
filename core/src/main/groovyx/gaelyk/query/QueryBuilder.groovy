@@ -557,7 +557,7 @@ class QueryBuilder {
      * @param maxPage maximum (or default) limit 
      */
     QueryBuilder paginate(Map params, int maxPage = 100) {
-        if (params.limit) {
+        if (params.limit && (params.limit as int) > 0) {
             int theLimit = Math.min(params.limit as int, maxPage)
             limit theLimit
             chunkSize theLimit

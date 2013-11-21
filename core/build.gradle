@@ -36,6 +36,10 @@ sourceSets {
     }
 }
 
+configurations {
+    jansi.extendsFrom(compile)
+}
+
 dependencies {
     compile "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}", {
         force = true
@@ -56,6 +60,8 @@ dependencies {
     testCompile 'cglib:cglib-nodep:2.2.2'
 
     testCompile fileTree(dir: 'testLibs', include: ['gaelyk-resources-0.1.1-SNAPSHOT.jar'])
+    
+    jansi 'org.fusesource.jansi:jansi:1.11'
 }
 
 jar {
@@ -75,6 +81,7 @@ groovydoc {
     link 'http://java.sun.com/j2se/1.5.0/docs/api', 'java.,org.xml.,org.xml.'
     link 'http://code.google.com/appengine/docs/java/javadoc/', 'com.google.appengine.'
     link 'http://groovy.codehaus.org/gapi/', 'org.codehaus.groovy.,groovy.'
+    groovyClasspath = project.configurations.jansi
 }
 
 task template {

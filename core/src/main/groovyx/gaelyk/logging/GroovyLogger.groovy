@@ -38,7 +38,7 @@ class GroovyLogger {
             // ignore the JDK classes
             "java.", "javax.", "sun.",
             // Ignore Google App Engine logs
-            "com.google.",
+            "com.google.api.",
     ]
 
     /** The underlying logger used for logging */

@@ -18,6 +18,8 @@ package groovyx.gaelyk.routes
 import groovy.servlet.AbstractHttpServlet
 import groovy.transform.CompileStatic
 import groovyx.gaelyk.GaelykBindingEnhancer
+import groovyx.gaelyk.GaelykServlet;
+import groovyx.gaelyk.GaelykTemplateServlet;
 import groovyx.gaelyk.cache.CacheHandler
 import groovyx.gaelyk.logging.GroovyLogger
 import groovyx.gaelyk.plugins.PluginsHandler
@@ -137,6 +139,14 @@ class RoutesFilter implements Filter {
      */
     void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         // reload the routes in local dev mode in case the routes definition has changed since the last request
+        try {
+            doFilterInternal(servletRequest, servletResponse, filterChain)            
+        } catch (Throwable t) {
+            throw filterStackTrace(t)
+        }
+    }
+
+    private doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
             loadRoutes()
         }
@@ -216,5 +226,35 @@ class RoutesFilter implements Filter {
             uri += info
         }
         return uri
+    }
+    
+    static Throwable filterStackTrace (HttpServletRequest request, Throwable original) {
+        if (request.getParameter('stacktrace') == 'true') {
+            return original
+        }
+        Throwable cause = original
+        while (original) {
+            boolean ignoreRest = false
+            boolean first      = true
+            original.stackTrace = original.stackTrace.findAll { StackTraceElement el ->
+                if (first) {
+                    first = false
+                    return true
+                }
+                if (ignoreRest) return false
+                if (el.getClassName() in [GaelykServlet, GaelykTemplateServlet]*.name) {
+                    ignoreRest = true
+                    return false
+                }
+                for (String packageName in GroovyLogger.EXCLUDE_LIST) {
+                    if (el.className.startsWith(packageName)) {
+                        return false
+                    }
+                }
+                return true
+            }.toArray()
+            
+            cause = original.cause
+        }
     }
 }

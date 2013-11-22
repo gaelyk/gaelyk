@@ -19,6 +19,9 @@ class SearchDslAstTransformationSpec extends Specification {
 
     @Ignore
     def "Expressions are transformed to method call properly"(){
+        TimeZone old = SearchQueryStringCategory.DATE_FORMAT.timeZone
+        SearchQueryStringCategory.DATE_FORMAT.timeZone = TimeZone.getTimeZone(TimeZone.GMT_ID)
+        
         QueryBuilder builder = evaluate 'prepare', """
         select one: one, two: rating + 10
         from Image
@@ -37,6 +40,9 @@ class SearchDslAstTransformationSpec extends Specification {
         builder.queryOptions.expressionsToReturn.size()         == 2
         builder.queryOptions.expressionsToReturn[0].name        == 'one'
         builder.queryOptions.expressionsToReturn[1].expression  == 'rating + 10'
+        
+        cleanup:
+        SearchQueryStringCategory.DATE_FORMAT.timeZone = old
     }
     
     @Unroll

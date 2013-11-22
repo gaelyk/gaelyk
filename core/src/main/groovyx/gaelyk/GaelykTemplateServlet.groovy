@@ -44,11 +44,13 @@ class GaelykTemplateServlet extends TemplateServlet {
     private static final String PRECOMPILED_TEMPLATE_PREFIX = '$gtpl$'
     
     private boolean preferPrecompiled = false
+    private boolean logErrors
 
     @Override
     @CompileStatic
     void init(ServletConfig config) {
         preferPrecompiled = !GaelykBindingEnhancer.localMode || config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true')
+        logErrors = config.getInitParameter('logErrors') != 'false' && (config.getInitParameter('logErrors') == 'true')
         super.init(config)
     }
 
@@ -115,19 +117,22 @@ class GaelykTemplateServlet extends TemplateServlet {
             e = RoutesFilter.filterStackTrace(request, e)
             StringWriter sw = []
             PrintWriter pw  = [sw]
-    
-            pw.print("GaelykTemplateServlet Error: ")
-            pw.print(" template: '")
-            pw.print(getScriptUri(request))
-            getLog(request).warning(sw.toString())
-    
+                    
+            if (logErrors) {
+                pw.print("GaelykTemplateServlet Error: ")
+                pw.print(" template: '")
+                pw.print(getScriptUri(request))
+                getLog(request).warning(sw.toString())
+            }
             /*
              * Resource not found.
              */
             if (e instanceof ResourceException) {
-                pw.println("': ")
-                e.printStackTrace(pw)                
-                servletContext.log(sw.toString())
+                if (logErrors) {
+                    pw.println("': ")
+                    e.printStackTrace(pw)                
+                    servletContext.log(sw.toString())
+                }
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
             }

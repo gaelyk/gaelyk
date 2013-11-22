@@ -43,11 +43,13 @@ class GaelykServlet extends GroovyServlet {
      */
     private GroovyScriptEngine gse
     private boolean preferPrecompiled
+    private boolean logErrors
 
     @Override
     @CompileStatic
     void init(ServletConfig config) {
         preferPrecompiled = !GaelykBindingEnhancer.localMode || config.getInitParameter('preferPrecompiled') != 'false' && (config.getInitParameter('preferPrecompiled') == 'true')
+        logErrors = config.getInitParameter('logErrors') != 'false' && (config.getInitParameter('logErrors') == 'true')
         super.init(config)
         // Set up the scripting engine
         gse = createGroovyScriptEngine()
@@ -127,22 +129,26 @@ class GaelykServlet extends GroovyServlet {
             }
         } catch (Throwable e) {
             e = RoutesFilter.filterStackTrace(request, e)
+
             StringWriter sw = []
             PrintWriter pw  = [sw]
-
-            pw.print("GaelykServlet Error: ")
-            pw.print(" script: '")
-            pw.print(scriptUri)
-            
-            getLog(request).warning(sw.toString())
+                    
+            if (logErrors) {
+                pw.print("GaelykServlet Error: ")
+                pw.print(" script: '")
+                pw.print(scriptUri)
+                getLog(request).warning(sw.toString())                
+            }
 
             /*
              * Resource not found.
              */
             if (e instanceof ResourceException) {
-                pw.println("': ")
-                e.printStackTrace(pw)                
-                servletContext.log(sw.toString())
+                if (logErrors) {
+                    pw.println("': ")
+                    e.printStackTrace(pw)
+                    servletContext.log(sw.toString())
+                }
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
             }

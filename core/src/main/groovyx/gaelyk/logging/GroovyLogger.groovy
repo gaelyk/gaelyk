@@ -39,6 +39,7 @@ class GroovyLogger {
             "java.", "javax.", "sun.",
             // Ignore Google App Engine logs
             "com.google.appengine.",
+            "com.google.apphosting."
     ]
 
     /** The underlying logger used for logging */

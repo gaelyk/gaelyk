@@ -142,7 +142,7 @@ class RoutesFilter implements Filter {
         try {
             doFilterInternal(servletRequest, servletResponse, filterChain)            
         } catch (Throwable t) {
-            throw filterStackTrace(t)
+            throw filterStackTrace(servletRequest, t)
         }
     }
 
@@ -228,19 +228,14 @@ class RoutesFilter implements Filter {
         return uri
     }
     
-    static Throwable filterStackTrace (HttpServletRequest request, Throwable original) {
+    static <T extends Throwable> T filterStackTrace (ServletRequest request, T original) {
         if (request.getParameter('stacktrace') == 'true') {
             return original
         }
         Throwable cause = original
-        while (original) {
+        while (cause) {
             boolean ignoreRest = false
-            boolean first      = true
-            original.stackTrace = original.stackTrace.findAll { StackTraceElement el ->
-                if (first) {
-                    first = false
-                    return true
-                }
+            cause.stackTrace = cause.stackTrace.findAll { StackTraceElement el ->
                 if (ignoreRest) return false
                 if (el.getClassName() in [GaelykServlet, GaelykTemplateServlet]*.name) {
                     ignoreRest = true
@@ -254,7 +249,8 @@ class RoutesFilter implements Filter {
                 return true
             }.toArray()
             
-            cause = original.cause
+            cause = cause.cause
         }
+        return original
     }
 }

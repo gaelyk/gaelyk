@@ -20,6 +20,7 @@ import groovy.servlet.ServletBinding
 import groovy.transform.CompileStatic
 import groovyx.gaelyk.logging.GroovyLogger
 import groovyx.gaelyk.plugins.PluginsHandler
+import groovyx.gaelyk.routes.RoutesFilter;
 
 import javax.servlet.ServletConfig
 import javax.servlet.ServletRequest
@@ -124,7 +125,8 @@ class GaelykServlet extends GroovyServlet {
                     }
                 }
             }
-        } catch (e) {
+        } catch (Throwable e) {
+            e = RoutesFilter.filterStackTrace(request, e)
             StringWriter sw = []
             PrintWriter pw  = [sw]
 

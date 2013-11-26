@@ -1,3 +1,9 @@
+buildscript {
+    repositories { mavenCentral() }
+    dependencies { classpath "org.codehaus.groovy:groovy-docgenerator:2.1.9" }
+}
+
+
 apply from: '../common.gradle'
 
 apply plugin: 'maven'
@@ -37,7 +43,8 @@ sourceSets {
 }
 
 configurations {
-    jansi.extendsFrom(compile)
+    jansi.extendsFrom(runtime)
+    tools.extendsFrom(runtime)
 }
 
 dependencies {
@@ -50,7 +57,7 @@ dependencies {
     compile "com.google.appengine:appengine-api-labs:${ext.gaelykAppEngineVersion}"
     compile 'javax.servlet:servlet-api:2.5'
 //    groovy "org.codehaus.groovy:groovy-test:${ext.gaelykGroovyVersion}" // for tests only   
-    testCompile 'javax.servlet.jsp:jsp-api:2.2'
+    compile 'javax.servlet.jsp:jsp-api:2.2'
     testCompile 'junit:junit:4.8.2'
     testCompile "com.google.appengine:appengine-testing:${ext.gaelykAppEngineVersion}"
     testCompile "com.google.appengine:appengine-api-stubs:${ext.gaelykAppEngineVersion}"
@@ -62,6 +69,9 @@ dependencies {
     testCompile fileTree(dir: 'testLibs', include: ['gaelyk-resources-0.1.1-SNAPSHOT.jar'])
     
     jansi 'org.fusesource.jansi:jansi:1.11'
+    
+    tools project(':gaelyk-docgenerator')
+//    tools "com.thoughtworks.qdox:qdox:1.12.1"
 }
 
 jar {
@@ -219,6 +229,62 @@ if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
 //                    xml.append(newXml.toString())
 //                }
             }
+        }
+    }
+}
+
+
+task docGDK {
+    //    ext.extraDocGDKclasses = []
+    dependsOn(':gaelyk-docgenerator:build')
+    // TODO don't hard-code these
+    ext.destinationDir = "$buildDir/html/groovy-jdk"
+    inputs.files sourceSets.main.runtimeClasspath
+    outputs.dir destinationDir
+    doLast {task ->
+        try {
+            ant {
+                java(
+                    classname: "groovyx.gaelyk.tools.docs.DocGenerator", 
+                    fork: "true", 
+                    failonerror: "true",
+                    classpath: (sourceSets.main.runtimeClasspath + groovydoc.groovyClasspath + configurations.tools).asPath,
+                    errorproperty: 'edr',
+                    outputproperty: 'odr'
+                ) {
+                    // either package name if in core or fully qualified path otherwise
+                    // arg(value: "src/main/groovy/servlet/ServletCategory.groovy")
+                    arg(value: "src/main/groovyx/gaelyk/extensions/MiscExtensions.java")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/ExpirationTimeExtensionMethods.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/ServletExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/DatastoreExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/MemcacheExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/BlobstoreExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/FilesExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/MailExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/TaskQueueExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/SearchExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/UrlFetchExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/ChannelExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/CapabilitiesExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/XmppExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/ImageExtensions.groovy")
+//                    arg(value: "src/main/groovyx/gaelyk/extensions/BackendExtensions.groovy")
+//                    jvmarg(value: "-Xdebug")
+//                    jvmarg(value: "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005")
+                }
+            }
+        } finally {
+            if (ant.properties.odr) {
+                logger.info "GDK Docs Out: " + ant.properties.odr
+            }
+            if (ant.properties.edr) {
+                logger.error "GDK Docs Err: " + ant.properties.edr
+            }
+        }
+        copy {
+            into task.destinationDir
+//            from "src/tools/org/codehaus/groovy/tools/groovy.ico", "src/tools/org/codehaus/groovy/tools/stylesheet.css"
         }
     }
 }

@@ -13,35 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.extensions
+package groovyx.gaelyk.extensions;
 
-import groovy.transform.CompileStatic
+import groovy.lang.Closure;
+import groovy.lang.IntRange;
 import groovyx.gaelyk.RetryingFuture;
 
-import com.google.appengine.api.datastore.Email
-import com.google.appengine.api.datastore.Text
-import com.google.appengine.api.blobstore.BlobKey
-import com.google.appengine.api.datastore.Link
-import com.google.appengine.api.datastore.Category
-import com.google.appengine.api.datastore.PhoneNumber
-import com.google.appengine.api.datastore.PostalAddress
-import com.google.appengine.api.datastore.Rating
-import com.google.appengine.api.xmpp.JID
-import com.google.appengine.api.datastore.Key
-import com.google.appengine.api.datastore.KeyFactory
-import org.codehaus.groovy.runtime.DefaultGroovyMethods
-import com.google.appengine.api.datastore.ShortBlob
-import com.google.appengine.api.datastore.Blob
-import com.google.appengine.api.datastore.GeoPt
-import com.google.appengine.api.blobstore.ByteRange
-import java.util.concurrent.Future
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import org.codehaus.groovy.runtime.StringGroovyMethods;
+
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.ByteRange;
+import com.google.appengine.api.datastore.Blob;
+import com.google.appengine.api.datastore.Category;
+import com.google.appengine.api.datastore.Email;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.GeoPt;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Link;
+import com.google.appengine.api.datastore.PhoneNumber;
+import com.google.appengine.api.datastore.PostalAddress;
+import com.google.appengine.api.datastore.Rating;
+import com.google.appengine.api.datastore.ShortBlob;
+import com.google.appengine.api.datastore.Text;
+import com.google.appengine.api.xmpp.JID;
 
 /**
  * Miscellaneous extension methods and utilities
  *
  * @author Guillaume Laforge
+ * @author Vladimir Orany
  */
-class MiscExtensions {
+public class MiscExtensions {
     // ----------------------------------------------------------------
     // General utility category methods
     // ----------------------------------------------------------------
@@ -50,14 +64,32 @@ class MiscExtensions {
      * Transforms a map of key / value pairs into a properly URL encoded query string.
      *
      * <pre><code>
-     *  assert "title=
+     *  assert "title=Gaelyk" == [title: "Gaelyk"].toQueryString()
      * </code></pre>
      *
-     * @return a query string
+     * @return a query string represenging the input map
      */
-    @CompileStatic
-    static String toQueryString(Map self) {
-        self.collect { k, v -> "${URLEncoder.encode(k.toString(), 'UTF-8')}=${URLEncoder.encode(v.toString(), 'UTF-8')}" }.join('&')
+    public static String toQueryString(Map<?,?> self) {
+        if (self == null || self.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        try {
+            for (Entry<?, ?> entry : self.entrySet()) {
+                if (entry.getKey() != null) {
+                    sb.append(URLEncoder.encode(entry.getKey().toString(), "UTF-8"));
+                }
+                sb.append("=");
+                if (entry.getValue() != null) {
+                    sb.append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));                    
+                }
+                sb.append("&");
+            }
+        } catch (UnsupportedEncodingException e) {
+            // should never happen
+        }
+        String result = sb.toString();
+        return result.substring(0, result.length() - 1);
     }
 
     // ------------------------------
@@ -65,7 +97,8 @@ class MiscExtensions {
     // ------------------------------
 
     /**
-     * Converter method for converting strings into various GAE specific types
+     * Converter method for converting strings into various GAE specific types.
+     * 
      * <pre><code>
      *  "foo@bar.com" as Email
      *  "http://www.google.com" as Link
@@ -79,32 +112,33 @@ class MiscExtensions {
      *  "agR0ZXN0cg8LEgdwZXJzb25zIgJtZQw" as Key
      * </code></pre>
      * 
-     * Also converts single String to String array with one element
+     * Also converts single String to String array with one element.
+     * @return String converted to given object if possible
      */
-    static Object asType(String self, Class clazz) {
-        if (clazz == Email)
-            new Email(self)
-        else if (clazz == Text)
-            new Text(self)
-        else if (clazz == BlobKey)
-            new BlobKey(self)
-        else if (clazz == Link)
-            new Link(self)
-        else if (clazz == Category)
-            new Category(self)
-        else if (clazz == PhoneNumber)
-            new PhoneNumber(self)
-        else if (clazz == PostalAddress)
-            new PostalAddress(self)
-        else if (clazz == Rating)
-            new Rating(Integer.valueOf(self))
-        else if (clazz == JID)
-            new JID(self)
-        else if (clazz == Key)
-            KeyFactory.stringToKey(self)
-        else if (clazz == String[])
-            [self] as String[]
-        else DefaultGroovyMethods.asType(self, clazz)
+    public static <T> T asType(String self, Class<T> clazz) {
+        if (clazz == Email.class)
+            return clazz.cast(new Email(self));
+        if (clazz == Text.class)
+            return clazz.cast(new Text(self));
+        if (clazz == BlobKey.class)
+            return clazz.cast(new BlobKey(self));
+        if (clazz == Link.class)
+            return clazz.cast(new Link(self));
+        if (clazz == Category.class)
+            return clazz.cast(new Category(self));
+        if (clazz == PhoneNumber.class)
+            return clazz.cast(new PhoneNumber(self));
+        if (clazz == PostalAddress.class)
+            return clazz.cast(new PostalAddress(self));
+        if (clazz == Rating.class)
+            return clazz.cast(new Rating(Integer.valueOf(self)));
+        if (clazz == JID.class)
+            return clazz.cast(new JID(self));
+        if (clazz == Key.class)
+            return clazz.cast(KeyFactory.stringToKey(self));
+        if (clazz == String[].class)
+            return clazz.cast(new String[] { self });
+        return StringGroovyMethods.asType(self, clazz);
     }
 
     /**
@@ -112,11 +146,12 @@ class MiscExtensions {
      * <pre><code>
      *  new URL("http://gaelyk.appspot.com") as Link
      * </code></pre>
+     * return {@link Link} representation of given {@link URL}
      */
-    static Link asType(URL self, Class linkClass) {
-        if (linkClass == Link)
-            new Link(self.toString())
-        else DefaultGroovyMethods.asType(self, linkClass)
+    public static <T> T asType(URL self, Class<T> linkClass) {
+        if (linkClass == Link.class)
+            return linkClass.cast(new Link(self.toString()));
+        return DefaultGroovyMethods.asType(self, linkClass);
     }
 
     /**
@@ -125,11 +160,10 @@ class MiscExtensions {
      *  32 as Rating
      * </code></pre>
      */
-    @CompileStatic
-    static Object asType(Integer self, Class ratingClass) {
-        if (ratingClass == Rating)
-            new Rating(self)
-        else DefaultGroovyMethods.asType(self, ratingClass)
+    public static <T> T asType(Integer self, Class <T> ratingClass) {
+        if (ratingClass == Rating.class)
+            return ratingClass.cast(new Rating(self));
+        return DefaultGroovyMethods.asType(self, ratingClass);
     }
 
     /**
@@ -139,13 +173,12 @@ class MiscExtensions {
      *  "some byte".getBytes() as ShortBlob
      * </code></pre>
      */
-    @CompileStatic
-    static Object asType(byte[] self, Class blobClass) {
-        if (blobClass == ShortBlob)
-            new ShortBlob(self)
-        else if (blobClass == Blob)
-            new Blob(self)
-        else DefaultGroovyMethods.asType(self, blobClass)
+    public static <T> T asType(byte[] self, Class<T> blobClass) {
+        if (blobClass == ShortBlob.class)
+            return blobClass.cast(new ShortBlob(self));
+        if (blobClass == Blob.class)
+            return blobClass.cast(new Blob(self));
+        return DefaultGroovyMethods.asType(self, blobClass);
     }
 
     /**
@@ -161,20 +194,32 @@ class MiscExtensions {
      *  ['address', 'name'] as Key
      * </code></pre>
      */
-    static Object asType(List list, Class clazz) {
-        if (clazz == GeoPt && list.size() == 2 && list.every { it instanceof Number }) {
-            new GeoPt(*list*.floatValue())
-        } else if (clazz == Key && list.size() == 3 && list[0] instanceof Key && list[1] instanceof String &&
-                (list[2] instanceof Number || list[2] instanceof String)) {
-            // KeyFactory.createKey(Key, String, long)
-            // KeyFactory.createKey(Key, String, String)
-            KeyFactory.createKey(*list)
-        } else if (clazz == Key && list.size() == 2 && list[0] instanceof String &&
-                (list[1] instanceof Number || list[1] instanceof String)) {
-            // KeyFactory.createKey(String, long)
-            // KeyFactory.createKey(String, String)
-            KeyFactory.createKey(*list)
-        } else DefaultGroovyMethods.asType(list, clazz)
+    public static <T> T asType(List<?> list, Class<T> clazz) {
+        if (list == null || clazz == null) return null;
+        if (clazz == GeoPt.class && list.size() == 2 && list.get(0) instanceof Number && list.get(1) instanceof Number) {
+            return clazz.cast(new GeoPt(((Number) list.get(0)).floatValue(), ((Number) list.get(1)).floatValue()));
+        }
+        
+        if (clazz == Key.class) {
+            if (list.size() == 2 && list.get(0) instanceof String) {
+                if (list.get(1) instanceof Number) {
+                    return clazz.cast(KeyFactory.createKey((String) list.get(0), ((Number) list.get(1)).longValue()));
+                }
+                if (list.get(1) instanceof String) {
+                    return clazz.cast(KeyFactory.createKey((String) list.get(0), ((String) list.get(1))));
+                }
+            }
+            if (list.size() == 3 && list.get(0) instanceof Key && list.get(1) instanceof String) {
+                if (list.get(2) instanceof Number) {
+                    return clazz.cast(KeyFactory.createKey((Key) list.get(0), (String) list.get(1), ((Number) list.get(2)).longValue()));
+                }
+                if (list.get(2) instanceof String) {
+                    return clazz.cast(KeyFactory.createKey((Key) list.get(0), (String) list.get(1), ((String) list.get(2))));
+                }
+            }
+        }
+        
+        return clazz.cast(DefaultGroovyMethods.asType(list, clazz));
     }
 
     /**
@@ -188,10 +233,10 @@ class MiscExtensions {
      * @param byteRangeClass the class of the byte range
      * @return a <code>ByteRange</code> instance
      */
-    static Object asType(IntRange range, Class byteRangeClass) {
-        if (byteRangeClass == ByteRange)
-            new ByteRange(range.fromInt, range.toInt)
-        else DefaultGroovyMethods.asType(range, byteRangeClass)
+    public static <T> T asType(IntRange range, Class<T> byteRangeClass) {
+        if (byteRangeClass == ByteRange.class)
+            return byteRangeClass.cast(new ByteRange(range.getFromInt(), range.getToInt()));
+        return DefaultGroovyMethods.asType(range, byteRangeClass);
     }
 	
 	/**
@@ -205,11 +250,11 @@ class MiscExtensions {
 	 * @param cls				desired class e.g. int
 	 * @return first value cast to desired type if the desired type is not array or collection
 	 */
-	static asType(String[] multipleParams, Class cls){
-		if(!cls.isArray() && !Collection.class.isAssignableFrom(cls)){
-			return DefaultGroovyMethods.asType(multipleParams.first(), cls)
+	@SuppressWarnings("deprecation") public static <T> T asType(String[] multipleParams, Class<T> cls){
+		if(!cls.isArray() && !Collection.class.isAssignableFrom(cls) && multipleParams.length > 0 ){
+			return DefaultGroovyMethods.asType(multipleParams[0], cls);
 		}
-		DefaultGroovyMethods.asType(multipleParams, cls)
+		return DefaultGroovyMethods.asType(multipleParams, cls);
 	}
 	
     // ----------------------------------------------------------------
@@ -222,9 +267,11 @@ class MiscExtensions {
      * @param future the future
      * @param name the property
      * @return the value associated with that property
+     * @throws ExecutionException 
+     * @throws InterruptedException 
      */
-    static Object get(Future future, String name) {
-        DatastoreExtensions.transformValueForRetrieval(future.get().getProperty(name))
+	public static Object get(Future<Entity> future, String name) throws InterruptedException, ExecutionException {
+        return DatastoreExtensions.transformValueForRetrieval(future.get().getProperty(name));
     }
 
     /**
@@ -233,9 +280,11 @@ class MiscExtensions {
      * @param future the future
      * @param name the property
      * @param value the new value for the property
+     * @throws ExecutionException 
+     * @throws InterruptedException 
      */
-    static void set(Future future, String name, Object value) {
-        future.get().setProperty(name, DatastoreExtensions.transformValueForStorage(value))
+    public static void set(Future<Entity> future, String name, Object value) throws InterruptedException, ExecutionException {
+        future.get().setProperty(name, DatastoreExtensions.transformValueForStorage(value));
     }
     
     /**
@@ -253,8 +302,8 @@ class MiscExtensions {
      * @param retries number of retries before failing
      * @return future which will first retries for particular times before throwing the exception
      */
-    static <R> Future<R> multiply(Number retries, Closure<Future<R>> factory){
-        RetryingFuture.retry(retries.intValue(), factory)
+    public static <R> Future<R> multiply(Number retries, Closure<Future<R>> factory){
+        return RetryingFuture.retry(retries.intValue(), factory);
     }
     
     

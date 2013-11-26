@@ -1,0 +1,8 @@
+apply from: '../common.gradle'
+
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}", {
+        force = true
+    }
+    compile "com.thoughtworks.qdox:qdox:1.12.1"
+}

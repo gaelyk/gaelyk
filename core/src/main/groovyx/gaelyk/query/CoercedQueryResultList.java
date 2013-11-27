@@ -25,7 +25,7 @@ class CoercedQueryResultList<T> extends ArrayList<T> implements QueryResultListW
     private final List<Index> indexList;
     private final Query       query;
 
-    private CoercedQueryResultList(Query query, QueryResultList<Entity> originalList, Class<T> coercedClass){
+    private CoercedQueryResultList(Query query, QueryResultList<Entity> originalList, Class<T> coercedClass) throws InstantiationException, IllegalAccessException{
         super(originalList.size());
         for (Entity entity : originalList){
              add(coercedClass.cast(DatastoreExtensions.asType(entity, coercedClass)));
@@ -40,8 +40,10 @@ class CoercedQueryResultList<T> extends ArrayList<T> implements QueryResultListW
      * @param originalList original query result list
      * @param coercedClass class to coerce the entities
      * @return coerced wrapper list
+     * @throws IllegalAccessException 
+     * @throws InstantiationException 
      */
-    public static <T> CoercedQueryResultList<T> coerce(Query query, QueryResultList<Entity> originalList, Class<T> coercedClass) {
+    public static <T> CoercedQueryResultList<T> coerce(Query query, QueryResultList<Entity> originalList, Class<T> coercedClass) throws InstantiationException, IllegalAccessException {
         return new CoercedQueryResultList<T>(query, originalList, coercedClass);
     }
 

@@ -333,11 +333,17 @@ class DocGenerator {
             apiBaseUrl = ""
             curPackage.split('\\.').size().times { apiBaseUrl += '../'}
             title = "GDK enhancement for ${target[0]}"
+        } else if (type.startsWith("groovyx.gaelyk") || type.startsWith("org.gaelyk")) {
+            apiBaseUrl = "http://gaelyk.appspot.com/api/"
+            title = "Groovy class in $packageName"
         } else if (type.startsWith("groovy") || type.startsWith("org.codehaus.groovy")) {
             apiBaseUrl = "http://groovy.codehaus.org/api/"
             title = "Groovy class in $packageName"
+        } else if (type.startsWith("com.google.app")) {
+            apiBaseUrl = "https://developers.google.com/appengine/docs/java/javadoc/"
+            title = "App Engine class in $packageName"
         } else {
-            apiBaseUrl = "http://java.sun.com/j2se/1.5.0/docs/api/"
+            apiBaseUrl = "http://docs.oracle.com/javase/7/docs/api/docs/api/"
             title = "JDK class in $packageName"
         }
 

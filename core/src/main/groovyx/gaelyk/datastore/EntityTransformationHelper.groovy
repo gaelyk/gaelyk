@@ -1,6 +1,7 @@
 package groovyx.gaelyk.datastore
 
-import groovy.transform.CompileStatic;
+import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
 import groovyx.gaelyk.extensions.DatastoreExtensions
 import groovyx.gaelyk.query.QueryBuilder
 import groovyx.gaelyk.query.QueryType
@@ -48,6 +49,7 @@ class EntityTransformationHelper {
         DatastoreExtensions.delete((Entity)DatastoreExtensions.asType(pogo, Entity))
     }
 
+    @CompileStatic(TypeCheckingMode.SKIP)
     static <P> P get(Class<P> pogoClass, long key) {
         try {
             return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
@@ -56,6 +58,7 @@ class EntityTransformationHelper {
         }
     }
 
+    @CompileStatic(TypeCheckingMode.SKIP)
     static <P> P get(Class<P> pogoClass, String key) {
         try {
             return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
@@ -64,6 +67,7 @@ class EntityTransformationHelper {
         }
     }
 
+    @CompileStatic(TypeCheckingMode.SKIP)
     static <P> P get(Class<P> pogoClass, Key parentKey, long key) {
         try {
             return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(parentKey, pogoClass.simpleName, key)), pogoClass)
@@ -72,6 +76,7 @@ class EntityTransformationHelper {
         }
     }
 
+    @CompileStatic(TypeCheckingMode.SKIP)
     static <P> P get(Class<P> pogoClass, Key parentKey, String key) {
         try {
             return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(parentKey, pogoClass.simpleName, key)), pogoClass)

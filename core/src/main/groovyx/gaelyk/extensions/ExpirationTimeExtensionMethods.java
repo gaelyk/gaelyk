@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.extensions
-
-import groovy.transform.CompileStatic
+package groovyx.gaelyk.extensions;
 
 /**
  * Extension methods for time duration handling, for the caching expiration definition
  *
- * @author Guillaume Laforge
+ * @author Guillaume Laforge, Vladimir Orany
  */
-@CompileStatic
-class ExpirationTimeExtensionMethods {
+public class ExpirationTimeExtensionMethods {
     /**
      * Method to support the notation: <code>10.seconds</code> in the URL routing configuration file
      * for defining the duration the output of the template or groovlet must stay in the cache
      * @return a number of seconds
      */
-    static int getSeconds(Integer self) {
-        self
+    public static int getSeconds(Integer self) {
+        return self;
     }
 
     /**
@@ -38,8 +35,8 @@ class ExpirationTimeExtensionMethods {
      * for defining the duration the output of the template or groovlet must stay in the cache
      * @return a number of seconds
      */
-    static int getSecond(Integer self) {
-        self
+    public static int getSecond(Integer self) {
+        return self;
     }
 
     /**
@@ -47,8 +44,8 @@ class ExpirationTimeExtensionMethods {
      * for defining the duration the output of the template or groovlet must stay in the cache
      * @return a number of seconds
      */
-    static int getMinutes(Integer self) {
-        self * 60
+    public static int getMinutes(Integer self) {
+        return self * 60;
     }
 
     /**
@@ -56,8 +53,8 @@ class ExpirationTimeExtensionMethods {
      * for defining the duration the output of the template or groovlet must stay in the cache
      * @return a number of seconds
      */
-    static int getMinute(Integer self) {
-        self * 60
+    public static int getMinute(Integer self) {
+        return self * 60;
     }
 
     /**
@@ -65,8 +62,8 @@ class ExpirationTimeExtensionMethods {
      * for defining the duration the output of the template or groovlet must stay in the cache
      * @return a number of seconds
      */
-    static int getHours(Integer self) {
-        self * 3600
+    public static int getHours(Integer self) {
+        return self * 3600;
     }
 
     /**
@@ -74,8 +71,8 @@ class ExpirationTimeExtensionMethods {
      * for defining the duration the output of the template or groovlet must stay in the cache
      * @return a number of seconds
      */
-    static int getHour(Integer self) {
-        self * 3600
+    public static int getHour(Integer self) {
+        return self * 3600;
     }
 
 }

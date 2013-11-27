@@ -16,6 +16,7 @@
 package groovyx.gaelyk.extensions;
 
 import groovy.lang.Closure;
+import groovy.lang.GroovyObject;
 import groovy.lang.IntRange;
 import groovyx.gaelyk.RetryingFuture;
 
@@ -44,6 +45,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.PhoneNumber;
 import com.google.appengine.api.datastore.PostalAddress;
+import com.google.appengine.api.datastore.PropertyContainer;
 import com.google.appengine.api.datastore.Rating;
 import com.google.appengine.api.datastore.ShortBlob;
 import com.google.appengine.api.datastore.Text;
@@ -270,8 +272,17 @@ public class MiscExtensions {
      * @throws ExecutionException 
      * @throws InterruptedException 
      */
-	public static Object get(Future<Entity> future, String name) throws InterruptedException, ExecutionException {
-        return DatastoreExtensions.transformValueForRetrieval(future.get().getProperty(name));
+	public static Object get(Future<Object> future, String name) throws InterruptedException, ExecutionException {
+	    Object val = future.get();
+        if (val instanceof PropertyContainer) {
+            PropertyContainer pc = (PropertyContainer) val;
+            return pc.getProperty(name);
+        }
+        if (val instanceof GroovyObject) {
+            GroovyObject go = (GroovyObject) val;
+            return go.getProperty(name);
+        }
+        throw new IllegalArgumentException("Only groovy objects or entities are supported as results of the future. Got " + val);
     }
 
     /**
@@ -283,8 +294,19 @@ public class MiscExtensions {
      * @throws ExecutionException 
      * @throws InterruptedException 
      */
-    public static void set(Future<Entity> future, String name, Object value) throws InterruptedException, ExecutionException {
-        future.get().setProperty(name, DatastoreExtensions.transformValueForStorage(value));
+    public static void set(Future<Object> future, String name, Object value) throws InterruptedException, ExecutionException {
+        Object val = future.get();
+        if (val instanceof PropertyContainer) {
+            PropertyContainer pc = (PropertyContainer) val;
+            pc.setProperty(name, DatastoreExtensions.transformValueForStorage(value));
+            return;
+        }
+        if (val instanceof GroovyObject) {
+            GroovyObject go = (GroovyObject) val;
+            go.setProperty(name, DatastoreExtensions.transformValueForStorage(value));
+            return;
+        }
+        throw new IllegalArgumentException("Only groovy objects or entities are supported as results of the future. Got " + val);
     }
     
     /**

@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.extensions
+package groovyx.gaelyk.extensions;
 
-import groovy.transform.CompileStatic
-import com.google.appengine.api.LifecycleManager
-import com.google.appengine.api.backends.BackendService
-import com.google.appengine.api.ThreadManager
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+
+import groovy.lang.Closure;
+import groovy.lang.DelegatesTo;
+
+import com.google.appengine.api.LifecycleManager;
+import com.google.appengine.api.ThreadManager;
+import com.google.appengine.api.backends.BackendService;
 
 /**
- * Backend service extension methods
+ * Backend service extension methods.
  *
- * @author Guillaume Laforge
+ * @author Guillaume Laforge, Vladmir Orany
  */
-class BackendExtensions {
+public class BackendExtensions {
 
     /**
      * Shortcut to use closures as shutdown hooks.
@@ -36,8 +40,8 @@ class BackendExtensions {
      * @param manager the lifecycle manager
      * @param c the closure as shutdown hook
      */
-    static void shutdownHook(LifecycleManager manager, @DelegatesTo(LifecycleManager.ShutdownHook) Closure c) {
-        manager.setShutdownHook(c as LifecycleManager.ShutdownHook)
+    public static void shutdownHook(LifecycleManager manager, @DelegatesTo(LifecycleManager.ShutdownHook.class) Closure<?> c) {
+        manager.setShutdownHook(DefaultGroovyMethods.asType(c, LifecycleManager.ShutdownHook.class));
     }
 
     /**
@@ -45,10 +49,9 @@ class BackendExtensions {
      *
      * @param the code supposed to run in background thread
      */
-    @CompileStatic
-    static Thread run(BackendService backends, Runnable code){
+    public static Thread run(BackendService backends, Runnable code){
         Thread thread = ThreadManager.createBackgroundThread(code);
-        thread.start()
-        thread
+        thread.start();
+        return thread;
     }
 }

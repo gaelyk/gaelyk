@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.extensions
+package groovyx.gaelyk.extensions;
 
-import groovy.transform.CompileStatic
-import com.google.appengine.api.memcache.MemcacheService
-import com.google.appengine.api.memcache.Expiration
-import com.google.appengine.api.memcache.MemcacheServiceException
-import groovyx.gaelyk.cache.CacheHandler
-import com.google.appengine.api.memcache.AsyncMemcacheService
-import com.google.appengine.api.memcache.MemcacheServiceFactory
-import java.util.concurrent.Future
+import groovy.lang.Closure;
+import groovy.lang.GString;
+import groovyx.gaelyk.cache.CacheHandler;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Future;
+
+import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.appengine.api.memcache.Expiration;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceException;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
 /**
  * Memcache service extension methods
@@ -30,7 +37,7 @@ import java.util.concurrent.Future
  * @author Guillaume Laforge
  * @author Scott Murphy
  */
-class MemcacheExtensions {
+public class MemcacheExtensions {
 
     /**
      * Get an object from the cache, with a object key, ignoring any exceptions.
@@ -38,12 +45,11 @@ class MemcacheExtensions {
      * @param key the Object key
      * @return the value stored under that key
      */
-    @CompileStatic
-    static Object get(MemcacheService memcache, Object key) {
+    public static Object get(MemcacheService memcache, Object key) {
         try {
-            return memcache.get((Object)key)
+            return memcache.get(key);
         } catch (MemcacheServiceException mse) {}
-        return null
+        return null;
     }
 
     /**
@@ -54,10 +60,9 @@ class MemcacheExtensions {
      * @param expiration expiration of the key/value
      * @param policy a SetPolicy
      */
-    @CompileStatic
-    static void put(MemcacheService memcache, Object key, Object value, Expiration expiration, MemcacheService.SetPolicy policy) {
+    public static void put(MemcacheService memcache, Object key, Object value, Expiration expiration, MemcacheService.SetPolicy policy) {
         try {
-            memcache.put(key, (Object)value, expiration, policy)
+            memcache.put(key, (Object)value, expiration, policy);
         } catch (MemcacheServiceException mse) {}
     }
 
@@ -67,9 +72,8 @@ class MemcacheExtensions {
      * @param key the GString key
      * @return the value stored under that key
      */
-    @CompileStatic
-    static Object get(MemcacheService memcache, String key) {
-        get(memcache, (Object)key)
+    public static Object get(MemcacheService memcache, String key) {
+        return get(memcache, (Object)key);
     }
 
     /**
@@ -78,9 +82,8 @@ class MemcacheExtensions {
      * @param key the GString key
      * @return the value stored under that key
      */
-    @CompileStatic
-    static Object get(MemcacheService memcache, GString key) {
-        get(memcache, (Object)key.toString())
+    public static Object get(MemcacheService memcache, GString key) {
+        return get(memcache, (Object)key.toString());
     }
 
     /**
@@ -89,9 +92,8 @@ class MemcacheExtensions {
      *
      * @param key the key identifying the object to get from the cache
      */
-    @CompileStatic
-    static Object getAt(MemcacheService memcache, Object key) {
-        get(memcache, key)
+    public static Object getAt(MemcacheService memcache, Object key) {
+        return get(memcache, key);
     }
 
     /**
@@ -100,11 +102,10 @@ class MemcacheExtensions {
      *
      * @param key the key identifying the object to get from the cache
      */
-    @CompileStatic
-    static Object getAt(MemcacheService memcache, String key) {
+    public static Object getAt(MemcacheService memcache, String key) {
         //TODO this method should be removed once we only need a getAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
-        get(memcache, (Object)key)
+       return  get(memcache, (Object)key);
     }
 
     /**
@@ -113,9 +114,8 @@ class MemcacheExtensions {
      * @param key a GString key
      * @param value the value to put in the cache
      */
-    @CompileStatic
-    static void set(MemcacheService memcache, String key, Object value) {
-        put(memcache, (Object)key, value, null, MemcacheService.SetPolicy.SET_ALWAYS)
+    public static void set(MemcacheService memcache, String key, Object value) {
+        put(memcache, (Object)key, value, null, MemcacheService.SetPolicy.SET_ALWAYS);
     }
 
     /**
@@ -124,9 +124,8 @@ class MemcacheExtensions {
      * @param key a GString key
      * @param value the value to put in the cache
      */
-    @CompileStatic
-    static void put(MemcacheService memcache, GString key, Object value) {
-        put(memcache, (Object)key.toString(), value, null, MemcacheService.SetPolicy.SET_ALWAYS)
+    public static void put(MemcacheService memcache, GString key, Object value) {
+        put(memcache, (Object)key.toString(), value, null, MemcacheService.SetPolicy.SET_ALWAYS);
     }
 
     /**
@@ -136,9 +135,8 @@ class MemcacheExtensions {
      * @param value the value to put in the cache
      * @param expiration expiration of the key/value
      */
-    @CompileStatic
-    static void put(MemcacheService memcache, GString key, Object value, Expiration expiration) {
-        put(memcache, (Object)key.toString(), value, expiration, MemcacheService.SetPolicy.SET_ALWAYS)
+    public static void put(MemcacheService memcache, GString key, Object value, Expiration expiration) {
+        put(memcache, (Object)key.toString(), value, expiration, MemcacheService.SetPolicy.SET_ALWAYS);
     }
 
     /**
@@ -149,9 +147,8 @@ class MemcacheExtensions {
      * @param expiration expiration of the key/value
      * @param policy a SetPolicy
      */
-    @CompileStatic
-    static void put(MemcacheService memcache, GString key, Object value, Expiration expiration, MemcacheService.SetPolicy policy) {
-        put(memcache, (Object)key.toString(), value, expiration, policy)
+    public static void put(MemcacheService memcache, GString key, Object value, Expiration expiration, MemcacheService.SetPolicy policy) {
+        put(memcache, (Object)key.toString(), value, expiration, policy);
     }
 
     /**
@@ -161,11 +158,10 @@ class MemcacheExtensions {
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
      */
-    @CompileStatic
-    static void putAt(MemcacheService memcache, String key, Object value) {
+    public static void putAt(MemcacheService memcache, String key, Object value) {
         //TODO this method should be removed once we only need a putAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
-        put(memcache, (Object)key, value, null, MemcacheService.SetPolicy.SET_ALWAYS)
+        put(memcache, (Object)key, value, null, MemcacheService.SetPolicy.SET_ALWAYS);
     }
 
     /**
@@ -175,21 +171,19 @@ class MemcacheExtensions {
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
      */
-    @CompileStatic
-    static void putAt(MemcacheService memcache, Object key, Object value) {
-        put(memcache, key, value, null, MemcacheService.SetPolicy.SET_ALWAYS)
+    public static void putAt(MemcacheService memcache, Object key, Object value) {
+        put(memcache, key, value, null, MemcacheService.SetPolicy.SET_ALWAYS);
     }
 
     /**
      * Shortcut to check whether a key is contained in the cache using the <code>in</code> operator:
      * <code>key in memcache</code>
      */
-    @CompileStatic
-    static boolean isCase(MemcacheService memcache, Object key) {
+    public static boolean isCase(MemcacheService memcache, Object key) {
         try {
-            return memcache.contains(key)
+            return memcache.contains(key);
         } catch (MemcacheServiceException mse) { }
-        false
+        return false;
     }
 
     /**
@@ -198,9 +192,8 @@ class MemcacheExtensions {
      * @param uri the URI for which to clear the cache
      * @return the set of keys that have been cleared (should be two in this case)
      */
-    @CompileStatic
-    static Set clearCacheForUri(MemcacheService memcache, String uri) {
-        CacheHandler.clearCacheForUri(uri)
+    public static Set clearCacheForUri(MemcacheService memcache, String uri) {
+        return CacheHandler.clearCacheForUri(uri);
     }
 
     /**
@@ -216,27 +209,28 @@ class MemcacheExtensions {
      * @param closure the closure to memoize
      * @return a memoized closure
      */
-    static Closure memoize(MemcacheService memcache, Closure closure) {
-        return new Closure(closure.owner) {
-            Object call(Object[] args) {
+    public static <T> Closure<T> memoize(final MemcacheService memcache, final Closure<T> closure) {
+        return new Closure<T>(closure.getOwner()) {
+            private static final long serialVersionUID = 1L;
+
+            public T call(Object... args) {
                 // a closure call is identified by its hashcode and its call argument values
-                def key = [
-                        closure: closure.hashCode(),
-                        arguments: args.toList()
-                ]
+                Map<String, Object> key = new HashMap<String, Object>();
+                key.put("closure", closure.hashCode());
+                key.put("arguments", Arrays.asList(args));
                 // search for a result for such a call in memcache
-                def result = memcache.get(key)
+                @SuppressWarnings("unchecked") T result = (T) memcache.get(key);
                 if (result != null) {
                     // a previous invocation exists
-                    return result
+                    return result;
                 } else {
                     // no previous invocation, so calling the closure and caching the result
-                    result = closure(* args)
-                    put(memcache, key, result, Expiration.byDeltaSeconds(60), MemcacheService.SetPolicy.SET_ALWAYS)
-                    return result
+                    result = closure.call(args);
+                    put(memcache, key, result, Expiration.byDeltaSeconds(60), MemcacheService.SetPolicy.SET_ALWAYS);
+                    return result;
                 }
             }
-        }
+        };
     }
 
     // Asynchronous memcache service
@@ -248,9 +242,8 @@ class MemcacheExtensions {
      * </code></pre>
      * @return the asynchronous Memcache service
      */
-    @CompileStatic
-    static AsyncMemcacheService getAsync(MemcacheService memcache) {
-        MemcacheServiceFactory.asyncMemcacheService
+    public static AsyncMemcacheService getAsync(MemcacheService memcache) {
+        return MemcacheServiceFactory.getAsyncMemcacheService();
     }
 
     /**
@@ -259,9 +252,8 @@ class MemcacheExtensions {
      * @param key the GString key
      * @return the value stored under that key
      */
-    @CompileStatic
-    static Future<? extends Object> get(AsyncMemcacheService memcache, String key) {
-        memcache.get((Object)key)
+    public static Future<? extends Object> get(AsyncMemcacheService memcache, String key) {
+        return memcache.get((Object)key);
     }
 
     /**
@@ -270,9 +262,8 @@ class MemcacheExtensions {
      * @param key the GString key
      * @return the value stored under that key
      */
-    @CompileStatic
-    static Future<? extends Object> get(AsyncMemcacheService memcache, GString key) {
-        memcache.get(key.toString())
+    public static Future<? extends Object> get(AsyncMemcacheService memcache, GString key) {
+        return memcache.get(key.toString());
     }
 
     /**
@@ -281,9 +272,8 @@ class MemcacheExtensions {
      *
      * @param key the key identifying the object to get from the cache
      */
-    @CompileStatic
-    static Future<? extends Object> getAt(AsyncMemcacheService memcache, Object key) {
-        memcache.get(key)
+    public static Future<? extends Object> getAt(AsyncMemcacheService memcache, Object key) {
+        return memcache.get(key);
     }
 
     /**
@@ -292,11 +282,10 @@ class MemcacheExtensions {
      *
      * @param key the key identifying the object to get from the cache
      */
-    @CompileStatic
-    static Future<? extends Object> getAt(AsyncMemcacheService memcache, String key) {
+    public static Future<? extends Object> getAt(AsyncMemcacheService memcache, String key) {
         //TODO this method should be removed once we only need a getAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
-        memcache.get(key)
+        return memcache.get(key);
     }
 
     /**
@@ -305,9 +294,8 @@ class MemcacheExtensions {
      * @param key a GString key
      * @param value the value to put in the cache
      */
-    @CompileStatic
-    static Future<Void> set(AsyncMemcacheService memcache, String key, Object value) {
-        memcache.put(key, value)
+    public static Future<Void> set(AsyncMemcacheService memcache, String key, Object value) {
+        return memcache.put(key, value);
     }
 
     /**
@@ -316,9 +304,8 @@ class MemcacheExtensions {
      * @param key a GString key
      * @param value the value to put in the cache
      */
-    @CompileStatic
-    static Future<Void> put(AsyncMemcacheService memcache, GString key, Object value) {
-        memcache.put(key.toString(), value)
+    public static Future<Void> put(AsyncMemcacheService memcache, GString key, Object value) {
+        return memcache.put(key.toString(), value);
     }
 
     /**
@@ -328,9 +315,8 @@ class MemcacheExtensions {
      * @param value the value to put in the cache
      * @param expiration expiration of the key/value
      */
-    @CompileStatic
-    static Future<Void> put(AsyncMemcacheService memcache, GString key, Object value, Expiration expiration) {
-        memcache.put(key.toString(), value, expiration)
+    public static Future<Void> put(AsyncMemcacheService memcache, GString key, Object value, Expiration expiration) {
+        return memcache.put(key.toString(), value, expiration);
     }
 
     /**
@@ -341,9 +327,8 @@ class MemcacheExtensions {
      * @param expiration expiration of the key/value
      * @param policy a SetPolicy
      */
-    @CompileStatic
-    static Future<Boolean> put(AsyncMemcacheService memcache, GString key, Object value, Expiration expiration, MemcacheService.SetPolicy policy) {
-        memcache.put(key.toString(), value, expiration, policy)
+    public static Future<Boolean> put(AsyncMemcacheService memcache, GString key, Object value, Expiration expiration, MemcacheService.SetPolicy policy) {
+        return memcache.put(key.toString(), value, expiration, policy);
     }
 
     /**
@@ -353,11 +338,10 @@ class MemcacheExtensions {
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
      */
-    @CompileStatic
-    static Future<Void> putAt(AsyncMemcacheService memcache, String key, Object value) {
+    public static Future<Void> putAt(AsyncMemcacheService memcache, String key, Object value) {
         //TODO this method should be removed once we only need a putAt() method taking Object key
         // looks like a bug in current Groovy where the two variants are needed
-        memcache.put(key, value)
+        return memcache.put(key, value);
     }
 
     /**
@@ -367,8 +351,7 @@ class MemcacheExtensions {
      * @param key the key identifying the object to put in the cache
      * @param value the value to put in the cache
      */
-    @CompileStatic
-    static Future<Void> putAt(AsyncMemcacheService memcache, Object key, Object value) {
-        memcache.put(key, value)
+    public static Future<Void> putAt(AsyncMemcacheService memcache, Object key, Object value) {
+        return memcache.put(key, value);
     }
 }

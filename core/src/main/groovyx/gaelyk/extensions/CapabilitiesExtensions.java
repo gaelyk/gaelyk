@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.extensions
+package groovyx.gaelyk.extensions;
 
-import groovy.transform.CompileStatic
-import com.google.appengine.api.capabilities.CapabilityStatus
-import com.google.appengine.api.capabilities.CapabilitiesService
-import com.google.appengine.api.capabilities.Capability
+import com.google.appengine.api.capabilities.CapabilityStatus;
+import com.google.appengine.api.capabilities.CapabilitiesService;
+import com.google.appengine.api.capabilities.Capability;
 
 /**
  * Capabilities method extensions
  *
  * @author Guillaume Laforge
  */
-@CompileStatic
-class CapabilitiesExtensions {
+public class CapabilitiesExtensions {
 
     /**
      * Query the status of the various App Engine services.
@@ -41,8 +39,8 @@ class CapabilitiesExtensions {
      * @param capa the capability to know the status of
      * @return a status
      */
-    static CapabilityStatus getAt(CapabilitiesService capabilities, Capability capa) {
-        return capabilities.getStatus(capa).getStatus()
+    public static CapabilityStatus getAt(CapabilitiesService capabilities, Capability capa) {
+        return capabilities.getStatus(capa).getStatus();
     }
 
     /**
@@ -51,7 +49,7 @@ class CapabilitiesExtensions {
      *
      * @return true if the capability status is ENABLED, otherwise false.
      */
-    static boolean asBoolean(CapabilityStatus capabilityStatus) {
-        capabilityStatus == CapabilityStatus.ENABLED || capabilityStatus == CapabilityStatus.SCHEDULED_MAINTENANCE
+    public static boolean asBoolean(CapabilityStatus capabilityStatus) {
+        return capabilityStatus == CapabilityStatus.ENABLED || capabilityStatus == CapabilityStatus.SCHEDULED_MAINTENANCE;
     }
 }

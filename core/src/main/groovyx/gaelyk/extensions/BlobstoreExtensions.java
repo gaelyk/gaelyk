@@ -13,30 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.extensions
+package groovyx.gaelyk.extensions;
 
-import groovy.transform.CompileStatic
-import com.google.appengine.api.blobstore.BlobKey
-import com.google.appengine.api.blobstore.BlobstoreInputStream
-import com.google.appengine.api.blobstore.BlobInfo
-import com.google.appengine.api.blobstore.BlobInfoFactory
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory
-import javax.servlet.http.HttpServletResponse
-import com.google.appengine.api.blobstore.ByteRange
-import com.google.appengine.api.images.Image
-import com.google.appengine.api.images.ImagesServiceFactory
-import com.google.appengine.api.images.ImagesService
+import groovy.lang.Closure;
+import groovy.lang.IntRange;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import org.codehaus.groovy.runtime.IOGroovyMethods;
+import org.codehaus.groovy.runtime.InvokerInvocationException;
+
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreInputStream;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.ByteRange;
+import com.google.appengine.api.images.Image;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ImagesServiceFailureException;
 import com.google.appengine.api.images.ServingUrlOptions;
-import com.google.apphosting.api.ApiProxy
-import com.google.appengine.api.images.ImagesServiceFailureException
-import com.google.appengine.api.blobstore.BlobstoreService
+import com.google.apphosting.api.ApiProxy;
 
 /**
  * Blobstore extension module methods
  *
  * @author Guillaume Laforge
  */
-class BlobstoreExtensions {
+public class BlobstoreExtensions {
     /**
      * Creates an <code>InputStream</code> over the blob.
      * The stream is passed as parameter of the closure.
@@ -49,11 +62,11 @@ class BlobstoreExtensions {
      * @param selfKey a BlobKey
      * @param c the closure to execute, passing in the stream as parameter of the closure
      * @return the return value of the closure execution
+     * @throws IOException 
      */
-    @CompileStatic
-    static Object withStream(BlobKey selfKey, Closure c) {
-        def stream = new BlobstoreInputStream(selfKey)
-        stream.withStream(c)
+    public static <T> T withStream(BlobKey selfKey, Closure<T> c) throws IOException {
+        BlobstoreInputStream stream = new BlobstoreInputStream(selfKey);
+        return IOGroovyMethods.withStream(stream, c);
     }
 
     /**
@@ -69,11 +82,11 @@ class BlobstoreExtensions {
      * @param encoding the encoding used to read from the stream (UTF-8, etc.)
      * @param c the closure to execute, passing in the stream as parameter of the closure
      * @return the return value of the closure execution
+     * @throws S 
      */
-    @CompileStatic
-    static Object withReader(BlobKey selfKey, String encoding, Closure c) {
-        def stream = new BlobstoreInputStream(selfKey)
-        stream.withReader(encoding, c)
+    public static <T> T withReader(BlobKey selfKey, String encoding, Closure<T> c) throws IOException {
+        BlobstoreInputStream stream = new BlobstoreInputStream(selfKey);
+        return IOGroovyMethods.withReader(stream, encoding, c);
     }
 
     /**
@@ -89,10 +102,10 @@ class BlobstoreExtensions {
      * @param encoding the encoding used to read from the stream (UTF-8, etc.)
      * @param c the closure to execute, passing in the stream as parameter of the closure
      * @return the return value of the closure execution
+     * @throws IOException 
      */
-    @CompileStatic
-    static Object withReader(BlobKey selfKey, Closure c) {
-        withReader(selfKey, "UTF-8", c)
+    public static <T> T withReader(BlobKey selfKey, Closure<T> c) throws IOException {
+        return withReader(selfKey, "UTF-8", c);
     }
 
     /**
@@ -103,41 +116,36 @@ class BlobstoreExtensions {
      * @param selfKey the blob key to get information from
      * @return an instance of <code>BlobInfo</code>
      */
-    @CompileStatic
-    static BlobInfo getInfo(BlobKey selfKey) {
-        new BlobInfoFactory().loadBlobInfo(selfKey)
+    public static BlobInfo getInfo(BlobKey selfKey) {
+        return new BlobInfoFactory().loadBlobInfo(selfKey);
     }
 
     /**
      * @return the name of the file stored in the blob
      */
-    @CompileStatic
-    static String getFilename(BlobKey selfKey) {
-        getInfo(selfKey).filename
+    public static String getFilename(BlobKey selfKey) {
+        return getInfo(selfKey).getFilename();
     }
 
     /**
      * @return the content-type of the blob
      */
-    @CompileStatic
-    static String getContentType(BlobKey selfKey) {
-        getInfo(selfKey).contentType
+    public static String getContentType(BlobKey selfKey) {
+        return getInfo(selfKey).getContentType();
     }
 
     /**
      * @return the creation date of the file stored in the blob
      */
-    @CompileStatic
-    static Date getCreation(BlobKey selfKey) {
-        getInfo(selfKey).creation
+    public static Date getCreation(BlobKey selfKey) {
+        return getInfo(selfKey).getCreation();
     }
 
     /**
      * @return the size of the blob
      */
-    @CompileStatic
-    static long getSize(BlobKey selfKey) {
-        getInfo(selfKey).size
+    public static long getSize(BlobKey selfKey) {
+        return getInfo(selfKey).getSize();
     }
 
     /**
@@ -145,51 +153,58 @@ class BlobstoreExtensions {
      *
      * @param selfKey the blob to delete, identified by its key
      */
-    @CompileStatic
-    static void delete(BlobKey selfKey) {
-        BlobstoreServiceFactory.blobstoreService.delete selfKey
+    public static void delete(BlobKey selfKey) {
+        BlobstoreServiceFactory.getBlobstoreService().delete(selfKey);
     }
 
     /**
-     * Serve a range of the blob to the response
+     * Serve a range of the blob to the response.
+     *
+     * @param selfKey the blob to serve
+     * @param the response on which to serve the blob
+     * @throws IOException 
+     */
+    public static void serve(BlobKey selfKey, HttpServletResponse response) throws IOException {
+        BlobstoreServiceFactory.getBlobstoreService().serve(selfKey, response);
+    }
+    
+    /**
+     * Serve a range of the blob to the response.
      *
      * @param selfKey the blob to serve
      * @param the response on which to serve the blob
      * @param range the range of the blob (parameter can be ommitted)
+     * @throws IOException 
      */
-    @CompileStatic
-    static void serve(BlobKey selfKey, HttpServletResponse response, ByteRange range = null) {
-        if (range)
-            BlobstoreServiceFactory.blobstoreService.serve selfKey, range, response
-        else
-            BlobstoreServiceFactory.blobstoreService.serve selfKey, response
+    public static void serve(BlobKey selfKey, HttpServletResponse response, ByteRange range) throws IOException {
+            BlobstoreServiceFactory.getBlobstoreService().serve(selfKey, range, response);
     }
 
     /**
-     *
+     * Serve a range of the blob to the response.
      * @param selfKey
      * @param response
      * @param range
+     * @throws IOException 
      */
-    static void serve(BlobKey selfKey, HttpServletResponse response, IntRange range) {
-        BlobstoreServiceFactory.blobstoreService.serve selfKey, new ByteRange(range.fromInt, range.toInt), response
+    public static void serve(BlobKey selfKey, HttpServletResponse response, IntRange range) throws IOException {
+        BlobstoreServiceFactory.getBlobstoreService().serve(selfKey, new ByteRange(range.getFromInt(), range.getToInt()), response);
     }
 
     /**
-     * Fetch a segment of a blob
+     * Fetch a segment of a blob.
      *
      * @param selfKey the blob key identifying the blob
      * @param start the beginning of the segment
      * @param end the end of the segment
      * @return an array of bytes
      */
-    @CompileStatic
-    static byte[] fetchData(BlobKey selfKey, long start, long end) {
-        BlobstoreServiceFactory.blobstoreService.fetchData selfKey, start, end
+    public static byte[] fetchData(BlobKey selfKey, long start, long end) {
+        return BlobstoreServiceFactory.getBlobstoreService().fetchData(selfKey, start, end);
     }
 
     /**
-     * Fetch a segment of a blob
+     * Fetch a segment of a blob.
      * <pre><code>
      * blobKey.fetchData 1000..2000
      * </code></pre>
@@ -198,20 +213,19 @@ class BlobstoreExtensions {
      * @param a Groovy int range
      * @return an array of bytes
      */
-    static byte[] fetchData(BlobKey selfKey, IntRange intRange) {
-        fetchData(selfKey, intRange.fromInt, intRange.toInt)
+    public static byte[] fetchData(BlobKey selfKey, IntRange intRange) {
+        return fetchData(selfKey, intRange.getFromInt(), intRange.getToInt());
     }
 
     /**
-     * Fetch a segment of a blob
+     * Fetch a segment of a blob.
      *
      * @param selfKey the blob key identifying the blob
      * @param byteRange a <code>ByteRange</code> representing the segment
      * @return an array of bytes
      */
-    @CompileStatic
-    static byte[] fetchData(BlobKey selfKey, ByteRange byteRange) {
-        fetchData(selfKey, byteRange.start, byteRange.end)
+    public static byte[] fetchData(BlobKey selfKey, ByteRange byteRange) {
+        return fetchData(selfKey, byteRange.getStart(), byteRange.getEnd());
     }
 
     /**
@@ -229,9 +243,8 @@ class BlobstoreExtensions {
      * @param selfKey the key
      * @return an Image
      */
-    @CompileStatic
-    static Image getImage(BlobKey selfKey) {
-        ImagesServiceFactory.makeImageFromBlob(selfKey)
+    public static Image getImage(BlobKey selfKey) {
+        return ImagesServiceFactory.makeImageFromBlob(selfKey);
     }
 
     /**
@@ -265,29 +278,32 @@ class BlobstoreExtensions {
      *              the result of onFail will be returned as the URL.
      * @return a URL that can serve the image dynamically.
      */
-    static String getServingUrl(BlobKey blobKey, Map options) {
-        ImagesService images = ImagesServiceFactory.getImagesService()
-        int retries = options.retry?:0
+    public static String getServingUrl(BlobKey blobKey, Map<String, Object> options) {
+        ImagesService images = ImagesServiceFactory.getImagesService();
+        int retries = options.containsKey("retry") ?  ((Number)options.get("retry")).intValue() : 0;
+        int origRetries = retries;
+        Closure<?> onFail = options.containsKey("onFail") ? (Closure<?>) options.get("onFail") : null;
+        Closure<?> onRetry = options.containsKey("onRetry") ? (Closure<?>) options.get("onRetry") : null;
         while (true) {
-            Exception ex = null
+            Exception ex = null;
             try {
-                return images.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey))
+                return images.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey));
             } catch (ApiProxy.ApiDeadlineExceededException adee) {
-                ex = adee
+                ex = adee;
             } catch (IllegalArgumentException iae) {
-                ex = iae
+                ex = iae;
             } catch (ImagesServiceFailureException isfe) {
-                ex = isfe
+                ex = isfe;
             }
             if (retries-- == 0) {
-                if (options.onFail) {
-                    return options.onFail(ex)
+                if (onFail != null) {
+                    return (String) onFail.call(ex);
                 }
-                throw ex
+                throw ex instanceof RuntimeException ? (RuntimeException) ex : new InvokerInvocationException(ex);
             } else {
-                if (options.onRetry) {
-                    if (!options.onRetry(ex, options.retry - (retries + 1)))
-                        return options.onFail? options.onFail(ex) : null
+                if (onRetry != null) {
+                    if (onRetry.call(ex, origRetries - (retries + 1)) != null)
+                        return onFail != null ? (String) onFail.call(ex) : null;
                 }
             }
         }
@@ -296,10 +312,9 @@ class BlobstoreExtensions {
     /**
      * Deletes a URL that was previously generated by the blobKey
      */
-    @CompileStatic
-    static void deleteServingUrl(BlobKey blobKey) {
-        ImagesService images = ImagesServiceFactory.getImagesService()
-        images.deleteServingUrl(blobKey)
+    public static void deleteServingUrl(BlobKey blobKey) {
+        ImagesService images = ImagesServiceFactory.getImagesService();
+        images.deleteServingUrl(blobKey);
     }
 
     /**
@@ -312,9 +327,8 @@ class BlobstoreExtensions {
      * @param c the closure passed to the collect method
      * @return a List of BlobInfos
      */
-    @CompileStatic
-    static List<BlobInfo> collect(BlobstoreService blobstore, Closure<BlobInfo> c) {
-        new BlobInfoFactory().queryBlobInfos().collect c
+    public static List<BlobInfo> collect(BlobstoreService blobstore, Closure<BlobInfo> c) {
+        return DefaultGroovyMethods.collect(new BlobInfoFactory().queryBlobInfos(), c);
     }
 
     /**
@@ -327,8 +341,7 @@ class BlobstoreExtensions {
      * @param c the closure passed to the each method
      * @return an iterator over BlobInfos
      */
-    @CompileStatic
-    static Iterator<BlobInfo> each(BlobstoreService blobstore, Closure<BlobInfo> c) {
-        new BlobInfoFactory().queryBlobInfos().each c
+    public static Iterator<BlobInfo> each(BlobstoreService blobstore, Closure<BlobInfo> c) {
+        return DefaultGroovyMethods.each(new BlobInfoFactory().queryBlobInfos(), c);
     }
 }

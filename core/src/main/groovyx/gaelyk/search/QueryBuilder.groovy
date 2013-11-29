@@ -296,4 +296,12 @@ class QueryBuilder {
             super.with c
         }
     }
+    
+    String getIndexName() {
+        indexName
+    }
+    
+    String getQueryString() {
+        queryString
+    }
 }

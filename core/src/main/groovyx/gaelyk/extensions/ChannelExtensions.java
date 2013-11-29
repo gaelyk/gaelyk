@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.extensions
+package groovyx.gaelyk.extensions;
 
-import groovy.transform.CompileStatic
-import com.google.appengine.api.channel.ChannelService
-import com.google.appengine.api.channel.ChannelMessage
+import com.google.appengine.api.channel.ChannelService;
+import com.google.appengine.api.channel.ChannelMessage;
 
 /**
  * Channel service extension methods
  *
  * @author Guillaume Laforge
  */
-@CompileStatic
-class ChannelExtensions {
+public class ChannelExtensions {
 
     /**
      * Send a message through the Channel service
@@ -33,7 +31,7 @@ class ChannelExtensions {
      * @param clientId the client ID
      * @param message the message to send
      */
-    static void send(ChannelService channel, String clientId, String message) {
-        channel.sendMessage(new ChannelMessage(clientId, message))
+    public static void send(ChannelService channel, String clientId, String message) {
+        channel.sendMessage(new ChannelMessage(clientId, message));
     }
 }

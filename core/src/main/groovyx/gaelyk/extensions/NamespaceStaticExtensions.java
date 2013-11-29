@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovyx.gaelyk.extensions
+package groovyx.gaelyk.extensions;
 
-import groovy.transform.CompileStatic
-import com.google.appengine.api.NamespaceManager
+import groovy.lang.Closure;
+
+import com.google.appengine.api.NamespaceManager;
 
 /**
  * Static methods for the NamespaceManager class
  *
  * @author Guillaume Laforge
  */
-@CompileStatic
-class NamespaceStaticExtensions {
+public class NamespaceStaticExtensions {
 
     /**
      * Use a namespace in the context of the excution of the closure.
@@ -38,13 +38,13 @@ class NamespaceStaticExtensions {
      * @param ns the name of the namespace to use
      * @param c the code to execute under that namespace
      */
-    static void of(NamespaceManager nm, String ns, Closure c) {
-        def oldNs = NamespaceManager.get()
-        NamespaceManager.set(ns)
+    public static void of(NamespaceManager nm, String ns, Closure<?> c) {
+        String oldNs = NamespaceManager.get();
+        NamespaceManager.set(ns);
         try {
-            c()
+            c.call();
         } finally {
-            NamespaceManager.set(oldNs)
+            NamespaceManager.set(oldNs);
         }
     }
 

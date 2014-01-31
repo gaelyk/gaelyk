@@ -1,0 +1,8 @@
+<div>
+    <h3>{{cls.className}}</h3>
+    <accordion close-others="false">
+        <accordion-group ng-repeat="method in cls.methods">
+            <div ng-include="'/views/method.html'"></div>
+        </accordion-group>
+    </accordion>
+</div>

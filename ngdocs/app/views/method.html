@@ -1,0 +1,22 @@
+<accordion-heading>
+    <span ng-bind-html="method.returnTypeDocUrl"></span> {{method.name}}<span ng-hide="method.parameters">()</span><span ng-show="method.parameters">(<span ng-bind-html="method.parametersDocUrl"></span>)</span>
+    <br/>
+    <small ng-bind-html="method.shortComment"></small>
+</accordion-heading>
+<p ng-bind-html="method.comment"></p>
+<div ng-show="method.parameters">
+    <h5>Parameters</h5>
+    <table class="table" ng-show="method.parameters">
+        <tbody>
+            <tr ng-repeat="param in method.parameters">
+                <th class="col-md-1" ng-bind-html="param.typeDocUrl"></th>
+                <th class="col-md-1">{{param.name}}</th>
+                <td ng-bind-html="param.comment"></td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+<p ng-show="method.returnComment"><strong>returns</strong> <span ng-bind-html="method.returnComment"></span></p>
+
+

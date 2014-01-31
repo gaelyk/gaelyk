@@ -15,12 +15,16 @@
  */
 package groovyx.gaelyk.tools.docs
 
+import com.thoughtworks.qdox.model.JavaMethod
+import com.thoughtworks.qdox.model.JavaParameter
 import groovy.json.JsonBuilder;
 
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import com.thoughtworks.qdox.JavaDocBuilder
 
 import org.codehaus.groovy.tools.shell.util.Logger
+import org.jsoup.Jsoup
+import org.jsoup.safety.Whitelist
 
 /**
  * Generate documentation about the methods provided by Gaelyk
@@ -186,6 +190,11 @@ class DocGenerator {
     }
 
     /**
+
+
+
+
+
      * Generate an index.
      * <p>
      * This method creates a index map indexed by the first letter of the
@@ -265,9 +274,20 @@ class DocGenerator {
     private Map getClassInfo(String pkg, String clazz) {
         def listOfMethods = jdkEnhancedClasses[clazz].sort {it.name}
         def methods = []
-        listOfMethods.each {method ->
+        listOfMethods.each { JavaMethod method ->
             def parameters = method.getTagsByName("param").collect {
-                [name: it.value.replaceAll(' .*', ''), comment: linkify(it.value.replaceAll('^\\w*', ''), pkg)]
+                def ret = [
+                    name:       it.value.replaceAll(' .*', ''),
+                    comment:    linkify(it.value.replaceAll('^\\w*', ''), pkg),
+                ]
+
+                JavaParameter parameter = method.getParameterByName(ret.name)
+                if (parameter) {
+                    ret.typeDocUrl  = getDocUrl(parameter.type?.toString(), pkg)
+                    ret.type        = parameter.type?.toString()
+
+                }
+                ret
             }
             if (parameters)
                 parameters.remove(0) // method is static, first arg is the "real this"
@@ -282,6 +302,7 @@ class DocGenerator {
                 shortComment: linkify(getFirstSentence(comment), pkg),
                 returnComment: method.getTagByName("return")?.getValue() ?: '',
                 seeComments: seeComments,
+                returnType: returnType,
                 returnTypeDocUrl: getDocUrl(returnType, pkg),
                 parametersSignature: getParametersDecl(method),
                 parametersDocUrl: getParametersDocUrl(method, pkg),
@@ -425,7 +446,8 @@ class DocGenerator {
     }
 
     private linkify(orig, curPackage) {
-        orig.replaceAll(/\{@link\s+([^}]*)\s*\}/) {all, link -> getDocUrl(link, curPackage) }
+        String text = orig.replaceAll(/\{@link\s+([^}]*)\s*\}/) {all, link -> getDocUrl(link, curPackage) }
+        Jsoup.clean(text, Whitelist.relaxed())
     }
 
     /**

@@ -68,7 +68,7 @@
         </div>
 
         <div id="footer">
-            <p>&copy; 2009-2012 &mdash; <b>Guillaume Laforge</b> and the <b>Gaelyk development team</b></p>
+            <p>&copy; 2009-2014 &mdash; <b>Guillaume Laforge</b> and the <b>Gaelyk development team</b></p>
             <p>Powered by <b>Gaelyk</b> and <b>Groovy</b></p>
         </div>
     </body>

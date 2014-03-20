@@ -191,9 +191,9 @@ class GaelykTemplateServlet extends TemplateServlet {
         return pkg.replaceAll(/[^a-zA-Z0-9\/]/, '_').replace('/', '.').toLowerCase()
     }
 
-    @CompileStatic
+    // @CompileStatic
     private runPrecompiled(String precompiledClassName, ServletBinding binding, HttpServletResponse response) {
-        Class<Script> precompiledClass = Class.forName(precompiledClassName)
+        Class<Script> precompiledClass = (Class<Script>) Class.forName(precompiledClassName)
         Script precompiled = precompiledClass.newInstance([binding]as Object[])
         precompiled.run()
     }

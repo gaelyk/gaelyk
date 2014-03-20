@@ -37,8 +37,8 @@ gaelykPrecompileTemplate.runtimeClasspath += project.configurations.precompile
 */
 
 dependencies {
-    def gaeVersion = '1.8.0'
-    def groovyVersion = '2.1.3'
+    def gaeVersion = '1.9.1'
+    def groovyVersion = '2.1.9'
     groovy "org.codehaus.groovy:groovy-all:${groovyVersion}" 
 //    precompile "org.codehaus.groovy:groovy-ant:${groovyVersion}"     
 //    precompile "org.ow2.asm:asm:4.0" 
@@ -47,7 +47,7 @@ dependencies {
     compile "org.codehaus.groovy:groovy-servlet:${groovyVersion}"    
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion"
-    compile 'org.gaelyk:gaelyk:2.0'
+    compile 'org.gaelyk:gaelyk:2.1'
     
     
 

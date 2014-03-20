@@ -9,12 +9,12 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-2.0.1.zip?direct"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-2.0.1.zip?direct">Template project v2.0</a></td>
+            <td><a href="http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-2.1.zip?direct"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-2.1.zip?direct">Template project v2.1</a></td>
         </tr>
         <tr>
-            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.0/gaelyk-2.0.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.0/gaelyk-2.0.jar">Gaelyk JAR v2.0</a></td>
+            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.1/gaelyk-2.1.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.1/gaelyk-2.1.jar">Gaelyk JAR v2.1</a></td>
         </tr>
     </table>
 </div>
@@ -24,13 +24,30 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 2.1 and beyond and 
 </p>
 
 <p>
-The latest version was tested with Groovy 2.1.3,
-and with the 1.8.0 version of the App Engine SDK.
+The latest version was tested with Groovy 2.1.9,
+and with the 1.9.1 version of the App Engine SDK.
 </p>
 
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 2.1</h2>
+
+<h3>Changes</h3>
+<ul>
+    <li>Migrated to GAE SDK 1.9.1</li>
+    <li>Static and read-only properties are ignored during datastore coercion</li>
+    <li>Enum constants are converted to Strings when coercing to <code>Entity</code></li>
+    <li>Added <code>deleteServingUrl</code> to <code>BlobKey</code> to delete previously created serving URL</li>
+    <li>Result list now contains original query for debug purposes</li>
+    <li>Errors are better reported during coercion</li>
+    <li><code>@Entity</code> annotation supports inheritance</li>
+    <li>Ability to customize coercion by implementing <code>DatastoreEntity</code> interface</li>
+    <li>Added <code>paginate</code> keyword to query DSL for simplified pagination out of box</li>
+    <li>Filtering stacktraces for clearer logs</li>
+
+</ul>
 
 <h2>Version 2.0</h2>
 

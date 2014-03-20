@@ -162,9 +162,9 @@ class GaelykServlet extends GroovyServlet {
         gse.run(scriptUri, binding)
     }
 
-    @CompileStatic
+    // @CompileStatic
     private runPrecompiled(String precompiledClassName, ServletBinding binding) {
-        Class<Script> precompiledClass = Class.forName(precompiledClassName)
+        Class<Script> precompiledClass = (Class<Script>) Class.forName(precompiledClassName)
         Script precompiled = precompiledClass.newInstance([binding]as Object[])
         precompiled.run()
     }

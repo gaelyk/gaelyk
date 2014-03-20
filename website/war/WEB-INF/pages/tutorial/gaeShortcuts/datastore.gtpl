@@ -152,7 +152,7 @@ and you can also convert an <code>Entity</code> to a POJO or POGO.
 So for example, if the <code>Person</code> class was in a package <code>com.foo</code>,
 the entity kind used would be <code>Person</code>, not the fully-qualified name.
 This is the same default strategy that <a href="http://code.google.com/p/objectify-appengine/">Objectify</a>
-is using.
+is using. You can further customize coercion by implementing <code>DatastoreEntity</code> interface.
 </blockquote>
 
 <a name="pogo-entity-coercion-annotations"></a>
@@ -510,6 +510,9 @@ Here are the various options of those verbs:
     sort asc  by propertyName
     // descending sorting
     sort desc by propertyName
+
+    // automatic pagination using limit, offset or cursor parameters
+    paginate params
 </pre>
 
 <blockquote>
@@ -610,6 +613,9 @@ to for flawless iteration.
     // automatically restart query when expired
     // usefull for long running queries
     restart automatically
+
+    // automatic pagination using limit, offset or cursor parameters
+    paginate params
 </pre>
 
 <blockquote>

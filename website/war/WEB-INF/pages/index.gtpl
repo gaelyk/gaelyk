@@ -188,8 +188,7 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
         </a>
     </div>
     <div class="pic-frame">
-        <a href="http://meorganizo.es/
-        ">
+        <a href="http://meorganizo.es/">
         <img src="/images/sightings/small/meorganizo.png" alt="meorganizo.es" ><br/>
         Personal productivity application
         </a>

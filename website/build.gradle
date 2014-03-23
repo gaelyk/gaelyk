@@ -1,25 +1,23 @@
 apply from: '../common.gradle'
 
+apply plugin: 'war'
 apply plugin: 'gaelyk'
 
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.4.1'
-        classpath 'org.gradle.api.plugins:gradle-gae-plugin:0.8', {
-            exclude module: "gradle-fatjar-plugin"
-        }
-        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
+        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.6'
     }
 }
 
 dependencies {
     compile project(':core')
 	groovy "org.codehaus.groovy:groovy-all:$ext.gaelykGroovyVersion"
-    gaeSdk "com.google.appengine:appengine-java-sdk:$ext.gaelykAppEngineVersion"
+    appengineSdk "com.google.appengine:appengine-java-sdk:$ext.gaelykAppEngineVersion"
     compile 'com.ocpsoft:ocpsoft-pretty-time:1.0.2',
             'opensymphony:sitemesh:2.4.2'
 }

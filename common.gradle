@@ -2,7 +2,7 @@ ext.gaelykGroovyVersion = '2.1.9'
 ext.gaelykSpockVersion = '0.7-groovy-2.0'
 ext.gaelykAppEngineVersion = '1.9.1'
 ext.gaelykLatestVersion = '2.1'
-ext.gaelykSpockLatestVersion = '0.5-SNAPSHOT'
+ext.gaelykSpockLatestVersion = '0.4'
 ext.gaelykGradleVersion = '1.10'
 
 repositories {
@@ -36,3 +36,4 @@ println "App Engine Version: $ext.gaelykAppEngineVersion"
 println "Gaelyk Version: $ext.gaelykLatestVersion"
 println "Gaelyk Spock Version: $ext.gaelykSpockLatestVersion"
 println "Gradle Version: $ext.gaelykGradleVersion"
+println "Java Version: ${System.getProperty("java.vendor")} ${System.getProperty("java.version")}"

@@ -1,5 +1,5 @@
-def stableDuration = localMode ? 0 : 1.hour
-def hotContentDuration = localMode ? 0 : 30.minutes
+def stableDuration = 0
+def hotContentDuration = 0
 
 get "/",            forward: "/WEB-INF/pages/index.gtpl",     cache: stableDuration
 

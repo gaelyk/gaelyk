@@ -9,8 +9,8 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-2.1.zip?direct"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-2.1.zip?direct">Template project v2.1</a></td>
+            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.zip?direct"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.zip?direct">Template project v2.1</a></td>
         </tr>
         <tr>
             <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.1/gaelyk-2.1.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>

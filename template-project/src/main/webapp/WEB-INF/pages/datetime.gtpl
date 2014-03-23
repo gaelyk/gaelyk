@@ -1,5 +1,5 @@
 <% include '/WEB-INF/includes/header.gtpl' %>
-<div class="hero-unit">
+<div class="jumbotron">
 <h1>Current Date</h1>
 
 <p>

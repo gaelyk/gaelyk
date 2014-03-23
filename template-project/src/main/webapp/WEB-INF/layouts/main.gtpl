@@ -1,19 +1,20 @@
 <!doctype html>
 <html>
 <head>
-  <title>Gaelyk</title>
-  <link rel="shortcut icon" href="/images/gaelyk-small-favicon.png" type="image/png">
-  <link rel="icon" href="/images/gaelyk-small-favicon.png" type="image/png">
-  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css" />
-  <script type="text/javascript" src="/js/jquery-1.11.0.js">
-  </script>
-  <script type="text/javascript" src="/js/bootstrap.min.js"></script>
-  <style type="text/css">
-      .center {
+    <title><sitemesh:write property='title'/> | Gaelyk</title>
+    <link rel="shortcut icon" href="/images/gaelyk-small-favicon.png" type="image/png">
+    <link rel="icon" href="/images/gaelyk-small-favicon.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css" />
+    <script type="text/javascript" src="/js/jquery-1.11.0.js">
+    </script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <style type="text/css">
+    .center {
         text-align: center;
-      }
-  </style>
+    }
+    </style>
+    <sitemesh:write property='head'/>
 </head>
 <body>
     <nav class="navbar navbar-default" role="navigation">
@@ -40,3 +41,8 @@
     </nav>
 
     <div class="container">
+        <sitemesh:write property='body'/>
+    </div>
+</body>
+</html>
+

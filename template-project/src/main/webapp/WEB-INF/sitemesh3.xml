@@ -1,0 +1,4 @@
+<sitemesh>
+  <mapping path='/*' decorator='/WEB-INF/layouts/main.gtpl' />
+  <mapping path='/_ah/*' exclude='true' />
+</sitemesh>

@@ -45,6 +45,19 @@ class RetryingFuture<R> implements Future<R> {
         }
         new RetryingFuture(retries, factory)
     }
+    
+    /**
+     * Creates new retry future which retries particular times before failing
+     * @param retries number of retries
+     * @param factory closure to construct the future
+     * @return future which retries particular times before failing
+     */
+    static <R> Future<R> retry(int retries, Callable<Future<R>> factory){
+        if(retries <= 0){
+            return factory()
+        }
+        new RetryingFuture(retries, factory)
+    }
 
     @Override public boolean cancel(boolean mayInterruptIfRunning) {
         

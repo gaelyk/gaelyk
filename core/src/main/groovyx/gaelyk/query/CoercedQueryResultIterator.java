@@ -30,9 +30,13 @@ class CoercedQueryResultIterator<E> implements QueryResultIteratorWithQuery<E> {
         return entitiesIterator.hasNext();
     }
 
-    @SuppressWarnings("unchecked") public E next() {
+    public E next() {
         Entity entity = entitiesIterator.next();
-        return (E) DatastoreExtensions.asType(entity, coercedClass);
+        try {
+            return (E) DatastoreExtensions.asType(entity, coercedClass);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void remove() {

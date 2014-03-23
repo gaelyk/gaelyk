@@ -1,0 +1,20 @@
+.navbar-brand {
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.center {
+    text-align: center;
+}
+
+.img-responsive.center {
+    margin: 0 auto;
+}
+
+.tab-pane p:first-child {
+    padding-top: 10px
+}
+
+.smaller {
+    font-size: 0.8em;
+}

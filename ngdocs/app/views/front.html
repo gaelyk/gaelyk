@@ -1,0 +1,123 @@
+<div class="jumbotron center">
+    <p><img src="/images/gaelyk.png" alt="Gaelyk Logo" class="img-responsive center"/></p>
+    <p class="lead">
+        Lightweight Groovy Framework for Google App Engine
+    </p>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h3>Start Project</h3>
+        <tabset>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-wrench"></span> Lazybones</tab-heading>
+                <p>
+                    The easiest way to start project is to install <a href="http://gvmtool.net">Groovy enVironment Manager</a> and let
+                    <a href="https://github.com/pledbrook/lazybones">Lazybones</a> create the project for you.
+                </p>
+                <p>
+                    Sign up for <a href="https://appengine.google.com">Google App Engine</a>
+                    and create new application. Use the application id when prompt.
+                </p>
+                <pre>$ curl -s get.gvmtool.net | bash
+$ gvm install lazybones
+$ lazybones create gaelyk {{gaelykTemplateVersion}} myproject
+$ cd myproject</pre>
+            </tab>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-send"></span> Glide</tab-heading>
+                <p>
+                    If you prefer simplicity you should try <a href="http://glide-gae.appspot.com/">Glide</a>.
+                    Glide removes all the clutter needed by <a href="http://www.gradle.org/">Gradle</a>
+                    and helps you create website in minutes.
+                </p>
+                <pre class="smaller">$ curl http://glide-gae.appspot.com/install | sh
+$ mkdir hello-glide
+$ cd hello-glide
+$ echo "hello glide" > hello.html</pre>
+            </tab>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-download"></span> Download</tab-heading>
+                <p>
+                    Gaelyk template is also available for download directly from
+                    <a href="https://bintray.com/glaforge/gaelyk">BinTray repository</a>.
+                    Download the template and extract it.
+                </p>
+                <p class="center"><a ng-href="{{'http://dl.bintray.com/glaforge/gaelyk/gaelyk-template-project-' + gaelykTemplateVersion +'.zip?direct'}}" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-download"></span> Download Template</a></p>
+            </tab>
+        </tabset>
+
+    </div>
+    <div class="col-md-4">
+        <h3>Run Server</h3>
+        <tabset>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-wrench"></span> Lazybones</tab-heading>
+                <p>
+                    Projects created by <a href="https://github.com/pledbrook/lazybones">Lazybones</a>
+                    are using <a href="http://www.gradle.org/">Gradle</a> as a build tool.
+                    When running server locally changes in static resources, templates and groovlets
+                    are synchronized immediately.
+                </p>
+                <pre>$ ./gradlew {{runCommand}}</pre>
+                <p>Go to <a href="http://localhost:8080">http://localhost:8080</a> in your browser.</p>
+            </tab>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-send"></span> Glide</tab-heading>
+                <p>
+                    Run <code>glide</code> command in project directory.
+                </p>
+                <pre>$ glide</pre>
+                <p>Go to <a href="http://localhost:8080">http://localhost:8080</a> in your browser.</p>
+            </tab>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-download"></span> Download</tab-heading>
+                <p>
+                    Projects created from Gaelyk template are using <a href="http://www.gradle.org/">Gradle</a> as a build tool.
+                    When running server locally changes in static resources, templates and groovlets
+                    are synchronized immediately.
+                </p>
+                <pre>$ ./gradlew {{runCommand}}</pre>
+                <p>Go to <a href="http://localhost:8080">http://localhost:8080</a> in your browser.</p>
+            </tab>
+        </tabset>
+    </div>
+    <div class="col-md-4">
+        <h3>Deploy into Cloud</h3>
+        <tabset>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-wrench"></span> Lazybones</tab-heading>
+                <p>
+                    If you have already signed up for <a href="https://appengine.google.com">Google App Engine</a>
+                    and set application identifier in the first step you can deploy right away.
+                </p>
+                <pre>$ ./gradlew {{deployCommand}}</pre>
+                <p>Go to <a href="http://appspot.com">http://yourappid.appspot.com/</a> in your browser.</p>
+            </tab>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-send"></span> Glide</tab-heading>
+                <p>
+                    Sign up for <a href="https://appengine.google.com">Google App Engine</a>
+                    and create new application. Create <code>__glide.groovy</code> file in your project
+                    with following content.
+                </p>
+                <pre>app {
+    name = "yourappid"
+    version = "1"
+}</pre>
+                <p>Run following command:</p>
+                <pre>$ glide deploy</pre>
+                <p>Go to <a href="http://appspot.com">http://yourappid.appspot.com/</a> in your browser.</p>
+            </tab>
+            <tab>
+                <tab-heading><span class="glyphicon glyphicon-download"></span> Download</tab-heading>
+                <p>
+                    Sign up for <a href="https://appengine.google.com">Google App Engine</a>
+                    and create new application. Replace <code>&lt;application&gt;</code>
+                    identifier in <code>src/main/webapp/WEB-INF/appengine-web.xml</code>.
+                </p>
+                <pre>$ ./gradlew {{deployCommand}}</pre>
+                <p>Go to <a href="http://appspot.com">http://yourappid.appspot.com/</a> in your browser.</p>
+            </tab>
+        </tabset>
+    </div>
+</div>

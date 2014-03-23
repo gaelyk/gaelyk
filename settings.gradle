@@ -1,1 +1,1 @@
-include 'core', 'website'
+include 'core', 'website', 'gaelyk-docgenerator'

@@ -47,13 +47,13 @@ class MemcacheExtensionMethodsTest extends GroovyTestCase {
         assert memcache.get('lastname-of-Guillaume-is') == 'Laforge'
         assert memcache.get("lastname-of-${'Guillaume'}-is") == 'Laforge'
 
-        memcache.put("age-of-${name}", 33, Expiration.byDeltaMillis(1000))
+        memcache.put("age-of-${name}", 33, Expiration.byDeltaMillis(10000))
         sleep 100
         assert memcache['age-of-Guillaume'] == 33
 
         assert 'age-of-Guillaume' in memcache
 
-        memcache.put("sex-of-${name}", 'Male', Expiration.byDeltaMillis(1000), SetPolicy.SET_ALWAYS)
+        memcache.put("sex-of-${name}", 'Male', Expiration.byDeltaMillis(10000), SetPolicy.SET_ALWAYS)
         assert memcache['sex-of-Guillaume'] == 'Male'
     }
 

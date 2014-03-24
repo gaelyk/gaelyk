@@ -9,8 +9,8 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.zip?direct"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.zip?direct">Template project v2.1</a></td>
+            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.zip">Template project v2.1</a></td>
         </tr>
         <tr>
             <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.1/gaelyk-2.1.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
@@ -36,6 +36,7 @@ But to get you started quickly, you may use a ready-made template project which 
 
 <h3>Changes</h3>
 <ul>
+    <li>Gradle plugin switched to official <a href="https://github.com/GoogleCloudPlatform/gradle-appengine-plugin">Gradle AppEngine Plugin</a></li>
     <li>Migrated to GAE SDK 1.9.1</li>
     <li>Static and read-only properties are ignored during datastore coercion</li>
     <li>Enum constants are converted to Strings when coercing to <code>Entity</code></li>

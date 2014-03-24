@@ -56,6 +56,7 @@ for <a href="http://code.google.com/appengine/">Google App Engine Java</a>.
         <b>Gaelyk</b> is <b>Open Source</b> and is released under the <b>Apache License</b> (ASL 2).
         Its source code is hosted by <a href="http://github.com/gaelyk/gaelyk/tree/master">Github</a>
     </li>
+    <li><b>Gaelyk</b> application can be simply crated using <a href="https://github.com/kdabir/lazybone-templates#creating-a-gaelyk-project-using-the-template">Lazybones template</a></li>
 </ul>
 </div>
 

@@ -9,6 +9,23 @@ import com.google.appengine.api.datastore.Text;
 
 public class DatastoreEntityCoercion {
 
+    public static enum Proxy {
+        INSTANCE;
+
+        Entity convert(DatastoreEntity dsEntity){
+            return DatastoreEntityCoercion.convert(dsEntity);
+        }
+
+        public static Object convert(Entity en, Class dsEntityClass, DatastoreEntity dsEntity) throws InstantiationException, IllegalAccessException{
+            return DatastoreEntityCoercion.convert(en, dsEntityClass, dsEntity);
+        }
+
+        public static Object convert(Entity en, Class dsEntityClass) throws InstantiationException, IllegalAccessException{
+            return DatastoreEntityCoercion.convert(en, dsEntityClass);
+        }
+
+    }
+
     public static Entity convert(DatastoreEntity<?> dsEntity){
         if(dsEntity == null) return null;
         

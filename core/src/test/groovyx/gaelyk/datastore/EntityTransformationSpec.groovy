@@ -182,7 +182,6 @@ class EntityTransformationSpec extends Specification {
         obj
     }
 
-    @spock.lang.Ignore
     def "Test find with generic"(){
         def obj = newShell().evaluate '''
             @groovy.transform.CompileStatic
@@ -200,6 +199,24 @@ class EntityTransformationSpec extends Specification {
 
         expect:
         obj
+    }
+
+    def "Test get by name"() {
+        def obj = newShell().evaluate '''
+            @groovyx.gaelyk.datastore.Entity class MyPogoWithName {
+
+                @groovyx.gaelyk.datastore.Key String email
+
+            }
+
+            new MyPogoWithName(email: 'test@example.com').save()
+
+            MyPogoWithName.get('test@example.com')
+        '''
+
+        expect:
+        obj
+        obj.email == 'test@example.com'
     }
 
     def "Test key"(){

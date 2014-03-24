@@ -95,8 +95,7 @@ class EntityTransformationSpec extends Specification {
                 @groovy.transform.CompileStatic(groovy.transform.TypeCheckingMode.SKIP)
                 static findAllByTest(String t){
                     MyPogo3.findAll{ 
-                        // where 'test' == t 
-                        where new groovyx.gaelyk.query.WhereClause(column: 'test', operation: com.google.appengine.api.datastore.Query.FilterOperator.EQUAL, comparedValue: t)
+                        where 'test' == t
                     }
                 }
             }
@@ -115,6 +114,30 @@ class EntityTransformationSpec extends Specification {
         2       | '("foo")'
         1       | '("bar")'
     }
+
+    def "Test find all with closure in script"(){
+        def obj = newShell().evaluate '''
+            @groovy.transform.CompileStatic
+            @groovyx.gaelyk.datastore.Entity
+            class MyPogo3 {
+                @groovyx.gaelyk.datastore.Indexed String test                
+            }
+
+             new MyPogo3(test: "foo").save()
+             new MyPogo3(test: "foo").save()
+             new MyPogo3(test: "bar").save()
+
+            MyPogo3.findAll''' + argument
+
+        expect:
+        obj.size() == result
+
+        where:
+        result  | argument
+        2       | '{ where test == "foo" }'
+        1       | '{ where test == "bar" }'
+    }
+
 
     def "Test count "(){
         def obj = newShell().evaluate '''

@@ -49,37 +49,37 @@ class EntityTransformationHelper {
         DatastoreExtensions.delete((Entity)DatastoreExtensions.asType(pogo, Entity))
     }
 
-    @CompileStatic(TypeCheckingMode.SKIP)
-    static <P> P get(Class<P> pogoClass, long key) {
+    static <P extends DatastoreEntity<?>> P get(Class<P> pogoClass, long key) {
         try {
-            return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
+            Entity entity = DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key))
+            return (P) DatastoreEntityCoercion.Proxy.INSTANCE.convert(entity, pogoClass)
         } catch (EntityNotFoundException e) {
             return null
         }
     }
 
-    @CompileStatic(TypeCheckingMode.SKIP)
-    static <P> P get(Class<P> pogoClass, String key) {
+    static <P extends DatastoreEntity<?>> P get(Class<P> pogoClass, String key) {
         try {
-            return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key)), pogoClass)
+            Entity entity = DatastoreExtensions.get(KeyFactory.createKey(pogoClass.simpleName, key))
+            return (P) DatastoreEntityCoercion.Proxy.INSTANCE.convert(entity, pogoClass)
         } catch (EntityNotFoundException e) {
             return null
         }
     }
 
-    @CompileStatic(TypeCheckingMode.SKIP)
-    static <P> P get(Class<P> pogoClass, Key parentKey, long key) {
+    static <P extends DatastoreEntity<?>> P get(Class<P> pogoClass, Key parentKey, long key) {
         try {
-            return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(parentKey, pogoClass.simpleName, key)), pogoClass)
+            Entity entity = DatastoreExtensions.get(KeyFactory.createKey(parentKey, pogoClass.simpleName, key))
+            return (P) DatastoreEntityCoercion.Proxy.INSTANCE.convert(entity, pogoClass)
         } catch (EntityNotFoundException e) {
             return null
         }
     }
 
-    @CompileStatic(TypeCheckingMode.SKIP)
-    static <P> P get(Class<P> pogoClass, Key parentKey, String key) {
+    static <P extends DatastoreEntity<?>> P get(Class<P> pogoClass, Key parentKey, String key) {
         try {
-            return DatastoreExtensions.asType(DatastoreExtensions.get(KeyFactory.createKey(parentKey, pogoClass.simpleName, key)), pogoClass)
+            Entity entity = DatastoreExtensions.get(KeyFactory.createKey(parentKey, pogoClass.simpleName, key))
+            return (P) DatastoreEntityCoercion.Proxy.INSTANCE.convert(entity, pogoClass)
         } catch (EntityNotFoundException e) {
             return null
         }

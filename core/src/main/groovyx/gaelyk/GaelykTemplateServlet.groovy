@@ -117,17 +117,11 @@ class GaelykTemplateServlet extends TemplateServlet {
             e = RoutesFilter.filterStackTrace(request, e)
             StringWriter sw = []
             PrintWriter pw  = [sw]
-                    
-            if (logErrors) {
-                pw.print("GaelykTemplateServlet Error: ")
-                pw.print(" template: '")
-                pw.print(getScriptUri(request))
-                getLog(request).warning(sw.toString())
-            }
+
             /*
              * Resource not found.
              */
-            if (e instanceof ResourceException) {
+            if (e instanceof ResourceException || e instanceof ClassNotFoundException || e instanceof FileNotFoundException) {
                 if (logErrors) {
                     pw.println("': ")
                     e.printStackTrace(pw)                
@@ -135,6 +129,12 @@ class GaelykTemplateServlet extends TemplateServlet {
                 }
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
+            } else if (logErrors) {
+                pw.print("GaelykTemplateServlet Error: ")
+                pw.print(" template: '")
+                pw.print(getScriptUri(request))
+                getLog(request).warning(sw.toString())
+
             }
             throw e // Let propagate out the filter chain and container handle the exception.
         }

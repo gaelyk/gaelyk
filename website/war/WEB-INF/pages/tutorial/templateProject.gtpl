@@ -52,8 +52,8 @@ The Gradle build file uses the following Gradle plugins:
 
 <p>
 You'll find more information on
-the <a href="https://github.com/bmuschko/gradle-gae-plugin">gae plugin</a> and
-<a href="https://github.com/bmuschko/gradle-gaelyk-plugin">gaelyk plugin</a>
+the <a href="https://github.com/GoogleCloudPlatform/gradle-appengine-plugin">gae plugin</a> and
+<a href="https://github.com/GoogleCloudPlatform/gradle-appengine-plugin">gaelyk plugin</a>
 on their respective project pages. The pages describe all available configuration options and tasks in detail.
 </p>
 

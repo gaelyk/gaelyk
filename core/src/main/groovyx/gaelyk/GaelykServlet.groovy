@@ -133,17 +133,10 @@ class GaelykServlet extends GroovyServlet {
             StringWriter sw = []
             PrintWriter pw  = [sw]
                     
-            if (logErrors) {
-                pw.print("GaelykServlet Error: ")
-                pw.print(" script: '")
-                pw.print(scriptUri)
-                getLog(request).warning(sw.toString())                
-            }
-
             /*
              * Resource not found.
              */
-            if (e instanceof ResourceException) {
+            if (e instanceof ResourceException || e instanceof ClassNotFoundException || e instanceof FileNotFoundException) {
                 if (logErrors) {
                     pw.println("': ")
                     e.printStackTrace(pw)
@@ -151,6 +144,11 @@ class GaelykServlet extends GroovyServlet {
                 }
                 response.sendError(HttpServletResponse.SC_NOT_FOUND)
                 return
+            } else if (logErrors) {
+                pw.print("GaelykServlet Error: ")
+                pw.print(" script: '")
+                pw.print(scriptUri)
+                getLog(request).warning(sw.toString())
             }
             throw e // Let propogate out the filter chain and container handle the exception.
         }

@@ -45,6 +45,7 @@ class SelfRestartingQueryResultIterator<T> implements QueryResultIteratorWithQue
             currentCursor = currentIterator.cursor
             return next
         } catch(e){
+            if (!currentCursor) throw new NoSuchElementException()
             if(e.message?.contains('Please restart it with the last cursor')){
                 queryBuilder.startAt(currentCursor)
                 currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery
@@ -57,6 +58,7 @@ class SelfRestartingQueryResultIterator<T> implements QueryResultIteratorWithQue
         try {
             return currentIterator.hasNext()
         } catch(e){
+            if (!currentCursor) return false
             if(e.message?.contains('Please restart it with the last cursor')){
                 queryBuilder.startAt(currentCursor)
                 currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery
@@ -73,6 +75,7 @@ class SelfRestartingQueryResultIterator<T> implements QueryResultIteratorWithQue
         try {
             return currentIterator.getCursor()
         } catch(e){
+            if (!currentCursor) return null
             if(e.message?.contains('Please restart it with the last cursor')){
                 queryBuilder.startAt(currentCursor)
                 currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery
@@ -85,6 +88,7 @@ class SelfRestartingQueryResultIterator<T> implements QueryResultIteratorWithQue
         try {
             return currentIterator.getIndexList()
         } catch(e){
+            if (!currentCursor) return []
             if(e.message?.contains('Please restart it with the last cursor')){
                 queryBuilder.startAt(currentCursor)
                 currentIterator = queryBuilder.iterate() as QueryResultIteratorWithQuery

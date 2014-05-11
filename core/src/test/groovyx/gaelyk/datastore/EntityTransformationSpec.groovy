@@ -302,17 +302,17 @@ class EntityTransformationSpec extends Specification {
                 @groovy.transform.CompileStatic
                 @groovyx.gaelyk.datastore.Entity
                 class MyPogo9 extends MyPogoSuper9 {
-                @groovyx.gaelyk.datastore.Key String name
+                @groovyx.gaelyk.datastore.Key Long name
                 @groovyx.gaelyk.datastore.Indexed String test1
                 @groovyx.gaelyk.datastore.Unindexed String test2
                 String test3
                 }
                 
-                new MyPogo9(name: "name", test1: "one", test2: "two", test3: "three")'''
+                new MyPogo9(name: 10, test1: "one", test2: "two", test3: "three")'''
         expect:
         obj.hasDatastoreKey() == true
-        obj.hasDatastoreNumericKey() == false
-        obj.getDatastoreKey() == 'name'
+        obj.hasDatastoreNumericKey() == true
+        obj.getDatastoreKey() == 10
         obj.hasDatastoreVersion() == false
         obj.getDatastoreIndexedProperties() == ['test1']
         obj.getDatastoreUnindexedProperties() == [

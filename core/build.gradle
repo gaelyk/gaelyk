@@ -1,6 +1,6 @@
 buildscript {
     repositories { mavenCentral() }
-    dependencies { classpath "org.codehaus.groovy:groovy-docgenerator:2.1.9" }
+    dependencies { classpath "org.codehaus.groovy:groovy-docgenerator:2.3.0" }
 }
 
 

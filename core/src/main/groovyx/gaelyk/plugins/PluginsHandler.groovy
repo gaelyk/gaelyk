@@ -18,6 +18,7 @@ package groovyx.gaelyk.plugins
 import groovy.transform.CompileStatic
 import groovyx.gaelyk.GaelykBindingEnhancer
 import groovyx.gaelyk.logging.GroovyLogger
+import groovyx.gaelyk.routes.Route
 
 import javax.servlet.ServletContext
 import javax.servlet.http.HttpServletRequest
@@ -40,11 +41,11 @@ class PluginsHandler {
     // we can't know which one will initialize the plugins first
     private boolean initialized = false
 
-    Map bindingVariables = [:]
-    List routes = []
-    List beforeActions = []
-    List afterActions = []
-    List installed = []
+    Map<String, Object> bindingVariables = [:]
+    List<Route> routes = []
+    List<Closure> beforeActions = []
+    List<Closure> afterActions = []
+    List<String> installed = []
 
     final Closure defaultScriptContentLoader = { String path ->
         def file = new File(path)
@@ -136,7 +137,7 @@ class PluginsHandler {
                 for(PluginBaseScript plugin in loader){
                     init plugin
                 }
-            } catch(java.util.ServiceConfigurationError e){
+            } catch(ServiceConfigurationError e){
                 log.config e.message
             }
 

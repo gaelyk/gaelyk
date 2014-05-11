@@ -304,7 +304,7 @@ public class XmppExtensions {
         // split the form-data lines around the boundaries
         // remove a first surrounding empty lines and closing boundary
         // trim the last \n characters
-        List<String> parts = DefaultGroovyMethods.getAt(body.split(lines.get(0).trim()), new IntRange(1,-2));
+        List<String> parts = DefaultGroovyMethods.getAt(body.split(lines.get(0).trim()), new IntRange(true, 1,-2));
         for (int i = 0; i < parts.size(); i++) {
             parts.set(i, parts.get(i).trim()); 
         }        

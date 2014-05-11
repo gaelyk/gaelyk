@@ -171,18 +171,18 @@ class PluginsHandlerTest extends GroovyTestCase {
                     """
                 } else if (path == "WEB-INF/plugins/pluginOne.groovy") {
                     """
-                    before { request.sample << '1' }
-                    after  { request.sample << '2' }
+                    before { request.setAttribute('sample', '1') }
+                    after  { request.setAttribute('sample', '2') }
                     """
                 } else if (path == "WEB-INF/plugins/pluginTwo.groovy") {
                     """
-                    before { request.sample << '3' }
-                    after  { request.sample << '4' }
+                    before { request.setAttribute('sample', '3') }
+                    after  { request.setAttribute('sample', '4') }
                     """
                 } else if (path == "WEB-INF/plugins/pluginThree.groovy") {
                     """
-                    before { request.sample << '5' }
-                    after  { request.sample << '6' }
+                    before { request.setAttribute('sample', '5') }
+                    after  { request.setAttribute('sample', '6') }
                     """
                 }
             }
@@ -212,8 +212,8 @@ class PluginsHandlerTest extends GroovyTestCase {
                     }
 
                     before {
-                        request.fromBindingBlock = binding
-                        request.fromBeforeBlock = this.datastore
+                        request.setAttribute('fromBindingBlock',binding)
+                        request.setAttribute('fromBeforeBlock', this.datastore)
                     }
                     """
                 } else ""
@@ -222,7 +222,7 @@ class PluginsHandlerTest extends GroovyTestCase {
             initPlugins(null, true)
 
             def values = [:]
-            def request = [setAttribute: { String name, obj -> values[name] = obj }] as HttpServletRequest
+            def request = [setAttribute: { String name, obj -> values[name] = obj }, set:  { String name, obj -> values[name] = obj }] as HttpServletRequest
             executeBeforeActions(request, [:] as HttpServletResponse)
 
             assert values.fromBindingBlock.book == "Harry Potter"

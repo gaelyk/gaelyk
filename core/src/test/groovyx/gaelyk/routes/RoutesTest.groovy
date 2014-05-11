@@ -137,8 +137,8 @@ class RoutesTest extends GroovyTestCase {
         assert new Route("/isbn/@isbn/toc", d, m, rt, { isbn ==~ /\d{9}(\d|X)/ }, null, 0, false, false, false, 0).forUri("/isbn/012345678X/toc",r("/isbn/012345678X/toc")).matches
         assert !new Route("/isbn/@isbn/toc", d, m, rt, { isbn =~ /\d{9}(\d|X)/ }, null, 0, false, false, false, 0).forUri("/isbn/XYZ/toc",r("/isbn/XYZ/toc")).matches
 
-        assert new Route("/admin", d, m, rt, { request.user == 'USER' }, null, 0, false, false, false, 0).forUri("/admin",r("/admin")).matches
-        assert !new Route("/admin", d, m, rt, { request.user == 'dummy' }, null, 0, false, false, false, 0).forUri("/admin",r("/admin")).matches
+        assert new Route("/admin", d, m, rt, { request.getAttribute('user') == 'USER' }, null, 0, false, false, false, 0).forUri("/admin",r("/admin")).matches
+        assert !new Route("/admin", d, m, rt, { request.getAttribute('user') == 'dummy' }, null, 0, false, false, false, 0).forUri("/admin",r("/admin")).matches
     }
 
     void testIgnoreRoute() {

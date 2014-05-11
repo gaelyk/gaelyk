@@ -16,6 +16,7 @@
 package groovyx.gaelyk.datastore
 
 import groovyx.gaelyk.query.QueryBuilder
+import org.codehaus.groovy.ast.tools.GenericsUtils
 
 import java.lang.reflect.Modifier
 
@@ -101,29 +102,23 @@ class EntityTransformation extends AbstractASTTransformation {
         parent.addMethod(addStaticDelegatedMethod(parent, "iterate", [query: QueryBuilder], getPogoIteratorNode(parent)))
     }
     
-    private AnnotationNode makeDelegatesToAnno(Class cls, int strategy){
+    private static AnnotationNode makeDelegatesToAnno(Class cls, int strategy){
         AnnotationNode anno = new AnnotationNode(ClassHelper.make(DelegatesTo).plainNodeReference)
         anno.addMember('value', new ClassExpression(ClassHelper.make(cls).plainNodeReference))
         anno.addMember('strategy', new ConstantExpression(strategy, true))
         anno
     }
 
-    private addDatastoreEntityInterface(ClassNode keyType, ClassNode parent) {
-        ClassNode datastoreEntityInterface = ClassHelper.make(DatastoreEntity).plainNodeReference
-        datastoreEntityInterface.setGenericsTypes([new GenericsType(keyType)] as GenericsType[])
-        parent.addInterface(datastoreEntityInterface)
+    private static addDatastoreEntityInterface(ClassNode keyType, ClassNode parent) {
+        parent.addInterface(GenericsUtils.makeClassSafeWithGenerics(ClassHelper.make(DatastoreEntity), new GenericsType(keyType)))
     }
 
-    private ClassNode getPogoIteratorNode(ClassNode parent) {
-        ClassNode pogoIteratorNode = ClassHelper.make(Iterator).plainNodeReference
-        pogoIteratorNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
-        return pogoIteratorNode
+    private static ClassNode getPogoIteratorNode(ClassNode parent) {
+        GenericsUtils.makeClassSafeWithGenerics(ClassHelper.make(Iterator), new GenericsType(parent))
     }
 
-    private ClassNode getBoundListNode(ClassNode parent) {
-        ClassNode pogoListNode = ClassHelper.make(List).plainNodeReference
-        pogoListNode.setGenericsTypes([new GenericsType(parent)] as GenericsType[])
-        return pogoListNode
+    private static ClassNode getBoundListNode(ClassNode parent) {
+        GenericsUtils.makeClassSafeWithGenerics(ClassHelper.make(List), new GenericsType(parent))
     }
 
     private ClassNode handleKey(ClassNode parent, SourceUnit source) {
@@ -159,7 +154,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(hasNumericKey ? new ConstantExpression(Boolean.TRUE, true) : new ConstantExpression(Boolean.FALSE, true))
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10001
+            self.columnNumber = 1
+            self
+        }
 
         parent.addMethod new MethodNode(
                 'hasDatastoreKey',
@@ -168,22 +167,28 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(new ConstantExpression(Boolean.TRUE, true))
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10002
+            self.columnNumber = 1
+            self
+        }
 
         parent.addMethod new MethodNode(
                 'getDatastoreKey',
                 Modifier.PUBLIC,
-                // XXX: can't bound yet
-                // hasNumericKey ? ClassHelper.Long_TYPE : ClassHelper.STRING_TYPE,
-                ClassHelper.OBJECT_TYPE,
+                hasNumericKey ? ClassHelper.Long_TYPE : ClassHelper.STRING_TYPE,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(new VariableExpression(existingKeyProperty))
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10003
+            self.columnNumber = 1
+            self
+        }
         
         BinaryExpression bes = new AstBuilder().buildFromString("this.${existingKeyProperty.name} = ${existingKeyProperty.name}")[0].statements[0].expression
 
-        Parameter setKeyParameter = new Parameter(/* hasNumericKey ? ClassHelper.Long_TYPE : ClassHelper.STRING_TYPE*/ ClassHelper.OBJECT_TYPE, existingKeyProperty.name)
+        Parameter setKeyParameter = new Parameter(hasNumericKey ? ClassHelper.Long_TYPE : ClassHelper.STRING_TYPE, existingKeyProperty.name)
         BlockStatement setKeyBlock = new BlockStatement()
         setKeyBlock.addStatement(new ExpressionStatement(
                 bes
@@ -198,7 +203,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 [setKeyParameter] as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10004
+            self.columnNumber = 1
+            self
+        }
         
         if(existingKeyProperty.type == ClassHelper.long_TYPE){
             return ClassHelper.Long_TYPE
@@ -227,7 +236,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(existingVersionProperty ? new ConstantExpression(Boolean.TRUE, true) : new ConstantExpression(Boolean.FALSE, true))
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10005
+            self.columnNumber = 1
+            self
+        }
 
         BlockStatement getVersionBlock = new BlockStatement()
         getVersionBlock.addStatement(new ExpressionStatement(existingVersionProperty ? new VariableExpression(existingVersionProperty) : new ConstantExpression(0)))
@@ -239,7 +252,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 getVersionBlock
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10006
+            self.columnNumber = 1
+            self
+        }
 
         def mce
         if(existingVersionProperty){
@@ -258,7 +275,11 @@ class EntityTransformation extends AbstractASTTransformation {
                     new Parameter(ClassHelper.long_TYPE, existingVersionProperty?.name ?: 'version')] as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10007
+            self.columnNumber = 1
+            self
+        }
     }
 
     private boolean handleParent(ClassNode parent, SourceUnit source, ClassNode keyCN) {
@@ -282,7 +303,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(existingParentProperty ? new ConstantExpression(Boolean.TRUE, true) : new ConstantExpression(Boolean.FALSE, true))
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10008
+            self.columnNumber = 1
+            self
+        }
 
         BlockStatement getParentBlock = new BlockStatement()
         getParentBlock.addStatement(existingParentProperty ? new ExpressionStatement(new VariableExpression(existingParentProperty)) : new ReturnStatement(new ConstantExpression(null)))
@@ -296,7 +321,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 getParentBlock
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10009
+            self.columnNumber = 1
+            self
+        }
 
         BlockStatement setKeyBlock = new BlockStatement()
         if(existingParentProperty){
@@ -313,7 +342,11 @@ class EntityTransformation extends AbstractASTTransformation {
                     new Parameter(keyCN, existingParentProperty?.name ?: 'parent')] as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 setKeyBlock
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10010
+            self.columnNumber = 1
+            self
+        }
         existingParentProperty
     }
 
@@ -374,7 +407,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(new VariableExpression('DATASTORE_INDEXED_PROPERTIES'))
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10011
+            self.columnNumber = 1
+            self
+        }
 
         parent.addField new FieldNode('DATASTORE_UNINDEXED_PROPERTIES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(ClassHelper.STRING_TYPE), parent, buildList(unindexed))
         parent.addMethod new MethodNode(
@@ -384,7 +421,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(new VariableExpression('DATASTORE_UNINDEXED_PROPERTIES'))
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10012
+            self.columnNumber = 1
+            self
+        }
     }
 
     private void eachPropertyIncludingSuper(ClassNode parent, Closure iterator, List<String> alreadyProcessed = []){
@@ -431,7 +472,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 block
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10013
+            self.columnNumber = 1
+            self
+        }
     }
 
     private MethodNode addStaticDelegatedMethod(ClassNode parent, String name, Map<String, Class> parameters, ClassNode returnType = ClassHelper.DYNAMIC_TYPE, Map<String, List<AnnotationNode>> paramAnnos = [:]) {
@@ -464,7 +509,11 @@ class EntityTransformation extends AbstractASTTransformation {
                 methodParams as Parameter[],
                 ClassNode.EMPTY_ARRAY,
                 block
-                )
+                ).with { MethodNode self ->
+            self.lineNumber = 10014
+            self.columnNumber = 1
+            self
+        }
     }
     
 //    private void tester(Object id){

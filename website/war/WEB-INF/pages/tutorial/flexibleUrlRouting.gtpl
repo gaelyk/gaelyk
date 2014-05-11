@@ -220,11 +220,11 @@ only when the following artefacts are initialized:
         <code>void init(ServletConfig)</code> method was called.
     </li>
     <li>
-        Servlet filters have had their <code>void init(FilterConfig)</code> method was called.
+        Servlet filters have had their <code>void init(FilterConfig)</code> method called.
     </li>
     <li>
         Servlet context listeners have had their <code>void contextInitialized(ServletContextEvent)</code>
-        method was called.
+        method called.
     </li>
 </ul>
 
@@ -563,7 +563,7 @@ will be <code>namespace-acme</code>.
 <h3>Routes indexes</h3>
 
 <p>
-Especially for writing plugins you may wont to change the default behaviour where the routes are evaluated one by one by its poisition
+Especially for writing plugins you may want to change the default behaviour where the routes are evaluated one by one by its poisition
 in  <code>routes.groovy</code> file. Under normal circumstances the index equals the line number
 of the route but can change this by assinging it in route definition:
 </p>

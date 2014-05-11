@@ -9,28 +9,41 @@
 <div id="sidebox" class="roundPinkBorder">
     <table>
         <tr>
-            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
-            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.zip">Template project v2.1</a></td>
+            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.2.zip"><img src="/images/icon-download.png" alt="Template project"></a></td>
+            <td><a href="http://dl.bintray.com/gaelyk/gaelyk-templates/gaelyk-template-project-2.1.2.zip">Template project v2.1.2</a></td>
         </tr>
         <tr>
-            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.1/gaelyk-2.1.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
-            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.1/gaelyk-2.1.jar">Gaelyk JAR v2.1</a></td>
+            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.1.2/gaelyk-2.1.2.jar"><img src="/images/icon-download.png" alt="Gaelyk JAR"></a></td>
+            <td><a href="http://repo1.maven.org/maven2/org/gaelyk/gaelyk/2.1.2/gaelyk-2.1.2.jar">Gaelyk JAR v2.1.2</a></td>
         </tr>
     </table>
 </div>
 
 <p>
-You can use the <b>Gaelyk</b> JAR in combination with Groovy 2.1 and beyond and with the latest Google App Engine SDK.
+You can use the <b>Gaelyk</b> JAR in combination with Groovy 2.3.x and beyond and with the latest Google App Engine SDK.
 </p>
 
 <p>
-The latest version was tested with Groovy 2.1.9,
-and with the 1.9.1 version of the App Engine SDK.
+The latest version was tested with Groovy 2.3.0,
+and with the 1.9.4 version of the App Engine SDK.
 </p>
 
 <p>
 But to get you started quickly, you may use a ready-made template project which bundles and configures everything.
 </p>
+
+<h2>Version 2.1.2</h2>
+<h3>Changes</h3>
+<ul>
+    <li>Switched to Groovy 2.3</li>
+    <li>Fixed null pointer exception for self restarting iterator in conjunction with <code>or</code> in the query</li>
+</ul>
+
+<h2>Version 2.1.1</h2>
+<h3>Changes</h3>
+<ul>
+<li>Showing 404 status page properly when groovlet or template not found</li>
+</ul>
 
 <h2>Version 2.1</h2>
 

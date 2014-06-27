@@ -173,12 +173,12 @@ Further customization of the coercion can be achieved by using annotations on yo
             <li><code>get(nameOrId)</code> to retrieve the object from the datastore by its name or id or return <code>null</code> if entity not found</li>
             <li><code>delete(nameOrId)</code> to remove the object represented by its name or id from the datastore </li>
             <li><code>count()</code> to count all the object of given POGO class stored in the datastore</li>
-            <li><code>count{...query...}</code> to count the objects which satisfies given <a href="query">query</a></li>
-            <li><code>find{...query...}</code> to find single object which satisfies given <a href="query">query</a></li>
+            <li><code>count{...query...}</code> to count the objects which satisfies given <a href="#query">query</a></li>
+            <li><code>find{...query...}</code> to find single object which satisfies given <a href="#query">query</a></li>
             <li><code>findAll()</code> to find all the object of given POGO class stored in the datastore</li>
-            <li><code>findAll{...query...}</code> to find the objects which satisfies given <a href="query">query</a></li>
+            <li><code>findAll{...query...}</code> to find the objects which satisfies given <a href="#query">query</a></li>
             <li><code>iterate()</code> to iterate over all the object of given POGO class stored in the datastore</li>
-            <li><code>iterate{...query...}</code> to iterate over the objects which satisfies given <a href="query">query</a></li>            
+            <li><code>iterate{...query...}</code> to iterate over the objects which satisfies given <a href="#query">query</a></li>
         </ul>
     If there is no property annotated with <code>@Key</code> annotation it also adds <code>@Key long id</code> property to the POGO class.<br/>
     You can set default behavior from unindexed to indexed setting <code>unidexed</code> property of the annotations to <code>false</code>.

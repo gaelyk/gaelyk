@@ -1,6 +1,6 @@
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
     <application>gaelyk</application>
-    <version>212</version>
+    <version>212x</version>
     <threadsafe>true</threadsafe>
     
     <static-files>

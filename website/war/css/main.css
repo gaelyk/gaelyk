@@ -151,6 +151,10 @@ a:hover {
 
 }
 
+.yourkit {
+    font-size: 0.6em;
+}
+
 .hide-on-screen {
     display: none;
 }

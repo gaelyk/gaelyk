@@ -55,16 +55,22 @@ public class MailExtensions {
                     else throw new IllegalArgumentException("Headers must be collection of Header objects");
                     break;
                 case "to":
-                    if (v instanceof Collection<?>) msg.setTo((Collection<String>) v);
-                    else msg.setTo(Arrays.asList(new String[] { String.valueOf(v) }));
+                    if (v instanceof Collection<?>)
+                        msg.setTo((Collection<String>) v);
+                    else
+                        msg.setTo(String.valueOf(v));
                     break;
                 case "bcc":
-                    if (v instanceof Collection<?>) msg.setTo((Collection<String>) v);
-                    else msg.setTo(Arrays.asList(new String[] { String.valueOf(v) }));
+                    if (v instanceof Collection<?>)
+                        msg.setBcc((Collection<String>) v);
+                    else
+                        msg.setBcc(String.valueOf(v));
                     break;
                 case "cc":
-                    if (v instanceof Collection<?>) msg.setTo((Collection<String>) v);
-                    else msg.setTo(Arrays.asList(new String[] { String.valueOf(v) }));
+                    if (v instanceof Collection<?>)
+                        msg.setCc((Collection<String>) v);
+                    else
+                        msg.setCc(String.valueOf(v));
                     break;
                 case "from":
                 case "sender":

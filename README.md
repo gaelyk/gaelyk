@@ -1,5 +1,6 @@
 Welcome to the Gaelyk project infrastructure
 ============================================
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/gaelyk/gaelyk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Gaelyk is a lightweight toolkit for developing applications in Groovy for the Google App Engine environment.
 

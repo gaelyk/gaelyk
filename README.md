@@ -14,5 +14,5 @@ If you wish to discuss or contribute, please fill free to join us on the [Gaelyk
 
 Gaelyk is hosted at GitHub:
 
-* [Sources](http://github.com/glaforge/gaelyk)
-* [Issue tracker](http://github.com/glaforge/gaelyk/issues)
+* [Sources](http://github.com/gaelyk/gaelyk)
+* [Issue tracker](http://github.com/gaelyk/gaelyk/issues)

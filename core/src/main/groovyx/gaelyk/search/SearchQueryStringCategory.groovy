@@ -53,7 +53,11 @@ class SearchQueryStringCategory {
         }
         "~\"$self\""
     }
-    
+
+    static String plus(String self, String other){
+        handleOverloadedComparisonOperator(' + ', self, other)
+    }
+
     static String plus(String self, Object other){
         handleOverloadedComparisonOperator(' + ', self, other)
     }

@@ -1,6 +1,6 @@
 ext.gaelykGroovyVersion = '2.3.0'
 ext.gaelykSpockVersion = '0.7-groovy-2.0'
-ext.gaelykAppEngineVersion = '1.9.19'
+ext.gaelykAppEngineVersion = '1.9.20'
 ext.gaelykLatestVersion = '2.2'
 ext.gaelykSpockLatestVersion = '0.4'
 ext.gaelykGradleVersion = '1.10'

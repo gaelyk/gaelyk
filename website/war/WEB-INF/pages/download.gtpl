@@ -25,7 +25,7 @@ You can use the <b>Gaelyk</b> JAR in combination with Groovy 2.3.x and beyond an
 
 <p>
 The latest version was tested with Groovy 2.3.0,
-and with the 1.9.4 version of the App Engine SDK.
+and with the 1.9.20 version of the App Engine SDK.
 </p>
 
 <p>

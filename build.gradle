@@ -9,7 +9,7 @@ allprojects {
     }
     
 
-    version = '2.2-SNAPSHOT'
+    version = '2.2.0-SNAPSHOT'
     group = 'org.gaelyk'
 }
 

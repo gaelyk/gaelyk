@@ -190,7 +190,6 @@ class PluginsHandler {
      *
      * @param binding the binding to add the variables to
      */
-    @CompileStatic
     void enrich(Binding binding) {
         bindingVariables.each { String k, Object v -> binding.setVariable(k, v) }
     }
@@ -201,7 +200,6 @@ class PluginsHandler {
      * @param request
      * @param response
      */
-    @CompileStatic
     void executeBeforeActions(HttpServletRequest request, HttpServletResponse response) {
         beforeActions.each { Closure action ->
             cloneDelegateAndExecute action, request, response
@@ -214,7 +212,6 @@ class PluginsHandler {
      * @param request
      * @param response
      */
-    @CompileStatic
     void executeAfterActions(HttpServletRequest request, HttpServletResponse response, Object executionResult = null) {
         afterActions.each { Closure action ->
             cloneDelegateAndExecute action, request, response, executionResult

@@ -83,7 +83,7 @@ class GaelykServletTest extends GroovyTestCase {
                 },
                 getResource: { String p ->
                     println "getResource($p)"
-                    if (p.contains('BeanInfo'))
+                    if (p.contains('BeanInfo') || p.contains('$'))
                         return null
                     else
                         tempFile.toURI().toURL()
@@ -104,6 +104,7 @@ class GaelykServletTest extends GroovyTestCase {
                 getServletPath: {-> println "getServletPath()"; "/index.groovy" },
                 getPathInfo: {-> println "getPathInfo()"; null },
                 getSession: { boolean b -> println "getSession($b)"; session },
+                getParameter: { String name -> },
                 getParameterNames: {->
                     println "getParameterNames()"; new Enumeration() {
                         boolean hasMoreElements() { return false }
@@ -141,7 +142,9 @@ class GaelykServletTest extends GroovyTestCase {
             servlet.service(request, response)
 
             assert writer.toString() == 'hellobye'
-
+        } catch (e) {
+            e.printStackTrace(System.out)
+            fail("Exception during servlet get action")
         } finally {
             tempFile.delete()
         }

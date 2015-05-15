@@ -25,7 +25,8 @@ import com.google.appengine.api.images.ImagesService
  * @author Guillaume Laforge
  */
 @Singleton
-class ImagesServiceWrapper implements ImagesService {
+class ImagesServiceWrapper {
+
     @Delegate(deprecated = true) ImagesService service = ImagesServiceFactory.imagesService
 
     def methodMissing(String name, args) {

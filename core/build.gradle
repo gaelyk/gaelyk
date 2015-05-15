@@ -48,20 +48,20 @@ configurations {
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:${ext.gaelykGroovyVersion}", {
+    compile "org.codehaus.groovy:groovy-all:${project.ext.gaelykGroovyVersion}", {
         force = true
     }
-//    compile "org.codehaus.groovy:groovy-servlet:${ext.gaelykGroovyVersion}"
-//    groovy "org.codehaus.groovy:groovy-ant:${ext.gaelykGroovyVersion}"  // for groovy-doc only   
-    compile "com.google.appengine:appengine-api-1.0-sdk:${ext.gaelykAppEngineVersion}"
-    compile "com.google.appengine:appengine-api-labs:${ext.gaelykAppEngineVersion}"
+//    compile "org.codehaus.groovy:groovy-servlet:${project.ext.gaelykGroovyVersion}"
+//    groovy "org.codehaus.groovy:groovy-ant:${project.ext.gaelykGroovyVersion}"  // for groovy-doc only
+    compile "com.google.appengine:appengine-api-1.0-sdk:${project.ext.gaelykAppEngineVersion}"
+    compile "com.google.appengine:appengine-api-labs:${project.ext.gaelykAppEngineVersion}"
     compile 'javax.servlet:servlet-api:2.5'
-//    groovy "org.codehaus.groovy:groovy-test:${ext.gaelykGroovyVersion}" // for tests only   
+//    groovy "org.codehaus.groovy:groovy-test:${project.ext.gaelykGroovyVersion}" // for tests only
     compile 'javax.servlet.jsp:jsp-api:2.2'
     testCompile 'junit:junit:4.8.2'
-    testCompile "com.google.appengine:appengine-testing:${ext.gaelykAppEngineVersion}"
-    testCompile "com.google.appengine:appengine-api-stubs:${ext.gaelykAppEngineVersion}"
-    testCompile "org.spockframework:spock-core:${ext.gaelykSpockVersion}", {
+    testCompile "com.google.appengine:appengine-testing:${project.ext.gaelykAppEngineVersion}"
+    testCompile "com.google.appengine:appengine-api-stubs:${project.ext.gaelykAppEngineVersion}"
+    testCompile "org.spockframework:spock-core:${project.ext.gaelykSpockVersion}", {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile 'cglib:cglib-nodep:2.2.2'
@@ -131,12 +131,6 @@ artifacts {
     archives javadocJar
 }
 
-tasks.withType(Upload) { // map the groovy configuration to compile in the pom
-    repositories.withType(MavenResolver) {
-        pom.scopeMappings.addMapping(1, configurations.groovy, 'compile')
-    }
-}
-
 if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
     boolean signingEnabled = !hasProperty('skipSigning') || skipSigning != 'true'
     if(signingEnabled){
@@ -151,7 +145,7 @@ if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
         repositories {
             mavenDeployer {
                 if(signingEnabled){
-                    beforeDeployment { deployment -> signPom(deployment) }                    
+                    beforeDeployment { deployment -> signing.signPom(deployment) }
                 }
 
                 def auth = {
@@ -235,7 +229,7 @@ if(hasProperty('nexusUsername') && hasProperty('nexusPassword')){
 
 
 task docGDK {
-    //    ext.extraDocGDKclasses = []
+    //    project.ext.extraDocGDKclasses = []
     dependsOn(':gaelyk-docgenerator:build')
     // TODO don't hard-code these
     ext.destinationDir = "$buildDir/html/groovy-jdk"

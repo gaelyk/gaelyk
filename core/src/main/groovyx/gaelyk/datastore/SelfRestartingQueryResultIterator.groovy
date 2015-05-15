@@ -39,7 +39,7 @@ class SelfRestartingQueryResultIterator<T> implements QueryResultIteratorWithQue
         new SelfRestartingQueryResultIterator(builder)
     }
 
-    Object next(){
+    T next(){
         try {
             def next = currentIterator.next()
             currentCursor = currentIterator.cursor

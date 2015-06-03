@@ -25,16 +25,16 @@ repositories {
 
 dependencies {
     def gaeVersion = '1.9.20'
-    def groovyVersion = '2.3.0'
+    def groovyVersion = '2.4.3'
 
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
 
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion"
 
-    compile 'org.sitemesh:sitemesh:3.0-alpha-2'
+    compile 'org.sitemesh:sitemesh:3.0.1'
 
-    compile 'org.gaelyk:gaelyk:2.1.2'
+    compile 'org.gaelyk:gaelyk:2.2.0'
 
 
     testCompile 'org.gaelyk:gaelyk-spock:0.4'

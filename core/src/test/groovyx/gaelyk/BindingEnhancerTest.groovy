@@ -23,10 +23,7 @@ import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestC
 import com.google.appengine.api.utils.SystemProperty
 import com.google.appengine.api.oauth.OAuthService
 import com.google.appengine.api.channel.ChannelService
-import com.google.appengine.tools.development.testing.LocalFileServiceTestConfig
-import com.google.appengine.api.files.FileService
 import com.google.appengine.api.prospectivesearch.ProspectiveSearchService
-import com.google.appengine.tools.development.testing.LocalProspectiveSearchServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalLogServiceTestConfig
 import com.google.appengine.api.log.LogService
 import com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig
@@ -50,7 +47,6 @@ class BindingEnhancerTest extends GroovyTestCase {
             new LocalTaskQueueTestConfig(),
             new LocalXMPPServiceTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
-            new LocalFileServiceTestConfig(),
             new LocalLogServiceTestConfig(),
             new LocalSearchServiceTestConfig()
             //new LocalProspectiveSearchServiceTestConfig()
@@ -132,7 +128,6 @@ class BindingEnhancerTest extends GroovyTestCase {
         assert binding.blobstore         instanceof BlobstoreService
         assert binding.oauth             instanceof OAuthService
         assert binding.channel           instanceof ChannelService
-        assert binding.files             instanceof FileService
         assert binding.prospectiveSearch instanceof ProspectiveSearchService
         assert binding.logService        instanceof LogService
         assert binding.search            instanceof SearchService

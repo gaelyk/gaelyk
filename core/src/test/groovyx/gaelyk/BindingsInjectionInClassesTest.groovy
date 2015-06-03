@@ -12,13 +12,10 @@ import groovyx.gaelyk.logging.LoggerAccessor
 import com.google.appengine.api.oauth.OAuthService
 import com.google.appengine.api.capabilities.CapabilitiesService
 import com.google.appengine.api.channel.ChannelService
-import com.google.appengine.api.files.FileService
-import com.google.appengine.api.backends.BackendService
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.taskqueue.Queue
 import com.google.appengine.api.prospectivesearch.ProspectiveSearchService
 import com.google.appengine.tools.development.testing.LocalProspectiveSearchServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalFileServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
@@ -47,7 +44,6 @@ class BindingsInjectionInClassesTest extends GroovyTestCase {
             new LocalTaskQueueTestConfig(),
             new LocalXMPPServiceTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
-            new LocalFileServiceTestConfig(),
             new LocalProspectiveSearchServiceTestConfig()
     )
 
@@ -103,9 +99,7 @@ class BindingsInjectionInClassesTest extends GroovyTestCase {
                 namespace		  : Class,
                 capabilities	  : CapabilitiesService,
                 channel 		  : ChannelService,
-                files			  : FileService,
                 prospectiveSearch : ProspectiveSearchService,
-                backends		  : BackendService,
                 lifecycle		  : LifecycleManager
 
         ].each { property, clazz ->

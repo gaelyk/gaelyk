@@ -133,8 +133,6 @@ def shortcutFor = { type ->
     property name: 'namespace', type: Class, doc: 'the Namespace manager', isStatic: true
     property name: 'capabilities', type: 'com.google.appengine.api.capabilities.CapabilitiesService', doc: 'the Capabilities service', isStatic: true
     property name: 'channel', type: 'com.google.appengine.api.channel.ChannelService', doc: 'the Channel service', isStatic: true
-    property name: 'files', type: 'com.google.appengine.api.files.FileService', doc: 'the File service', isStatic: true
-    property name: 'backends', type: 'com.google.appengine.api.backends.BackendService', doc: 'the Backend service', isStatic: true
     property name: 'lifecycle', type: 'com.google.appengine.api.LifecycleManager', doc: 'the Lifecycle manager', isStatic: true
     property name: 'localMode', type: Boolean, doc: 'a boolean variable which is true when the application is running in local development mode, and false when deployed on Google\'s cloud.', isStatic: true
 
@@ -810,168 +808,6 @@ Usage: <code>key.asyncDelete()</code> '''
 
 }
 
-shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
-    provider = 'Gaelyk'
-    method name: 'delete',
-            type: 'void',
-            doc: 'Delete an AppEngineFile file from the blobstore.'
-
-    method name: 'withReader',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            useNamedArgs: true,
-            params: [encoding: String, locked: boolean, finalize: true, c: 'groovy.lang.Closure'],
-            doc: '''Method creating a reader for the AppEngineFile, read textual content from it, and closes it when done.
-
-<pre><code>
- def file = files.fromPath(someStringPath)
-
- // with default options
- file.withReader { reader ->
-     log.info reader.text
- }
-
- // with specific options:
- file.withReader(encoding: "US-ASCII", locked: true) { reader ->
-     log.info reader.text
- }
-</code></pre>'''
-
-    method name: 'withReader',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            params: [c: 'groovy.lang.Closure'],
-            doc: '''Method creating a reader for the AppEngineFile, read textual content from it, and closes it when done.
-
-<pre><code>
- def file = files.fromPath(someStringPath)
-
- // with default options
- file.withReader { reader ->
-     log.info reader.text
- }
-
- // with specific options:
- file.withReader(encoding: "US-ASCII", locked: true) { reader ->
-     log.info reader.text
- }
-</code></pre>'''
-
-    method name: 'withOutputStream',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            useNamedArgs: true,
-            params: [encoding: String, locked: boolean, finalize: true, c: 'groovy.lang.Closure'],
-            doc: '''Method creating an output stream for the AppEngineFile, writing bynary content to it, and closes it when done.
-
-<pre><code>
- def file = files.createNewBlobFile("text/plain", "hello.txt")
-
- // with default options
- file.withOutputStream { stream ->
-     stream << "some content".bytes
- }
-
- // with specific options:
- file.withOutputStream(locked: true, finalize: false) { writer ->
-     stream << "some content".bytes
- }
-</code></pre>'''
-
-    method name: 'withOutputStream',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            params: [c: 'groovy.lang.Closure'],
-            doc: '''Method creating an output stream for the AppEngineFile, writing bynary content to it, and closes it when done.
-
-<pre><code>
- def file = files.createNewBlobFile("text/plain", "hello.txt")
-
- // with default options
- file.withOutputStream { stream ->
-     stream << "some content".bytes
- }
-
- // with specific options:
- file.withOutputStream(locked: true, finalize: false) { writer ->
-     stream << "some content".bytes
- }
-</code></pre>'''
-
-    method name: 'withInputStream',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            useNamedArgs: true,
-            params: [encoding: String, locked: boolean, finalize: true, c: 'groovy.lang.Closure'],
-            doc: '''Method creating a buffered input stream for the AppEngineFile, read binary content from it, and closes it when done.
-
-<pre><code>
- def file = files.fromPath(someStringPath)
-
- // with default options
- file.withInputStream { stream ->
-     // read from the buffered input stream
- }
-
- // with specific options:
- file.withInputStream(locked: true) { stream ->
-     // read from the buffered input stream
- }
-</code></pre>'''
-
-    method name: 'withInputStream',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            params: [c: 'groovy.lang.Closure'],
-            doc: '''Method creating a buffered input stream for the AppEngineFile, read binary content from it, and closes it when done.
-
-<pre><code>
- def file = files.fromPath(someStringPath)
-
- // with default options
- file.withInputStream { stream ->
-     // read from the buffered input stream
- }
-
- // with specific options:
- file.withInputStream(locked: true) { stream ->
-     // read from the buffered input stream
- }
-</code></pre>'''
-
-    method name: 'withWriter',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            useNamedArgs: true,
-            params: [encoding: String, locked: boolean, finalize: true, c: 'groovy.lang.Closure'],
-            doc: '''Method creating a writer for the AppEngineFile, writing textual content to it, and closes it when done.
-
-<pre><code>
- def file = files.createNewBlobFile("text/plain", "hello.txt")
-
- // with default options
- file.withWriter { writer ->
-     writer << "some content"
- }
-
- // with specific options:
- file.withWriter(encoding: "US-ASCII", locked: true, finalize: false) { writer ->
-     writer << "some content
- }
-</code></pre>'''
-
-    method name: 'withWriter',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            params: [c: 'groovy.lang.Closure'],
-            doc: '''Method creating a writer for the AppEngineFile, writing textual content to it, and closes it when done.
-
-<pre><code>
- def file = files.createNewBlobFile("text/plain", "hello.txt")
-
- // with default options
- file.withWriter { writer ->
-     writer << "some content"
- }
-
- // with specific options:
- file.withWriter(encoding: "US-ASCII", locked: true, finalize: false) { writer ->
-     writer << "some content
- }
-</code></pre>'''
-
     method name: 'getBlobKey',
             type: 'com.google.appengine.api.blobstore.BlobKey',
             doc: '''Retrieves the blob key associated with an App Engine file.
@@ -1396,20 +1232,6 @@ shortcutFor('java.io.File').accept {
     property name: 'image',
             type: 'com.google.appengine.api.images.Image',
             doc: 'Create an image from a file.'
-
-}
-
-shortcutFor('com.google.appengine.api.files.FileService').accept {
-    provider = 'Gaelyk'
-    method name: 'fromPath',
-            type: 'com.google.appengine.api.files.AppEngineFile',
-            params: [path: 'java.lang.String'],
-            doc: '''Get a reference to an App Engine file from its path.
-<pre><code>
- def path = "...some path..."
- def file = files.fromPath(path)
-// equivalent of new AppEngineFile(path)
-</code></pre>'''
 
 }
 

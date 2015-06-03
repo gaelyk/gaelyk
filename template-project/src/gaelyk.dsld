@@ -85,8 +85,6 @@ contribute(enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/gr
   property name: 'namespace', type: Class, doc: 'the Namespace manager'
   property name: 'capabilities', type: 'com.google.appengine.api.capabilities.CapabilitiesService', doc: 'the Capabilities service'
   property name: 'channel', type: 'com.google.appengine.api.channel.ChannelService', doc: 'the Channel service'
-  property name: 'files', type: 'com.google.appengine.api.files.FileService', doc: 'the File service'
-  property name: 'backends', type: 'com.google.appengine.api.backends.BackendService', doc: 'the Backend service'
   property name: 'lifecycle', type: 'com.google.appengine.api.LifecycleManager', doc: 'the Lifecycle manager'
   property name: 'localMode', type: Boolean, doc: 'a boolean variable which is true when the application is running in local development mode, and false when deployed on Google\'s cloud.'
   property name: 'prospectiveSearch', type: 'com.google.appengine.api.prospectivesearch.ProspectiveSearchService', doc: 'the prospective search service'
@@ -281,20 +279,6 @@ shortcutFor('com.google.appengine.api.datastore.Key').accept {
   provider = 'Gaelyk'
 }
 
-shortcutFor('com.google.appengine.api.files.AppEngineFile').accept {
-  provider = 'Gaelyk'
-
-  property name: 'blobKey',
-      type: 'com.google.appengine.api.blobstore.BlobKey',
-      doc: '''Retrieves the blob key associated with an App Engine file.
-<pre><code>
- def file = files.createNewBlobFile("text/plain")
- def key = file.blobKey
- // equivalent of FileServiceFactory.fileService.getBlobKey(file)
-</code></pre>'''
-
-}
-
 shortcutFor('com.google.appengine.api.mail.MailService').accept {
   provider = 'Gaelyk'
 }
@@ -436,10 +420,6 @@ shortcutFor('java.io.File').accept {
       type: 'com.google.appengine.api.images.Image',
       doc: 'Create an image from a file.'
 
-}
-
-shortcutFor('com.google.appengine.api.files.FileService').accept {
-  provider = 'Gaelyk'
 }
 
 shortcutFor('com.google.appengine.api.LifecycleManager').accept {

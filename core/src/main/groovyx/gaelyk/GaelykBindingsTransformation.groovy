@@ -16,8 +16,6 @@
 package groovyx.gaelyk
 
 import com.google.appengine.api.LifecycleManager
-import com.google.appengine.api.backends.BackendService
-import com.google.appengine.api.backends.BackendServiceFactory
 import com.google.appengine.api.blobstore.BlobstoreService
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.capabilities.CapabilitiesService
@@ -26,8 +24,6 @@ import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.datastore.DatastoreService
 import com.google.appengine.api.datastore.DatastoreServiceFactory
-import com.google.appengine.api.files.FileService
-import com.google.appengine.api.files.FileServiceFactory
 import com.google.appengine.api.mail.MailService
 import com.google.appengine.api.mail.MailServiceFactory
 import com.google.appengine.api.memcache.MemcacheService
@@ -98,8 +94,6 @@ class GaelykBindingsTransformation implements ASTTransformation {
         addGetterIfNotExists(parent, OAuthService,             "getOauth",             OAuthServiceFactory,        "getOAuthService")
         addGetterIfNotExists(parent, CapabilitiesService,      "getCapabilities",      CapabilitiesServiceFactory, "getCapabilitiesService")
         addGetterIfNotExists(parent, ChannelService,           "getChannel",           ChannelServiceFactory,      "getChannelService")
-        addGetterIfNotExists(parent, FileService,              "getFiles",             FileServiceFactory,         "getFileService")
-        addGetterIfNotExists(parent, BackendService,           "getBackends",          BackendServiceFactory,      "getBackendService")
         addGetterIfNotExists(parent, LifecycleManager,         "getLifecycle",         LifecycleManager,           "getInstance")
         addGetterIfNotExists(parent, ProspectiveSearchService, "getProspectiveSearch", ProspectiveSearchService,   "getProspectiveSearchService")
         addGetterIfNotExists(parent, User,                     "getUser",              GaelykBindingEnhancer,      "getCurrentUser")

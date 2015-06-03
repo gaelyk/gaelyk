@@ -30,8 +30,6 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory
 
 import groovyx.gaelyk.logging.LoggerAccessor
 import com.google.appengine.api.channel.ChannelServiceFactory
-import com.google.appengine.api.files.FileServiceFactory
-import com.google.appengine.api.backends.BackendServiceFactory
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.users.User
 import com.google.appengine.api.prospectivesearch.ProspectiveSearchServiceFactory
@@ -98,11 +96,7 @@ class GaelykBindingEnhancer {
         // Channel service in SDK 1.4.0 for Comet-style applications
         binding.setVariable("channel", ChannelServiceFactory.channelService)
 
-        // Files service in SDK 1.4.3 for writing to the blobstore programmatically
-        binding.setVariable("files", FileServiceFactory.fileService)
-
         // Backend service and Lifecycle manager in SDK 1.5.0
-        binding.setVariable("backends", BackendServiceFactory.backendService)
         binding.setVariable("lifecycle", LifecycleManager.instance)
 
         // Prospective search service in SDK 1.5.4

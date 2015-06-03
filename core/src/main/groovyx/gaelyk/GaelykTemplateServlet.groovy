@@ -41,7 +41,7 @@ import org.codehaus.groovy.runtime.InvokerInvocationException
  */
 class GaelykTemplateServlet extends TemplateServlet {
 
-    private static final String PRECOMPILED_TEMPLATE_PREFIX = '$gtpl$'
+    private static final String PRECOMPILED_TEMPLATE_PREFIX = '_gtpl_'
     
     private boolean preferPrecompiled = false
     private boolean logErrors
@@ -182,7 +182,7 @@ class GaelykTemplateServlet extends TemplateServlet {
             ret += packageToDir(match[0][1])
         }
         ret += PRECOMPILED_TEMPLATE_PREFIX
-        ret += match[0][3]
+        ret += match[0][3].replaceAll(/[^a-zA-Z0-9\$]/, '_')
         ret
     }
 

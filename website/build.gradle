@@ -1,30 +1,70 @@
-apply from: '../common.gradle'
-
 apply plugin: 'war'
 apply plugin: 'gaelyk'
 
+def compatibilityVersion = 1.7
+sourceCompatibility = compatibilityVersion
+targetCompatibility = compatibilityVersion
+
 buildscript {
     repositories {
-        maven {
-           url 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
         mavenCentral()
         jcenter()
     }
 
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.7.0-SNAPSHOT', {
-
-        }
+        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.6'
+        classpath 'org.gradle.api.plugins:gradle-appengine-geb-plugin:0.4'
     }
 }
 
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
 dependencies {
-    compile project(':core')
-	compile "org.codehaus.groovy:groovy-all:$project.ext.gaelykGroovyVersion"
-    appengineSdk "com.google.appengine:appengine-java-sdk:$project.ext.gaelykAppEngineVersion"
+    def gaeVersion = '1.9.20'
+    def groovyVersion = '2.4.3'
+
+    compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+
+    compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
+            "com.google.appengine:appengine-api-labs:$gaeVersion"
+
     compile 'com.ocpsoft:ocpsoft-pretty-time:1.0.2',
             'opensymphony:sitemesh:2.4.2'
+
+
+    compile 'org.gaelyk:gaelyk:2.2.0'
+
+
+    testCompile 'org.gaelyk:gaelyk-spock:0.4'
+    testCompile "com.google.appengine:appengine-api-stubs:$gaeVersion",
+            "com.google.appengine:appengine-testing:$gaeVersion"
+
+    appengineSdk "com.google.appengine:appengine-java-sdk:$gaeVersion"
+
+
+    /**
+     * To add binary plugin just declare it as a dependency. For example,
+     * uncomment following to add GPars support to your Gaelyk project.
+     * @see https://github.com/musketyr/gpars-appengine
+     */
+    // compile 'org.codehaus.gpars:gpars-appengine:0.1'
+
+    /**
+     * Gaelyk console serves as playground or key-hole surgery tool for
+     * your application
+     * @see https://github.com/gaelyk/gaelyk-console
+     */
+    // compile 'org.gaelyk:gaelyk-console:2.0'
+
+}
+
+appengine {
+    appcfg {
+        email  = 'vladimir.orany@gmail.com'
+    }
 }
 
 webAppDirName = 'war'

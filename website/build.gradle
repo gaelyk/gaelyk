@@ -12,8 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.6'
-        classpath 'org.gradle.api.plugins:gradle-appengine-geb-plugin:0.4'
+        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.7.0'
     }
 }
 
@@ -23,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    def gaeVersion = '1.9.20'
+    def gaeVersion = '1.9.21'
     def groovyVersion = '2.4.3'
 
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"

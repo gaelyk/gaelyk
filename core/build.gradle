@@ -55,6 +55,7 @@ dependencies {
 //    groovy "org.codehaus.groovy:groovy-ant:${project.ext.gaelykGroovyVersion}"  // for groovy-doc only
     compile "com.google.appengine:appengine-api-1.0-sdk:${project.ext.gaelykAppEngineVersion}"
     compile "com.google.appengine:appengine-api-labs:${project.ext.gaelykAppEngineVersion}"
+    compile "com.google.appengine.tools:appengine-gcs-client:0.5"
     compile 'javax.servlet:servlet-api:2.5'
 //    groovy "org.codehaus.groovy:groovy-test:${project.ext.gaelykGroovyVersion}" // for tests only
     compile 'javax.servlet.jsp:jsp-api:2.2'

@@ -66,7 +66,7 @@ In addition to this builder approach, <b>Gaelyk</b> provides a shortcut notation
 </pre>
 
 <p>
-There is also a variant with an overloaded <code>&lt;&lt;</code> operator for the second one:
+There is also a variant with an overloaded <code>&lt;&lt;</code> operator for the second asynchronous one:
 </p>
 
 <pre class="brush:groovy">

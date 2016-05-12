@@ -1,7 +1,7 @@
 apply plugin: 'war'
-//apply plugin: 'gaelyk'  // does not support latest app engine plugin
+apply plugin: 'gaelyk'  // does not support latest app engine plugin
 apply plugin: 'appengine'
-//apply plugin: 'appengine-geb' // does not support latest app engine plugin
+apply plugin: 'appengine-geb' // does not support latest app engine plugin
 
 def compatibilityVersion = 1.7
 sourceCompatibility = compatibilityVersion
@@ -15,8 +15,8 @@ buildscript {
 
     dependencies {
         classpath 'com.google.appengine:gradle-appengine-plugin:1.9.34'
-    //    classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.7.0'
-    //    classpath 'org.gradle.api.plugins:gradle-appengine-geb-plugin:0.4'
+        classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.7.0'
+        classpath 'org.gradle.api.plugins:gradle-appengine-geb-plugin:0.4'
     }
 }
 
@@ -61,6 +61,6 @@ dependencies {
      * your application
      * @see https://github.com/gaelyk/gaelyk-console
      */
-    // compile 'org.gaelyk:gaelyk-console:2.0'
+    compile 'org.gaelyk:gaelyk-console:2.0'
 
 }

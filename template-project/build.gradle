@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    def gaeVersion = '1.9.37'
+    def gaeVersion = '1.9.38'
     def groovyVersion = '2.4.6'
 
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
@@ -67,4 +67,8 @@ dependencies {
          exclude module: "appengine-api-stubs"
      }
 
+}
+
+appengine {
+  downloadSdk = true
 }

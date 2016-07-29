@@ -9,7 +9,7 @@ allprojects {
     }
     
 
-    version = '2.2.1.SNAPSHOT'
+    version = '2.2.1-SNAPSHOT'
     group = 'org.gaelyk'
 }
 
@@ -40,5 +40,5 @@ task templateProjectZip(type: Zip) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '2.14.1'
 }

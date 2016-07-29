@@ -12,4 +12,5 @@ out
 website/war/api
 website/war/WEB-INF/classes
 website/war/WEB-INF/lib
+gaelyk-docgenerator
 /gaelyk-template-project.zip

@@ -6,6 +6,9 @@ out
 *.iws
 .idea
 .gradle
+gradle
+gradlew
+gradlew.bat
 .classpath
 .project
 .settings

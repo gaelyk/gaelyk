@@ -94,7 +94,7 @@ class GroovyLogger {
             // if it's a Groovlet or Template, just use the logger name
             // as otherwise, the class name and method name aren't really significant
             // as they are just generated groovy scripts
-            logger.logp(level, logger.name, null, msg)
+           logger.logp(level, logger.name, "", msg)
         } else {
             def stack = Thread.currentThread().stackTrace
             // find the proper caller class and method

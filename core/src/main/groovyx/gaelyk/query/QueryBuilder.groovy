@@ -75,7 +75,7 @@ class QueryBuilder {
         Query query = fromKind ? new Query(fromKind) : new Query()
 
         // retrieve keys only or full entities
-        if (queryType == QueryType.KEYS)
+        if ((queryType == QueryType.KEYS) || (queryType == QueryType.COUNT))
             query.setKeysOnly()
 
         if (ancestor)

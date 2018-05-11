@@ -58,7 +58,7 @@ public class DatastoreEntityCoercion {
         for (String propertyName : dsEntity.getDatastoreIndexedProperties()) {
             Object value = dsEntity.getProperty(propertyName);
             try {
-                entity.setProperty(propertyName, transformValueForStorage(dsEntity.getProperty(propertyName)));
+                entity.setProperty(propertyName, transformValueForStorage(value));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Problem setting value '" + value + "' to indexed property '" + propertyName + "' of entity "
                         + dsEntity.getClass().getSimpleName(), e);

@@ -20,8 +20,6 @@ import com.google.appengine.api.blobstore.BlobstoreService
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.api.capabilities.CapabilitiesService
 import com.google.appengine.api.capabilities.CapabilitiesServiceFactory
-import com.google.appengine.api.channel.ChannelService
-import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.datastore.DatastoreService
 import com.google.appengine.api.datastore.DatastoreServiceFactory
 import com.google.appengine.api.mail.MailService
@@ -37,8 +35,6 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory
 import com.google.appengine.api.users.User
 import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.UserServiceFactory
-import com.google.appengine.api.xmpp.XMPPService
-import com.google.appengine.api.xmpp.XMPPServiceFactory
 import groovy.transform.CompileStatic
 import groovyx.gaelyk.logging.LoggerAccessor
 import org.codehaus.groovy.ast.ASTNode
@@ -89,11 +85,8 @@ class GaelykBindingsTransformation implements ASTTransformation {
         addGetterIfNotExists(parent, ImagesServiceWrapper,     "getImages",            ImagesServiceWrapper,       "getInstance")
         addGetterIfNotExists(parent, UserService,              "getUsers",             UserServiceFactory,         "getUserService")
         addGetterIfNotExists(parent, Queue,                    "getDefaultQueue",      QueueFactory,               "getDefaultQueue")
-        addGetterIfNotExists(parent, XMPPService,              "getXmpp",              XMPPServiceFactory,         "getXMPPService")
         addGetterIfNotExists(parent, BlobstoreService,         "getBlobstore",         BlobstoreServiceFactory,    "getBlobstoreService")
         addGetterIfNotExists(parent, OAuthService,             "getOauth",             OAuthServiceFactory,        "getOAuthService")
-        addGetterIfNotExists(parent, CapabilitiesService,      "getCapabilities",      CapabilitiesServiceFactory, "getCapabilitiesService")
-        addGetterIfNotExists(parent, ChannelService,           "getChannel",           ChannelServiceFactory,      "getChannelService")
         addGetterIfNotExists(parent, LifecycleManager,         "getLifecycle",         LifecycleManager,           "getInstance")
         addGetterIfNotExists(parent, ProspectiveSearchService, "getProspectiveSearch", ProspectiveSearchService,   "getProspectiveSearchService")
         addGetterIfNotExists(parent, User,                     "getUser",              GaelykBindingEnhancer,      "getCurrentUser")

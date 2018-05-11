@@ -6,18 +6,15 @@ import com.google.appengine.api.urlfetch.URLFetchService
 import com.google.appengine.api.mail.MailService
 import com.google.appengine.api.users.UserService
 import com.google.appengine.api.users.User
-import com.google.appengine.api.xmpp.XMPPService
 import com.google.appengine.api.blobstore.BlobstoreService
 import groovyx.gaelyk.logging.LoggerAccessor
 import com.google.appengine.api.oauth.OAuthService
 import com.google.appengine.api.capabilities.CapabilitiesService
-import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.taskqueue.Queue
 import com.google.appengine.api.prospectivesearch.ProspectiveSearchService
 import com.google.appengine.tools.development.testing.LocalProspectiveSearchServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig
@@ -42,7 +39,6 @@ class BindingsInjectionInClassesTest extends GroovyTestCase {
             new LocalImagesServiceTestConfig(),
             new LocalUserServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
-            new LocalXMPPServiceTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
             new LocalProspectiveSearchServiceTestConfig()
     )
@@ -90,7 +86,6 @@ class BindingsInjectionInClassesTest extends GroovyTestCase {
                 user			  : User,
                 defaultQueue	  : Queue,
                 queues  		  : QueueAccessor,
-                xmpp			  : XMPPService,
                 localMode		  : Boolean,
                 blobstore		  : BlobstoreService,
                 app 			  : Map,
@@ -98,7 +93,6 @@ class BindingsInjectionInClassesTest extends GroovyTestCase {
                 oauth			  : OAuthService,
                 namespace		  : Class,
                 capabilities	  : CapabilitiesService,
-                channel 		  : ChannelService,
                 prospectiveSearch : ProspectiveSearchService,
                 lifecycle		  : LifecycleManager
 

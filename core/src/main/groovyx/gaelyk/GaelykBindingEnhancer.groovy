@@ -26,10 +26,8 @@ import com.google.appengine.api.oauth.OAuthServiceFactory
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory
 import com.google.appengine.api.users.UserServiceFactory
 import com.google.appengine.api.utils.SystemProperty
-import com.google.appengine.api.xmpp.XMPPServiceFactory
 
 import groovyx.gaelyk.logging.LoggerAccessor
-import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.LifecycleManager
 import com.google.appengine.api.users.User
 import com.google.appengine.api.prospectivesearch.ProspectiveSearchServiceFactory
@@ -69,9 +67,6 @@ class GaelykBindingEnhancer {
         binding.setVariable("defaultQueue", QueueFactory.defaultQueue)
         binding.setVariable("queues", getQueues())
 
-        // New in GAE SDK 1.2.5: XMPP support
-        binding.setVariable("xmpp", XMPPServiceFactory.XMPPService)
-
         // Tells whether the application is running in local development mode
         // or is deployed on Google's cloud
         binding.setVariable("localMode", getLocalMode())
@@ -93,8 +88,6 @@ class GaelykBindingEnhancer {
         // Capabilities service to know the status of the various GAE services
         binding.setVariable("capabilities", CapabilitiesServiceFactory.capabilitiesService)
 
-        // Channel service in SDK 1.4.0 for Comet-style applications
-        binding.setVariable("channel", ChannelServiceFactory.channelService)
 
         // Backend service and Lifecycle manager in SDK 1.5.0
         binding.setVariable("lifecycle", LifecycleManager.instance)

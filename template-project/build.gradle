@@ -3,7 +3,7 @@ apply plugin: 'war'
 apply plugin: 'appengine'
 //apply plugin: 'appengine-geb' // does not support latest app engine plugin
 
-def compatibilityVersion = 1.7
+def compatibilityVersion = 1.8
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
@@ -14,20 +14,21 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.38'
+        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.59'
         //classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.7.0'
         classpath 'org.gradle.api.plugins:gradle-appengine-geb-plugin:0.4'
     }
 }
 
 repositories {
+    mavenLocal()    
     mavenCentral()
     jcenter()
 }
 
 dependencies {
-    def gaeVersion = '1.9.40'
-    def groovyVersion = '2.4.7'
+    def gaeVersion = '1.9.63'
+    def groovyVersion = '2.4.15'
 
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
 
@@ -36,7 +37,8 @@ dependencies {
 
     compile 'org.sitemesh:sitemesh:3.0.1'
 
-    compile 'org.gaelyk:gaelyk:2.2.0'
+    compile 'org.gaelyk:gaelyk:2.3.0-SNAPSHOT'
+    compile project.files('gaelyk-info-0.1.jar')
     //compile project.files('../core/build/libs/gaelyk-2.2.1-SNAPSHOT.jar')
 
     testCompile 'org.gaelyk:gaelyk-spock:0.4'

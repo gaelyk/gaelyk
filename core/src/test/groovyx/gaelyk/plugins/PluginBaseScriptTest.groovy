@@ -7,7 +7,6 @@ import com.google.appengine.tools.development.testing.LocalURLFetchServiceTestCo
 import com.google.appengine.tools.development.testing.LocalMailServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
 import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
@@ -29,7 +28,6 @@ class PluginBaseScriptTest extends GroovyTestCase {
             new LocalImagesServiceTestConfig(),
             new LocalUserServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
-            new LocalXMPPServiceTestConfig(),
             new LocalBlobstoreServiceTestConfig()
     )
 

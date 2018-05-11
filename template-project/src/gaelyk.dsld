@@ -79,12 +79,10 @@ contribute(enclosingScript(sourceFolderOfCurrentType('src/main/webapp/WEB-INF/gr
   property name: 'user', type: 'com.google.appengine.api.users.User', doc: 'the currently logged in user (null if no user logged in)'
   property name: 'defaultQueue', type: 'com.google.appengine.api.taskqueue.Queue', doc: 'the default queue'
   property name: 'queues', type: Map, doc: 'a map-like object with which you can access the configured queues'
-  property name: 'xmpp', type: 'com.google.appengine.api.xmpp.XMPPService', doc: 'the Jabber/XMPP service.'
   property name: 'blobstore', type: 'com.google.appengine.api.blobstore.BlobstoreService', doc: 'the Blobstore service.'
   property name: 'oauth', type: 'com.google.appengine.api.oauth.OAuthService', doc: 'the OAuth service.'
   property name: 'namespace', type: Class, doc: 'the Namespace manager'
   property name: 'capabilities', type: 'com.google.appengine.api.capabilities.CapabilitiesService', doc: 'the Capabilities service'
-  property name: 'channel', type: 'com.google.appengine.api.channel.ChannelService', doc: 'the Channel service'
   property name: 'lifecycle', type: 'com.google.appengine.api.LifecycleManager', doc: 'the Lifecycle manager'
   property name: 'localMode', type: Boolean, doc: 'a boolean variable which is true when the application is running in local development mode, and false when deployed on Google\'s cloud.'
   property name: 'prospectiveSearch', type: 'com.google.appengine.api.prospectivesearch.ProspectiveSearchService', doc: 'the prospective search service'
@@ -283,14 +281,6 @@ shortcutFor('com.google.appengine.api.mail.MailService').accept {
   provider = 'Gaelyk'
 }
 
-shortcutFor('com.google.appengine.api.xmpp.XMPPService').accept {
-  provider = 'Gaelyk'
-}
-
-shortcutFor('com.google.appengine.api.channel.ChannelService').accept {
-  provider = 'Gaelyk'
-}
-
 shortcutFor('javax.servlet.http.HttpServletResponse').accept {
   provider = 'Gaelyk'
   
@@ -332,23 +322,6 @@ shortcutFor('com.google.appengine.api.urlfetch.HTTPResponse').accept {
 
 shortcutFor('com.google.appengine.api.images.CompositeTransform').accept {
   provider = 'Gaelyk'
-}
-
-shortcutFor('com.google.appengine.api.xmpp.Message').accept {
-  provider = 'Gaelyk'
-
-  property name: 'from',
-      type: 'java.lang.String',
-      doc: 'Get the sender Jabber ID of the message in the form of a String.'
-
-  property name: 'xml',
-      type: 'groovy.util.slurpersupport.GPathResult',
-      doc: 'Get the XML content of this message (if it\'s an XML message) in the form of a DOM parsed with XmlSlurper..'
-
-  property name: 'recipients',
-      type: 'java.util.List',
-      doc: 'Gets the list of recipients of this message in the form of a list of Jabber ID strings.'
-
 }
 
 shortcutFor('com.google.appengine.api.capabilities.CapabilitiesService').accept {
@@ -400,14 +373,6 @@ shortcutFor('com.google.appengine.api.capabilities.CapabilityStatus').accept {
 
 shortcutFor('java.util.Map').accept {
   provider = 'Gaelyk'
-}
-
-shortcutFor('com.google.appengine.api.xmpp.SendResponse').accept {
-  provider = 'Gaelyk'
-  property name: 'successful',
-      type: 'boolean',
-      doc: 'Checks the status of the sending of the message was successful for all its recipients.'
-
 }
 
 shortcutFor('javax.servlet.http.HttpServletRequest').accept {

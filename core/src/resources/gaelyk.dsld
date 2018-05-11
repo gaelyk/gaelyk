@@ -127,12 +127,10 @@ def shortcutFor = { type ->
     property name: 'user', type: 'com.google.appengine.api.users.User', doc: 'the currently logged in user (null if no user logged in)', isStatic: true
     property name: 'defaultQueue', type: 'com.google.appengine.api.taskqueue.Queue', doc: 'the default queue', isStatic: true
     property name: 'queues', type: Map, doc: 'a map-like object with which you can access the configured queues', isStatic: true
-    property name: 'xmpp', type: 'com.google.appengine.api.xmpp.XMPPService', doc: 'the Jabber/XMPP service.', isStatic: true
     property name: 'blobstore', type: 'com.google.appengine.api.blobstore.BlobstoreService', doc: 'the Blobstore service.', isStatic: true
     property name: 'oauth', type: 'com.google.appengine.api.oauth.OAuthService', doc: 'the OAuth service.', isStatic: true
     property name: 'namespace', type: Class, doc: 'the Namespace manager', isStatic: true
     property name: 'capabilities', type: 'com.google.appengine.api.capabilities.CapabilitiesService', doc: 'the Capabilities service', isStatic: true
-    property name: 'channel', type: 'com.google.appengine.api.channel.ChannelService', doc: 'the Channel service', isStatic: true
     property name: 'lifecycle', type: 'com.google.appengine.api.LifecycleManager', doc: 'the Lifecycle manager', isStatic: true
     property name: 'localMode', type: Boolean, doc: 'a boolean variable which is true when the application is running in local development mode, and false when deployed on Google\'s cloud.', isStatic: true
 
@@ -906,15 +904,6 @@ thus preventing from using Gaelyk's routing to point at our own handler.'''
 
 }
 
-shortcutFor('com.google.appengine.api.channel.ChannelService').accept {
-    provider = 'Gaelyk'
-    method name: 'send',
-            type: 'void',
-            params: [clientId: 'java.lang.String', message: 'java.lang.String'],
-            doc: 'Send a message through the Channel service.'
-
-}
-
 shortcutFor('javax.servlet.http.HttpServletResponse').accept {
     provider = 'Gaelyk'
     method name: 'getHeaders',
@@ -1011,34 +1000,6 @@ def rotateTransform = ...
 
 croptTransform << rotateTransform
 </code></pre>'''
-
-}
-
-shortcutFor('com.google.appengine.api.xmpp.Message').accept {
-    provider = 'Gaelyk'
-    method name: 'getFrom',
-            type: 'java.lang.String',
-            doc: 'Get the sender Jabber ID of the message in the form of a String.'
-
-    property name: 'from',
-            type: 'java.lang.String',
-            doc: 'Get the sender Jabber ID of the message in the form of a String.'
-
-    method name: 'getXml',
-            type: 'groovy.util.slurpersupport.GPathResult',
-            doc: 'Get the XML content of this message (if it\'s an XML message) in the form of a DOM parsed with XmlSlurper.'
-
-    property name: 'xml',
-            type: 'groovy.util.slurpersupport.GPathResult',
-            doc: 'Get the XML content of this message (if it\'s an XML message) in the form of a DOM parsed with XmlSlurper..'
-
-    method name: 'getRecipients',
-            type: 'java.util.List',
-            doc: 'Gets the list of recipients of this message in the form of a list of Jabber ID strings.'
-
-    property name: 'recipients',
-            type: 'java.util.List',
-            doc: 'Gets the list of recipients of this message in the form of a list of Jabber ID strings.'
 
 }
 

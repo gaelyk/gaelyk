@@ -9,3 +9,4 @@ WEB-INF
 *.ipr
 *.iws
 target
+.DS_Store

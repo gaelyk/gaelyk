@@ -18,7 +18,6 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig
 import com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalXMPPServiceTestConfig
 
 /**
  * 
@@ -35,7 +34,6 @@ class PluginsHandlerTest extends GroovyTestCase {
     new LocalImagesServiceTestConfig(),
     new LocalUserServiceTestConfig(),
     new LocalTaskQueueTestConfig(),
-    new LocalXMPPServiceTestConfig(),
     new LocalBlobstoreServiceTestConfig()
     )
 

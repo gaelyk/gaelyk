@@ -44,6 +44,8 @@ import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.datastore.TransactionOptions;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Extension methods dedicated to the low-level DataStore service
  * 
@@ -145,7 +147,7 @@ public class DatastoreExtensions {
         return transformValueForRetrieval(entity.getProperty(name));
     }
 
-    static Object transformValueForRetrieval(Object value) {
+    public static Object transformValueForRetrieval(Object value) {
         return value instanceof Text ? ((Text) value).getValue() : value;
     }
 
@@ -171,9 +173,10 @@ public class DatastoreExtensions {
         // the datastore doesn't allow to store GStringImpl
         // so we need a toString() first
         Object newValue = value instanceof GString ? value.toString() : value;
-        // if we store a string longer than 500 characters
+        // if we store a string longer than 1500 bytes
         // it needs to be wrapped in a Text instance
-        if (newValue instanceof String && ((String) newValue).length() > 500) {
+        // See https://github.com/gaelyk/gaelyk/issues/222
+        if (newValue instanceof String && ((String)newValue).getBytes(UTF_8).length > 1500) {
             newValue = new Text((String) newValue);
         }
         return newValue;

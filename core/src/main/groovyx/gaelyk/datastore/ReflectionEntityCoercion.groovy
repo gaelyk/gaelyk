@@ -26,6 +26,9 @@ import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.EntityNotFoundException
 
+import static groovyx.gaelyk.extensions.DatastoreExtensions.transformValueForRetrieval
+import static groovyx.gaelyk.extensions.DatastoreExtensions.transformValueForStorage
+
 /**
  * Utility class handling the POGO to Entity coercion, and Entity to POGO coercion as well.
  *
@@ -175,7 +178,7 @@ class ReflectionEntityCoercion {
         props.each { String propName, PropertyDescriptor m ->
             if (propName != key && propName != parent) {
                 if (!props[propName].ignore() && !props[propName].version() && !props[propName].parent()) {
-                    def val = p.metaClass.getProperty(p, propName)
+                    def val = transformValueForStorage(p.metaClass.getProperty(p, propName))
                     if (props[propName].unindexed()) {
                         entity.setUnindexedProperty(propName, val)
                     } else {
@@ -212,7 +215,7 @@ class ReflectionEntityCoercion {
             entityProps.each { String k, v ->
                 if (o.metaClass.hasProperty(o, k)) {
                     try {
-                        o[k] = v                        
+                        o[k] = transformValueForRetrieval(v)
                     } catch(ReadOnlyPropertyException rope){
                         // cannot set read only property!
                     }

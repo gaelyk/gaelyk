@@ -145,7 +145,7 @@ public class DatastoreExtensions {
         return transformValueForRetrieval(entity.getProperty(name));
     }
 
-    static Object transformValueForRetrieval(Object value) {
+    public static Object transformValueForRetrieval(Object value) {
         return value instanceof Text ? ((Text) value).getValue() : value;
     }
 

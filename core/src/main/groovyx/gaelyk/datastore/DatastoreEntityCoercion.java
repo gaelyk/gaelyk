@@ -1,11 +1,13 @@
 package groovyx.gaelyk.datastore;
 
-import groovy.lang.GString;
-import groovyx.gaelyk.extensions.DatastoreExtensions;
-
 import com.google.appengine.api.datastore.Entities;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Text;
+
+import groovy.lang.GString;
+import groovyx.gaelyk.extensions.DatastoreExtensions;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DatastoreEntityCoercion {
 
@@ -79,9 +81,10 @@ public class DatastoreEntityCoercion {
     
     private static Object transformValueForStorage(Object value) {
         Object newValue = (value instanceof GString || value instanceof Enum<?>) ? value.toString() : value;
-        // if we store a string longer than 500 characters
+        // if we store a string longer than 1500 bytes
         // it needs to be wrapped in a Text instance
-        if (newValue instanceof String && ((String)newValue).length() > 500) {
+        // See https://github.com/gaelyk/gaelyk/issues/222
+        if (newValue instanceof String && ((String)newValue).getBytes(UTF_8).length > 1500) {
             newValue = new Text((String) newValue);
         }
         return newValue;

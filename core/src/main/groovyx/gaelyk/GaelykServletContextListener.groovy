@@ -43,7 +43,7 @@ class GaelykServletContextListener implements ServletContextListener {
     void contextDestroyed(ServletContextEvent servletContextEvent) {
         // nothing special to be done
     }
-    
+
     /**
      * Verifies if proper version of Gaelyk is used.
      * Currently Groovy 2.x.x versions are supported but this may change
@@ -54,9 +54,9 @@ class GaelykServletContextListener implements ServletContextListener {
             throw new IllegalStateException("You must use Groovy 2.x to run Gaelyk ${GaelykBindingEnhancer.app['gaelyk']['version']} application.")
         }
     }
-    
+
     private static boolean verifyGroovyVersionInternal(String version){
-        version.startsWith('2.')
+        version.startsWith('2.') || version.startsWith('3.')
     }
-            
+
 }

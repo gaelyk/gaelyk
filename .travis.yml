@@ -1,5 +1,5 @@
 language: groovy
-script: 'gradle -q -b core/build.gradle check'
+script: './gradlew check'
 notifications:
   email:
     recipients:

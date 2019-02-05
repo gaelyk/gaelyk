@@ -25,6 +25,7 @@ import com.google.appengine.tools.development.testing.LocalLogServiceTestConfig
 import com.google.appengine.api.log.LogService
 import com.google.appengine.tools.development.testing.LocalSearchServiceTestConfig
 import com.google.appengine.api.search.SearchService
+import com.google.appengine.api.capabilities.CapabilitiesService
 
 /**
  * Test the binding enhancer binds the GAE services in the binding.
@@ -125,8 +126,9 @@ class BindingEnhancerTest extends GroovyTestCase {
         assert binding.prospectiveSearch instanceof ProspectiveSearchService
         assert binding.logService        instanceof LogService
         assert binding.search            instanceof SearchService
+        assert binding.capabilities      instanceof CapabilitiesService
     }
-    
+
     /**
      * Lazy session is the default session.
      */

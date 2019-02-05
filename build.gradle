@@ -3,11 +3,11 @@ defaultTasks 'clean', 'build', 'templateProjectZip'
 allprojects {
     apply plugin: 'groovy'
     apply plugin: 'idea'
-    
+
     repositories {
         mavenCentral()
     }
-    
+
 
     version = '2.3.0-SNAPSHOT'
     group = 'org.gaelyk'
@@ -30,7 +30,7 @@ task templateProjectZip(type: Zip) {
     from(templateProjectDir) {
         include 'build.gradle'
     }
-    
+
     from('.') {
         include 'gradlew', 'gradlew.bat'
         fileMode = 0755
@@ -39,6 +39,6 @@ task templateProjectZip(type: Zip) {
     baseName 'gaelyk-template-project'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
+task generateWrapper(type: Wrapper) {
+    gradleVersion = '4.10.3'
 }

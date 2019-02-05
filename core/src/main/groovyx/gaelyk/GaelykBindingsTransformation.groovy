@@ -97,6 +97,7 @@ class GaelykBindingsTransformation implements ASTTransformation {
         addGetterIfNotExists(parent, Class,                    "getNamespace",         GaelykBindingEnhancer,      "getNamespaceManager")
         addGetterIfNotExists(parent, LogService,               "getLogService",        LogServiceFactory,          "getLogService")
         addGetterIfNotExists(parent, SearchService,            "getSearchService",     SearchServiceFactory,       "getSearchService")
+        addGetterIfNotExists(parent, CapabilitiesService,      "getCapabilities",      CapabilitiesServiceFactory, "getCapabilitiesService")
     }
 
     private void addGetterIfNotExists(ClassNode parent, Class serviceClass, String getterName, Class factoryClass, String factoryMethodName) {
@@ -113,11 +114,11 @@ class GaelykBindingsTransformation implements ASTTransformation {
         block.addStatement(new ReturnStatement(new MethodCallExpression(
                 new ClassExpression(factoryType), factoryMethodName, new TupleExpression()
         )))
-        
+
         new MethodNode(
-                accessorName, 
-                Modifier.PRIVATE | Modifier.STATIC, 
-                returnType, 
+                accessorName,
+                Modifier.PRIVATE | Modifier.STATIC,
+                returnType,
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 block

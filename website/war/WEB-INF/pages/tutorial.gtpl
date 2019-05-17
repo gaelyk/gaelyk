@@ -149,7 +149,6 @@ You can <a href="/api/index.html">browse the JavaDoc</a> of the classes composin
             <li><a href="/tutorial/app-engine-shortcuts#urlfetch-options">Allowed options</a></li>
         </ul>
         <li><a href="/tutorial/app-engine-shortcuts#channel">Channel service improvements</a></li>
-        <li><a href="/tutorial/app-engine-shortcuts#backend">Backend service support</a></li>
         <li><a href="/tutorial/app-engine-shortcuts#search">Search service support</a></li>
     </ul>
 

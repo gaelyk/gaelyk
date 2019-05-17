@@ -89,7 +89,7 @@ class GaelykBindingEnhancer {
         binding.setVariable("capabilities", CapabilitiesServiceFactory.capabilitiesService)
 
 
-        // Backend service and Lifecycle manager in SDK 1.5.0
+        // Lifecycle manager in SDK 1.5.0
         binding.setVariable("lifecycle", LifecycleManager.instance)
 
         // Prospective search service in SDK 1.5.4

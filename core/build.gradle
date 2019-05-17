@@ -260,11 +260,8 @@ task docGDK {
                     arg(value: "src/main/groovyx/gaelyk/extensions/TaskQueueExtensions.java")
                     arg(value: "src/main/groovyx/gaelyk/extensions/SearchExtensions.java")
                     arg(value: "src/main/groovyx/gaelyk/extensions/UrlFetchExtensions.java")
-                    arg(value: "src/main/groovyx/gaelyk/extensions/ChannelExtensions.java")
                     arg(value: "src/main/groovyx/gaelyk/extensions/CapabilitiesExtensions.java")
-                    arg(value: "src/main/groovyx/gaelyk/extensions/XmppExtensions.java")
                     arg(value: "src/main/groovyx/gaelyk/extensions/ImageExtensions.java")
-                    arg(value: "src/main/groovyx/gaelyk/extensions/BackendExtensions.java")
 //                    jvmarg(value: "-Xdebug")
 //                    jvmarg(value: "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005")
                 }

@@ -39,6 +39,6 @@ task templateProjectZip(type: Zip) {
     baseName 'gaelyk-template-project'
 }
 
-task generateWrapper(type: Wrapper) {
+wrapper {
     gradleVersion = '4.10.3'
 }

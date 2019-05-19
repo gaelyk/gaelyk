@@ -1,6 +1,7 @@
 package groovyx.gaelyk.datastore;
 
 import java.util.List;
+import org.codehaus.groovy.ast.PropertyNode;
 
 /**
  * Helper interface to speed up Object to Entity coercion skipping unnecessary reflection which
@@ -127,4 +128,6 @@ public interface DatastoreEntity<K> {
      */
     void setProperty(String propertyName, Object newValue);
 
+//    List<PropertyNode> getDatastoreIndexedPropertyNodes();
+//    List<PropertyNode> getDatastoreUnindexedPropertyNodes();
 }

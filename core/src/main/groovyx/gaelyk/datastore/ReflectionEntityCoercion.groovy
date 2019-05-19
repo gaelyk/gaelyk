@@ -25,6 +25,8 @@ import java.lang.reflect.Modifier
 import com.google.appengine.api.datastore.Entities
 import com.google.appengine.api.datastore.Entity
 import com.google.appengine.api.datastore.EntityNotFoundException
+import com.google.appengine.api.datastore.Link
+import com.google.appengine.api.blobstore.BlobKey
 
 import static groovyx.gaelyk.extensions.DatastoreExtensions.transformValueForRetrieval
 import static groovyx.gaelyk.extensions.DatastoreExtensions.transformValueForStorage
@@ -193,6 +195,32 @@ class ReflectionEntityCoercion {
         return entity
     }
 
+    public static Object transformValueForRetrieval(Object value, Class type) {
+        // Google Client Libraries do not support Link and BlobKey.
+        // They automatically map them to String.  If a properties type is String,
+        // consistant behaviour is expected.
+        // https://googleapis.dev/java/google-cloud-clients/latest/com/google/cloud/datastore/Value.html
+        switch (type) { // setting to
+            case BlobKey:
+               switch (value) { // from
+                    case String: return new BlobKey((String) value)
+               } 
+               break 
+            case Link:
+               switch (value) { // from
+                    case String: return new Link((String) value)
+               } 
+               break 
+            case String:
+               switch (value) { // from
+                    case BlobKey: return ((BlobKey) value).getKeyString() 
+                    case Link: return value.toString()
+               }
+        } // otherwise normal behaviour
+        return transformValueForRetrieval(value)
+    }
+
+
     /**
      * Convert an entity into an object
      *
@@ -213,9 +241,10 @@ class ReflectionEntityCoercion {
             }
         } else {
             entityProps.each { String k, v ->
-                if (o.metaClass.hasProperty(o, k)) {
+                def prop = o.metaClass.hasProperty(o, k)
+                if (prop) {
                     try {
-                        o[k] = transformValueForRetrieval(v)
+                        o[k] = transformValueForRetrieval(v, prop.type)
                     } catch(ReadOnlyPropertyException rope){
                         // cannot set read only property!
                     }

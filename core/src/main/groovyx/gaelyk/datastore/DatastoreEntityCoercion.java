@@ -3,9 +3,11 @@ package groovyx.gaelyk.datastore;
 import com.google.appengine.api.datastore.Entities;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Text;
+import org.codehaus.groovy.ast.PropertyNode;
 
 import groovy.lang.GString;
 import groovyx.gaelyk.extensions.DatastoreExtensions;
+import groovyx.gaelyk.datastore.ReflectionEntityCoercion;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -113,12 +115,18 @@ public class DatastoreEntityCoercion {
                 dsEntity.setDatastoreVersion(0); 
             }
         }
-        for(String propertyName : dsEntity.getDatastoreIndexedProperties()){
-            setEntityProperty(en, dsEntity, propertyName);
+        for(String property : dsEntity.getDatastoreIndexedProperties()){
+            setEntityProperty(en, dsEntity, property);
         }
-        for(String propertyName : dsEntity.getDatastoreUnindexedProperties()){
-            setEntityProperty(en, dsEntity, propertyName);
+        for(String property : dsEntity.getDatastoreIndexedProperties()){
+            setEntityProperty(en, dsEntity, property);
         }
+//        for(PropertyNode propertyNode : dsEntity.getDatastoreIndexedPropertyNodes()){
+//            setEntityProperty(en, dsEntity, propertyNode);
+//        }
+//        for(PropertyNode propertyNode : dsEntity.getDatastoreUnindexedPropertyNodes()){
+//            setEntityProperty(en, dsEntity, propertyNode);
+//        }
         return dsEntity;
     }
 
@@ -129,11 +137,16 @@ public class DatastoreEntityCoercion {
             return;
         }
         Object value = en.getProperty(propertyName);
-        if (value instanceof Text) {
-            value = ((Text) value).getValue();
+        
+        Class type = null;
+        for (Class clazz = dsEntity.getClass(); type == null && clazz != null; clazz = clazz.getSuperclass()) {
+            try {
+                type = clazz.getDeclaredField(propertyName).getType();
+            } catch (NoSuchFieldException nfe) {} 
         } 
+
         try {
-            dsEntity.setProperty(propertyName, value);
+            dsEntity.setProperty(propertyName, ReflectionEntityCoercion.transformValueForRetrieval(value, type));
         } catch (Exception e) {
             throw new IllegalArgumentException("Problem setting value '" + value + "' to property '" + propertyName + "' of entity " + dsEntity.getClass().getSimpleName(), e);
         }

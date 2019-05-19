@@ -3,7 +3,7 @@ project.ext.gaelykSpockVersion = '1.0-groovy-2.4'
 project.ext.gaelykAppEngineVersion = '1.9.73'
 project.ext.gaelykLatestVersion = '2.3.0-SNAPSHOT'
 project.ext.gaelykSpockLatestVersion = '0.4'
-project.ext.gaelykGradleVersion = '2.14.1'
+project.ext.gaelykGradleVersion = '4.10.3'
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ apply plugin: 'idea'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-task wrapper(type: Wrapper) {
+wrapper {
     gradleVersion = gaelykGradleVersion
 }
 

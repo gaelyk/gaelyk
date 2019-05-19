@@ -8,19 +8,13 @@ buildscript {
     }
     
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.3'
     }
 }
 */
 
 apply plugin: 'maven'
 apply plugin: 'nexus'
-
-tasks.withType(Upload) { // map the groovy configuration to compile in the pom
-    repositories.withType(MavenResolver) {
-        pom.scopeMappings.addMapping(1, configurations.groovy, 'compile')
-    }
-}
 
 boolean signingEnabled = !hasProperty('skipSigning') || skipSigning != 'true'
 nexus {

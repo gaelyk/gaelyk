@@ -20,10 +20,6 @@ apply plugin: 'idea'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-wrapper {
-    gradleVersion = gaelykGradleVersion
-}
-
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }

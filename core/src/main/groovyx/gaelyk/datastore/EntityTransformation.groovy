@@ -121,6 +121,10 @@ class EntityTransformation extends AbstractASTTransformation {
         GenericsUtils.makeClassSafeWithGenerics(ClassHelper.make(List), new GenericsType(parent))
     }
 
+    private static ClassNode getClassNodeForClass() {
+        GenericsUtils.makeClassSafeWithGenerics(ClassHelper.make(List), new GenericsType(ClassHelper.makeWithoutCaching(Class)))
+    }
+
     private ClassNode handleKey(ClassNode parent, SourceUnit source) {
         ClassNode keyAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Key).plainNodeReference
 
@@ -361,7 +365,9 @@ class EntityTransformation extends AbstractASTTransformation {
         boolean defaultIndexed = memberHasValue(anno, 'unindexed', false)
 
         List<String> indexed = []
+        List<ClassNode> indexedTypes = []
         List<String> unindexed = []
+        List<ClassNode> unindexedTypes = []
 
         eachPropertyIncludingSuper(parent) { PropertyNode prop ->
             if(Modifier.isStatic(prop.modifiers) || Modifier.isFinal(prop.modifiers)) {
@@ -382,6 +388,7 @@ class EntityTransformation extends AbstractASTTransformation {
             }
             if(hasUnindexedAnno){
                 unindexed << prop.name
+                unindexedTypes << prop.type
                 return
             }
             boolean hasIndexedAnno = annos.any { AnnotationNode a ->
@@ -389,12 +396,15 @@ class EntityTransformation extends AbstractASTTransformation {
             }
             if(hasIndexedAnno){
                 indexed << prop.name
+                indexedTypes << prop.type
                 return
             }
             if(defaultIndexed){
                 indexed << prop.name
+                indexedTypes << prop.type
             } else {
                 unindexed << prop.name
+                unindexedTypes << prop.type
             }
         }
 
@@ -426,6 +436,39 @@ class EntityTransformation extends AbstractASTTransformation {
             self.columnNumber = 1
             self
         }
+
+        parent.addField new FieldNode('DATASTORE_INDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(classNodeForClass), parent, buildClassList(indexedTypes))
+
+        parent.addMethod new MethodNode(
+                'getDatastoreIndexedPropertiesTypes',
+                Modifier.PUBLIC,
+                // cannot use list of classes directly as it causes NPE in TypeResolver
+                // but thanks to type errasure this also works
+                GenericsUtils.makeClassSafeWithGenerics(List, ClassHelper.OBJECT_TYPE),
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(new VariableExpression('DATASTORE_INDEXED_PROPERTIES_TYPES'))
+        ).with { MethodNode self ->
+            self.lineNumber = 10013
+            self.columnNumber = 1
+            self
+        }
+
+        parent.addField new FieldNode('DATASTORE_UNINDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(classNodeForClass), parent, buildClassList(unindexedTypes))
+        parent.addMethod new MethodNode(
+                'getDatastoreUnindexedPropertiesTypes',
+                Modifier.PUBLIC,
+                // cannot use list of classes directly as it causes NPE in TypeResolver
+                // but thanks to type errasure this also works
+                GenericsUtils.makeClassSafeWithGenerics(List, ClassHelper.OBJECT_TYPE),
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(new VariableExpression('DATASTORE_UNINDEXED_PROPERTIES_TYPES'))
+        ).with { MethodNode self ->
+            self.lineNumber = 10014
+            self.columnNumber = 1
+            self
+        }
     }
 
     private void eachPropertyIncludingSuper(ClassNode parent, Closure iterator, List<String> alreadyProcessed = []){
@@ -453,6 +496,16 @@ class EntityTransformation extends AbstractASTTransformation {
         ListExpression list = new ListExpression()
         for (String value in values) {
             list.addExpression(new ConstantExpression(value))
+        }
+        list
+    }
+
+
+    private Expression buildClassList(List<ClassNode> values) {
+        ListExpression list = new ListExpression()
+        for (ClassNode value in values) {
+            // I'm not sure if ClassExpression is the best one
+            list.addExpression(new ClassExpression(value))
         }
         list
     }

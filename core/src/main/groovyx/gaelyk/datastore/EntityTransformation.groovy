@@ -121,6 +121,10 @@ class EntityTransformation extends AbstractASTTransformation {
         GenericsUtils.makeClassSafeWithGenerics(ClassHelper.make(List), new GenericsType(parent))
     }
 
+    private static ClassNode getClassNodeForClass() {
+        GenericsUtils.makeClassSafeWithGenerics(ClassHelper.make(List), new GenericsType(ClassHelper.makeWithoutCaching(Class)))
+    }
+
     private ClassNode handleKey(ClassNode parent, SourceUnit source) {
         ClassNode keyAnnoClassNode = ClassHelper.make(groovyx.gaelyk.datastore.Key).plainNodeReference
 
@@ -384,6 +388,7 @@ class EntityTransformation extends AbstractASTTransformation {
             }
             if(hasUnindexedAnno){
                 unindexed << prop.name
+                unindexedTypes << prop.type
                 return
             }
             boolean hasIndexedAnno = annos.any { AnnotationNode a ->
@@ -432,12 +437,14 @@ class EntityTransformation extends AbstractASTTransformation {
             self
         }
 
-        parent.addField new FieldNode('DATASTORE_INDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(ClassHelper.CLASS_Type), parent, buildClassList(indexedTypes))
+        parent.addField new FieldNode('DATASTORE_INDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(classNodeForClass), parent, buildClassList(indexedTypes))
 
         parent.addMethod new MethodNode(
                 'getDatastoreIndexedPropertiesTypes',
                 Modifier.PUBLIC,
-                getBoundListNode(ClassHelper.CLASS_Type),
+                // cannot use list of classes directly as it causes NPE in TypeResolver
+                // but thanks to type errasure this also works
+                GenericsUtils.makeClassSafeWithGenerics(List, ClassHelper.OBJECT_TYPE),
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(new VariableExpression('DATASTORE_INDEXED_PROPERTIES_TYPES'))
@@ -447,11 +454,13 @@ class EntityTransformation extends AbstractASTTransformation {
             self
         }
 
-        parent.addField new FieldNode('DATASTORE_UNINDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(ClassHelper.CLASS_Type), parent, buildClassList(unindexedTypes))
+        parent.addField new FieldNode('DATASTORE_UNINDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(classNodeForClass), parent, buildClassList(unindexedTypes))
         parent.addMethod new MethodNode(
                 'getDatastoreUnindexedPropertiesTypes',
                 Modifier.PUBLIC,
-                getBoundListNode(ClassHelper.CLASS_Type),
+                // cannot use list of classes directly as it causes NPE in TypeResolver
+                // but thanks to type errasure this also works
+                GenericsUtils.makeClassSafeWithGenerics(List, ClassHelper.OBJECT_TYPE),
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
                 new ReturnStatement(new VariableExpression('DATASTORE_UNINDEXED_PROPERTIES_TYPES'))

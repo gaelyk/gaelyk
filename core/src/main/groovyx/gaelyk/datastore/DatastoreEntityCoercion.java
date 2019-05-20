@@ -118,7 +118,7 @@ public class DatastoreEntityCoercion {
         for(String property : dsEntity.getDatastoreIndexedProperties()){
             setEntityProperty(en, dsEntity, property);
         }
-        for(String property : dsEntity.getDatastoreIndexedProperties()){
+        for(String property : dsEntity.getDatastoreUnindexedProperties()){
             setEntityProperty(en, dsEntity, property);
         }
 //        for(PropertyNode propertyNode : dsEntity.getDatastoreIndexedPropertyNodes()){

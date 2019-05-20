@@ -50,8 +50,16 @@ public class ExampleDatastoreEntity implements DatastoreEntity<Long> {
         return Arrays.asList("indexed1", "indexed2", "type");
     }
 
+    @Override public List<Class> getDatastoreIndexedPropertiesTypes() {
+        return Arrays.asList(String.class, int.class, EDEType.class);
+    }
+
     @Override public List<String> getDatastoreUnindexedProperties() {
         return Arrays.asList("unindexed1", "unindexed2");
+    }
+
+    @Override public List<Class> getDatastoreUnindexedPropertiesTypes() {
+        return Arrays.asList(String.class, String.class);
     }
 
     public long getId() {

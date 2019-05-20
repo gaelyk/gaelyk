@@ -315,10 +315,16 @@ class EntityTransformationSpec extends Specification {
         obj.getDatastoreKey() == 10
         obj.hasDatastoreVersion() == false
         obj.getDatastoreIndexedProperties() == ['test1']
+        obj.getDatastoreIndexedPropertiesTypes() == [String]
         obj.getDatastoreUnindexedProperties() == [
             'test2',
             'test3',
-            'superProp'
+            'superProp',
+        ]
+        obj.getDatastoreUnindexedPropertiesTypes() == [
+                String,
+                String,
+                String,
         ]
         obj.hasDatastoreParent() == false
         obj.getDatastoreParent() == null

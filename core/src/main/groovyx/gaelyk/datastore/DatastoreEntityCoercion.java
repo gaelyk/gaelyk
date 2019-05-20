@@ -9,6 +9,8 @@ import groovy.lang.GString;
 import groovyx.gaelyk.extensions.DatastoreExtensions;
 import groovyx.gaelyk.datastore.ReflectionEntityCoercion;
 
+import java.util.List;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DatastoreEntityCoercion {
@@ -115,42 +117,31 @@ public class DatastoreEntityCoercion {
                 dsEntity.setDatastoreVersion(0); 
             }
         }
-        for(String property : dsEntity.getDatastoreIndexedProperties()){
-            setEntityProperty(en, dsEntity, property);
+        List<String> indexedProperties = dsEntity.getDatastoreIndexedProperties();
+        List<Class> indexedTypes = dsEntity.getDatastoreIndexedPropertiesTypes();
+        for (int i = 0; i < indexedProperties.size(); i++) {
+            setEntityProperty(en, dsEntity, indexedProperties.get(i), indexedTypes.get(i));
         }
-        for(String property : dsEntity.getDatastoreUnindexedProperties()){
-            setEntityProperty(en, dsEntity, property);
+        List<String> unindexedProperties = dsEntity.getDatastoreUnindexedProperties();
+        List<Class> unindexedTypes = dsEntity.getDatastoreUnindexedPropertiesTypes();
+        for (int i = 0; i < unindexedProperties.size(); i++) {
+            setEntityProperty(en, dsEntity, unindexedProperties.get(i), unindexedTypes.get(i));
         }
-//        for(PropertyNode propertyNode : dsEntity.getDatastoreIndexedPropertyNodes()){
-//            setEntityProperty(en, dsEntity, propertyNode);
-//        }
-//        for(PropertyNode propertyNode : dsEntity.getDatastoreUnindexedPropertyNodes()){
-//            setEntityProperty(en, dsEntity, propertyNode);
-//        }
         return dsEntity;
     }
 
-    private static <E extends DatastoreEntity<?>> void setEntityProperty(Entity en, E dsEntity, String propertyName) {
+    private static <E extends DatastoreEntity<?>> void setEntityProperty(Entity en, E dsEntity, String propertyName, Class propertyType) {
         if (!en.hasProperty(propertyName)) {
             // the property doesn't have the property set so let it blank
             // this is important for keeping default values
             return;
         }
         Object value = en.getProperty(propertyName);
-        
-        Class type = null;
-        for (Class clazz = dsEntity.getClass(); type == null && clazz != null; clazz = clazz.getSuperclass()) {
-            try {
-                type = clazz.getDeclaredField(propertyName).getType();
-            } catch (NoSuchFieldException nfe) {} 
-        } 
-
         try {
-            dsEntity.setProperty(propertyName, ReflectionEntityCoercion.transformValueForRetrieval(value, type));
+            dsEntity.setProperty(propertyName, ReflectionEntityCoercion.transformValueForRetrieval(value, propertyType));
         } catch (Exception e) {
             throw new IllegalArgumentException("Problem setting value '" + value + "' to property '" + propertyName + "' of entity " + dsEntity.getClass().getSimpleName(), e);
         }
-
     }
     
 }

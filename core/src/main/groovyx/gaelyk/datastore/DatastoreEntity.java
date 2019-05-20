@@ -101,12 +101,28 @@ public interface DatastoreEntity<K> {
     List<String> getDatastoreIndexedProperties();
 
     /**
+     * Returns list of the types of properties which should be saved in the data store with the index.
+     * This method should return same values for each instance. It cannot be static because of Java interface restrictions.
+     *
+     * @return list of the types of properties which should be saved in the data store with the index
+     */
+    List<Class> getDatastoreIndexedPropertiesTypes();
+
+    /**
      * Returns list of the names of properties which should be saved in the data store unindexed.
      * This method should return same values for each instance. It cannot be static because of Java interface restrictions.
      * 
      * @return list of the names of properties which should be saved in the data store unindexed
      */
     List<String> getDatastoreUnindexedProperties();
+
+    /**
+     * Returns list of the types of properties which should be saved in the data store unindexed.
+     * This method should return same values for each instance. It cannot be static because of Java interface restrictions.
+     *
+     * @return list of the types of properties which should be saved in the data store unindexed
+     */
+    List<Class> getDatastoreUnindexedPropertiesTypes();
     
     // taken from GroovyObject, for java compatibility. Groovy classes has these methods
     // automagically

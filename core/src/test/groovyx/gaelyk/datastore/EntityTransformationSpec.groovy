@@ -444,7 +444,6 @@ class EntityTransformationSpec extends Specification {
         def obj = newShell().evaluate '''
             import groovyx.gaelyk.datastore.Order
             import groovyx.gaelyk.datastore.Entity as GE
-            import groovyx.gaelyk.datastore.Indexed
             import groovyx.gaelyk.datastore.Ignore
             import groovy.transform.Canonical
             
@@ -452,10 +451,10 @@ class EntityTransformationSpec extends Specification {
             class Person {
                 @Ignore Order order
             }
-            true
+            new Person()
         '''
         expect:
-        obj == true
+            obj.class.simpleName == 'Person'
     }
 
     /*@spock.lang.Ignore*/

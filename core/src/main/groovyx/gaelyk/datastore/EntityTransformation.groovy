@@ -524,7 +524,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 block
                 ).with { MethodNode self ->
-            self.lineNumber = 10013
+            self.lineNumber = 10015
             self.columnNumber = 1
             self
         }
@@ -561,7 +561,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 block
                 ).with { MethodNode self ->
-            self.lineNumber = 10014
+            self.lineNumber = 10016
             self.columnNumber = 1
             self
         }

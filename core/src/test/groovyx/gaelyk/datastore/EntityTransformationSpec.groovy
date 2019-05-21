@@ -440,6 +440,24 @@ class EntityTransformationSpec extends Specification {
         obj.pogo.id == obj.key.id
     }
 
+    def "AST Error test"(){
+        def obj = newShell().evaluate '''
+            import groovyx.gaelyk.datastore.Order
+            import groovyx.gaelyk.datastore.Entity as GE
+            import groovyx.gaelyk.datastore.Ignore
+            import groovy.transform.Canonical
+            
+            @GE @Canonical 
+            class Person {
+                @Ignore Order order
+            }
+
+            new Person()
+        '''
+        expect:
+            obj.class.simpleName == 'Person'
+    }
+
     /*@spock.lang.Ignore*/
     def "Id is set 2"(){
         DatastoreEntity obj = new Order()

@@ -437,7 +437,7 @@ class EntityTransformation extends AbstractASTTransformation {
             self
         }
 
-        parent.addField new FieldNode('DATASTORE_INDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(classNodeForClass), parent, buildClassList(indexedTypes))
+        parent.addField new FieldNode('DATASTORE_INDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, GenericsUtils.makeClassSafeWithGenerics(List, ClassHelper.OBJECT_TYPE), parent, buildClassList(indexedTypes))
 
         parent.addMethod new MethodNode(
                 'getDatastoreIndexedPropertiesTypes',
@@ -454,7 +454,7 @@ class EntityTransformation extends AbstractASTTransformation {
             self
         }
 
-        parent.addField new FieldNode('DATASTORE_UNINDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(classNodeForClass), parent, buildClassList(unindexedTypes))
+        parent.addField new FieldNode('DATASTORE_UNINDEXED_PROPERTIES_TYPES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, GenericsUtils.makeClassSafeWithGenerics(List, ClassHelper.OBJECT_TYPE), parent, buildClassList(unindexedTypes))
         parent.addMethod new MethodNode(
                 'getDatastoreUnindexedPropertiesTypes',
                 Modifier.PUBLIC,

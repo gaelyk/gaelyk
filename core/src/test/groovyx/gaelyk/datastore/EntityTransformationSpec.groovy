@@ -451,7 +451,6 @@ class EntityTransformationSpec extends Specification {
             class Person {
                 @Ignore Order order
             }
-
             new Person()
         '''
         expect:

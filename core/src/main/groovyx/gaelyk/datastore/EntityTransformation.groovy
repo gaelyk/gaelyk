@@ -409,7 +409,6 @@ class EntityTransformation extends AbstractASTTransformation {
         }
 
         parent.addField new FieldNode('DATASTORE_INDEXED_PROPERTIES', Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL, getBoundListNode(ClassHelper.STRING_TYPE), parent, buildList(indexed))
-
         parent.addMethod new MethodNode(
                 'getDatastoreIndexedProperties',
                 Modifier.PUBLIC,
@@ -500,7 +499,6 @@ class EntityTransformation extends AbstractASTTransformation {
         list
     }
 
-
     private Expression buildClassList(List<ClassNode> values) {
         ListExpression list = new ListExpression()
         for (ClassNode value in values) {
@@ -526,7 +524,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 block
                 ).with { MethodNode self ->
-            self.lineNumber = 10013
+            self.lineNumber = 10015
             self.columnNumber = 1
             self
         }
@@ -563,7 +561,7 @@ class EntityTransformation extends AbstractASTTransformation {
                 ClassNode.EMPTY_ARRAY,
                 block
                 ).with { MethodNode self ->
-            self.lineNumber = 10014
+            self.lineNumber = 10016
             self.columnNumber = 1
             self
         }

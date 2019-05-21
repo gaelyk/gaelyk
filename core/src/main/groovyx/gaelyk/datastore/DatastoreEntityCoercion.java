@@ -3,9 +3,13 @@ package groovyx.gaelyk.datastore;
 import com.google.appengine.api.datastore.Entities;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Text;
+import org.codehaus.groovy.ast.PropertyNode;
 
 import groovy.lang.GString;
 import groovyx.gaelyk.extensions.DatastoreExtensions;
+import groovyx.gaelyk.datastore.ReflectionEntityCoercion;
+
+import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -113,31 +117,31 @@ public class DatastoreEntityCoercion {
                 dsEntity.setDatastoreVersion(0); 
             }
         }
-        for(String propertyName : dsEntity.getDatastoreIndexedProperties()){
-            setEntityProperty(en, dsEntity, propertyName);
+        List<String> indexedProperties = dsEntity.getDatastoreIndexedProperties();
+        List<Class> indexedTypes = dsEntity.getDatastoreIndexedPropertiesTypes();
+        for (int i = 0; i < indexedProperties.size(); i++) {
+            setEntityProperty(en, dsEntity, indexedProperties.get(i), indexedTypes.get(i));
         }
-        for(String propertyName : dsEntity.getDatastoreUnindexedProperties()){
-            setEntityProperty(en, dsEntity, propertyName);
+        List<String> unindexedProperties = dsEntity.getDatastoreUnindexedProperties();
+        List<Class> unindexedTypes = dsEntity.getDatastoreUnindexedPropertiesTypes();
+        for (int i = 0; i < unindexedProperties.size(); i++) {
+            setEntityProperty(en, dsEntity, unindexedProperties.get(i), unindexedTypes.get(i));
         }
         return dsEntity;
     }
 
-    private static <E extends DatastoreEntity<?>> void setEntityProperty(Entity en, E dsEntity, String propertyName) {
+    private static <E extends DatastoreEntity<?>> void setEntityProperty(Entity en, E dsEntity, String propertyName, Class propertyType) {
         if (!en.hasProperty(propertyName)) {
             // the property doesn't have the property set so let it blank
             // this is important for keeping default values
             return;
         }
         Object value = en.getProperty(propertyName);
-        if (value instanceof Text) {
-            value = ((Text) value).getValue();
-        } 
         try {
-            dsEntity.setProperty(propertyName, value);
+            dsEntity.setProperty(propertyName, ReflectionEntityCoercion.transformValueForRetrieval(value, propertyType));
         } catch (Exception e) {
             throw new IllegalArgumentException("Problem setting value '" + value + "' to property '" + propertyName + "' of entity " + dsEntity.getClass().getSimpleName(), e);
         }
-
     }
     
 }

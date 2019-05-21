@@ -422,12 +422,16 @@ class EntityTransformationSpec extends Specification {
             import groovyx.gaelyk.datastore.Key
             import groovyx.gaelyk.datastore.Entity as GE
             import groovyx.gaelyk.datastore.Indexed
+            import groovyx.gaelyk.datastore.Ignore
+            import groovyx.gaelyk.datastore.Order
+            import groovy.transform.Canonical
             import com.google.appengine.api.datastore.*
             
-            @GE @groovy.transform.CompileStatic
+            @GE @Canonical @groovy.transform.CompileStatic
             class Person {
                 @Key long id
                 @Indexed String name
+                @Ignore Order order
             }
 
             def key = new Person(name: 'test').save()

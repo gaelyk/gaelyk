@@ -61,7 +61,8 @@ class ReflectionEntityCoercion {
         }
         if (!cachedProps.containsKey(clazz)) {
             Map<String, PropertyDescriptor> props = [:]
-            for (String property in p.properties.keySet()) {
+            List<String> keySet = p.getMetaPropertyValues().collect { it.name }
+            for (String property : keySet) {
                 if (!(property in ['class', 'metaClass']) && !(property.startsWith('$') || property.startsWith('_'))) {
                     def descriptor = getPropertyDescriptorFor(clazz, property, defaultIndexed)
                     // XXX: This does not work. If it is Groovy bug, it's really nasty!
